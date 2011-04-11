@@ -26,6 +26,6 @@ setup(
 	"""
         [ckan.plugins]
 	# Add plugins here, eg
-	# myplugin=ckanext.spatial:PluginClass
+	wms_preview=ckanext.spatial.plugin:WMSPreview
 	""",
 )
