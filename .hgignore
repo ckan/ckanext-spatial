@@ -1,0 +1,4 @@
+syntax: glob 
+*.pyc
+*.egg-info
+*.swp
