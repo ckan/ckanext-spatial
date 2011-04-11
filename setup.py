@@ -24,8 +24,11 @@ setup(
 	],
 	entry_points=\
 	"""
-        [ckan.plugins]
+    [ckan.plugins]
 	# Add plugins here, eg
 	wms_preview=ckanext.spatial.plugin:WMSPreview
+ 	spatial_query=ckanext.spatial.plugin:SpatialQuery
+    [paste.paster_command]
+    extents=ckanext.spatial.commands.extents:Extents
 	""",
 )
