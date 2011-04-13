@@ -20,6 +20,29 @@ and enable the spatial features of your PostgreSQL database. See the
 Configuration
 =============
 
+Once you have PostGIS installed and configured, you need to create the necessary
+DB tables running the following command (with your python env activated)::
+
+    paster spatial initdb [srid] --config=../ckan/development.ini
+
+You can define the SRID of the geometry column. Default is 4258.
+
+Problems you may find::
+
+    LINE 1: SELECT AddGeometryColumn('package_extent','the_geom', E'4258...
+           ^
+    HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+     "SELECT AddGeometryColumn('package_extent','the_geom', %s, 'POLYGON', 2)" ('4258',)
+
+PostGIS was not installed correctly. Please check the "Setting up PostGIS" section.
+
+    ::
+    sqlalchemy.exc.ProgrammingError: (ProgrammingError) permission denied for relation spatial_ref_sys
+
+The user accessing the ckan database needs to be owner (or have 
+permissions) of the geometry_columns and spatial_ref_sys tables
+
+
 Plugins are configured as follows in the CKAN ini file::
 
     ckan.plugins = wms_preview spatial_query
@@ -32,13 +55,19 @@ the EPSG code as an integer (e.g 4326, 4258, 27700, etc). It defaults to
     ckan.spatial.srid = 4258
 
 
+
 Command line interface
 ======================
 
 The following operations can be run from the command line using the 
-``paster extents`` command::
-
-      extents update 
+``paster spatial`` command::
+      
+      initdb [srid]
+        - Creates the necessary tables. You must have PostGIS installed
+        and configured in the database.
+        You can privide the SRID of the geometry column. Default is 4258.
+         
+      extents 
          - creates or updates the extent geometry column for packages with
           a bounding box defined in extras
        
@@ -127,6 +156,10 @@ http://postgis.refractions.net/docs/ch02.html#PGInstall
 
 Setting up a spatial table
 --------------------------
+
+**Note:** If you run the ``initdb`` command, the table was already created for
+you. This sections just describes what's going on for those who want to know
+more.
 
 To be able to store geometries and perform spatial operations, PostGIS
 needs to work with geometry fields. Geometry fields should always be
