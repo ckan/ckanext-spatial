@@ -20,7 +20,7 @@ def get_srid(crs):
     else:
        srid = crs
 
-    return int(srid)
+    return srid
 
 def save_extent(package,extent=False):
     '''Updates the package extent in the package_extent geometry column
@@ -46,6 +46,8 @@ def save_extent(package,extent=False):
         crs = package.extras.get('spatial-reference-system')
         if crs:
             srid = get_srid(crs)
+    if srid:
+        srid = str(srid)
     try:
 
         # Check if extent already exists
