@@ -43,9 +43,7 @@ def save_extent(package,extent=False):
         miny = float(package.extras.get('bbox-south-lat'))
         maxx = float(package.extras.get('bbox-west-long'))
         maxy = float(package.extras.get('bbox-north-lat'))
-        crs = package.extras.get('spatial-reference-system')
-        if crs:
-            srid = get_srid(crs)
+
     if srid:
         srid = str(srid)
     try:
@@ -111,6 +109,6 @@ def save_extent(package,extent=False):
         Session.commit()
         log.info(msg, package.id)
         return package
-    except:
-        log.error('An error occurred when saving the extent for package %s',package.id)
+    except Exception,e:
+        log.error('An error occurred when saving the extent for package %s: %r' % (package.id,e))
         raise Exception
