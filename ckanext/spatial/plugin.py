@@ -70,10 +70,10 @@ class WMSPreview(SingletonPlugin):
 
     def update_config(self, config):
         here = os.path.dirname(__file__)
-        rootdir = os.path.dirname(os.path.dirname(here))
+        rootdir = os.path.dirname(here)
 
-        template_dir = os.path.join(rootdir, 'templates')
-        public_dir = os.path.join(rootdir, 'public')
+        template_dir = os.path.join('templates')
+        public_dir = os.path.join('public')
         
         if config.get('extra_template_paths'):
             config['extra_template_paths'] += ','+template_dir
