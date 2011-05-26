@@ -2,7 +2,8 @@ from ckan.lib.helpers import json
 import ckan.lib.helpers as h
 from ckan.lib.base import c, g, request, \
                           response, session, render, config, abort, redirect
-from ckan.controllers.rest import BaseApiController
+
+from ckan.controllers.api import ApiController as BaseApiController
 
 from ckan.model import Session
 
