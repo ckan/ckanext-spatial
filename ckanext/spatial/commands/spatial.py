@@ -1,9 +1,12 @@
 import sys
 import re
 from pprint import pprint
+import logging
 
 from ckan.lib.cli import CkanCommand
-from ckanext.spatial.lib import save_extent
+from ckan.lib.helpers import json
+from ckanext.spatial.lib import save_package_extent
+log = logging.getLogger(__name__)
 
 class Spatial(CkanCommand):
     '''Performs spatially related operations.
@@ -12,11 +15,11 @@ class Spatial(CkanCommand):
         spatial initdb [srid]
             Creates the necessary tables. You must have PostGIS installed
             and configured in the database.
-            You can provide the SRID of the geometry column. Default is 4258.
+            You can provide the SRID of the geometry column. Default is 4326.
 
         spatial extents
             Creates or updates the extent geometry column for packages with
-            a bounding box defined in extras
+            an extent defined in the 'spatial' extra.
       
     The commands should be run from the ckanext-spatial directory and expect
     a development.ini file to be present. Most of the time you will
@@ -63,19 +66,32 @@ class Spatial(CkanCommand):
         conn = Session.connection()
         packages = [extra.package \
                     for extra in \
-                    Session.query(PackageExtra).filter(PackageExtra.key == 'bbox-east-long').all()]
+                    Session.query(PackageExtra).filter(PackageExtra.key == 'spatial').all()]
 
-        error = False
+        errors = []
+        count = 0
         for package in packages:
             try:
-                save_extent(package)
-            except:
-                errors = True
- 
-        if error:
-            msg = "There was an error saving the package extent. Have you set up the package_extent table in the DB?"
-        else:
-            msg = "Done. Extents generated for %i packages" % len(packages)
+                value = package.extras['spatial']
+                log.debug('Received: %r' % value)
+                geometry = json.loads(value)
+
+                count += 1
+            except ValueError,e:
+                errors.append(u'Package %s - Error decoding JSON object: %s' % (package.id,str(e)))
+            except TypeError,e:
+                errors.append(u'Package %s - Error decoding JSON object: %s' % (package.id,str(e)))
+
+            save_package_extent(package.id,geometry)
+        
+
+        Session.commit()
+        
+        if errors:
+            msg = 'Errors were found:\n%s' % '\n'.join(errors)
+            print msg
+
+        msg = "Done. Extents generated for %i out of %i packages" % (count,len(packages))
 
         print msg
 

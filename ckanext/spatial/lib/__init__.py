@@ -1,17 +1,21 @@
-from ckan.model import Session, repo
-from ckan.model import Package
+import logging
+
+from ckan.model import Session
 from ckan.lib.base import config
 
+from ckanext.spatial.model import PackageExtent
+from shapely.geometry import asShape
 
-log = __import__("logging").getLogger(__name__)
+from geoalchemy import WKTSpatialElement
 
+log = logging.getLogger(__name__)
 
 def get_srid(crs):
     """Returns the SRID for the provided CRS definition
         The CRS can be defined in the following formats
-        - urn:ogc:def:crs:EPSG::4258
-        - EPSG:4258
-        - 4258
+        - urn:ogc:def:crs:EPSG::4326
+        - EPSG:4326
+        - 4326
        """
 
     if ':' in crs:
@@ -20,95 +24,51 @@ def get_srid(crs):
     else:
        srid = crs
 
-    return srid
+    return int(srid)
 
-def save_extent(package,extent=False):
-    '''Updates the package extent in the package_extent geometry column
-       If no extent provided (as a dict with minx,miny,maxx,maxy and srid keys),
-       the values stored in the package extras are used'''
+def save_package_extent(package_id, geometry = None, srid = None):
+    '''Adds, updates or deletes the package extent geometry.
 
-    db_srid = int(config.get('ckan.spatial.srid', '4258'))
-    conn = Session.connection()
+       package_id: Package unique identifier
+       geometry: a Python object implementing the Python Geo Interface
+                (i.e a loaded GeoJSON object)
+       srid: The spatial reference in which the geometry is provided.
+             If None, it defaults to the DB srid.
 
-    srid = None
-    if extent:
-        minx = extent['minx']
-        miny = extent['miny']
-        maxx = extent['maxx']
-        maxy = extent['maxy']
-        if 'srid' in extent:
-            srid = extent['srid']
-    else:
-        minx = float(package.extras.get('bbox-east-long'))
-        miny = float(package.extras.get('bbox-south-lat'))
-        maxx = float(package.extras.get('bbox-west-long'))
-        maxy = float(package.extras.get('bbox-north-lat'))
+       Will throw ValueError if the geometry object does not provide a geo interface.
 
-    if srid:
-        srid = str(srid)
-    try:
+    '''
+    db_srid = int(config.get('ckan.spatial.srid', '4326'))
 
-        # Check if extent already exists
-        rows = conn.execute('SELECT package_id FROM package_extent WHERE package_id = %s',package.id).fetchall()
-        update =(len(rows) > 0)
 
-        params = {'id':package.id, 'minx':minx,'miny':miny,'maxx':maxx,'maxy':maxy, 'db_srid': db_srid}
+    existing_package_extent = Session.query(PackageExtent).filter(PackageExtent.package_id==package_id).first()
 
-        if update:
-            # Update
-            if srid and srid != db_srid:
-                # We need to reproject the input geometry
-                statement = """UPDATE package_extent SET
-                                the_geom = ST_Transform(
-                                            ST_GeomFromText('POLYGON ((%(minx)s %(miny)s,
-                                                            %(maxx)s %(miny)s,
-                                                            %(maxx)s %(maxy)s,
-                                                            %(minx)s %(maxy)s,
-                                                            %(minx)s %(miny)s))',%(srid)s),
-                                            %(db_srid)s)
-                                WHERE package_id = %(id)s
-                                """
-                params.update({'srid': srid})
-            else:
-                statement = """UPDATE package_extent SET
-                                the_geom = ST_GeomFromText('POLYGON ((%(minx)s %(miny)s,
-                                                            %(maxx)s %(miny)s,
-                                                            %(maxx)s %(maxy)s,
-                                                            %(minx)s %(maxy)s,
-                                                            %(minx)s %(miny)s))',%(db_srid)s)
-                                WHERE package_id = %(id)s
-                                """
-            msg = 'Updated extent for package %s'
+    if geometry:
+        shape = asShape(geometry)
+
+        if not srid:
+            srid = db_srid
+
+        package_extent = PackageExtent(package_id=package_id,the_geom=WKTSpatialElement(shape.wkt, srid))
+
+    # Check if extent exists
+    if existing_package_extent:
+
+        # If extent exists but we received no geometry, we'll delete the existing one
+        if not geometry:
+            existing_package_extent.delete()
+            log.debug('Deleted extent for package %s' % package_id)
         else:
-            # Insert
-            if srid and srid != db_srid:
-                # We need to reproject the input geometry
-                statement = """INSERT INTO package_extent (package_id,the_geom) VALUES (
-                                %(id)s,
-                                ST_Transform(
-                                    ST_GeomFromText('POLYGON ((%(minx)s %(miny)s,
-                                                            %(maxx)s %(miny)s,
-                                                            %(maxx)s %(maxy)s,
-                                                            %(minx)s %(maxy)s,
-                                                            %(minx)s %(miny)s))',%(srid)s),
-                                        %(db_srid))
-                                        )"""
-                params.update({'srid': srid})
+            # Check if extent changed
+            if Session.scalar(package_extent.the_geom.wkt) <> Session.scalar(existing_package_extent.the_geom.wkt):
+                # Update extent
+                existing_package_extent.the_geom = package_extent.the_geom
+                existing_package_extent.save()
+                log.debug('Updated extent for package %s' % package_id)
             else:
-                statement = """INSERT INTO package_extent (package_id,the_geom) VALUES (
-                                %(id)s,
-                                ST_GeomFromText('POLYGON ((%(minx)s %(miny)s,
-                                                            %(maxx)s %(miny)s,
-                                                            %(maxx)s %(maxy)s,
-                                                            %(minx)s %(maxy)s,
-                                                            %(minx)s %(miny)s))',%(db_srid)s))"""
-            msg = 'Created new extent for package %s'
+                log.debug('Extent for package %s unchanged' % package_id)
+    elif geometry:
+        # Insert extent
+        Session.add(package_extent)
+        log.debug('Created new extent for package %s' % package_id)
 
-        conn.execute(statement,params)
-
-        Session.commit()
-        log.info(msg, package.id)
-        return package
-    except Exception,e:
-        log.error('An error occurred when saving the extent for package %s: %r' % (package.id,e))
-        raise Exception
