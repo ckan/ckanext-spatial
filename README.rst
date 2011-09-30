@@ -108,9 +108,8 @@ forms:
 - EPSG:4326
 - 4326
 
-
 Geo-Indexing your packages
-==========================
+--------------------------
 
 In order to make a package queryable by location, an special extra must
 be defined, with its key named 'spatial'. The value must be a valid GeoJSON_
@@ -131,11 +130,25 @@ the information stored in the extra with the geometry table.
 Dataset Map Widget
 ==================
 
-To enable the dataset_map you need to add the `dataset_map` plugin to your
+To enable the dataset map you need to add the `dataset_map` plugin to your
 ini file (See 'Configuration'). You need to load the `spatial_query` plugin also.
 
 When the plugin is enabled, if datasets contain a 'spatial' extra like the one
-described in the previous section, a map will be shown in the dataset details page.
+described in the previous section, a map will be shown on the dataset details page.
+
+
+WMS Previewer
+=============
+
+To enable the WMS previewer you need to add the `wms_preview` plugin to your
+ini file (See 'Configuration').
+
+Please note that this is an experimental plugin and may be unstable.
+
+When the plugin is enabled, if datasets contain a resource that has 'WMS' format,
+a 'View available WMS layers' link will be displayed on the dataset details page.
+It forwards to a simple map viewer that will attempt to load the remote service
+layers, based on the GetCapabilities response.
 
 
 

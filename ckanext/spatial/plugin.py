@@ -132,13 +132,14 @@ class WMSPreview(SingletonPlugin):
         if routes.get('controller') == 'package' and \
             routes.get('action') == 'read' and c.pkg.id:
 
-            is_inspire = (c.pkg.extras.get('INSPIRE') == 'True')
-            # TODO: What about WFS, WCS...
-            is_wms = (c.pkg.extras.get('resource-type') == 'service')
-            if is_inspire and is_wms:
-                data = {'name': c.pkg.name}
-                stream = stream | Transformer('body//div[@class="resources subsection"]')\
-                    .append(HTML(html.MAP_VIEW % data))
+            for res in c.pkg.resources:
+                if res.format == "WMS":
+                    data = {'name': c.pkg.name}
+                    stream = stream | Transformer('body//div[@class="resources subsection"]')\
+                        .append(HTML(html.MAP_VIEW % data))
+
+                    break
+
 
 
         return stream

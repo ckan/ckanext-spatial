@@ -15,7 +15,7 @@
       <script type="text/javascript">
         //<![CDATA[
         $(document).ready(function(){
-            CKAN.WMSPreview.setup("${c.wms.url}");
+            CKAN.WMSPreview.setup("${c.wms_url}");
         })
         //]]>
       </script>
@@ -29,9 +29,9 @@
     </h2>
     
     <!-- Source URL -->    
-    <div class="url" py:if="c.pkg.url">
+    <div class="url" py:if="c.wms_url">
       <p>
-        Source: <a href="${c.wms.url}" target="_blank">${c.wms.url}</a>
+        Source: <a href="${c.wms_url}" target="_blank">${c.wms_url}</a>
       </p>
     </div>
     <p>

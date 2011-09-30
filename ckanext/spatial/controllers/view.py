@@ -26,10 +26,10 @@ class ViewController(BaseController):
 
         for res in c.pkg.resources:
             if res.format == "WMS":
-                c.wms = res
+                c.wms_url = res.url if not '?' in res.url else res.url.split('?')[0]
                 break
-        if not c.wms:
-            abort(400, 'This package does not have a WMS')
+        if not c.wms_url:
+            abort(400, 'This package does not have a WMS resource')
 
         return render('ckanext/spatial/wms_preview.html')
 
