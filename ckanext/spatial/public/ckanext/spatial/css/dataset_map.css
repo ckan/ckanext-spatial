@@ -1,0 +1,9 @@
+.dataset-map {
+    padding-bottom: 10px
+}
+
+.olControlAttribution {
+    left: 5px;
+    right: inherit;
+    bottom: 3px !important;
+}

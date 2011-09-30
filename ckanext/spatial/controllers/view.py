@@ -10,14 +10,6 @@ from ckan.model import Package
 
 class ViewController(BaseController):
 
-    def __before__(self, action, **env):
-        super(ViewController, self).__before__(action, **env)
-        # All calls to this controller must be with a sysadmin key
-        if not self.authorizer.is_sysadmin(c.user):
-            response_msg = _('Not authorized to see this page')
-            status = 401
-            abort(status, response_msg)
-
     def wms_preview(self,id):
         #check if package exists
         c.pkg = Package.get(id)
@@ -26,10 +18,10 @@ class ViewController(BaseController):
 
         for res in c.pkg.resources:
             if res.format == "WMS":
-                c.wms = res
+                c.wms_url = res.url if not '?' in res.url else res.url.split('?')[0]
                 break
-        if not c.wms:
-            abort(400, 'This package does not have a WMS')
+        if not c.wms_url:
+            abort(400, 'This package does not have a WMS resource')
 
         return render('ckanext/spatial/wms_preview.html')
 

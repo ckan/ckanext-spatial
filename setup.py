@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 import sys, os
 
-version = '0.1'
+version = '0.2'
 
 setup(
 	name='ckanext-spatial',
@@ -28,6 +28,7 @@ setup(
 	# Add plugins here, eg
 	wms_preview=ckanext.spatial.plugin:WMSPreview
  	spatial_query=ckanext.spatial.plugin:SpatialQuery
+ 	dataset_extent_map=ckanext.spatial.plugin:DatasetExtentMap
     [paste.paster_command]
     spatial=ckanext.spatial.commands.spatial:Spatial
 	""",
