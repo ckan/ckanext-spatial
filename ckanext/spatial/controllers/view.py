@@ -10,14 +10,6 @@ from ckan.model import Package
 
 class ViewController(BaseController):
 
-    def __before__(self, action, **env):
-        super(ViewController, self).__before__(action, **env)
-        # All calls to this controller must be with a sysadmin key
-        if not self.authorizer.is_sysadmin(c.user):
-            response_msg = _('Not authorized to see this page')
-            status = 401
-            abort(status, response_msg)
-
     def wms_preview(self,id):
         #check if package exists
         c.pkg = Package.get(id)
