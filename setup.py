@@ -28,6 +28,7 @@ setup(
 	# Add plugins here, eg
 	wms_preview=ckanext.spatial.plugin:WMSPreview
  	spatial_query=ckanext.spatial.plugin:SpatialQuery
+ 	dataset_extent_map=ckanext.spatial.plugin:DatasetExtentMap
     [paste.paster_command]
     spatial=ckanext.spatial.commands.spatial:Spatial
 	""",

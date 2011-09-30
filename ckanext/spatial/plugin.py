@@ -1,6 +1,6 @@
 import os
 from logging import getLogger
-
+from pylons.i18n import _
 from genshi.input import HTML
 from genshi.filters import Transformer
 
@@ -74,6 +74,49 @@ class SpatialQuery(SingletonPlugin):
 
     def delete(self, package):
         save_package_extent(package.id,None)
+
+
+class DatasetExtentMap(SingletonPlugin):
+
+    implements(IGenshiStreamFilter)
+    implements(IConfigurer, inherit=True)
+
+    def filter(self, stream):
+        from pylons import request, tmpl_context as c
+        routes = request.environ.get('pylons.routes_dict')
+        if routes.get('controller') == 'package' and \
+            routes.get('action') == 'read' and c.pkg.id:
+
+            extent = c.pkg.extras.get('spatial',None)
+            if extent:
+                data = {'extent': extent,
+                        'title': _('Geographic extent')}
+                stream = stream | Transformer('body//div[@class="dataset"]')\
+                    .append(HTML(html.PACKAGE_MAP % data))
+                stream = stream | Transformer('head')\
+                    .append(HTML(html.PACKAGE_MAP_EXTRA_HEADER % data))
+                stream = stream | Transformer('body')\
+                    .append(HTML(html.PACKAGE_MAP_EXTRA_FOOTER % data))
+
+
+
+        return stream
+
+    def update_config(self, config):
+        here = os.path.dirname(__file__)
+
+        template_dir = os.path.join(here, 'templates')
+        public_dir = os.path.join(here, 'public')
+
+        if config.get('extra_template_paths'):
+            config['extra_template_paths'] += ','+template_dir
+        else:
+            config['extra_template_paths'] = template_dir
+        if config.get('extra_public_paths'):
+            config['extra_public_paths'] += ','+public_dir
+        else:
+            config['extra_public_paths'] = public_dir
+
 
 
 class WMSPreview(SingletonPlugin):

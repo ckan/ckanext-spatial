@@ -3,8 +3,11 @@ ckanext-spatial - Geo related plugins for CKAN
 ==============================================
 
 This extension contains plugins that add geospatial capabilities to CKAN.
-Currently, there are a WMS previewer (`wms_preview`) and a spatial query
-API call (`spatial_query`) available.
+The following plugins are currently available:
+
+* Automatic geo-indexing and spatial API call (`spatial_query`).
+* Map widget showing a package extent (`dataset_extent_map`).
+* A Web Map Service (WMS) previewer (`wms_preview`).
 
 Dependencies
 ============
@@ -50,9 +53,10 @@ The user accessing the ckan database needs to be owner (or have
 permissions) of the geometry_columns and spatial_ref_sys tables
 
 
-Plugins are configured as follows in the CKAN ini file::
+Plugins are configured as follows in the CKAN ini file (Add only the ones you
+are interested in)::
 
-    ckan.plugins = wms_preview spatial_query
+    ckan.plugins = wms_preview spatial_query dataset_extent_map
 
 If you are using the spatial search feature, you can define the projection
 in which extents are stored in the database with the following option. Use 
@@ -85,8 +89,11 @@ the config explicitly though::
         paster extents update --config=../ckan/development.ini
 
 
-API
-===
+Spatial Query
+=============
+
+To enable the spatial query you need to add the `spatial_query` plugin to your
+ini file (See 'Configuration').
 
 The extension adds the following call to the CKAN search API, which returns
 packages with an extent that intersects with the bounding box provided::
@@ -119,6 +126,17 @@ or::
 
 Every time a package is created, updated or deleted, the extension will synchronize
 the information stored in the extra with the geometry table.
+
+
+Dataset Map Widget
+==================
+
+To enable the dataset_map you need to add the `dataset_map` plugin to your
+ini file (See 'Configuration'). You need to load the `spatial_query` plugin also.
+
+When the plugin is enabled, if datasets contain a 'spatial' extra like the one
+described in the previous section, a map will be shown in the dataset details page.
+
 
 
 Setting up PostGIS
