@@ -98,9 +98,8 @@ CKAN.WMSPreview = function($){
                     olLayers.push(dummyLayer);
 
                     // Setup some sizes
-                    var w = $("#container").width() * 0.50;
+                    w = $("#content").width();
                     if (w > 1024) w = 1024;
-                    $("#content").width($("#container").width());
                     $("#map").width(w);
                     $("#map").height(500);
 

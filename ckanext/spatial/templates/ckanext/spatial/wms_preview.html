@@ -6,11 +6,22 @@
   <py:def function="page_title">${c.pkg.title or c.pkg.name} - WMS preview</py:def>
 
   <py:def function="optional_head">
-    <link type="text/css" rel="stylesheet" media="all" href="/ckanext/spatial/wms_preview.css" />
-    <script type="text/javascript" src="/ckanext/spatial/js/openlayers/OpenLayers_ckan.js"></script>
-    <script type="text/javascript" src="/ckanext/spatial/js/wms_preview.js"></script>
+    <link type="text/css" rel="stylesheet" media="all" href="/ckanext/spatial/css/wms_preview.css" />
   </py:def>
-  
+   <py:def function="optional_footer">
+        <link type="text/css" rel="stylesheet" media="all" href="/ckanext/spatial/css/wms_preview.css" />
+        <script type="text/javascript" src="/ckanext/spatial/js/openlayers/OpenLayers_wms_preview.js"></script>
+        <script type="text/javascript" src="/ckanext/spatial/js/wms_preview.js"></script>
+      <script type="text/javascript">
+        //<![CDATA[
+        $(document).ready(function(){
+            CKAN.WMSPreview.setup("${c.wms.url}");
+        })
+        //]]>
+      </script>
+
+  </py:def>
+ 
 <div py:match="content">
   <div class="map-view-content">
     <h2 class="head">
@@ -31,13 +42,6 @@
     </p>
       <div class="package subsection">
       <h3>WMS preview</h3>
-      <script type="text/javascript">
-        //<![CDATA[
-        $(document).ready(function(){
-            CKAN.WMSPreview.setup("${c.wms.url}");
-        })
-        //]]>
-      </script>
     <div id="map"></div>
     <div id="layers"></div>
     </div>
