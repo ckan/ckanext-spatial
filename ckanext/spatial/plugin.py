@@ -29,10 +29,9 @@ class SpatialQuery(SingletonPlugin):
 
     def before_map(self, map):
 
-        map.connect('api_spatial_query', '/api/2/search/package/geo',
+        map.connect('api_spatial_query', '/api/2/search/{register:dataset|package}/geo',
             controller='ckanext.spatial.controllers.api:ApiController',
             action='spatial_query')
-
         return map
 
     def create(self, package):
@@ -153,10 +152,6 @@ class WMSPreview(SingletonPlugin):
         map.connect('proxy', '/proxy',
             controller='ckanext.spatial.controllers.view:ViewController',
             action='proxy')
-
-        map.connect('api_spatial_query', '/api/2/search/package/geo',
-            controller='ckanext.spatial.controllers.api:ApiController',
-            action='spatial_query')
 
         return map
 

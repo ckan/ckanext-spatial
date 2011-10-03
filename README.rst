@@ -6,7 +6,7 @@ This extension contains plugins that add geospatial capabilities to CKAN.
 The following plugins are currently available:
 
 * Automatic geo-indexing and spatial API call (`spatial_query`).
-* Map widget showing a package extent (`dataset_extent_map`).
+* Map widget showing a dataset extent (`dataset_extent_map`).
 * A Web Map Service (WMS) previewer (`wms_preview`).
 
 Dependencies
@@ -79,7 +79,7 @@ The following operations can be run from the command line using the
         You can privide the SRID of the geometry column. Default is 4326.
          
       extents 
-         - creates or updates the extent geometry column for packages with
+         - creates or updates the extent geometry column for datasets with
           an extent defined in the 'spatial' extra.
        
 The commands should be run from the ckanext-spatial directory and expect
@@ -96,9 +96,9 @@ To enable the spatial query you need to add the `spatial_query` plugin to your
 ini file (See 'Configuration').
 
 The extension adds the following call to the CKAN search API, which returns
-packages with an extent that intersects with the bounding box provided::
+datasets with an extent that intersects with the bounding box provided::
 
-    /api/2/search/package/geo?bbox={minx,miny,maxx,maxy}[&crs={srid}]
+    /api/2/search/dataset/geo?bbox={minx,miny,maxx,maxy}[&crs={srid}]
 
 If the bounding box coordinates are not in the same projection as the one
 defined in the database, a CRS must be provided, in one of the following
@@ -108,10 +108,10 @@ forms:
 - EPSG:4326
 - 4326
 
-Geo-Indexing your packages
+Geo-Indexing your datasets
 --------------------------
 
-In order to make a package queryable by location, an special extra must
+In order to make a dataset queryable by location, an special extra must
 be defined, with its key named 'spatial'. The value must be a valid GeoJSON_
 geometry, for example::
 
@@ -123,7 +123,7 @@ or::
 
 .. _GeoJSON: http://geojson.org
 
-Every time a package is created, updated or deleted, the extension will synchronize
+Every time a dataset is created, updated or deleted, the extension will synchronize
 the information stored in the extra with the geometry table.
 
 

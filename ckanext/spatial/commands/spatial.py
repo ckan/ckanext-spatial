@@ -18,7 +18,7 @@ class Spatial(CkanCommand):
             You can provide the SRID of the geometry column. Default is 4326.
 
         spatial extents
-            Creates or updates the extent geometry column for packages with
+            Creates or updates the extent geometry column for datasets with
             an extent defined in the 'spatial' extra.
       
     The commands should be run from the ckanext-spatial directory and expect
