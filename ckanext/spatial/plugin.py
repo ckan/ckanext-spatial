@@ -41,6 +41,11 @@ class SpatialQuery(SingletonPlugin):
         self.check_spatial_extra(package)
 
     def check_spatial_extra(self,package):
+        if not package.id:
+            log.warning('Couldn\'t store spatial extent because no id was provided for the package')
+            return
+
+        # TODO: deleted extra
         for extra in package.extras_list:
             if extra.key == 'spatial':
                 if extra.state == 'active':

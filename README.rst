@@ -65,7 +65,14 @@ the EPSG code as an integer (e.g 4326, 4258, 27700, etc). It defaults to
     
     ckan.spatial.srid = 4326
 
+Tests
+=====
 
+Please note that the tests currently only work with Postgres. You must use the
+test-core.ini located in the extension directory to run them. Most of the time
+you should run something like::
+
+    nosetests --ckan --with-pylons=test-core.ini ckanext/spatial/tests
 
 Command line interface
 ======================
