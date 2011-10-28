@@ -14,14 +14,14 @@ class ViewController(BaseController):
         #check if package exists
         c.pkg = Package.get(id)
         if c.pkg is None:
-            abort(404, 'Package not found')
+            abort(404, 'Dataset not found')
 
         for res in c.pkg.resources:
             if res.format == "WMS":
                 c.wms_url = res.url if not '?' in res.url else res.url.split('?')[0]
                 break
         if not c.wms_url:
-            abort(400, 'This package does not have a WMS resource')
+            abort(400, 'This dataset does not have a WMS resource')
 
         return render('ckanext/spatial/wms_preview.html')
 

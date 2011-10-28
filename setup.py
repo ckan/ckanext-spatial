@@ -26,7 +26,7 @@ setup(
 	"""
     [ckan.plugins]
 	# Add plugins here, eg
-	wms_preview=ckanext.spatial.plugin:WMSPreview
+	wms_preview=ckanext.spatial.nongeos_plugin:WMSPreview
  	spatial_query=ckanext.spatial.plugin:SpatialQuery
  	dataset_extent_map=ckanext.spatial.plugin:DatasetExtentMap
     [paste.paster_command]
