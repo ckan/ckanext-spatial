@@ -2,7 +2,7 @@ from string import Template
 
 from ckan.lib.base import request, config, abort
 from ckan.controllers.api import ApiController as BaseApiController
-from ckan.model import Session
+from ckan.model import Session, Package
 
 from ckanext.spatial.lib import get_srid
 from ckanext.spatial.model import PackageExtent
@@ -44,7 +44,11 @@ class ApiController(BaseApiController):
         else:
             input_geometry = WKTSpatialElement(wkt,self.db_srid)
 
-        extents = Session.query(PackageExtent).filter(PackageExtent.the_geom.intersects(input_geometry))
+        extents = Session.query(PackageExtent) \
+                  .filter(PackageExtent.package_id==Package.id) \
+                  .filter(PackageExtent.the_geom.intersects(input_geometry)) \
+                  .filter(Package.state==u'active')
+
         ids = [extent.package_id for extent in extents]
 
         output = dict(count=len(ids),results=ids)
