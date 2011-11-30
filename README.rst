@@ -12,7 +12,7 @@ The following plugins are currently available:
 Dependencies
 ============
 
-You will need CKAN installed. The present module should be installed at least 
+You will need CKAN installed. The present module should be installed at least
 with `setup.py develop` if not installed in the normal way with
 `setup.py install` or using pip or easy_install.
 
@@ -29,13 +29,16 @@ and enable the spatial features of your PostgreSQL database. See the
 Configuration
 =============
 
-Once you have PostGIS installed and configured, you need to create the necessary
-DB tables running the following command (with your python env activated)::
+You will first need to have have PostGIS installed and configured in your
+database (see the "Setting up PostGIS" section for details)
+
+Once this is done, you need to create the necessary DB tables running the
+following command (with your python env activated)::
 
     paster spatial initdb [srid] --config=../ckan/development.ini
 
-You can define the SRID of the geometry column. Default is 4326. If you are not
-familiar with projections, we recommend to use the default value.
+You can define the SRID of the geometry column. Default is 4326. If you
+are not familiar with projections, we recommend to use the default value.
 
 Problems you may find::
 
@@ -49,7 +52,7 @@ PostGIS was not installed correctly. Please check the "Setting up PostGIS" secti
     ::
     sqlalchemy.exc.ProgrammingError: (ProgrammingError) permission denied for relation spatial_ref_sys
 
-The user accessing the ckan database needs to be owner (or have 
+The user accessing the ckan database needs to be owner (or have
 permissions) of the geometry_columns and spatial_ref_sys tables
 
 
@@ -59,10 +62,10 @@ are interested in)::
     ckan.plugins = wms_preview spatial_query dataset_extent_map
 
 If you are using the spatial search feature, you can define the projection
-in which extents are stored in the database with the following option. Use 
-the EPSG code as an integer (e.g 4326, 4258, 27700, etc). It defaults to 
+in which extents are stored in the database with the following option. Use
+the EPSG code as an integer (e.g 4326, 4258, 27700, etc). It defaults to
 4326::
-    
+
     ckan.spatial.srid = 4326
 
 Tests
@@ -77,20 +80,20 @@ you should run something like::
 Command line interface
 ======================
 
-The following operations can be run from the command line using the 
+The following operations can be run from the command line using the
 ``paster spatial`` command::
-      
+
       initdb [srid]
         - Creates the necessary tables. You must have PostGIS installed
         and configured in the database.
         You can privide the SRID of the geometry column. Default is 4326.
-         
-      extents 
+
+      extents
          - creates or updates the extent geometry column for datasets with
           an extent defined in the 'spatial' extra.
-       
+
 The commands should be run from the ckanext-spatial directory and expect
-a development.ini file to be present. Most of the time you will specify 
+a development.ini file to be present. Most of the time you will specify
 the config explicitly though::
 
         paster extents update --config=../ckan/development.ini
@@ -126,7 +129,7 @@ geometry, for example::
 
 or::
 
-    { "type": "Point", "coordinates": [-3.145,53.078] }    
+    { "type": "Point", "coordinates": [-3.145,53.078] }
 
 .. _GeoJSON: http://geojson.org
 
@@ -168,39 +171,44 @@ Configuration
 *   Install PostGIS::
 
         sudo apt-get install postgresql-8.4-postgis
-    
+
 *   Create a new PostgreSQL database::
-    
+
         sudo -u postgres createdb [database]
-        
+
     (If you just want to spatially enable an exisiting database, you can
     ignore this point, but it's a good idea to create a template to
     make easier to create new databases)
 
 *   Many of the PostGIS functions are written in the PL/pgSQL language,
     so we need to enable it in our database::
-    
+
         sudo -u postgres createlang plpgsql [database]
 
 *   Run the following commands. The first one will create the necessary
     tables and functions in the database, and the second will populate
     the spatial reference table::
-    
+
         sudo -u postgres psql -d [database] -f /usr/share/postgresql/8.4/contrib/postgis-1.5/postgis.sql
-        sudo -u postgres psql -d [database] -f /usr/share/postgresql/8.4/contrib/postgis-1.5/spatial_ref_sys.sql    
+        sudo -u postgres psql -d [database] -f /usr/share/postgresql/8.4/contrib/postgis-1.5/spatial_ref_sys.sql
+
+    **Note**: depending on your distribution and PostGIS version, the
+    scripts may be located on a slightly different location, e.g.::
+
+    /usr/share/postgresql/8.4/contrib/postgis.sql
 
 *   Execute the following command to see if PostGIS was properly
     installed::
-    
+
         sudo -u postgres psql -d [database] -c "SELECT postgis_full_version()"
-    
+
     You should get something like::
-    
-                                             postgis_full_version                                          
+
+                                             postgis_full_version
         ------------------------------------------------------------------------------------------------------
         POSTGIS="1.5.2" GEOS="3.2.2-CAPI-1.6.2" PROJ="Rel. 4.7.1, 23 September 2009" LIBXML="2.7.7" USE_STATS
         (1 row)
-    
+
     Also, if you log into the database, you should see two tables,
     ``geometry_columns`` and ``spatial_ref_sys`` (and probably a view
     called ``geography_columns``).
@@ -208,7 +216,7 @@ Configuration
     Note: This commands will create the two tables owned by the postgres
     user. You probably should make owner the user that will access the
     database from ckan::
-    
+
         ALTER TABLE spatial_ref_sys OWNER TO [your_user];
         ALTER TABLE geometry_columns OWNER TO [your_user];
 
@@ -216,6 +224,23 @@ More information on PostGIS installation can be found here:
 
 http://postgis.refractions.net/docs/ch02.html#PGInstall
 
+Migrating to an existing PostGIS database
+-----------------------------------------
+
+If you are loading a database dump to an existing PostGIS database, you may
+find errors like ::
+
+    ERROR:  type "spheroid" already exists
+
+This means that the PostGIS functions are installed, but you may need to
+create the necessary tables anyway. You can force psql to ignore these
+errors and continue the transaction with the ON_ERROR_ROLLBACK=on::
+
+    sudo -u postgres psql -d [database] -f /usr/share/postgresql/8.4/contrib/postgis-1.5/postgis.sql -v ON_ERROR_ROLLBACK=on
+
+You will still need to populate the spatial_ref_sys table and change the
+tables permissions. Refer to the previous section for details on how to do
+it.
 
 
 Setting up a spatial table
@@ -232,13 +257,13 @@ added via the ``AddGeometryColumn`` function::
     CREATE TABLE package_extent(
         package_id text PRIMARY KEY
     );
-    
+
     ALTER TABLE package_extent OWNER TO [your_user];
-    
+
     SELECT AddGeometryColumn('package_extent','the_geom', 4326, 'POLYGON', 2);
-    
+
 This will add a geometry column in the ``package_extent`` table called
-``the_geom``, with the spatial reference system EPSG:4326. The stored 
+``the_geom``, with the spatial reference system EPSG:4326. The stored
 geometries will be polygons, with 2 dimensions (The actual table on CKAN
 uses the GEOMETRY type to support multiple geometry types).
 
@@ -249,10 +274,10 @@ defined in the geometry column creation::
     # \d package_extent
 
        Table "public.package_extent"
-       Column   |   Type   | Modifiers 
+       Column   |   Type   | Modifiers
     ------------+----------+-----------
      package_id | text     | not null
-     the_geom   | geometry | 
+     the_geom   | geometry |
     Indexes:
         "package_extent_pkey" PRIMARY KEY, btree (package_id)
     Check constraints:
