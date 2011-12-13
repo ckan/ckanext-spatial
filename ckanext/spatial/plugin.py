@@ -6,7 +6,10 @@ from genshi.filters import Transformer
 
 import ckan.lib.helpers as h
 
+from ckan.lib.search import SearchError
 from ckan.lib.helpers import json
+
+from ckan import model
 
 from ckan.plugins import implements, SingletonPlugin
 from ckan.plugins import IRoutes, IConfigurer
@@ -26,6 +29,7 @@ class SpatialQuery(SingletonPlugin):
 
     implements(IRoutes, inherit=True)
     implements(IPackageController, inherit=True)
+    implements(IGenshiStreamFilter)
 
     def before_map(self, map):
 
@@ -78,6 +82,49 @@ class SpatialQuery(SingletonPlugin):
 
     def delete(self, package):
         save_package_extent(package.id,None)
+
+    def search(self, search_results, search_params):
+        if 'extras' in search_params and 'ext_bbox' in search_params['extras'] \
+            and search_params['extras']['ext_bbox']:
+            from ckanext.spatial.controllers.api import validate_bbox, bbox_query
+            from ckan.lib.dictization.model_dictize import package_dictize
+            from ckan.model import Package
+
+            bbox = validate_bbox(search_params['extras']['ext_bbox'])
+            if not bbox:
+                raise SearchError('Wrong bounding box provided')
+
+
+            extents = bbox_query(bbox)
+
+            bbox_query_ids = [extent.package_id for extent in extents]
+
+            search_results_ids = [pkg['id'] for pkg in search_results['results']]
+
+            filtered_ids = [id for id in search_results_ids if id in bbox_query_ids]
+
+            filtered_results = []
+            context = {'model':model}
+            for filtered_id in filtered_ids:
+                filtered_results.append(package_dictize(Package.get(filtered_id),context))
+
+            # Update the search results with the filtered results
+            search_results['count'] = len(filtered_results)
+            search_results['results'] = filtered_results
+
+        return search_results
+
+    def filter(self, stream):
+        from pylons import request, tmpl_context as c
+        routes = request.environ.get('pylons.routes_dict')
+        if routes.get('controller') == 'package' and \
+            routes.get('action') == 'search':
+
+            data = {'value': request.params.get('ext_bbox','')}
+            stream = stream | Transformer('body//div[@id="dataset-search-ext"]')\
+                .append(HTML(html.SPATIAL_SEARCH_FORM % data))
+
+        return stream
 
 
 class DatasetExtentMap(SingletonPlugin):

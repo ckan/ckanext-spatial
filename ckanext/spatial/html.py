@@ -30,3 +30,7 @@ PACKAGE_MAP_EXTRA_FOOTER="""
 
 
 """
+
+SPATIAL_SEARCH_FORM="""
+BBox  <input type="text" name="ext_bbox" value="%(value)s" />
+"""
