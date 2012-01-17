@@ -83,7 +83,7 @@ class SpatialQuery(SingletonPlugin):
     def delete(self, package):
         save_package_extent(package.id,None)
 
-    def search(self, search_results, search_params):
+    def after_search(self, search_results, search_params):
         if 'extras' in search_params and 'ext_bbox' in search_params['extras'] \
             and search_params['extras']['ext_bbox']:
             from ckanext.spatial.controllers.api import validate_bbox, bbox_query
