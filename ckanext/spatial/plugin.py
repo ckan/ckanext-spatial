@@ -21,7 +21,7 @@ from ckan.logic.action.update import package_error_summary
 
 import html
 
-from ckanext.spatial.lib import save_package_extent
+from ckanext.spatial.lib import save_package_extent,validate_bbox, bbox_query
 
 log = getLogger(__name__)
 
@@ -83,36 +83,31 @@ class SpatialQuery(SingletonPlugin):
     def delete(self, package):
         save_package_extent(package.id,None)
 
-    def after_search(self, search_results, search_params):
+    def before_search(self,search_params):
         if 'extras' in search_params and 'ext_bbox' in search_params['extras'] \
             and search_params['extras']['ext_bbox']:
-            from ckanext.spatial.controllers.api import validate_bbox, bbox_query
-            from ckan.lib.dictization.model_dictize import package_dictize
-            from ckan.model import Package
 
             bbox = validate_bbox(search_params['extras']['ext_bbox'])
             if not bbox:
                 raise SearchError('Wrong bounding box provided')
 
-
             extents = bbox_query(bbox)
 
-            bbox_query_ids = [extent.package_id for extent in extents]
+            if extents.count() == 0:
+                # We don't need to perform the search
+                search_params['abort_search'] = True
+            else:
+                # We'll perform the existing search but also filtering by the ids
+                # of datasets within the bbox
+                bbox_query_ids = [extent.package_id for extent in extents]
 
-            search_results_ids = [pkg['id'] for pkg in search_results['results']]
+                q = search_params.get('q','')
+                new_q = '%s AND ' % q if q else ''
+                new_q += '(%s)' % ' OR '.join(['id:%s' % id for id in bbox_query_ids])
 
-            filtered_ids = [id for id in search_results_ids if id in bbox_query_ids]
+                search_params['q'] = new_q
 
-            filtered_results = []
-            context = {'model':model}
-            for filtered_id in filtered_ids:
-                filtered_results.append(package_dictize(Package.get(filtered_id),context))
-
-            # Update the search results with the filtered results
-            search_results['count'] = len(filtered_results)
-            search_results['results'] = filtered_results
-
-        return search_results
+        return search_params
 
     def filter(self, stream):
         from pylons import request, tmpl_context as c
