@@ -115,9 +115,13 @@ class SpatialQuery(SingletonPlugin):
         if routes.get('controller') == 'package' and \
             routes.get('action') == 'search':
 
-            data = {'value': request.params.get('ext_bbox','')}
+            data = {'bbox': request.params.get('ext_bbox','')}
             stream = stream | Transformer('body//div[@id="dataset-search-ext"]')\
                 .append(HTML(html.SPATIAL_SEARCH_FORM % data))
+            stream = stream | Transformer('head')\
+                .append(HTML(html.SPATIAL_SEARCH_FORM_EXTRA_HEADER % data))
+            stream = stream | Transformer('body')\
+                .append(HTML(html.SPATIAL_SEARCH_FORM_EXTRA_FOOTER % data))
 
         return stream
 
