@@ -2,6 +2,10 @@
     padding-bottom: 10px
 }
 
+#dataset-map-attribution{
+    font-size: x-small;
+}
+
 .olControlAttribution {
     left: 5px;
     right: inherit;

@@ -49,10 +49,15 @@ CKAN.DatasetMap = function($){
             $("#dataset-map-container").width(w);
             $("#dataset-map-container").height(w/3);
 
+            var mapquestTiles = [
+                    "http://otile1.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.jpg",
+                    "http://otile2.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.jpg",
+                    "http://otile3.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.jpg",
+                    "http://otile4.mqcdn.com/tiles/1.0.0/osm/${z}/${x}/${y}.jpg"];
 
             var layers = [
-                new OpenLayers.Layer.OSM()
-            ]
+                new OpenLayers.Layer.OSM("MapQuest-OSM Tiles", mapquestTiles)
+            ];
 
 
             // Create a new map
@@ -65,7 +70,6 @@ CKAN.DatasetMap = function($){
                 "maxResolution": 156543.0339,
                 "maxExtent": new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34),
                 "controls": [ 
-                    new OpenLayers.Control.Attribution(),
                     new OpenLayers.Control.PanZoom(),
                     new OpenLayers.Control.Navigation()
                 ],
