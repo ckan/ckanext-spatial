@@ -2,7 +2,7 @@ import os
 import re
 from sqlalchemy import Table
 from ckan.model import Session,repo, meta
-from ckanext.spatial.model import setup as spatial_db_setup
+from ckanext.spatial.model import setup as spatial_db_setup,define_spatial_tables
 
 def setup_postgis_tables():
 
@@ -39,10 +39,8 @@ class SpatialTestBase:
         if not table.exists():
             setup_postgis_tables()
 
-        # Create the package_extent table
-        table = Table('package_extent', meta.metadata)
-        if not table.exists():
-            spatial_db_setup()
+        spatial_db_setup()
+
 
     @classmethod
     def teardown_class(cls):

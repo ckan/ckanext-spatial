@@ -9,7 +9,8 @@ import ckan.lib.helpers as h
 from ckan.lib.helpers import json
 
 from ckan.plugins import implements, SingletonPlugin
-from ckan.plugins import IRoutes, IConfigurer
+from ckan.plugins import IRoutes
+from ckan.plugins import IConfigurable, IConfigurer
 from ckan.plugins import IGenshiStreamFilter
 from ckan.plugins import IPackageController
 
@@ -19,6 +20,8 @@ from ckan.logic.action.update import package_error_summary
 import html
 
 from ckanext.spatial.lib import save_package_extent
+from ckanext.spatial.model import setup as setup_model
+
 
 log = getLogger(__name__)
 
@@ -26,6 +29,12 @@ class SpatialQuery(SingletonPlugin):
 
     implements(IRoutes, inherit=True)
     implements(IPackageController, inherit=True)
+    implements(IConfigurable, inherit=True)
+
+    def configure(self, config):
+
+        if not config.get('ckan.spatial.testing',False):
+            setup_model()
 
     def before_map(self, map):
 
