@@ -26,6 +26,14 @@ If you want to use the spatial search API, you will need PostGIS installed
 and enable the spatial features of your PostgreSQL database. See the
 "Setting up PostGIS" section for details.
 
+Note that Shapely requires libgeos to be installed. If you installed PostGIS on
+the same machine you already got it, but if PostGIS is located on another server
+you will need to install GEOS::
+
+    sudo apt-get install libgeos-c1
+
+
+
 Configuration
 =============
 

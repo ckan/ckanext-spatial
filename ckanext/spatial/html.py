@@ -9,6 +9,7 @@ PACKAGE_MAP="""
 <div class="dataset-map subsection">
 <h3>%(title)s</h3>
 <div id="dataset-map-container"></div>
+<div id="dataset-map-attribution">Map data CC-BY-SA by <a href="http://openstreetmap.org">OpenStreetMap</a> | Tiles courtesy of <a href="http://www.mapquest.com">MapQuest</a></div>
 </div>
 """
 
