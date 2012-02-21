@@ -5,9 +5,14 @@ ckanext-spatial - Geo related plugins for CKAN
 This extension contains plugins that add geospatial capabilities to CKAN.
 The following plugins are currently available:
 
-* Automatic geo-indexing and spatial API call (`spatial_query`).
+* Spatial model for CKAN datasets and automatic geo-indexing (`spatial_metadata`)
+* Spatial search integration and API call (`spatial_query`).
+* Map widget integrated on the search form (`spatial_query_widget`).
 * Map widget showing a dataset extent (`dataset_extent_map`).
 * A Web Map Service (WMS) previewer (`wms_preview`).
+
+All plugins except the WMS previewer require the `spatial_metadata` plugin.
+
 
 Dependencies
 ============
@@ -67,15 +72,14 @@ permissions) of the geometry_columns and spatial_ref_sys tables
 Plugins are configured as follows in the CKAN ini file (Add only the ones you
 are interested in)::
 
-    ckan.plugins = wms_preview spatial_query dataset_extent_map
+    ckan.plugins = spatial_metadata spatial_query spatial_query_widget dataset_extent_map wms_preview
 
-If you are using the spatial search feature, you can define the projection
+When enabling the spatial metadata, you can define the projection
 in which extents are stored in the database with the following option. Use
 the EPSG code as an integer (e.g 4326, 4258, 27700, etc). It defaults to
 4326::
 
     ckan.spatial.srid = 4326
-
 
 If you want to define a default map extent for the different map widgets,
 (e.g. if you are running a national instace of CKAN) you can do so adding
@@ -123,7 +127,8 @@ Spatial Query
 =============
 
 To enable the spatial query you need to add the `spatial_query` plugin to your
-ini file (See 'Configuration').
+ini file (See `Configuration`_). This plugin requires the `spatial_metadata`
+plugin.
 
 The extension adds the following call to the CKAN search API, which returns
 datasets with an extent that intersects with the bounding box provided::
@@ -137,6 +142,20 @@ forms:
 - urn:ogc:def:crs:EPSG::4326
 - EPSG:4326
 - 4326
+
+As of CKAN 1.6, you can integrate your spatial query in the full CKAN
+search, via the web interface (see the `Spatial Query Widget`_) or
+via the `action API`__, e.g.::
+
+    POST http://localhost:5000/api/action/package_search
+    {
+        "q": "Pollution",
+        "extras": {
+            "ext_bbox": "-7.535093,49.208494,3.890688,57.372349"
+        }
+    }
+
+__ http://docs.ckan.org/en/latest/apiv3.html
 
 Geo-Indexing your datasets
 --------------------------
@@ -157,11 +176,24 @@ Every time a dataset is created, updated or deleted, the extension will synchron
 the information stored in the extra with the geometry table.
 
 
+Spatial Query Widget
+====================
+
+**Note**: this plugin requires CKAN 1.6 or higher.
+
+To enable the search map widget you need to add the `spatial_query_widget` plugin to your
+ini file (See `Configuration`_). You also need to load both the `spatial_metadata`
+and the `spatial_query` plugins.
+
+When the plugin is enabled, a map widget will be shown in the dataset search form,
+where users can refine their searchs drawing an area of interest.
+
+
 Dataset Map Widget
 ==================
 
 To enable the dataset map you need to add the `dataset_map` plugin to your
-ini file (See 'Configuration'). You need to load the `spatial_query` plugin also.
+ini file (See `Configuration`_). You need to load the `spatial_metadata` plugin also.
 
 When the plugin is enabled, if datasets contain a 'spatial' extra like the one
 described in the previous section, a map will be shown on the dataset details page.
@@ -171,7 +203,7 @@ WMS Previewer
 =============
 
 To enable the WMS previewer you need to add the `wms_preview` plugin to your
-ini file (See 'Configuration').
+ini file (See `Configuration`_).
 
 Please note that this is an experimental plugin and may be unstable.
 
@@ -185,8 +217,8 @@ layers, based on the GetCapabilities response.
 Setting up PostGIS
 ==================
 
-Configuration
--------------
+PostGIS Configuration
+---------------------
 
 *   Install PostGIS::
 

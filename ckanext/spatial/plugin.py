@@ -29,11 +29,9 @@ from ckanext.spatial.model import setup as setup_model
 
 log = getLogger(__name__)
 
-class SpatialQuery(SingletonPlugin):
+class SpatialMetadata(SingletonPlugin):
 
-    implements(IRoutes, inherit=True)
     implements(IPackageController, inherit=True)
-    implements(IGenshiStreamFilter)
     implements(IConfigurable, inherit=True)
 
     def configure(self, config):
@@ -41,12 +39,6 @@ class SpatialQuery(SingletonPlugin):
         if not config.get('ckan.spatial.testing',False):
             setup_model()
 
-    def before_map(self, map):
-
-        map.connect('api_spatial_query', '/api/2/search/{register:dataset|package}/geo',
-            controller='ckanext.spatial.controllers.api:ApiController',
-            action='spatial_query')
-        return map
 
     def create(self, package):
         self.check_spatial_extra(package)
@@ -93,6 +85,18 @@ class SpatialQuery(SingletonPlugin):
     def delete(self, package):
         save_package_extent(package.id,None)
 
+class SpatialQuery(SingletonPlugin):
+
+    implements(IRoutes, inherit=True)
+    implements(IPackageController, inherit=True)
+
+    def before_map(self, map):
+
+        map.connect('api_spatial_query', '/api/2/search/{register:dataset|package}/geo',
+            controller='ckanext.spatial.controllers.api:ApiController',
+            action='spatial_query')
+        return map
+
     def before_search(self,search_params):
         if 'extras' in search_params and 'ext_bbox' in search_params['extras'] \
             and search_params['extras']['ext_bbox']:
@@ -118,6 +122,10 @@ class SpatialQuery(SingletonPlugin):
                 search_params['q'] = new_q
 
         return search_params
+
+class SpatialQueryWidget(SingletonPlugin):
+
+    implements(IGenshiStreamFilter)
 
     def filter(self, stream):
         from pylons import request, tmpl_context as c
