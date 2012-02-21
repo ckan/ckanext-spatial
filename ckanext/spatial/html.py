@@ -43,6 +43,7 @@ SPATIAL_SEARCH_FORM_EXTRA_FOOTER="""
         //<![CDATA[
         $(document).ready(function(){
             CKAN.SpatialSearchForm.bbox = '%(bbox)s';
+            CKAN.SpatialSearchForm.defaultExtent = '%(default_extent)s';
             CKAN.SpatialSearchForm.setup();
         })
         //]]>

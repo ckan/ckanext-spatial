@@ -1,5 +1,6 @@
 import os
 from logging import getLogger
+from pylons import config
 from pylons.i18n import _
 from genshi.input import HTML
 from genshi.filters import Transformer
@@ -124,7 +125,10 @@ class SpatialQuery(SingletonPlugin):
         if routes.get('controller') == 'package' and \
             routes.get('action') == 'search':
 
-            data = {'bbox': request.params.get('ext_bbox','')}
+            data = {
+                'bbox': request.params.get('ext_bbox',''),
+                'default_extent': config.get('ckan.spatial.default_map_extent','')
+            }
             stream = stream | Transformer('body//div[@id="dataset-search-ext"]')\
                 .append(HTML(html.SPATIAL_SEARCH_FORM % data))
             stream = stream | Transformer('head')\

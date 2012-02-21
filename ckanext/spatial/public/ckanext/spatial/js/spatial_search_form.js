@@ -24,6 +24,8 @@ CKAN.SpatialSearchForm = function($){
 
         bbox: null,
 
+        defaultExtent: null,
+
         styles: {
             "default":{
                 "fillColor":"#FCF6CF",
@@ -115,19 +117,24 @@ CKAN.SpatialSearchForm = function($){
                 $("#ext_bbox").val('');
             });
 
-            // There's a bbox from a previous search
+            var coords, bounds;
+            // Check if there's a bbox from a previous search or a default
+            // extent defined
+            if (this.bbox || this.defaultExtent) {
+                coords = (this.bbox) ? this.bbox.split(",") : this.defaultExtent.split(",");
+                bounds = new OpenLayers.Bounds(coords[0],coords[1],coords[2],coords[3]).transform(proj4326,proj900913);
+            } else {
+                bounds = this.map.maxExtent;
+            }
+
+            this.map.zoomToExtent(bounds);
+
             if (this.bbox) {
-                var coords = this.bbox.split(",");
-                var bounds = new OpenLayers.Bounds(coords[0],coords[1],coords[2],coords[3]).transform(proj4326,proj900913);
                 var feature = new OpenLayers.Feature.Vector(
                         bounds.toGeometry()
                 );
                 vector_layer.addFeatures([feature]);
-                this.map.zoomToExtent(bounds);
-            } else {
-                this.map.zoomToMaxExtent();
             }
-
             this.map.addLayer(vector_layer);
 
             CKAN.SpatialSearchForm.mapInitialized = true;
