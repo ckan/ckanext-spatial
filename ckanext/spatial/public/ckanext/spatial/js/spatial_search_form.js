@@ -2,7 +2,9 @@ var CKAN = CKAN || {};
 
 CKAN.SpatialSearchForm = function($){
 
-    // Private
+    // Projections
+    var proj4326 = new OpenLayers.Projection("EPSG:4326");
+    var proj900913 = new OpenLayers.Projection("EPSG:900913");
 
     var getGeomType = function(feature){
         return feature.geometry.CLASS_NAME.split(".").pop().toLowerCase()
@@ -14,6 +16,23 @@ CKAN.SpatialSearchForm = function($){
 
         return new OpenLayers.StyleMap(OpenLayers.Util.applyDefaults(
                     style, OpenLayers.Feature.Vector.style["default"]))
+    }
+
+    var getParameterByName = function (name) {
+
+        var match = RegExp('[?&]' + name + '=([^&]*)')
+                        .exec(window.location.search);
+
+        return match ?
+            decodeURIComponent(match[1].replace(/\+/g, ' '))
+            : null;
+
+    }
+
+    var getBoundsFromBbox = function(bbox){
+        var coords = bbox.split(",");
+        var bounds = new OpenLayers.Bounds(coords[0],coords[1],coords[2],coords[3]).transform(proj4326,proj900913);
+        return bounds;
     }
 
     // Public
@@ -65,9 +84,6 @@ CKAN.SpatialSearchForm = function($){
                 //new OpenLayers.Layer.OSM()
                 new OpenLayers.Layer.OSM("MapQuest-OSM Tiles", mapquestTiles)
             ]
-            // Projections
-            var proj4326 = new OpenLayers.Projection("EPSG:4326");
-            var proj900913 = new OpenLayers.Projection("EPSG:900913");
 
             // Create a new map
             this.map = new OpenLayers.Map("spatial-search-map" ,
@@ -117,27 +133,38 @@ CKAN.SpatialSearchForm = function($){
                 $("#ext_bbox").val('');
             });
 
-            var coords, bounds;
+            var bounds;
             // Check if there's a bbox from a previous search or a default
             // extent defined
-            if (this.bbox || this.defaultExtent) {
-                coords = (this.bbox) ? this.bbox.split(",") : this.defaultExtent.split(",");
-                bounds = new OpenLayers.Bounds(coords[0],coords[1],coords[2],coords[3]).transform(proj4326,proj900913);
+            if (this.bbox) {
+                var bboxBounds = getBoundsFromBbox(this.bbox);
+                var feature = new OpenLayers.Feature.Vector(
+                        bboxBounds.toGeometry()
+                );
+                vector_layer.addFeatures([feature]);
+                bounds = bboxBounds;
+            }
+
+            var previousExtent = getParameterByName("ext_prev_extent");
+            if (previousExtent && this.bbox){
+                bounds = getBoundsFromBbox(previousExtent);
+            } else if (this.defaultExtent) {
+                bounds = getBoundsFromBbox(this.defaultExtent);
             } else {
                 bounds = this.map.maxExtent;
             }
 
-            this.map.zoomToExtent(bounds);
+            this.map.zoomToExtent(bounds,true);
 
-            if (this.bbox) {
-                var feature = new OpenLayers.Feature.Vector(
-                        bounds.toGeometry()
-                );
-                vector_layer.addFeatures([feature]);
-            }
             this.map.addLayer(vector_layer);
 
+            this.map.events.register("moveend",this,function(e){
+                $("#ext_prev_extent").val(e.object.getExtent().transform(proj900913,proj4326).toBBOX());
+            });
+
             CKAN.SpatialSearchForm.mapInitialized = true;
+
+            this.map.events.triggerEvent("moveend");
         }
     }
 }(jQuery)
