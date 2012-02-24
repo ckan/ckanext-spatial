@@ -1,12 +1,16 @@
 import os
 from logging import getLogger
+from pylons import config
 from pylons.i18n import _
 from genshi.input import HTML
 from genshi.filters import Transformer
 
 import ckan.lib.helpers as h
 
+from ckan.lib.search import SearchError
 from ckan.lib.helpers import json
+
+from ckan import model
 
 from ckan.plugins import implements, SingletonPlugin
 from ckan.plugins import IRoutes
@@ -19,15 +23,14 @@ from ckan.logic.action.update import package_error_summary
 
 import html
 
-from ckanext.spatial.lib import save_package_extent
+from ckanext.spatial.lib import save_package_extent,validate_bbox, bbox_query
 from ckanext.spatial.model import setup as setup_model
 
 
 log = getLogger(__name__)
 
-class SpatialQuery(SingletonPlugin):
+class SpatialMetadata(SingletonPlugin):
 
-    implements(IRoutes, inherit=True)
     implements(IPackageController, inherit=True)
     implements(IConfigurable, inherit=True)
 
@@ -36,12 +39,6 @@ class SpatialQuery(SingletonPlugin):
         if not config.get('ckan.spatial.testing',False):
             setup_model()
 
-    def before_map(self, map):
-
-        map.connect('api_spatial_query', '/api/2/search/{register:dataset|package}/geo',
-            controller='ckanext.spatial.controllers.api:ApiController',
-            action='spatial_query')
-        return map
 
     def create(self, package):
         self.check_spatial_extra(package)
@@ -87,6 +84,67 @@ class SpatialQuery(SingletonPlugin):
 
     def delete(self, package):
         save_package_extent(package.id,None)
+
+class SpatialQuery(SingletonPlugin):
+
+    implements(IRoutes, inherit=True)
+    implements(IPackageController, inherit=True)
+
+    def before_map(self, map):
+
+        map.connect('api_spatial_query', '/api/2/search/{register:dataset|package}/geo',
+            controller='ckanext.spatial.controllers.api:ApiController',
+            action='spatial_query')
+        return map
+
+    def before_search(self,search_params):
+        if 'extras' in search_params and 'ext_bbox' in search_params['extras'] \
+            and search_params['extras']['ext_bbox']:
+
+            bbox = validate_bbox(search_params['extras']['ext_bbox'])
+            if not bbox:
+                raise SearchError('Wrong bounding box provided')
+
+            extents = bbox_query(bbox)
+
+            if extents.count() == 0:
+                # We don't need to perform the search
+                search_params['abort_search'] = True
+            else:
+                # We'll perform the existing search but also filtering by the ids
+                # of datasets within the bbox
+                bbox_query_ids = [extent.package_id for extent in extents]
+
+                q = search_params.get('q','')
+                new_q = '%s AND ' % q if q else ''
+                new_q += '(%s)' % ' OR '.join(['id:%s' % id for id in bbox_query_ids])
+
+                search_params['q'] = new_q
+
+        return search_params
+
+class SpatialQueryWidget(SingletonPlugin):
+
+    implements(IGenshiStreamFilter)
+
+    def filter(self, stream):
+        from pylons import request, tmpl_context as c
+        routes = request.environ.get('pylons.routes_dict')
+        if routes.get('controller') == 'package' and \
+            routes.get('action') == 'search':
+
+            data = {
+                'bbox': request.params.get('ext_bbox',''),
+                'default_extent': config.get('ckan.spatial.default_map_extent','')
+            }
+            stream = stream | Transformer('body//div[@id="dataset-search-ext"]')\
+                .append(HTML(html.SPATIAL_SEARCH_FORM % data))
+            stream = stream | Transformer('head')\
+                .append(HTML(html.SPATIAL_SEARCH_FORM_EXTRA_HEADER % data))
+            stream = stream | Transformer('body')\
+                .append(HTML(html.SPATIAL_SEARCH_FORM_EXTRA_FOOTER % data))
+
+        return stream
 
 
 class DatasetExtentMap(SingletonPlugin):
