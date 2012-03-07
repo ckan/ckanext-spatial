@@ -1,4 +1,5 @@
 import os
+import re
 from logging import getLogger
 from pylons import config
 from pylons.i18n import _
@@ -19,7 +20,6 @@ from ckan.plugins import IGenshiStreamFilter
 from ckan.plugins import IPackageController
 
 from ckan.logic import ValidationError
-from ckan.logic.action.update import package_error_summary
 
 import html
 
@@ -28,6 +28,26 @@ from ckanext.spatial.model import setup as setup_model
 
 
 log = getLogger(__name__)
+
+def package_error_summary(error_dict):
+    ''' Do some i18n stuff on the error_dict keys '''
+
+    def prettify(field_name):
+        field_name = re.sub('(?<!\w)[Uu]rl(?!\w)', 'URL',
+                            field_name.replace('_', ' ').capitalize())
+        return _(field_name.replace('_', ' '))
+
+    summary = {}
+    for key, error in error_dict.iteritems():
+        if key == 'resources':
+            summary[_('Resources')] = _('Package resource(s) invalid')
+        elif key == 'extras':
+            summary[_('Extras')] = _('Missing Value')
+        elif key == 'extras_validation':
+            summary[_('Extras')] = error[0]
+        else:
+            summary[_(prettify(key))] = error[0]
+    return summary
 
 class SpatialMetadata(SingletonPlugin):
 
