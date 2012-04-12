@@ -48,7 +48,7 @@ database (see the "Setting up PostGIS" section for details)
 Once this is done, you need to create the necessary DB tables running the
 following command (with your python env activated)::
 
-    paster spatial initdb [srid] --config=../ckan/development.ini
+    paster --plugin=ckanext-spatial spatial initdb [srid] --config=mysite.ini
 
 You can define the SRID of the geometry column. Default is 4326. If you
 are not familiar with projections, we recommend to use the default value.
@@ -96,8 +96,8 @@ Tests
 =====
 
 Please note that the tests currently only work with Postgres. You must use the
-test-core.ini located in the extension directory to run them. Most of the time
-you should run something like::
+test-core.ini located in the extension directory to run them and have the pyenv
+activated. Most of the time you should run something like::
 
     nosetests --ckan --with-pylons=test-core.ini ckanext/spatial/tests
 

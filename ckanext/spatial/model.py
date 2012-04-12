@@ -12,7 +12,7 @@ log = getLogger(__name__)
 
 package_extent_table = None
 
-DEFAULT_SRID = 4326
+DEFAULT_SRID = 4326 #(WGS 84)
 
 def setup(srid=None):
 
