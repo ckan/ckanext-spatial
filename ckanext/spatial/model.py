@@ -17,7 +17,7 @@ DEFAULT_SRID = 4326
 def setup(srid=None):
 
     if package_extent_table is None:
-        define_spatial_tables()
+        define_spatial_tables(srid)
         log.debug('Spatial tables defined in memory')
 
     if model.repo.are_tables_created():
@@ -54,11 +54,15 @@ class PackageExtent(DomainObject):
         self.package_id = package_id
         self.the_geom = the_geom
 
-def define_spatial_tables():
+def define_spatial_tables(db_srid=None):
 
     global package_extent_table
 
-    db_srid = int(config.get('ckan.spatial.srid', DEFAULT_SRID))
+    if not db_srid:
+        db_srid = int(config.get('ckan.spatial.srid', DEFAULT_SRID))
+    else:
+        db_srid = int(db_srid)
+
     package_extent_table = Table('package_extent', metadata,
                     Column('package_id', types.UnicodeText, primary_key=True),
                     GeometryExtensionColumn('the_geom', Geometry(2,srid=db_srid)))
