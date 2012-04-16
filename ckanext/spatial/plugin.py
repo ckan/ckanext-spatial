@@ -182,7 +182,7 @@ class DatasetExtentMap(SingletonPlugin):
             if extent:
                 data = {'extent': extent,
                         'title': _('Geographic extent')}
-                stream = stream | Transformer('body//div[@class="dataset"]')\
+                stream = stream | Transformer('body//div[@id="dataset"]')\
                     .append(HTML(html.PACKAGE_MAP % data))
                 stream = stream | Transformer('head')\
                     .append(HTML(html.PACKAGE_MAP_EXTRA_HEADER % data))
