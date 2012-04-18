@@ -91,6 +91,28 @@ Coordinates must be in latitude/longitude, e.g.::
 
     ckan.spatial.default_map_extent=-6.88,49.74,0.50,59.2
 
+SOLR Configuration
+------------------
+
+If using Spatial Query functionality then there is an additional SOLR/Lucene setting that should be used to set the limit on number of datasets searchable with a spatial value.
+
+The setting is ``maxBooleanClauses`` in the solrconfig.xml and the value is the number of datasets spatially searchable. The default is ``1024`` and this could be increased to say ``16384``. For a SOLR single core this will probably be at `/etc/solr/conf/solrconfig.xml`. For a multiple core set-up, there will me several solrconfig.xml files a couple of levels below `/etc/solr`. For that case, *ALL* of the cores' `solrconfig.xml` should have this setting at the new value. 
+
+Example::
+
+      <maxBooleanClauses>16384</maxBooleanClauses>
+
+This setting is needed because PostGIS spatial query results are fed into SOLR using a Boolean expression, and the parser for that has a limit. So if your spatial area contains more than the limit (of which the default is 1024) then you will get this error::
+
+ Dataset search error: ('SOLR returned an error running query...
+ 
+and in the SOLR logs you see::
+ 
+ too many boolean clauses
+ ...
+ Caused by: org.apache.lucene.search.BooleanQuery$TooManyClauses:
+ maxClauseCount is set to 1024
+
 
 Tests
 =====
