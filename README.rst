@@ -11,7 +11,7 @@ The following plugins are currently available:
 * Map widget showing a dataset extent (`dataset_extent_map`).
 * A Web Map Service (WMS) previewer (`wms_preview`).
 
-All plugins except the WMS previewer require the `spatial_metadata` plugin.
+**Note:** All plugins except the WMS previewer require the `spatial_metadata` plugin.
 
 
 Dependencies
@@ -53,21 +53,7 @@ following command (with your python env activated)::
 You can define the SRID of the geometry column. Default is 4326. If you
 are not familiar with projections, we recommend to use the default value.
 
-Problems you may find::
-
-    LINE 1: SELECT AddGeometryColumn('package_extent','the_geom', E'4326...
-           ^
-    HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
-     "SELECT AddGeometryColumn('package_extent','the_geom', %s, 'GEOMETRY', 2)" ('4326',)
-
-PostGIS was not installed correctly. Please check the "Setting up PostGIS" section.
-
-    ::
-    sqlalchemy.exc.ProgrammingError: (ProgrammingError) permission denied for relation spatial_ref_sys
-
-The user accessing the ckan database needs to be owner (or have
-permissions) of the geometry_columns and spatial_ref_sys tables
-
+Check the Troubleshooting_ section if you get errors at this stage.
 
 Plugins are configured as follows in the CKAN ini file (Add only the ones you
 are interested in)::
@@ -114,6 +100,41 @@ and in the SOLR logs you see::
  maxClauseCount is set to 1024
 
 
+Troubleshooting
+===============
+
+Here are some common problems you may find when installing or using the
+extension:
+
+* When initializing the spatial tables::
+
+    LINE 1: SELECT AddGeometryColumn('package_extent','the_geom', E'4326...
+           ^
+    HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+     "SELECT AddGeometryColumn('package_extent','the_geom', %s, 'GEOMETRY', 2)" ('4326',)
+
+
+  PostGIS was not installed correctly. Please check the "Setting up PostGIS" section.
+  ::
+
+    sqlalchemy.exc.ProgrammingError: (ProgrammingError) permission denied for relation spatial_ref_sys
+
+
+  The user accessing the ckan database needs to be owner (or have permissions) of the geometry_columns and spatial_ref_sys tables.
+
+* When performing a spatial query::
+
+    InvalidRequestError: SQL expression, column, or mapped entity expected - got '<class 'ckanext.spatial.model.PackageExtent'>'
+
+  The spatial model has not been loaded. You probably forgot to add the `spatial_metadata` plugin to your ini configuration file.
+  ::
+
+    InternalError: (InternalError) Operation on two geometries with different SRIDs
+
+  The spatial reference system of the database geometry column and the one used by CKAN differ. Remember, if you are using a different spatial reference system from the default one (WGS 84 lat/lon, EPSG:4326), you must define it in the configuration file as follows::
+
+    ckan.spatial.srid = 4258
+
 Tests
 =====
 
@@ -142,7 +163,7 @@ The commands should be run from the ckanext-spatial directory and expect
 a development.ini file to be present. Most of the time you will specify
 the config explicitly though::
 
-        paster extents update --config=../ckan/development.ini
+        paster spatial extents --config=../ckan/development.ini
 
 
 Spatial Query

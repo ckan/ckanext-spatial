@@ -4,6 +4,7 @@ from pprint import pprint
 from nose.tools import assert_equal, assert_raises
 from ckan.logic.action.create import package_create
 from ckan.logic.action.delete import package_delete
+from ckan.logic.schema import default_create_package_schema
 from ckan import model
 
 from ckan.model import Package, Session
@@ -40,7 +41,8 @@ class TestSpatialApi(ApiTestCase,SpatialTestBase,ControllerTestCase):
         return offset
 
     def test_basic_query(self):
-        context = {'model':model,'session':Session,'user':'tester','extras_as_string':True}
+        schema = default_create_package_schema()
+        context = {'model':model,'session':Session,'user':'tester','extras_as_string':True,'schema':schema,'api_version':2}
         package_dict = package_create(context,self.package_fixture_data)
 
         # Point inside bbox
@@ -99,7 +101,8 @@ class TestActionPackageSearch(SpatialTestBase,WsgiAppCase):
         model.repo.rebuild_db()
 
     def test_1_basic(self):
-        context = {'model':model,'session':Session,'user':'tester','extras_as_string':True}
+        schema = default_create_package_schema()
+        context = {'model':model,'session':Session,'user':'tester','extras_as_string':True,'schema':schema,'api_version':2}
         package_dict_1 = package_create(context,self.package_fixture_data_1)
         del context['package']
         package_dict_2 = package_create(context,self.package_fixture_data_2)
