@@ -11,3 +11,12 @@
     right: inherit;
     bottom: 3px !important;
 }
+
+#dataset-map-container div.olControlAttribution {
+    font-size: 9px;
+    font-family: helvetica,tahoma,verdana,sans-serif;
+    line-height: 12px;
+    left: 5px;
+    bottom: 3px;
+    color: #666;
+}

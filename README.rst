@@ -81,6 +81,9 @@ The Dataset Extent Map displays only on certain routes. By default it is just th
 
     ckan.spatial.dataset_extent_map.routes = package/read ckanext.dgu.controllers.package:PackageController/read
 
+The Dataset Extent Map provides two different map types. It defaults to 'osm' but if you have a license and apikey for 'os' then you can use that map type using this configuration::
+
+    ckan.spatial.dataset_extent_map.map_type = os
 
 SOLR Configuration
 ------------------

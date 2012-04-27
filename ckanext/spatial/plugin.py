@@ -174,6 +174,14 @@ class DatasetExtentMap(SingletonPlugin):
 
     def filter(self, stream):
         from pylons import request, tmpl_context as c
+        map_type = config.get('ckan.spatial.dataset_extent_map.map_type', 'osm')
+        if map_type == 'osm':
+            js_library_links = '<script type="text/javascript" src="/ckanext/spatial/js/openlayers/OpenLayers_dataset_map.js"></script>'
+            map_attribution = html.MAP_ATTRIBUTION_OSM
+        elif map_type == 'os':
+            js_library_links = '<script src="http://osinspiremappingprod.ordnancesurvey.co.uk/libraries/openlayers-openlayers-56e25fc/lib/OpenLayers.js" type="text/javascript"></script>'
+            map_attribution = '' # done in the js instead
+
         route_dict = request.environ.get('pylons.routes_dict')
         route = '%s/%s' % (route_dict.get('controller'), route_dict.get('action'))
         routes_to_filter = config.get('ckan.spatial.dataset_extent_map.routes', 'package/read').split(' ')
@@ -182,7 +190,10 @@ class DatasetExtentMap(SingletonPlugin):
             extent = c.pkg.extras.get('spatial',None)
             if extent:
                 data = {'extent': extent,
-                        'title': _('Geographic extent')}
+                        'title': _('Geographic extent'),
+                        'map_type': map_type,
+                        'js_library_links': js_library_links,
+                        'map_attribution': map_attribution}
                 stream = stream | Transformer('body//div[@id="dataset"]')\
                     .append(HTML(html.PACKAGE_MAP % data))
                 stream = stream | Transformer('head')\
