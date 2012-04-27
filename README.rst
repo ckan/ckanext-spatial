@@ -77,6 +77,11 @@ Coordinates must be in latitude/longitude, e.g.::
 
     ckan.spatial.default_map_extent=-6.88,49.74,0.50,59.2
 
+The Dataset Extent Map displays only on certain routes. By default it is just the 'Package' controller, 'read' method. To display it on other routes you can specify it in a space separated list like this::
+
+    ckan.spatial.dataset_extent_map.routes = package/read ckanext.dgu.controllers.package:PackageController/read
+
+
 SOLR Configuration
 ------------------
 

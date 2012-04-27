@@ -174,9 +174,10 @@ class DatasetExtentMap(SingletonPlugin):
 
     def filter(self, stream):
         from pylons import request, tmpl_context as c
-        routes = request.environ.get('pylons.routes_dict')
-        if routes.get('controller') == 'package' and \
-            routes.get('action') == 'read' and c.pkg.id:
+        route_dict = request.environ.get('pylons.routes_dict')
+        route = '%s/%s' % (route_dict.get('controller'), route_dict.get('action'))
+        routes_to_filter = config.get('ckan.spatial.dataset_extent_map.routes', 'package/read').split(' ')
+        if route in routes_to_filter and c.pkg.id:
 
             extent = c.pkg.extras.get('spatial',None)
             if extent:
