@@ -34,7 +34,7 @@ CKAN.DatasetMap = function($){
                 "fillColor":"#FCF6CF",
                 "strokeColor":"#B52",
                 "strokeWidth":2,
-                "fillOpacity":0.4,
+                "fillOpacity":0.4
 //            "pointRadius":7
             }
         },
