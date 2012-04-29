@@ -44,6 +44,7 @@ class TestSpatialApi(ApiTestCase,SpatialTestBase,ControllerTestCase):
         schema = default_create_package_schema()
         context = {'model':model,'session':Session,'user':'tester','extras_as_string':True,'schema':schema,'api_version':2}
         package_dict = package_create(context,self.package_fixture_data)
+        package_id = context.get('id')
 
         # Point inside bbox
         offset = self._offset_with_bbox()
@@ -52,7 +53,7 @@ class TestSpatialApi(ApiTestCase,SpatialTestBase,ControllerTestCase):
         res_dict = self.data_from_res(res)
 
         assert res_dict['count'] == 1
-        assert res_dict['results'][0] == package_dict['id']
+        assert res_dict['results'][0] == package_id
 
         # Point outside bbox
         offset = self._offset_with_bbox(-10,10,-20,20)
@@ -65,8 +66,7 @@ class TestSpatialApi(ApiTestCase,SpatialTestBase,ControllerTestCase):
 
         # Delete the package and ensure it does not come up on
         # search results
-        package_delete(context,{'id':package_dict['id']})
-
+        package_delete(context,{'id':package_id})
         offset = self._offset_with_bbox()
 
         res = self.app.get(offset, status=200)
