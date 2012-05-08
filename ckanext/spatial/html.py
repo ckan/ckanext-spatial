@@ -60,8 +60,8 @@ SPATIAL_SEARCH_FORM="""
     <div id="spatial-search-map-container">
         <div id="spatial-search-map">&nbsp;</div>
         <div id="spatial-search-toolbar">
-            <input type="button" id="draw-box" value="Select an area" class="pretty-button"/>
-            <input type="button" id="clear-box" value="Clear" class="pretty-button"/>
+            <input type="button" id="draw-box" value="Select an area" class="btn"/>
+            <input type="button" id="clear-box" value="Clear" class="btn"/>
             <div class="helper">Click on the 'Select' button to draw an area of interest. Use the map controls or the mouse wheel to zoom. Drag to pan the map.</div>
         </div>
     </div>
