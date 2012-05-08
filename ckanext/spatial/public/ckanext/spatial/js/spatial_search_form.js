@@ -117,16 +117,16 @@ CKAN.SpatialSearchForm = function($){
             $("#draw-box").click(function(){
                 if (!query.active){
                     query.activate();
-                    $("#draw-box").addClass("depressed");
+                    $("#draw-box").addClass("active");
                 } else {
-                    $("#draw-box").removeClass("depressed");
+                    $("#draw-box").removeClass("active");
                     query.deactivate();
                 }
             });
 
             $("#clear-box").click(function(){
                 if (query.active){
-                    $("#draw-box").removeClass("depressed");
+                    $("#draw-box").removeClass("active");
                     query.deactivate();
                 }
                 vector_layer.destroyFeatures();
@@ -212,7 +212,7 @@ OpenLayers.Control.BoxQuery = OpenLayers.Class(OpenLayers.Control, {
         // when user submits the form
         $("#ext_bbox").val(bounds.toBBOX());
 
-        $("#draw-box").removeClass("depressed");
+        $("#draw-box").removeClass("active");
         this.deactivate();
 
     }

@@ -58,13 +58,14 @@ SPATIAL_SEARCH_FORM="""
 <div id="spatial-search-show"><a href="#" class="more">Filter by location</a></div>
 <div id="spatial-search-container">
     <div id="spatial-search-map-container">
-        <div id="spatial-search-map">&nbsp;</div>
-        <div id="spatial-search-toolbar">
+        <div id="spatial-search-map" class="span3"></div>
+        <div id="spatial-search-toolbar" class="span3">
             <input type="button" id="draw-box" value="Select an area" class="btn"/>
             <input type="button" id="clear-box" value="Clear" class="btn"/>
             <div class="helper">Click on the 'Select' button to draw an area of interest. Use the map controls or the mouse wheel to zoom. Drag to pan the map.</div>
         </div>
     </div>
+    <div class="clearfix"></div>
     <div id="spatial-search-map-attribution">Map data CC-BY-SA by <a href="http://openstreetmap.org">OpenStreetMap</a> | Tiles by <a href="http://www.mapquest.com">MapQuest</a></div>
 </div>
 """

@@ -23,20 +23,17 @@
 
 
 #spatial-search-map-container {
-    float:left;
     margin-top: 10px;
     margin-bottom: 0px;
     width: 100%;
 }
 
 #spatial-search-map {
-    float:left;
     width: 300px;
     height: 200px;
 }
 
 #spatial-search-toolbar{
-    float:left;
     margin-left: 20px;
     width: 250px;
 }
