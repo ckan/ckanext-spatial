@@ -44,11 +44,11 @@ CKAN.DatasetMap = function($){
                 return false;
 
             // Setup some sizes
-            var width = $("#dataset").width();
+            var width = $(CKAN.DatasetMap.element).width();
             if (width > 1024) {
                 width = 1024;
             }
-            var height = width/2;
+            var height = ($(CKAN.DatasetMap.element).height() || width/2);
             $("#dataset-map-container").width(width);
             $("#dataset-map-container").height(height);
 

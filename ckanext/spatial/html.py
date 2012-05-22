@@ -4,7 +4,14 @@ MAP_VIEW="""
 </div>
 """
 
-PACKAGE_MAP="""
+PACKAGE_MAP_BASIC="""
+<div class="dataset-map subsection">
+<div id="dataset-map-container"></div>
+%(map_attribution)s
+</div>
+"""
+
+PACKAGE_MAP_EXTENDED="""
 <hr class="cleared" />
 <div class="dataset-map subsection">
 <h3>%(title)s</h3>
@@ -25,6 +32,7 @@ PACKAGE_MAP_EXTRA_FOOTER="""
         $(document).ready(function(){
             CKAN.DatasetMap.map_type = '%(map_type)s';
             CKAN.DatasetMap.extent = '%(extent)s';
+            CKAN.DatasetMap.element = '#%(element_id)s';
             CKAN.DatasetMap.setup();
         })
         //]]>

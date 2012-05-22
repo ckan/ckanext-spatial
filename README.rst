@@ -85,6 +85,11 @@ The Dataset Extent Map provides two different map types. It defaults to 'osm' bu
 
     ckan.spatial.dataset_extent_map.map_type = os
 
+The Dataset Extent Map will be inserted by default at the end of the dataset page. This can be changed by supplying an alternative element_id to the default::
+
+    ckan.spatial.dataset_extent_map.element_id = dataset
+
+
 SOLR Configuration
 ------------------
 
