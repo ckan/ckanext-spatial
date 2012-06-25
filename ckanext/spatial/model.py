@@ -1,12 +1,16 @@
 from logging import getLogger
 
+from sqlalchemy import types, Column, Table
+
+from geoalchemy import Geometry, GeometryColumn, GeometryDDL, GeometryExtensionColumn
+from geoalchemy.postgis import PGComparator
+
+
 from ckan.lib.base import config
 from ckan import model
 from ckan.model import Session
-from ckan.model.meta import *
+from ckan.model import meta
 from ckan.model.domain_object import DomainObject
-from geoalchemy import *
-from geoalchemy.postgis import PGComparator
 
 log = getLogger(__name__)
 
@@ -21,8 +25,8 @@ def setup(srid=None):
         log.debug('Spatial tables defined in memory')
 
     if model.repo.are_tables_created():
-        if not Table('geometry_columns',metadata).exists() or \
-            not Table('spatial_ref_sys',metadata).exists():
+        if not Table('geometry_columns',meta.metadata).exists() or \
+            not Table('spatial_ref_sys',meta.metadata).exists():
             raise Exception('The spatial extension is enabled, but PostGIS ' + \
                     'has not been set up in the database. ' + \
                     'Please refer to the "Setting up PostGIS" section in the README.')
@@ -63,12 +67,12 @@ def define_spatial_tables(db_srid=None):
     else:
         db_srid = int(db_srid)
 
-    package_extent_table = Table('package_extent', metadata,
+    package_extent_table = Table('package_extent', meta.metadata,
                     Column('package_id', types.UnicodeText, primary_key=True),
                     GeometryExtensionColumn('the_geom', Geometry(2,srid=db_srid)))
 
 
-    mapper(PackageExtent, package_extent_table, properties={
+    meta.mapper(PackageExtent, package_extent_table, properties={
             'the_geom': GeometryColumn(package_extent_table.c.the_geom,
                                             comparator=PGComparator)})
 
