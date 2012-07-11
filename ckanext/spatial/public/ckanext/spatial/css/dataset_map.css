@@ -1,9 +1,13 @@
-.dataset-map {
-    padding-bottom: 10px
+.module-narrow #dataset-map-container{
+  height: 200px;
 }
 
 #dataset-map-attribution{
     font-size: x-small;
+}
+
+.module-narrow #dataset-map-attribution{
+  margin-left: 3px;
 }
 
 .olControlAttribution {

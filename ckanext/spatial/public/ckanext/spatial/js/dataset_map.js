@@ -3,7 +3,7 @@ var CKAN = CKAN || {};
 CKAN.DatasetMap = function($){
 
     // Private
-    
+
     var getGeomType = function(feature){
         return feature.geometry.CLASS_NAME.split(".").pop().toLowerCase()
     }
@@ -43,6 +43,9 @@ CKAN.DatasetMap = function($){
             if (!this.extent)
                 return false;
 
+            CKAN.DatasetMap.map_type = CKAN.DatasetMap.map_type || "osm";
+            CKAN.DatasetMap.element = CKAN.DatasetMap.element || "#dataset-map-container";
+
             // Setup some sizes
             var width = $(CKAN.DatasetMap.element).width();
             if (width > 1024) {
@@ -51,6 +54,8 @@ CKAN.DatasetMap = function($){
             var height = ($(CKAN.DatasetMap.element).height() || width/2);
             $("#dataset-map-container").width(width);
             $("#dataset-map-container").height(height);
+
+            var showZoomControls = (width > 300);
 
             if (this.map_type=='osm') {
                 var mapquestTiles = [
@@ -72,12 +77,12 @@ CKAN.DatasetMap = function($){
                     "numZoomLevels": 18,
                     "maxResolution": 156543.0339,
                     "maxExtent": new OpenLayers.Bounds(-20037508, -20037508, 20037508, 20037508.34),
-                    "controls": [ 
-                        new OpenLayers.Control.PanZoom(),
+                    "controls": [
                         new OpenLayers.Control.Navigation()
                     ],
                     "theme":"/ckanext/spatial/js/openlayers/theme/default/style.css"
                 });
+                if (showZoomControls) this.map.addControl(new OpenLayers.Control.PanZoom());
                 var internalProjection = new OpenLayers.Projection("EPSG:900913");
             } else if (this.map_type=='os') {
 
@@ -120,7 +125,7 @@ CKAN.DatasetMap = function($){
                 var internalProjection = new OpenLayers.Projection("EPSG:4258");
             }
             this.map.addLayers(layers);
-            
+
             var geojson_format = new OpenLayers.Format.GeoJSON({
                 "internalProjection": internalProjection,
                 "externalProjection": new OpenLayers.Projection("EPSG:4326")
@@ -135,15 +140,15 @@ CKAN.DatasetMap = function($){
                     "projection": new OpenLayers.Projection("EPSG:4326"),
                     "styleMap": getStyle(geom_type)
                 }
-            ); 
-            
+            );
+
             this.map.addLayer(vector_layer);
             vector_layer.addFeatures(features);
             if (geom_type == "point"){
                 this.map.setCenter(new OpenLayers.LonLat(features[0].geometry.x,features[0].geometry.y),
                                    this.map.numZoomLevels/2)
             } else {
-                this.map.zoomToExtent(vector_layer.getDataExtent()); 
+                this.map.zoomToExtent(vector_layer.getDataExtent());
             }
 
 
