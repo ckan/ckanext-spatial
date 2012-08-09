@@ -24,7 +24,7 @@ def setup(srid=None):
         define_spatial_tables(srid)
         log.debug('Spatial tables defined in memory')
 
-    if model.repo.are_tables_created():
+    if model.package_table.exists():
         if not Table('geometry_columns',meta.metadata).exists() or \
             not Table('spatial_ref_sys',meta.metadata).exists():
             raise Exception('The spatial extension is enabled, but PostGIS ' + \
