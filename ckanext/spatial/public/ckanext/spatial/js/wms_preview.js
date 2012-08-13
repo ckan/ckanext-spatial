@@ -9,14 +9,41 @@ CKAN.WMSPreview = function($){
 
     var proxy = "/proxy?url=";
 
-    var getURL = function(server,version){
+    var getParameterByName = function(name,query_string) {
+      query_string = query_string || window.location.search;
+      var match = RegExp('[?&]' + name + '=([^&]*)')
+                    .exec(query_string);
+      return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+    }
+
+    var cleanUrl = function(server){
+      var qs;
+      if (server.indexOf("?") !== -1)
+        parts = server.split("?");
+        server = parts[0];
+        qs = parts[1];
+
+      var mapParam = getParameterByName("map", "?" + qs);
+      if (mapParam)
+        server = server + "?map=" + mapParam;
+
+      return server;
+    }
+
+    var getCapabilitiesUrl = function(server,version){
+
+        version = version || defaultVersion;
+
         if (server.indexOf("?") === -1)
             server += "?"
+        if (server.indexOf("=") !== -1)
+            server += "&"
 
         var url  = server +
                    "SERVICE=WMS" +
                    "&REQUEST=GetCapabilities" +
-                   "&VERSION=" + defaultVersion
+                   "&VERSION=" + version;
+
         return (proxy) ? proxy + escape(url) : url;
     }
 
@@ -35,13 +62,13 @@ CKAN.WMSPreview = function($){
     return {
         map: null,
         setup: function(server){
-            if (server.indexOf("?") !== -1)
-              server = server.split("?")[0];
 
-            var url = getURL(server);
+            var wmsUrl = cleanUrl(server);
+
+            var capabilitiesUrl = getCapabilitiesUrl(wmsUrl);
 
             var self = this;
-            $.get(url,function(data){
+            $.get(capabilitiesUrl,function(data){
                 // Most WMS Servers will return the version they prefer,
                 // regardless of which one you requested, so better check
                 // for the actual version returned.
@@ -73,7 +100,7 @@ CKAN.WMSPreview = function($){
                         if (layer.minScale && (layer.minScale < minScale || minScale === false)) minScale = layer.minScale;
                         olLayers.push(new OpenLayers.Layer.WMS(
                             layer.title,
-                            server,
+                            wmsURL,
                             {"layers": layer.name,
                             "format": getFormat(layer.formats),
                             "transparent":true
