@@ -4,7 +4,7 @@ CKAN.WMSPreview = function($){
 
     // Private
     var defaultVersion = "1.3.0";
-    
+
     var preferredFormat = "image/png";
 
     var proxy = "/proxy?url=";
@@ -13,8 +13,8 @@ CKAN.WMSPreview = function($){
         if (server.indexOf("?") === -1)
             server += "?"
 
-        var url  = server + 
-                   "SERVICE=WMS" + 
+        var url  = server +
+                   "SERVICE=WMS" +
                    "&REQUEST=GetCapabilities" +
                    "&VERSION=" + defaultVersion
         return (proxy) ? proxy + escape(url) : url;
@@ -30,14 +30,16 @@ CKAN.WMSPreview = function($){
     }
 
 
-    
+
     // Public
     return {
         map: null,
         setup: function(server){
+            if (server.indexOf("?") !== -1)
+              server = server.split("?")[0];
 
             var url = getURL(server);
-            
+
             var self = this;
             $.get(url,function(data){
                 // Most WMS Servers will return the version they prefer,
@@ -52,7 +54,7 @@ CKAN.WMSPreview = function($){
                 var capabilities = format.read(data);
                 if (capabilities.capability){
                     var layers = capabilities.capability.layers;
-                    
+
                     var olLayers = [];
                     var maxExtent = false;
                     var maxScale = false;
@@ -84,7 +86,7 @@ CKAN.WMSPreview = function($){
                             "visibility": (count == 0)
                             })  //Tiled?
                       );
-                       
+
                     }
 
                     var dummyLayer = new OpenLayers.Layer("Dummy",{
@@ -93,15 +95,12 @@ CKAN.WMSPreview = function($){
                             "isBaseLayer":true,
                             "visibility":false,
                             "minScale": (minScale) ? minScale : null,
-                            "maxScale": (maxScale) ? maxScale : null                           
+                            "maxScale": (maxScale) ? maxScale : null
                     });
                     olLayers.push(dummyLayer);
 
-                    // Setup some sizes
-                    w = $("#content").width();
-                    if (w > 1024) w = 1024;
-                    $("#map").width(w);
-                    $("#map").height(500);
+                    $("#ckanext-datapreview").empty();
+                    $("#ckanext-datapreview").append($("<div></div>").attr("id","map"));
 
                     // Create a new map
                     self.map = new OpenLayers.Map("map" ,
@@ -122,11 +121,11 @@ CKAN.WMSPreview = function($){
                             ],
                             "theme":"/ckanext/spatial/js/openlayers/theme/default/style.css"
                         });
- 
+
                     self.map.maxExtent = maxExtent;
                     self.map.addLayers(olLayers);
 
-                    self.map.zoomTo(1); 
+                    self.map.zoomTo(1);
                 } else {
                   $("#main").prepend(
                         $("<div></div>").attr("class","flash-banner-box").append(
