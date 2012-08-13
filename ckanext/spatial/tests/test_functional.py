@@ -14,6 +14,11 @@ log = logging.getLogger(__name__)
 
 
 class TestPackageController(FunctionalTestCase,SpatialTestBase):
+
+    @classmethod
+    def setup_class(cls):
+        cls.extra_environ = {'REMOTE_USER': 'annafan'}
+
     def setup(self):
         CreateTestData.create()
 
@@ -24,7 +29,7 @@ class TestPackageController(FunctionalTestCase,SpatialTestBase):
         name = 'test-spatial-dataset-1'
 
         offset = url_for(controller='package', action='new')
-        res = self.app.get(offset)
+        res = self.app.get(offset, extra_environ=self.extra_environ)
         assert 'Add - Datasets' in res
         fv = res.forms['dataset-edit']
         prefix = ''
@@ -32,7 +37,7 @@ class TestPackageController(FunctionalTestCase,SpatialTestBase):
         fv[prefix+'extras__0__key'] = u'spatial'
         fv[prefix+'extras__0__value'] = self.geojson_examples['point']
 
-        res = fv.submit('save')
+        res = fv.submit('save', extra_environ=self.extra_environ)
         assert not 'Error' in res, res
 
         package = Package.get(name)
@@ -52,7 +57,7 @@ class TestPackageController(FunctionalTestCase,SpatialTestBase):
         name = 'test-spatial-dataset-2'
 
         offset = url_for(controller='package', action='new')
-        res = self.app.get(offset)
+        res = self.app.get(offset, extra_environ=self.extra_environ)
         assert 'Add - Datasets' in res
         fv = res.forms['dataset-edit']
         prefix = ''
@@ -60,7 +65,7 @@ class TestPackageController(FunctionalTestCase,SpatialTestBase):
         fv[prefix+'extras__0__key'] = u'spatial'
         fv[prefix+'extras__0__value'] = u'{"Type":Bad Json]'
 
-        res = fv.submit('save')
+        res = fv.submit('save', extra_environ=self.extra_environ)
         assert 'Error' in res, res
         assert 'Spatial' in res
         assert 'Error decoding JSON object' in res
@@ -72,7 +77,7 @@ class TestPackageController(FunctionalTestCase,SpatialTestBase):
         name = 'test-spatial-dataset-3'
 
         offset = url_for(controller='package', action='new')
-        res = self.app.get(offset)
+        res = self.app.get(offset, extra_environ=self.extra_environ)
         assert 'Add - Datasets' in res
         fv = res.forms['dataset-edit']
         prefix = ''
@@ -80,7 +85,7 @@ class TestPackageController(FunctionalTestCase,SpatialTestBase):
         fv[prefix+'extras__0__key'] = u'spatial'
         fv[prefix+'extras__0__value'] = u'{"Type":"Bad_GeoJSON","a":2}'
 
-        res = fv.submit('save')
+        res = fv.submit('save', extra_environ=self.extra_environ)
         assert 'Error' in res, res
         assert 'Spatial' in res
         assert 'Error creating geometry' in res
@@ -93,14 +98,14 @@ class TestPackageController(FunctionalTestCase,SpatialTestBase):
         name = 'annakarenina'
 
         offset = url_for(controller='package', action='edit',id=name)
-        res = self.app.get(offset)
+        res = self.app.get(offset, extra_environ=self.extra_environ)
         assert 'Edit - Datasets' in res
         fv = res.forms['dataset-edit']
         prefix = ''
         fv[prefix+'extras__1__key'] = u'spatial'
         fv[prefix+'extras__1__value'] = self.geojson_examples['point']
 
-        res = fv.submit('save')
+        res = fv.submit('save', extra_environ=self.extra_environ)
         assert not 'Error' in res, res
 
         package = Package.get(name)
@@ -117,13 +122,13 @@ class TestPackageController(FunctionalTestCase,SpatialTestBase):
 
         # Update the spatial extra
         offset = url_for(controller='package', action='edit',id=name)
-        res = self.app.get(offset)
+        res = self.app.get(offset, extra_environ=self.extra_environ)
         assert 'Edit - Datasets' in res
         fv = res.forms['dataset-edit']
         prefix = ''
         fv[prefix+'extras__1__value'] = self.geojson_examples['polygon']
 
-        res = fv.submit('save')
+        res = fv.submit('save', extra_environ=self.extra_environ)
         assert not 'Error' in res, res
 
         # Check that the PackageExtent object has been updated

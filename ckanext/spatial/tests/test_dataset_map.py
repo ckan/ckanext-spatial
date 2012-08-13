@@ -16,18 +16,19 @@ class TestDatasetMap(FunctionalTestCase,SpatialTestBase):
 
     def test_map_shown(self):
         CreateTestData.create()
-
+        
+        extra_environ = {'REMOTE_USER': 'annafan'}
         name = 'annakarenina'
 
         offset = url_for(controller='package', action='edit',id=name)
-        res = self.app.get(offset)
+        res = self.app.get(offset, extra_environ=extra_environ)
         assert 'Edit - Datasets' in res
         fv = res.forms['dataset-edit']
         prefix = ''
         fv[prefix+'extras__1__key'] = u'spatial'
         fv[prefix+'extras__1__value'] = self.geojson_examples['point']
 
-        res = fv.submit('save')
+        res = fv.submit('save', extra_environ=extra_environ)
         assert not 'Error' in res, res
 
         # Load the dataset page and check if the libraries have been loaded
