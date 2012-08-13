@@ -17,7 +17,7 @@ class ViewController(BaseController):
             abort(404, 'Dataset not found')
 
         for res in c.pkg.resources:
-            if res.format == "WMS":
+            if res.format.lower() == 'wms':
                 c.wms_url = res.url if not '?' in res.url else res.url.split('?')[0]
                 break
         if not c.wms_url:
