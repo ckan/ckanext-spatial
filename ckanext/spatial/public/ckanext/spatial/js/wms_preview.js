@@ -100,7 +100,7 @@ CKAN.WMSPreview = function($){
                         if (layer.minScale && (layer.minScale < minScale || minScale === false)) minScale = layer.minScale;
                         olLayers.push(new OpenLayers.Layer.WMS(
                             layer.title,
-                            wmsURL,
+                            wmsUrl,
                             {"layers": layer.name,
                             "format": getFormat(layer.formats),
                             "transparent":true
