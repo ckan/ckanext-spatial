@@ -18,10 +18,11 @@ CKAN.WMSPreview = function($){
 
     var cleanUrl = function(server){
       var qs;
-      if (server.indexOf("?") !== -1)
+      if (server.indexOf("?") !== -1){
         parts = server.split("?");
         server = parts[0];
         qs = parts[1];
+      }
 
       var mapParam = getParameterByName("map", "?" + qs);
       if (mapParam)
