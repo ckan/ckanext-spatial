@@ -68,7 +68,7 @@ the EPSG code as an integer (e.g 4326, 4258, 27700, etc). It defaults to
     ckan.spatial.srid = 4326
 
 If you want to define a default map extent for the different map widgets,
-(e.g. if you are running a national instace of CKAN) you can do so adding
+(e.g. if you are running a national instance of CKAN) you can do so adding
 this configuration option::
 
     ckan.spatial.default_map_extent=<minx>,<miny>,<maxx>,<maxy>
