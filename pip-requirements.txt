@@ -1,2 +1,5 @@
 GeoAlchemy>=0.6
 Shapely>=1.2.13
+owslib
+lxml<=2.2.99
+argparse

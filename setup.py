@@ -24,13 +24,17 @@ setup(
 	],
 	entry_points=\
 	"""
+    [console_scripts]
+    cswinfo = ckanext.spatial.commands.cswinfo:cswinfo
+
     [ckan.plugins]
-	# Add plugins here, eg
     spatial_metadata=ckanext.spatial.plugin:SpatialMetadata
     spatial_query=ckanext.spatial.plugin:SpatialQuery
     spatial_query_widget=ckanext.spatial.plugin:SpatialQueryWidget
     dataset_extent_map=ckanext.spatial.plugin:DatasetExtentMap
     wms_preview=ckanext.spatial.nongeos_plugin:WMSPreview
+    cswserver=ckanext.spatial.plugin:CatalogueServiceWeb
+
     [paste.paster_command]
     spatial=ckanext.spatial.commands.spatial:Spatial
 	""",
