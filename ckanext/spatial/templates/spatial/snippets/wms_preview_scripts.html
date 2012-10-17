@@ -1,3 +1,8 @@
-<script type="text/javascript" src="/ckanext/spatial/js/openlayers/OpenLayers_wms_preview.js"></script>
-<script type="text/javascript" src="/ckanext/spatial/js/wms_preview.js"></script>
-
+<script src="{% url_for_static '/base/vendor/jquery.js' %}"></script>
+<script src="{% url_for_static '/ckanext/spatial/js/openlayers/OpenLayers_wms_preview.js' %}"></script>
+<script src="{% url_for_static '/ckanext/spatial/js/wms_preview.js' %}"></script>
+<script>
+  $(document).ready(function(){
+    CKAN.WMSPreview.setup(preload_resource.url);
+  })
+</script>

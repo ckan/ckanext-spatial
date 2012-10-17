@@ -127,8 +127,8 @@ CKAN.WMSPreview = function($){
                     });
                     olLayers.push(dummyLayer);
 
-                    $("#ckanext-datapreview").empty();
-                    $("#ckanext-datapreview").append($("<div></div>").attr("id","map"));
+                    $("#datapreview").empty();
+                    $("#datapreview").append($("<div></div>").attr("id","map"));
 
                     // Create a new map
                     self.map = new OpenLayers.Map("map" ,
