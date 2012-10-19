@@ -1,0 +1,539 @@
+<?xml version='1.0' encoding='ASCII'?>
+<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:geonet="http://www.fao.org/geonetwork" xmlns:csw="http://www.opengis.net/cat/csw/2.0.2" xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd">
+    <gmd:fileIdentifier xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml">
+      <gco:CharacterString>be06a48d-36fa-4369-a585-7fcc319db4c0-new</gco:CharacterString>
+    </gmd:fileIdentifier>
+    <gmd:language>
+      <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/php/code_list.php" codeListValue="eng">English</gmd:LanguageCode>
+    </gmd:language>
+    <gmd:hierarchyLevel>
+      <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode" codeListValue="dataset"/>
+    </gmd:hierarchyLevel>
+    <gmd:contact>
+      -
+      <gmd:CI_ResponsibleParty>
+        <gmd:organisationName>
+          <gco:CharacterString>Spatial Evidence Officer</gco:CharacterString>
+        </gmd:organisationName>
+        <gmd:contactInfo>
+          -
+          <gmd:CI_Contact>
+            <gmd:phone>
+              -
+              <gmd:CI_Telephone>
+                <gmd:voice>
+                  <gco:CharacterString>01248 385500</gco:CharacterString>
+                </gmd:voice>
+              </gmd:CI_Telephone>
+            </gmd:phone>
+            <gmd:address>
+              -
+              <gmd:CI_Address>
+                <gmd:deliveryPoint>
+                  <gco:CharacterString>Countryside Council for Wales</gco:CharacterString>
+                </gmd:deliveryPoint>
+                <gmd:deliveryPoint>
+                  <gco:CharacterString>Maes-y-Ffynnon</gco:CharacterString>
+                </gmd:deliveryPoint>
+                <gmd:administrativeArea>
+                  <gco:CharacterString>LL57 2DW</gco:CharacterString>
+                </gmd:administrativeArea>
+                <gmd:postalCode>
+                  <gco:CharacterString>LL57 2DW</gco:CharacterString>
+                </gmd:postalCode>
+                <gmd:electronicMailAddress>
+                  <gco:CharacterString>enquiries@ccw.gov.uk</gco:CharacterString>
+                </gmd:electronicMailAddress>
+              </gmd:CI_Address>
+            </gmd:address>
+          </gmd:CI_Contact>
+        </gmd:contactInfo>
+        <gmd:role>
+          <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode" codeListValue="pointOfContact"/>
+        </gmd:role>
+      </gmd:CI_ResponsibleParty>
+    </gmd:contact>
+    <gmd:dateStamp>
+      <gco:DateTime xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:gml="http://www.opengis.net/gml">2011-10-29T17:14:04</gco:DateTime>
+    </gmd:dateStamp>
+    <gmd:metadataStandardName>
+      <gco:CharacterString>Gemini</gco:CharacterString>
+    </gmd:metadataStandardName>
+    <gmd:metadataStandardVersion>
+      <gco:CharacterString>2.1</gco:CharacterString>
+    </gmd:metadataStandardVersion>
+    <gmd:referenceSystemInfo>
+      -
+      <gmd:MD_ReferenceSystem>
+        -
+        <gmd:referenceSystemIdentifier>
+          -
+          <gmd:RS_Identifier>
+            <gmd:code>
+              <gco:CharacterString>urn:ogc:def:crs:EPSG::Nat. Grid GB</gco:CharacterString>
+            </gmd:code>
+            <gmd:codeSpace>
+              <gco:CharacterString>OGP</gco:CharacterString>
+            </gmd:codeSpace>
+          </gmd:RS_Identifier>
+        </gmd:referenceSystemIdentifier>
+      </gmd:MD_ReferenceSystem>
+    </gmd:referenceSystemInfo>
+    <gmd:identificationInfo>
+      <gmd:MD_DataIdentification id="98742">
+        <gmd:citation>
+          -
+          <gmd:CI_Citation>
+            <gmd:title>
+              <gco:CharacterString>Protected sites: Country Parks - GIS dataset</gco:CharacterString>
+            </gmd:title>
+            <gmd:alternateTitle>
+              <gco:CharacterString>Parciau Cenedlaethol - Set Ddata SGDd</gco:CharacterString>
+            </gmd:alternateTitle>
+            <gmd:alternateTitle>
+              <gco:CharacterString>Sites (Country Parks)</gco:CharacterString>
+            </gmd:alternateTitle>
+            <gmd:date>
+              -
+              <gmd:CI_Date>
+                -
+                <gmd:date>
+                  <gco:Date>2009-00-00</gco:Date>
+                </gmd:date>
+                -
+                <gmd:dateType>
+                  <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode" codeListValue="publication"/>
+                </gmd:dateType>
+              </gmd:CI_Date>
+            </gmd:date>
+            <gmd:date>
+              -
+              <gmd:CI_Date>
+                -
+                <gmd:date>
+                  <gco:Date>2009-01-01</gco:Date>
+                </gmd:date>
+                -
+                <gmd:dateType>
+                  <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode" codeListValue="revision"/>
+                </gmd:dateType>
+              </gmd:CI_Date>
+            </gmd:date>
+            <gmd:identifier>
+              <gmd:RS_Identifier>
+                <gmd:code>
+                  <gco:CharacterString>98742</gco:CharacterString>
+                </gmd:code>
+                <gmd:codeSpace>
+                  <gco:CharacterString>http://www.ccw.gov.uk</gco:CharacterString>
+                </gmd:codeSpace>
+              </gmd:RS_Identifier>
+            </gmd:identifier>
+          </gmd:CI_Citation>
+        </gmd:citation>
+        <gmd:abstract>
+          <gco:CharacterString>This is a GIS dataset containing spatial objects such as points, lines, and polygons. It contains digital boundaries of country parks. There are about 250 recognised Country Parks in England and Wales. Most Country Parks were designated in the 1970s, under the Countryside Act 1968 with the support of the former Countryside Commission. In more recent times there has been no specific financial support for country parks directly, and fewer have been designated. Most are managed by local authorities, although other organisations and private individuals can also run them. A Country Park is an area designated for people to visit and enjoy recreation in a countryside environment. The purpose of a country park is to provide somewhere for visitors who do not necessarily want to go out into the wider countryside. Visitors can enjoy a public open space with an informal atmosphere, as opposed to a formal park as might be found in an urban area. For this reason country parks are usually found close to or on the edge of built-up areas, and rarely in the countryside proper.</gco:CharacterString>
+        </gmd:abstract>
+        <gmd:pointOfContact>
+          -
+          <gmd:CI_ResponsibleParty>
+            <gmd:organisationName>
+              <gco:CharacterString>Countryside Council for Wales (CCW)</gco:CharacterString>
+            </gmd:organisationName>
+            <gmd:contactInfo>
+              -
+              <gmd:CI_Contact>
+                <gmd:phone>
+                  -
+                  <gmd:CI_Telephone>
+                    <gmd:voice>
+                      <gco:CharacterString>01248 385500</gco:CharacterString>
+                    </gmd:voice>
+                  </gmd:CI_Telephone>
+                </gmd:phone>
+                <gmd:address>
+                  -
+                  <gmd:CI_Address>
+                    <gmd:deliveryPoint>
+                      <gco:CharacterString>Countryside Council for Wales</gco:CharacterString>
+                    </gmd:deliveryPoint>
+                    <gmd:deliveryPoint>
+                      <gco:CharacterString>Maes y Ffynnon</gco:CharacterString>
+                    </gmd:deliveryPoint>
+                    <gmd:city>
+                      <gco:CharacterString>Bangor</gco:CharacterString>
+                    </gmd:city>
+                    <gmd:administrativeArea>
+                      <gco:CharacterString>Gwynedd</gco:CharacterString>
+                    </gmd:administrativeArea>
+                    <gmd:postalCode>
+                      <gco:CharacterString>LL56 2DW</gco:CharacterString>
+                    </gmd:postalCode>
+                    <gmd:electronicMailAddress>
+                      <gco:CharacterString>enquiries@ccw.gov.uk</gco:CharacterString>
+                    </gmd:electronicMailAddress>
+                  </gmd:CI_Address>
+                </gmd:address>
+              </gmd:CI_Contact>
+            </gmd:contactInfo>
+            <gmd:role>
+              <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode" codeListValue="originator"/>
+            </gmd:role>
+          </gmd:CI_ResponsibleParty>
+        </gmd:pointOfContact>
+        <gmd:resourceMaintenance>
+          -
+          <gmd:MD_MaintenanceInformation>
+            <gmd:maintenanceAndUpdateFrequency>
+              <gmd:MD_MaintenanceFrequencyCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_MaintenanceFrequencyCode" codeListValue="asNeeded"/>
+            </gmd:maintenanceAndUpdateFrequency>
+          </gmd:MD_MaintenanceInformation>
+        </gmd:resourceMaintenance>
+        <gmd:graphicOverview xmlns:srv="http://www.isotc211.org/2005/srv">
+          <gmd:MD_BrowseGraphic>
+            <gmd:fileName>
+              <gco:CharacterString>CCW_Countryparks_s.png</gco:CharacterString>
+            </gmd:fileName>
+            <gmd:fileDescription>
+              <gco:CharacterString>thumbnail</gco:CharacterString>
+            </gmd:fileDescription>
+            <gmd:fileType>
+              <gco:CharacterString>png</gco:CharacterString>
+            </gmd:fileType>
+          </gmd:MD_BrowseGraphic>
+        </gmd:graphicOverview>
+        <gmd:graphicOverview xmlns:srv="http://www.isotc211.org/2005/srv">
+          <gmd:MD_BrowseGraphic>
+            <gmd:fileName>
+              <gco:CharacterString>CCW_Countryparks.png</gco:CharacterString>
+            </gmd:fileName>
+            <gmd:fileDescription>
+              <gco:CharacterString>large_thumbnail</gco:CharacterString>
+            </gmd:fileDescription>
+            <gmd:fileType>
+              <gco:CharacterString>png</gco:CharacterString>
+            </gmd:fileType>
+          </gmd:MD_BrowseGraphic>
+        </gmd:graphicOverview>
+        <gmd:resourceFormat>
+          -
+          <gmd:MD_Format>
+            <gmd:name>
+              <gco:CharacterString>CCW website; cd; dvd</gco:CharacterString>
+            </gmd:name>
+            <gmd:version gco:nilReason="inapplicable"/>
+          </gmd:MD_Format>
+        </gmd:resourceFormat>
+        <gmd:descriptiveKeywords>
+          -
+          <gmd:MD_Keywords>
+            <gmd:keyword>
+              <gco:CharacterString>Protected sites</gco:CharacterString>
+            </gmd:keyword>
+            <gmd:thesaurusName>
+              -
+              <gmd:CI_Citation>
+                <gmd:title>
+                  <gco:CharacterString>GEMET - INSPIRE themes, version 1.0</gco:CharacterString>
+                </gmd:title>
+                <gmd:date>
+                  -
+                  <gmd:CI_Date>
+                    -
+                    <gmd:date>
+                      <gco:Date>2011-07-05</gco:Date>
+                    </gmd:date>
+                    -
+                    <gmd:dateType>
+                      <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode" codeListValue="publication"/>
+                    </gmd:dateType>
+                  </gmd:CI_Date>
+                </gmd:date>
+              </gmd:CI_Citation>
+            </gmd:thesaurusName>
+          </gmd:MD_Keywords>
+        </gmd:descriptiveKeywords>
+        <gmd:descriptiveKeywords>
+          -
+          <gmd:MD_Keywords>
+            <gmd:keyword>
+              <gco:CharacterString>Biodiversity</gco:CharacterString>
+            </gmd:keyword>
+            <gmd:keyword>
+              <gco:CharacterString>Country parks</gco:CharacterString>
+            </gmd:keyword>
+            <gmd:keyword>
+              <gco:CharacterString>Nature conservation</gco:CharacterString>
+            </gmd:keyword>
+            <gmd:thesaurusName>
+              -
+              <gmd:CI_Citation>
+                <gmd:title>
+                  <gco:CharacterString>Integrated Public Sector Vocabulary (IPSV)</gco:CharacterString>
+                </gmd:title>
+                <gmd:date>
+                  -
+                  <gmd:CI_Date>
+                    -
+                    <gmd:date>
+                      <gco:Date>2011-07-05</gco:Date>
+                    </gmd:date>
+                    -
+                    <gmd:dateType>
+                      <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode" codeListValue="publication"/>
+                    </gmd:dateType>
+                  </gmd:CI_Date>
+                </gmd:date>
+              </gmd:CI_Citation>
+            </gmd:thesaurusName>
+          </gmd:MD_Keywords>
+        </gmd:descriptiveKeywords>
+        <gmd:resourceConstraints>
+          <gmd:MD_Constraints>
+            <gmd:useLimitation>
+              <gco:CharacterString>CCGC/CCW 2004. You may reproduce this dataset free of charge for non-commercial and internal business purposes in any format or medium, provided that you do so accurately, acknowledging both the source and CCW's copyright, and do not use it in a misleading context. To avoid using old information, we recommend that you obtain the latest version from the original source.</gco:CharacterString>
+            </gmd:useLimitation>
+          </gmd:MD_Constraints>
+        </gmd:resourceConstraints>
+        <gmd:resourceConstraints>
+          <gmd:MD_LegalConstraints>
+            <gmd:accessConstraints>
+              <gmd:MD_RestrictionCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_RestrictionCode" codeListValue="otherRestrictions"/>
+            </gmd:accessConstraints>
+            <gmd:otherConstraints>
+              <gco:characterString>CCW is legally obliged to give public access to the data and information which it holds unless specific legal exceptions apply, for example, if the data is personal or if release of the data would result in environmental harm</gco:characterString>
+            </gmd:otherConstraints>
+            <gmd:accessConstraints>
+              <gmd:MD_RestrictionCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_RestrictionCode" codeListValue="copyright"/>
+            </gmd:accessConstraints>
+          </gmd:MD_LegalConstraints>
+        </gmd:resourceConstraints>
+        <gmd:language>
+          <gmd:LanguageCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#LanguageCode" codeListValue="eng"/>
+        </gmd:language>
+        <gmd:topicCategory>
+          <gmd:MD_TopicCategoryCode>biota</gmd:MD_TopicCategoryCode>
+        </gmd:topicCategory>
+        <gmd:topicCategory>
+          <gmd:MD_TopicCategoryCode>environment</gmd:MD_TopicCategoryCode>
+        </gmd:topicCategory>
+        <gmd:topicCategory>
+          <gmd:MD_TopicCategoryCode>geoscientificInformation</gmd:MD_TopicCategoryCode>
+        </gmd:topicCategory>
+        <gmd:extent>
+          -
+          <gmd:EX_Extent>
+            <gmd:geographicElement>
+              <gmd:EX_GeographicDescription>
+                <gmd:geographicIdentifier>
+                  <gmd:MD_Identifier>
+                    -
+                    <gmd:authority>
+                      -
+                      <gmd:CI_Citation>
+                        <gmd:title>
+                          <gco:CharacterString>ISO3166 Countries</gco:CharacterString>
+                        </gmd:title>
+                        <gmd:date>
+                          -
+                          <gmd:CI_Date>
+                            -
+                            <gmd:date>
+                              <gco:Date>2011-07-05</gco:Date>
+                            </gmd:date>
+                            -
+                            <gmd:dateType>
+                              <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode" codeListValue="publication"/>
+                            </gmd:dateType>
+                          </gmd:CI_Date>
+                        </gmd:date>
+                      </gmd:CI_Citation>
+                    </gmd:authority>
+                    -
+                    <gmd:code>
+                      <gco:CharacterString>Wales (WLS)</gco:CharacterString>
+                    </gmd:code>
+                  </gmd:MD_Identifier>
+                </gmd:geographicIdentifier>
+              </gmd:EX_GeographicDescription>
+            </gmd:geographicElement>
+            <gmd:geographicElement>
+              <gmd:EX_GeographicBoundingBox>
+                <gmd:westBoundLongitude>
+                  <gco:Decimal>-6.279468297494083</gco:Decimal>
+                </gmd:westBoundLongitude>
+                <gmd:eastBoundLongitude>
+                  <gco:Decimal>-2.4589218491907405</gco:Decimal>
+                </gmd:eastBoundLongitude>
+                <gmd:southBoundLatitude>
+                  <gco:Decimal>51.02857752005919</gco:Decimal>
+                </gmd:southBoundLatitude>
+                <gmd:northBoundLatitude>
+                  <gco:Decimal>53.525259613573844</gco:Decimal>
+                </gmd:northBoundLatitude>
+              </gmd:EX_GeographicBoundingBox>
+            </gmd:geographicElement>
+            <gmd:temporalElement>
+              <gmd:EX_TemporalExtent>
+                -
+                <gmd:extent>
+                  <gml:TimePeriod gml:id="medinMEDIN01">
+                    <gml:beginPosition>1995-01-01</gml:beginPosition>
+                    <gml:endPosition>2009-12-31</gml:endPosition>
+                  </gml:TimePeriod>
+                </gmd:extent>
+              </gmd:EX_TemporalExtent>
+            </gmd:temporalElement>
+          </gmd:EX_Extent>
+        </gmd:extent>
+        <gmd:supplementalInformation>
+          <gco:CharacterString>Keith Jones, Spatial Evidence Manager, PKCG.</gco:CharacterString>
+        </gmd:supplementalInformation>
+      </gmd:MD_DataIdentification>
+    </gmd:identificationInfo>
+    <gmd:distributionInfo xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:date="http://exslt.org/dates-and-times" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:gml="http://www.opengis.net/gml">
+      <gmd:MD_Distribution>
+        <gmd:distributor xmlns:gml="http://www.opengis.net/gml/3.2">
+          -
+          <gmd:MD_Distributor>
+            <gmd:distributorContact>
+              -
+              <gmd:CI_ResponsibleParty>
+                <gmd:organisationName>
+                  <gco:CharacterString>GIS Team</gco:CharacterString>
+                </gmd:organisationName>
+                <gmd:contactInfo>
+                  -
+                  <gmd:CI_Contact>
+                    <gmd:phone>
+                      -
+                      <gmd:CI_Telephone>
+                        <gmd:voice>
+                          <gco:CharacterString>Tel: 0845 1306229</gco:CharacterString>
+                        </gmd:voice>
+                      </gmd:CI_Telephone>
+                    </gmd:phone>
+                    <gmd:address>
+                      -
+                      <gmd:CI_Address>
+                        <gmd:deliveryPoint>
+                          <gco:CharacterString>Enquiries, Countryside Council for Wales</gco:CharacterString>
+                        </gmd:deliveryPoint>
+                        <gmd:deliveryPoint>
+                          <gco:CharacterString>Maes-y-Ffynnon</gco:CharacterString>
+                        </gmd:deliveryPoint>
+                        <gmd:city>
+                          <gco:CharacterString>Bangor</gco:CharacterString>
+                        </gmd:city>
+                        <gmd:administrativeArea>
+                          <gco:CharacterString>Gwynedd</gco:CharacterString>
+                        </gmd:administrativeArea>
+                        <gmd:postalCode>
+                          <gco:CharacterString>LL57 2DW</gco:CharacterString>
+                        </gmd:postalCode>
+                        <gmd:electronicMailAddress>
+                          <gco:CharacterString>gis.helpdesk@ccw.gov.uk</gco:CharacterString>
+                        </gmd:electronicMailAddress>
+                      </gmd:CI_Address>
+                    </gmd:address>
+                  </gmd:CI_Contact>
+                </gmd:contactInfo>
+                <gmd:role>
+                  <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_RoleCode" codeListValue="distributor"/>
+                </gmd:role>
+              </gmd:CI_ResponsibleParty>
+            </gmd:distributorContact>
+          </gmd:MD_Distributor>
+        </gmd:distributor>
+        <gmd:transferOptions xmlns:gml="http://www.opengis.net/gml/3.2">
+          -
+          <gmd:MD_DigitalTransferOptions>
+            <gmd:onLine>
+              -
+              <gmd:CI_OnlineResource>
+                <gmd:linkage>
+                  <gmd:URL>http://inspire.wales.gov.uk/metadata/srv/en/main.home?uuid=be06a48d-36fa-4369-a585-7fcc319db4c0</gmd:URL>
+                </gmd:linkage>
+              </gmd:CI_OnlineResource>
+            </gmd:onLine>
+            <gmd:onLine>
+              -
+              <gmd:CI_OnlineResource>
+                <gmd:linkage>
+                  <gmd:URL>http://inspire.wales.gov.uk/maps/Protected_sites/wms?request=getCapabilities</gmd:URL>
+                </gmd:linkage>
+              </gmd:CI_OnlineResource>
+            </gmd:onLine>
+            <gmd:onLine>
+              <gmd:CI_OnlineResource>
+                <gmd:linkage>
+                  <gmd:URL>http://inspire.wales.gov.uk/maps/Protected_sites/wms?</gmd:URL>
+                </gmd:linkage>
+                <gmd:protocol>
+                  <gco:CharacterString>OGC:WMS-1.3.0-http-get-map</gco:CharacterString>
+                </gmd:protocol>
+                <gmd:name>
+                  <gco:CharacterString>Protected_sites:country_parks</gco:CharacterString>
+                </gmd:name>
+                <gmd:description>
+                  <gco:CharacterString>Country Parks of Wales. Data produced by the CCW (Countryside Council for Wales).</gco:CharacterString>
+                </gmd:description>
+              </gmd:CI_OnlineResource>
+            </gmd:onLine>
+          </gmd:MD_DigitalTransferOptions>
+        </gmd:transferOptions>
+      </gmd:MD_Distribution>
+    </gmd:distributionInfo>
+    <gmd:dataQualityInfo>
+      -
+      <gmd:DQ_DataQuality>
+        <gmd:scope>
+          -
+          <gmd:DQ_Scope>
+            <gmd:level>
+              <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/codeList.xml#MD_ScopeCode" codeListValue="dataset"/>
+            </gmd:level>
+          </gmd:DQ_Scope>
+        </gmd:scope>
+        <gmd:report>
+          <gmd:DQ_DomainConsistency>
+            <gmd:result>
+              <gmd:DQ_ConformanceResult>
+                <gmd:specification>
+                  <gmd:CI_Citation>
+                    <gmd:title>
+                      <gco:CharacterString>UK GEMINI Standard version 2.0</gco:CharacterString>
+                    </gmd:title>
+                    <gmd:date>
+                      <gmd:CI_Date>
+                        <gmd:date>
+                          <gco:Date>2009-07-20</gco:Date>
+                        </gmd:date>
+                        <gmd:dateType>
+                          <gmd:CI_DateTypeCode xmlns="http://www.isotc211.org/2005/gmd" codeList="http://www.isotc211.org/2005/resources/codeList.xml#CI_DateTypeCode" codeListValue="publication"/>
+                        </gmd:dateType>
+                      </gmd:CI_Date>
+                    </gmd:date>
+                  </gmd:CI_Citation>
+                </gmd:specification>
+                <gmd:explanation>
+                  <gco:CharacterString>Conforms to GEMINI2 2.0 draft schematron</gco:CharacterString>
+                </gmd:explanation>
+                <gmd:pass>
+                  <gco:Boolean>true</gco:Boolean>
+                </gmd:pass>
+              </gmd:DQ_ConformanceResult>
+            </gmd:result>
+          </gmd:DQ_DomainConsistency>
+        </gmd:report>
+        <gmd:lineage>
+          -
+          <gmd:LI_Lineage>
+            <gmd:statement>
+              <gco:CharacterString>Originally mapped on paper maps by Unitary Authorities. This dataset was originally put together from maps provided by Unitary Authorities and then digitised by CCW staff in the mid 1990s. Later updates were compiled from digital data supplied by unitary authorities and pdfs. Digital data captured to 1:2500 /1:10,000 (OS MasterMap has variable scale from uplands to urban areas)</gco:CharacterString>
+            </gmd:statement>
+          </gmd:LI_Lineage>
+        </gmd:lineage>
+      </gmd:DQ_DataQuality>
+    </gmd:dataQualityInfo>
+  </gmd:MD_Metadata>
