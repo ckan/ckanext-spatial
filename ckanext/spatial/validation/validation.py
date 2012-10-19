@@ -209,7 +209,7 @@ all_validators = (ISO19139Schema,
                   Gemini2Schematron)
 
 
-class Validator(object):
+class Validators(object):
     '''
     Validates XML against one or more profiles (i.e. validators).
     '''
@@ -218,7 +218,7 @@ class Validator(object):
 
     def isvalid(self, xml):
         '''For backward compatibility'''
-        return is_valid(xml)
+        return self.is_valid(xml)
     
     def is_valid(self, xml):
         if not hasattr(self, 'validators'):

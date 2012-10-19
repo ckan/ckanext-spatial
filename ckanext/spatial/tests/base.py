@@ -1,8 +1,12 @@
 import os
 import re
+
 from sqlalchemy import Table
-from ckan.model import Session,repo, meta
-from ckanext.spatial.model import setup as spatial_db_setup,define_spatial_tables
+from nose.plugins.skip import SkipTest
+
+from ckan.model import Session, repo, meta, engine_is_sqlite
+from ckanext.spatial.model.package_extent import setup as spatial_db_setup, define_spatial_tables
+from ckanext.harvest.model import setup as harvest_model_setup
 
 def setup_postgis_tables():
 
@@ -33,7 +37,9 @@ class SpatialTestBase:
 
     @classmethod
     def setup_class(cls):
-
+        if engine_is_sqlite():
+            raise SkipTest("PostGIS is required for this test")
+        
         # This will create the PostGIS tables (geometry_columns and
         # spatial_ref_sys) which were deleted when rebuilding the database
         table = Table('geometry_columns', meta.metadata)
@@ -42,6 +48,8 @@ class SpatialTestBase:
 
         spatial_db_setup()
 
+        # Setup the harvest tables
+        harvest_model_setup()
 
     @classmethod
     def teardown_class(cls):

@@ -6,8 +6,8 @@ from ckan.lib.helpers import url_for,json
 
 from ckan.tests import CreateTestData
 from ckan.tests.functional.base import FunctionalTestCase
-
-from ckanext.spatial.tests import SpatialTestBase
+from ckanext.harvest.model import setup as harvest_model_setup
+from ckanext.spatial.tests.base import SpatialTestBase
 
 log = logging.getLogger(__name__)
 
@@ -17,7 +17,7 @@ class TestWMSPreview(FunctionalTestCase,SpatialTestBase):
         CreateTestData.create()
 
     def teardown(self):
-        CreateTestData.delete()
+        model.repo.rebuild_db()
 
     def test_link_and_map_shown(self):
 

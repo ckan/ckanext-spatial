@@ -5,11 +5,12 @@ from geoalchemy import WKTSpatialElement
 
 from shapely.geometry import asShape
 from ckan.model import Session, Package
+from ckan import model
 from ckan.lib.helpers import json
 from ckan.tests import CreateTestData
 from ckanext.spatial.model import PackageExtent
 
-from ckanext.spatial.tests import SpatialTestBase
+from ckanext.spatial.tests.base import SpatialTestBase
 
 log = logging.getLogger(__name__)
 
@@ -20,7 +21,7 @@ class TestPackageExtent(SpatialTestBase):
         CreateTestData.create()
 
     def teardown(self):
-        CreateTestData.delete()
+        model.repo.rebuild_db()
 
     def test_create_extent(self):
         package = Package.get('annakarenina')

@@ -5,7 +5,7 @@ from ckan.lib.helpers import url_for
 
 from ckan.tests.functional.base import FunctionalTestCase
 
-from ckanext.spatial.tests import SpatialTestBase
+from ckanext.spatial.tests.base import SpatialTestBase
 
 log = logging.getLogger(__name__)
 

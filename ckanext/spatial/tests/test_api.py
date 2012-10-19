@@ -12,7 +12,7 @@ import ckan.lib.search as search
 from ckan.tests import CreateTestData, setup_test_search_index,WsgiAppCase
 from ckan.tests.functional.api.base import ApiTestCase
 from ckan.tests import TestController as ControllerTestCase
-from ckanext.spatial.tests import SpatialTestBase
+from ckanext.spatial.tests.base import SpatialTestBase
 
 log = logging.getLogger(__name__)
 

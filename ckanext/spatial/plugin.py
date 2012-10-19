@@ -24,7 +24,7 @@ from ckan.logic import ValidationError
 import html
 
 from ckanext.spatial.lib import save_package_extent,validate_bbox, bbox_query
-from ckanext.spatial.model import setup as setup_model
+from ckanext.spatial.model.package_extent import setup as setup_model
 
 
 log = getLogger(__name__)
@@ -92,6 +92,8 @@ class SpatialMetadata(SingletonPlugin):
                         error_dict = {'spatial':[u'Error creating geometry: %s' % str(e)]}
                         raise ValidationError(error_dict, error_summary=package_error_summary(error_dict))
                     except Exception, e:
+                        if bool(os.getenv('DEBUG')):
+                            raise
                         error_dict = {'spatial':[u'Error: %s' % str(e)]}
                         raise ValidationError(error_dict, error_summary=package_error_summary(error_dict))
 
@@ -257,6 +259,29 @@ class CatalogueServiceWeb(SingletonPlugin):
                           conditions={"method": ["GET"]})
         route_map.connect("/csw", controller=c, action="dispatch_post",
                           conditions={"method": ["POST"]})
+
+        return route_map
+
+    def after_map(self, route_map):
+        return route_map
+
+class HarvestMetadataApi(SingletonPlugin):
+    '''
+    Harvest Metadata API
+    (previously called "InspireApi")
+    
+    A way for a user to view the harvested metadata XML, either as a raw file or
+    styled to view in a web browser.
+    '''
+    implements(IRoutes)
+        
+    def before_map(self, route_map):
+        controller = "ckanext.spatial.controllers.api:HarvestMetadataApiController"
+
+        route_map.connect("/api/2/rest/harvestobject/:id/xml", controller=controller,
+                          action="display_xml")
+        route_map.connect("/api/2/rest/harvestobject/:id/html", controller=controller,
+                          action="display_html")
 
         return route_map
 

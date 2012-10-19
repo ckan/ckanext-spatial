@@ -11,13 +11,18 @@ The following plugins are currently available:
 * Dataset Extent Map - Map widget showing a dataset extent (`dataset_extent_map`).
 * WMS Preview - a Web Map Service (WMS) previewer (`wms_preview`).
 * CSW Server - a basic CSW server - to server metadata from the CKAN instance (`cswserver`)
+* GEMINI Harvesters - for importing INSPIRE-style metadata into CKAN (`gemini_csw_harvester`, `gemini_doc_harvester`, `gemini_waf_harvester`)
+* Harvest Metadata API - a way for a user to view the harvested metadata XML, either as a raw file or styled to view in a web browser. (`inspire_api`)
 
 These libraries:
 * CSW Client - a basic client for accessing a CSW server
-* Validator - a python library that uses Schematron to validate geographic metadata XML
+* Validators - uses XSD / Schematron to validate geographic metadata XML. Used by the GEMINI Harvesters
+* Validators for ISO19139/INSPIRE/GEMINI2 metadata. Used by the Validator.
 
 And these command-line tools:
 * cswinfo - a command-line tool to help making requests of any CSW server
+
+As of October 2012, ckanext-csw and ckanext-inspire were merged into this extension.
 
 About the components
 ====================
@@ -130,10 +135,52 @@ For example you can ask the capabilities of the CSW server installed into CKAN r
 
 The standard CSW response is in XML format.
 
+GEMINI Harvesters
+-----------------
+
+These harvesters were are designed to harvest metadata records in the GEMINI2 format, which is an XML spatial metadata format very similar to ISO19139. This was developed for the UK Location Programme and GEMINI2, but it would be simple to adapt them for other INSPIRE or ISO19139-based metadata.
+
+The harvesters get the metadata from these types of server:
+
+ * GeminiCswHarvester - CSW server
+ * GeminiWafHarvester - WAF file server - An index page with links to GEMINI resources
+ * GeminiDocHarvester - HTTP file server - An individual GEMINI resource
+
+The GEMINI-specific parts of the code are restricted to the fields imported into CKAN, so it would be relatively simple to generalise these to other INSPIRE profiles.
+
+Each contains code to do the three stages of harvesting:
+ * gather_stage - Submits a request to Harvest Sources and assembles a list of all the metadata URLs (since each CSW record can recursively refer to more records?). Some processing of the XML or validation may occur.
+ * fetch_stage - Fetches all the Gemini metadata
+ * import_stage - validates all the Gemini, converts it to a CKAN Package and saves it in CKAN
+
+You must specify which validators to use in the configuration of ``ckan.inspire.validator.profiles`` - see below.
+
+Harvest Metadata API
+--------------------
+
+Enabled with the ``ckan.plugins = spatial_harvest_metadata_api`` (previous known as ``inspire_api``)
+
+To view the harvest objects (containing the harvested metadata) in the web interface, these controller locations are added:
+
+/api/2/rest/harvestobject/<id>/xml
+
+/api/2/rest/harvestobject/<id>/html
+
+
 CSW Client
 ----------
 
 CswService is a client for python software (such as the CSW Harvester in ckanext-inspire) to conveniently access a CSW server, using the same three methods as the CSW Server supports. It is a wrapper around OWSLib's tool, dealing with the details of the calls and responses to make it very convenient to use, whereas OWSLib on its own is more complicated.
+
+Validators
+----------
+
+This library can validate metadata records. It currently supports ISO19139 / INSPIRE / GEMINI2 formats, validating them with XSD and Schematron schemas. It is easily extensible.
+
+To specify which validators to use during harvesting, specify their names in CKAN config. e.g.::
+
+  ckan.spatial.validator.profiles = iso19139,gemini2,constraints
+
 
 cswinfo tool
 ------------
@@ -350,11 +397,13 @@ extension:
 Tests
 =====
 
-Please note that the tests currently only work with Postgres. You must use the
-test-core.ini located in the extension directory to run them and have the pyenv
-activated. Most of the time you should run something like::
+All of the tests need access to the spatial model in Postgres, so to run the tests, specify ``test-core.ini``::
 
-  (pyenv) $ nosetests --ckan --with-pylons=test-core.ini ckanext/spatial/tests
+  (pyenv) $ nosetests --ckan --with-pylons=test-core.ini -l ckanext ckanext/spatial/tests
+
+In some places in this extension, ALL exceptions get caught and reported as errors. Since these could be basic coding errors, to aid debugging these during development, you can request exceptions are reraised by setting the DEBUG environment variable::
+
+  export DEBUG=1
 
 Command line interface
 ======================
@@ -387,6 +436,8 @@ PostGIS Configuration
 *   Install PostGIS::
 
         sudo apt-get install postgresql-8.4-postgis
+
+    (or ``postgresql-9.1-postgis``, depending on your postgres version)
 
 *   Create a new PostgreSQL database::
 
@@ -536,3 +587,14 @@ Now check the install by running xmllint::
   $ xmllint --version
   xmllint: using libxml version 20900
      compiled with: Threads Tree Output Push Reader Patterns Writer SAXv1 FTP HTTP DTDValid HTML Legacy C14N Catalog XPath XPointer XInclude Iconv ISO8859X Unicode Regexps Automata Expr Schemas Schematron Modules Debug Zlib 
+
+Licence
+=======
+
+This code falls under different copyrights, depending on when it was contributed and by whom::
+* (c) Copyright 2011-2012 Open Knowledge Foundation
+* Crown Copyright
+* XML/XSD files: copyright of their respective owners, held in the files themselves
+
+All of this code is licensed for reuse under the Open Government Licence 
+http://www.nationalarchives.gov.uk/doc/open-government-licence/

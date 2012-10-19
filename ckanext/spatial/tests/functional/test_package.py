@@ -8,7 +8,7 @@ from ckan.tests import CreateTestData
 from ckan.tests.functional.base import FunctionalTestCase
 from ckanext.spatial.model import PackageExtent
 
-from ckanext.spatial.tests import SpatialTestBase
+from ckanext.spatial.tests.base import SpatialTestBase
 
 log = logging.getLogger(__name__)
 
@@ -17,6 +17,7 @@ class TestPackageController(FunctionalTestCase,SpatialTestBase):
 
     @classmethod
     def setup_class(cls):
+        SpatialTestBase.setup_class()
         cls.extra_environ = {'REMOTE_USER': 'annafan'}
 
     def setup(self):

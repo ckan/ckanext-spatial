@@ -2,21 +2,24 @@ import logging
 from pprint import pprint
 
 from ckan.model import Package, Session
+from ckan import model
 from ckan.lib.helpers import url_for,json
 
 from ckan.tests import CreateTestData
 from ckan.tests.functional.base import FunctionalTestCase
-
-from ckanext.spatial.tests import SpatialTestBase
+from ckanext.spatial.tests.base import SpatialTestBase
 
 log = logging.getLogger(__name__)
 
 
 class TestDatasetMap(FunctionalTestCase,SpatialTestBase):
+    def setup(self):
+        CreateTestData.create()
+
+    def teardown(self):
+        model.repo.rebuild_db()
 
     def test_map_shown(self):
-        CreateTestData.create()
-        
         extra_environ = {'REMOTE_USER': 'annafan'}
         name = 'annakarenina'
 
