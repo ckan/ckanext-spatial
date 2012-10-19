@@ -41,5 +41,6 @@ setup(
 
     [paste.paster_command]
     spatial=ckanext.spatial.commands.spatial:Spatial
+    validation=ckanext.spatial.commands.validation:Validation
 	""",
 )
