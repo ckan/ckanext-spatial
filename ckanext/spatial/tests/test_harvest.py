@@ -134,14 +134,14 @@ class TestHarvest(HarvestFixtureBase):
 
     @classmethod
     def setup_class(cls):
-        SpatialHarvester._validator = Validators(profiles=['iso19139','gemini2'])
+        SpatialHarvester._validator = Validators(profiles=['gemini2'])
         HarvestFixtureBase.setup_class()
 
     def test_harvest_basic(self):
 
         # Create source
         source_fixture = {
-            'url': u'http://127.0.0.1:8999/waf/index.html',
+            'url': u'http://127.0.0.1:8999/gemini2.1-waf/index.html',
             'type': u'gemini-waf'
         }
 
@@ -178,7 +178,7 @@ class TestHarvest(HarvestFixtureBase):
 
         # Create source
         source_fixture = {
-            'url': u'http://127.0.0.1:8999/single/service1.xml',
+            'url': u'http://127.0.0.1:8999/gemini2.1/service1.xml',
             'type': u'gemini-single'
         }
 
@@ -285,7 +285,7 @@ class TestHarvest(HarvestFixtureBase):
 
         # Create source
         source_fixture = {
-            'url': u'http://127.0.0.1:8999/single/dataset1.xml',
+            'url': u'http://127.0.0.1:8999/gemini2.1/dataset1.xml',
             'type': u'gemini-single'
         }
 
@@ -386,7 +386,7 @@ class TestHarvest(HarvestFixtureBase):
     def test_harvest_error_bad_xml(self):
         # Create source
         source_fixture = {
-            'url': u'http://127.0.0.1:8999/single/error_bad_xml.xml',
+            'url': u'http://127.0.0.1:8999/gemini2.1/error_bad_xml.xml',
             'type': u'gemini-single'
         }
 
@@ -410,7 +410,7 @@ class TestHarvest(HarvestFixtureBase):
     def test_harvest_error_404(self):
         # Create source
         source_fixture = {
-            'url': u'http://127.0.0.1:8999/single/not_there.xml',
+            'url': u'http://127.0.0.1:8999/gemini2.1/not_there.xml',
             'type': u'gemini-single'
         }
 
@@ -430,7 +430,7 @@ class TestHarvest(HarvestFixtureBase):
 
         # Create source
         source_fixture = {
-            'url': u'http://127.0.0.1:8999/single/error_validation.xml',
+            'url': u'http://127.0.0.1:8999/gemini2.1/error_validation.xml',
             'type': u'gemini-single'
         }
 
@@ -473,7 +473,7 @@ class TestHarvest(HarvestFixtureBase):
 
         # Create source
         source_fixture = {
-            'url': u'http://127.0.0.1:8999/single/dataset1.xml',
+            'url': u'http://127.0.0.1:8999/gemini2.1/dataset1.xml',
             'type': u'gemini-single'
         }
 
@@ -537,7 +537,7 @@ class TestHarvest(HarvestFixtureBase):
 
         # Create source
         source_fixture = {
-            'url': u'http://127.0.0.1:8999/single/service1.xml',
+            'url': u'http://127.0.0.1:8999/gemini2.1/service1.xml',
             'type': u'gemini-single'
         }
 
@@ -575,7 +575,7 @@ class TestHarvest(HarvestFixtureBase):
 
         # Harvest an updated document, with a more recent modified date, package should be
         # updated and reactivated
-        source.url = u'http://127.0.0.1:8999/single/service1_newer.xml'
+        source.url = u'http://127.0.0.1:8999/gemini2.1/service1_newer.xml'
         source.save()
 
         third_job = self._create_job(source.id)
@@ -608,7 +608,7 @@ class TestHarvest(HarvestFixtureBase):
 
         # Create source1
         source1_fixture = {
-            'url': u'http://127.0.0.1:8999/single/source1/same_dataset.xml',
+            'url': u'http://127.0.0.1:8999/gemini2.1/source1/same_dataset.xml',
             'type': u'gemini-single'
         }
 
@@ -628,7 +628,7 @@ class TestHarvest(HarvestFixtureBase):
         # (As of https://github.com/okfn/ckanext-inspire/commit/9fb67
         # we are no longer throwing an exception when this happens)
         source2_fixture = {
-            'url': u'http://127.0.0.1:8999/single/source2/same_dataset.xml',
+            'url': u'http://127.0.0.1:8999/gemini2.1/source2/same_dataset.xml',
             'type': u'gemini-single'
         }
 
@@ -673,7 +673,7 @@ class TestHarvest(HarvestFixtureBase):
 
         # Create source1
         source1_fixture = {
-            'url': u'http://127.0.0.1:8999/single/source1/same_dataset.xml',
+            'url': u'http://127.0.0.1:8999/gemini2.1/source1/same_dataset.xml',
             'type': u'gemini-single'
         }
 
@@ -694,7 +694,7 @@ class TestHarvest(HarvestFixtureBase):
 
         # Harvest the same document, unchanged, from another source
         source2_fixture = {
-            'url': u'http://127.0.0.1:8999/single/source2/same_dataset.xml',
+            'url': u'http://127.0.0.1:8999/gemini2.1/source2/same_dataset.xml',
             'type': u'gemini-single'
         }
 
@@ -716,7 +716,7 @@ class TestHarvest(HarvestFixtureBase):
 
         # Create source1
         source1_fixture = {
-            'url': u'http://127.0.0.1:8999/single/service1.xml',
+            'url': u'http://127.0.0.1:8999/gemini2.1/service1.xml',
             'type': u'gemini-single'
         }
 
@@ -733,7 +733,7 @@ class TestHarvest(HarvestFixtureBase):
 
         # Harvest the same document GUID but with a newer date, from another source. 
         source2_fixture = {
-            'url': u'http://127.0.0.1:8999/single/service1_newer.xml',
+            'url': u'http://127.0.0.1:8999/gemini2.1/service1_newer.xml',
             'type': u'gemini-single'
         }
 
@@ -758,7 +758,7 @@ class TestHarvest(HarvestFixtureBase):
 
         # Create source
         source_fixture = {
-            'url': u'http://127.0.0.1:8999/single/dataset1.xml',
+            'url': u'http://127.0.0.1:8999/gemini2.1/dataset1.xml',
             'type': u'gemini-single'
         }
 
@@ -804,16 +804,6 @@ class TestHarvest(HarvestFixtureBase):
         assert len(source_dict['status']['packages']) == 1
 
 
-validation_error_xml = '''
-<root xmlns:svrl="http://purl.oclc.org/dsdl/svrl">
-  <svrl:failed-assert test="srv:serviceType/*[1] = 'discovery' or srv:serviceType/*[1] = 'view' or srv:serviceType/*[1] = 'download' or srv:serviceType/*[1] = 'transformation' or srv:serviceType/*[1] = 'invoke' or srv:serviceType/*[1] = 'other'" location="/*[local-name()='MD_Metadata' and namespace-uri()='http://www.isotc211.org/2005/gmd']/*[local-name()='identificationInfo' and namespace-uri()='http://www.isotc211.org/2005/gmd']/*[local-name()='SV_ServiceIdentification' and namespace-uri()='http://www.isotc211.org/2005/srv']">
-    <svrl:text>
-        Service type shall be one of 'discovery', 'view', 'download', 'transformation', 'invoke' or 'other' following INSPIRE generic names.
-      </svrl:text>
-  </svrl:failed-assert>
-</root>
-'''
-
 class TestValidation(HarvestFixtureBase):
 
     @classmethod
@@ -824,7 +814,7 @@ class TestValidation(HarvestFixtureBase):
     def get_validation_errors(self, validation_test_filename):
         # Create source
         source_fixture = {
-            'url': u'http://127.0.0.1:8999/single/validation/%s' % validation_test_filename,
+            'url': u'http://127.0.0.1:8999/gemini2.1/validation/%s' % validation_test_filename,
             'type': u'gemini-single'
         }
 
@@ -838,16 +828,6 @@ class TestValidation(HarvestFixtureBase):
         # Check the validation errors
         errors = '; '.join([gather_error.message for gather_error in job.gather_errors])
         return errors
-
-    def test_schematron_error_extraction(self):
-        failure_xml = lxml.etree.fromstring(validation_error_xml)
-        fail_element = failure_xml.getchildren()[0]
-        details = SchematronValidator.extract_error_details(fail_element)
-        if isinstance(details, tuple):
-            details = details[1]
-        assert_in("srv:serviceType/*[1] = 'discovery'", details)
-        assert_in("/*[local-name()='MD_Metadata'", details)
-        assert_in("Service type shall be one of 'discovery'", details)
 
     def test_01_dataset_fail_iso19139_schema(self):
         errors = self.get_validation_errors('01_Dataset_Invalid_XSD_No_Such_Element.xml')

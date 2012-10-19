@@ -53,6 +53,18 @@ class XsdValidator(BaseValidator):
         return True, []
 
 
+class ISO19139Schema(XsdValidator):
+    name = 'iso19139'
+    title = 'ISO19139 XSD Schema'
+
+    @classmethod
+    def is_valid(cls, xml):
+        xsd_path = 'xml/iso19139'
+        gmx_xsd_filepath = os.path.join(os.path.dirname(__file__),
+                                            xsd_path, 'gmx/gmx.xsd')
+        is_valid, errors = cls._is_valid(xml, gmx_xsd_filepath, 'Dataset schema (gmx.xsd)')
+        return is_valid, errors
+
 class ISO19139EdenSchema(XsdValidator):
     name = 'iso19139eden'
     title = 'ISO19139 XSD Schema (EDEN)'
@@ -157,31 +169,6 @@ class SchematronValidator(BaseValidator):
         return etree.XSLT(compiled)
 
         
-class ISO19139Schema(SchematronValidator):
-    name = 'iso19139'
-    title = 'ISO19139 XSD Schema'
-
-    @classmethod
-    def get_schematrons(cls):
-        with resource_stream("ckanext.csw", "xml/schematron/ExtractSchFromXSD.xsl") as xsl_file:
-            xsl = etree.parse(xsl_file)
-            xsd2sch = etree.XSLT(xsl)
-
-        root = resource_filename("ckanext.csw", "xml/iso19139")
-        schematrons = []
-        for filename in ["gmd/gmd.xsd"]:
-            filename = os.path.join(root, filename)
-            with open(filename) as xsd_file:
-                xsd = etree.parse(xsd_file)
-                extracted_schematron_rules = xsd2sch(xsd)
-                # There are no schematron rules here! So this validation is pointless.
-                #<?xml version="1.0" standalone="yes"?>
-                #<sch:schema xmlns:sch="http://purl.oclc.org/dsdl/schematron" xmlns:xs="http://www.w3.org/2001/XMLSchema">
-                #  <sch:diagnostics/>
-                #</sch:schema>
-                schematrons.append(cls.schematron(extracted_schematron_rules))
-        return schematrons
-
 class ConstraintsSchematron(SchematronValidator):
     name = 'constraints'
     title = 'ISO19139 Table A.1 Constraints Schematron 1.3'

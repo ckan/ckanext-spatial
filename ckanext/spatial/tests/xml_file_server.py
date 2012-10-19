@@ -10,8 +10,9 @@ PORT = 8999
 def serve(port=PORT):
     '''Serves test XML files over HTTP'''
     
-    # Make sure we serve from the tests directory
-    os.chdir(os.path.dirname(os.path.abspath( __file__ )))
+    # Make sure we serve from the tests' XML directory
+    os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                          'xml'))
 
     Handler = SimpleHTTPServer.SimpleHTTPRequestHandler
     
