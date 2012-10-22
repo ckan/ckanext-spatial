@@ -1,6 +1,6 @@
 import os
 from pkg_resources import resource_stream, resource_filename
-from ckanext.inspire.model import GeminiDocument
+from ckanext.spatial.model import GeminiDocument
 
 from lxml import etree
 

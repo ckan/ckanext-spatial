@@ -153,7 +153,7 @@ Each contains code to do the three stages of harvesting:
  * fetch_stage - Fetches all the Gemini metadata
  * import_stage - validates all the Gemini, converts it to a CKAN Package and saves it in CKAN
 
-You must specify which validators to use in the configuration of ``ckan.inspire.validator.profiles`` - see below.
+You must specify which validators to use in the configuration of ``ckan.spatial.validator.profiles`` - see below.
 
 Harvest Metadata API
 --------------------

@@ -9,7 +9,6 @@ from ckan import model
 from ckan.model import Session,Package
 from ckan.logic.schema import default_update_package_schema
 from ckan.logic import get_action
-import ckanext.inspire
 from ckanext.harvest.model import (setup as harvest_model_setup,
                                    HarvestSource, HarvestJob, HarvestObject)
 from ckanext.spatial.validation import Validators, SchematronValidator
