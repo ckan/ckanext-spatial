@@ -168,7 +168,7 @@ class SchematronValidator(BaseValidator):
                 compiled = xform(compiled)
         return etree.XSLT(compiled)
 
-        
+
 class ConstraintsSchematron(SchematronValidator):
     name = 'constraints'
     title = 'ISO19139 Table A.1 Constraints Schematron 1.3'
@@ -206,7 +206,7 @@ class Validators(object):
     def isvalid(self, xml):
         '''For backward compatibility'''
         return self.is_valid(xml)
-    
+
     def is_valid(self, xml):
         if not hasattr(self, 'validators'):
             self.validators = {} # name: class
@@ -222,11 +222,17 @@ class Validators(object):
             log.info('Validated against "%s"', validator.title)
         log.info('Validation passed')
         return True, []
-                
+
 if __name__ == '__main__':
     from sys import argv
     import logging
+    from pprint import pprint
     logging.basicConfig()
-    
-    v = Validators()
-    v.is_valid(etree.parse(open(argv[1])))
+
+    if len(argv) == 3:
+        profiles = argv[2].split(',')
+    else:
+        profiles = ["iso19139", "constraints", "gemini2"]
+    v = Validators(profiles)
+    result = v.is_valid(etree.parse(open(argv[1])))
+    pprint(result)
