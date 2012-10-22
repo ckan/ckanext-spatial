@@ -153,16 +153,16 @@ class SchematronValidator(BaseValidator):
     @classmethod
     def schematron(cls, schema):
         transforms = [
-            "xml/schematron/iso_dsdl_include.xsl",
-            "xml/schematron/iso_abstract_expand.xsl",
-            "xml/schematron/iso_svrl_for_xslt1.xsl",
+            "validation/xml/schematron/iso_dsdl_include.xsl",
+            "validation/xml/schematron/iso_abstract_expand.xsl",
+            "validation/xml/schematron/iso_svrl_for_xslt1.xsl",
             ]
         if isinstance(schema, file):
             compiled = etree.parse(schema)
         else:
             compiled = schema
         for filename in transforms:
-            with resource_stream("ckanext.csw", filename) as stream:
+            with resource_stream("ckanext.spatial", filename) as stream:
                 xform_xml = etree.parse(stream)
                 xform = etree.XSLT(xform_xml)
                 compiled = xform(compiled)
@@ -175,8 +175,8 @@ class ConstraintsSchematron(SchematronValidator):
 
     @classmethod
     def get_schematrons(cls):
-        with resource_stream("ckanext.csw",
-                             "xml/medin/ISOTS19139A1Constraints_v1.3.sch") as schema:
+        with resource_stream("ckanext.spatial",
+                             "validation/xml/medin/ISOTS19139A1Constraints_v1.3.sch") as schema:
             return [cls.schematron(schema)]
 
 
@@ -186,8 +186,8 @@ class Gemini2Schematron(SchematronValidator):
 
     @classmethod
     def get_schematrons(cls):
-        with resource_stream("ckanext.csw",
-                             "xml/gemini2/gemini2-schematron-20110906-v1.2.sch") as schema:
+        with resource_stream("ckanext.spatial",
+                             "validation/xml/gemini2/gemini2-schematron-20110906-v1.2.sch") as schema:
             return [cls.schematron(schema)]
 
 all_validators = (ISO19139Schema,
