@@ -789,7 +789,7 @@ class TestHarvest(HarvestFixtureBase):
         Session.refresh(second_obj)
         Session.refresh(third_obj)
 
-        after_package_dict = get_action('package_show_rest')(self.context,{'id':imported_objects[0]['package_id']})
+        after_package_dict = get_action('package_show_rest')(self.context,{'id':first_obj.package_id})
 
         # Package was updated, and the current object remains the same
         assert after_package_dict, before_package_dict['id'] == after_package_dict['id']
