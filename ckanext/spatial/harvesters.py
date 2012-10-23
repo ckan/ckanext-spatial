@@ -598,6 +598,7 @@ class GeminiCswHarvester(GeminiHarvester, SingletonPlugin):
                     continue
 
         except Exception, e:
+            log.error('Exception: %s' % text_traceback())
             self._save_gather_error('Error gathering the identifiers from the CSW server [%s]' % str(e), harvest_job)
             return None
 
