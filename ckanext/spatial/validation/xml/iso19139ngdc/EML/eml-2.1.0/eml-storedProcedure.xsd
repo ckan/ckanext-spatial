@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    xmlns="eml://ecoinformatics.org/storedProcedure-2.1.0" 
+    xmlns:cov="eml://ecoinformatics.org/coverage-2.1.0" 
+    xmlns:prot="eml://ecoinformatics.org/protocol-2.1.0" 
+    xmlns:phys="eml://ecoinformatics.org/physical-2.1.0" 
+    xmlns:att="eml://ecoinformatics.org/attribute-2.1.0" 
+    xmlns:doc="eml://ecoinformatics.org/documentation-2.1.0" 
+    xmlns:ent="eml://ecoinformatics.org/entity-2.1.0" 
+    xmlns:res="eml://ecoinformatics.org/resource-2.1.0" 
+    xmlns:con="eml://ecoinformatics.org/constraint-2.1.0" 
+    targetNamespace="eml://ecoinformatics.org/storedProcedure-2.1.0">
+  <xs:import namespace="eml://ecoinformatics.org/entity-2.1.0" 
+  schemaLocation="eml-entity.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/documentation-2.1.0" 
+  schemaLocation="eml-documentation.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/attribute-2.1.0" 
+  schemaLocation="eml-attribute.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/protocol-2.1.0" 
+  schemaLocation="eml-protocol.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/physical-2.1.0" 
+  schemaLocation="eml-physical.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/coverage-2.1.0" 
+  schemaLocation="eml-coverage.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/resource-2.1.0" 
+  schemaLocation="eml-resource.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/constraint-2.1.0" 
+  schemaLocation="eml-constraint.xsd"/>
+  <xs:annotation>
+    <xs:documentation>
+       '$RCSfile: eml-storedProcedure.xsd,v $'
+       Copyright: 1997-2002 Regents of the University of California,
+                            University of New Mexico, and
+                            Arizona State University
+        Sponsors: National Center for Ecological Analysis and Synthesis and
+                  Partnership for Interdisciplinary Studies of Coastal Oceans,
+                     University of California Santa Barbara
+                  Long-Term Ecological Research Network Office,
+                     University of New Mexico
+                  Center for Environmental Studies, Arizona State University
+   Other funding: National Science Foundation (see README for details)
+                  The David and Lucile Packard Foundation
+     For Details: http://knb.ecoinformatics.org/
+
+        '$Author: obrien $'
+          '$Date: 2009/02/25 23:51:54 $'
+      '$Revision: 1.46 $'
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    </xs:documentation>
+    <xs:appinfo>
+      <doc:moduleDocs>
+        <doc:moduleName>eml-storedProcedure</doc:moduleName>
+        <doc:moduleDescription>
+        <section xmlns="">
+          <title>
+            The eml-storedProcedure module - Data tables
+            resulting from procedures stored in a database
+          </title>
+          <para>
+            The storedProcedure module is meant to capture information on
+            procedures that produce data output in the form of a data table.
+            In an RDBMS one can code complex queries and transactions into
+            stored procedures and then invoke them directly from front-end
+            applications. It allows the optional description of any parameters
+            that are expected to be passed to the procedure when it is called.
+          </para>
+        </section>
+        </doc:moduleDescription>
+        <doc:recommendedUsage>Use the storedProcedure module to document
+        datasets that use storedProcedures to retrieve archived
+        data.</doc:recommendedUsage>
+        <doc:standAlone>yes</doc:standAlone>
+      </doc:moduleDocs>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="storedProcedure" type="StoredProcedureType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Stored Procedure&gt;</doc:tooltip>
+        <doc:summary>The storedProcedure element documents stored
+        procedures.</doc:summary>
+        <doc:description>The storedProcedure element is meant to capture
+        information on procedures that produce data output in the form of a
+        data table. In an RDBMS one can code complex queries and transactions
+        into stored procedures and then invoke them directly from front-end
+        applications. This element allows the optional description of any
+        parameters that are expected to be passed to the procedure when it is
+        called. A common use of a stored procedure is to rotate a data table 
+        from attributes in columns to attributes in rows for statistical 
+        analysis.</doc:description>
+        
+      </xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="StoredProcedureType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Stored Procedure complex type&gt;</doc:tooltip>
+        <doc:summary>Structure for documenting a stored procedure</doc:summary>
+        <doc:description>The StoredProcedureType complex type defines the structure
+        for documenting a stored procedure.</doc:description>
+        
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:choice>
+      <xs:sequence>
+        <xs:group ref="ent:EntityGroup"/>
+        <xs:element name="attributeList" type="att:AttributeListType">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Attribute List</doc:tooltip>
+              <doc:summary>The list of attributes associated with this
+              entity.</doc:summary>
+              <doc:description>The list of attributes associated with this
+              entity.  For more information see the eml-attribute
+              module.</doc:description>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="constraint" type="con:ConstraintType" minOccurs="0" maxOccurs="unbounded">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Constraint</doc:tooltip>
+              <doc:summary/>
+              <doc:description>Description of any relational constraints on '
+              this entity.  For more information see the eml-constraint
+              module.</doc:description>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="parameter" type="ParameterType" minOccurs="0" maxOccurs="unbounded">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Parameter</doc:tooltip>
+              <doc:summary>A parameter that is required as input to the
+              stored procedure.</doc:summary>
+              <doc:description>The parameter elements defines the fields that
+              may be required to invoke a stored procedure.</doc:description>
+              
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+      <xs:group ref="res:ReferencesGroup"/>
+    </xs:choice>
+    <xs:attribute name="id" type="res:IDType" use="optional"/>
+    <xs:attribute name="system" type="res:SystemType" use="optional"/>
+    <xs:attribute name="scope" type="res:ScopeType" use="optional" default="document"/>
+  </xs:complexType>
+  <xs:complexType name="ParameterType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Parameter complex type</doc:tooltip>
+        <doc:summary>The structure for defining a parameter that is required as
+        input to the stored procedure.</doc:summary>
+        <doc:description>The parameter complex type defines the structure for
+        documenting the parameters that may be required to invoke a stored
+        procedure.</doc:description>
+        
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="name" type="res:NonEmptyStringType">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Parameter Name</doc:tooltip>
+            <doc:summary>The name of the parameter.</doc:summary>
+            <doc:description>The value of the name field is the name of the
+            parameter.</doc:description>
+            <doc:example>SiteID</doc:example>
+            
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="domainDescription" type="res:NonEmptyStringType">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Domain Description</doc:tooltip>
+            <doc:summary>A description of domain of valid values for the
+            parameter.</doc:summary>
+            <doc:description>The domainDescription field is used to describe
+            the valid entries for the parameter being described. A stored
+            procedure will work only when the parameter's value corresponds to
+            an actual value in a database.</doc:description>
+            <doc:example>The database has SiteId values that range from cap1 to
+            cap10, however the allowable SiteId values for this stored procedure
+            are cap1,cap2,cap4 or cap7. </doc:example>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="required" type="xs:boolean">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Required</doc:tooltip>
+            <doc:summary>Whether or not the parameter is
+            required.</doc:summary>
+            <doc:description>The required field is used to document whether the
+            parameter being described is or is not required when invoking the
+            stored procedure.</doc:description>
+            <doc:example>true</doc:example>
+            
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="repeats" type="xs:boolean">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Repeats</doc:tooltip>
+            <doc:summary>Whether or not the parameter repeats.</doc:summary>
+            <doc:description>The repeats field is used to document whether or
+            not the parameter being described can be repeated when invoking the
+            stored procedure.</doc:description>
+            <doc:example>true</doc:example>
+            
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

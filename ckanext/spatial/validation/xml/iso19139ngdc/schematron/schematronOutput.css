@@ -1,0 +1,32 @@
+schematron-output {
+  display : block;
+  margin : 1em;
+}
+
+schematron-output:before {
+  display : block;
+  content : "Schematron Error Report";
+  border-bottom : 0.1em solid navy;
+  padding : 0.3em;
+  font-size : large;
+  font-weight : bold;
+  color : navy;
+  background-color : inherit;
+}
+
+active-pattern{
+  display: none;
+}
+
+failed-assert:before {
+  font-weight : bold;
+  content: "Error found at Xpath :" attr(location);
+}
+successful-report:before {
+  font-weight : bold;
+  content: "Non-ASCII character found at XPath: " attr(location); 
+}
+
+text{
+  display: block;
+}

@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" blockDefault="#all"
+	xmlns:sch="http://www.ascc.net/xml/schematron">
+<xsd:annotation>
+	<xsd:documentation>
+		Section 9 : Time Period Information
+	</xsd:documentation>
+</xsd:annotation>
+
+<xsd:element name="timeinfo" type="timeinfoType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Time Period Information
+		Section: 9
+		Description: information about the date and time of an event. (Note: this section provides a means of stating temporal information, and is used by other sections of the metadata standard. This section is never used alone.)
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Time Period Information</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="timeinfoType">
+	<xsd:choice>
+		<xsd:element ref="sngdate"/>
+		<xsd:element ref="mdattim"/>
+		<xsd:element ref="rngdates"/>
+	</xsd:choice>
+</xsd:complexType>
+
+<xsd:element name="sngdate" type="sngdateType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Single Date/Time
+		Section: 9.1
+		Description: means of encoding a single date and time.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Single Date/Time</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="sngdateType">
+	<xsd:sequence>
+		<xsd:element ref="caldate"/>
+		<xsd:element ref="time" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="caldate" type="caldateType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Calendar Date
+		Section: 9.1.1
+		Description: the year (and optionally month, or month and day).
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Calendar Date</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="caldateType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: date
+			Domain: "Unknown" free date
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:union memberTypes="FGDCdate">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:token">
+				<xsd:enumeration value="Unknown"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:union>
+</xsd:simpleType>
+
+<xsd:element name="time" type="timeType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Time of Day
+		Section: 9.1.2
+		Description: the hour (and optionally minute, or minute and second) of the day.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Time of Day</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="timeType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: time
+			Domain: "Unknown" free time
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:union memberTypes="FGDCtime">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:token">
+				<xsd:enumeration value="Unknown"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:union>
+</xsd:simpleType>
+
+<xsd:element name="mdattim" type="mdattimType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Multiple Dates/Times
+		Section: 9.2
+		Description: means of encoding multiple individual dates and times.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Multiple Dates/Times</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="mdattimType">
+	<xsd:sequence>
+		<xsd:element ref="sngdate" minOccurs="2" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="rngdates" type="rngdatesType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Range of Dates/Times
+		Section: 9.3
+		Description: means of encoding a range of dates and times.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Range of Dates/Times</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="rngdatesType">
+	<xsd:sequence>
+		<xsd:element ref="begdate"/>
+		<xsd:element ref="begtime" minOccurs="0"/>
+		<xsd:element ref="enddate"/>
+		<xsd:element ref="endtime" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="begdate" type="begdateType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Beginning Date
+		Section: 9.3.1
+		Description: the first year (and optionally month, or month and day) of the event.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Beginning Date</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="begdateType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: date
+			Domain: "Unknown" free date
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:union memberTypes="FGDCdate">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:token">
+				<xsd:enumeration value="Unknown"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:union>
+</xsd:simpleType>
+
+<xsd:element name="begtime" type="begtimeType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Beginning Time
+		Section: 9.3.2
+		Description: the first hour (and optionally minute, or minute and second) of the day for the event.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Beginning Time</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="begtimeType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: time
+			Domain: "Unknown" free time
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:union memberTypes="FGDCtime">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:token">
+				<xsd:enumeration value="Unknown"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:union>
+</xsd:simpleType>
+
+<xsd:element name="enddate" type="enddateType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Ending Date
+		Section: 9.3.3
+		Description: the last year (and optionally month, or month and day) for the event.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Ending Date</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="enddateType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: date
+			Domain: "Unknown" "Present" free date
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:union memberTypes="FGDCdate">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:token">
+				<xsd:enumeration value="Unknown"/>
+				<xsd:enumeration value="Present"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:union>
+</xsd:simpleType>
+
+<xsd:element name="endtime" type="endtimeType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Ending Time
+		Section: 9.3.4
+		Description: the last hour (and optionally minute, or minute and second) of the day for the event.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Ending Time</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="endtimeType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: time
+			Domain: "Unknown" free time
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:union memberTypes="FGDCtime">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:token">
+				<xsd:enumeration value="Unknown"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:union>
+</xsd:simpleType>
+
+</xsd:schema>

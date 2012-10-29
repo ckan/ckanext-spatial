@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:v="eml://ecoinformatics.org/view-2.1.0" xmlns:sp="eml://ecoinformatics.org/storedProcedure-2.1.0" xmlns:sv="eml://ecoinformatics.org/spatialVector-2.1.0" xmlns:md="eml://ecoinformatics.org/methods-2.1.0" xmlns:sr="eml://ecoinformatics.org/spatialRaster-2.1.0" xmlns:proj="eml://ecoinformatics.org/project-2.1.0" xmlns:dat="eml://ecoinformatics.org/dataTable-2.1.0" xmlns:ent="eml://ecoinformatics.org/entity-2.1.0" xmlns:acc="eml://ecoinformatics.org/access-2.1.0" xmlns="eml://ecoinformatics.org/dataset-2.1.0" xmlns:res="eml://ecoinformatics.org/resource-2.1.0" xmlns:rp="eml://ecoinformatics.org/party-2.1.0" xmlns:txt="eml://ecoinformatics.org/text-2.1.0" xmlns:doc="eml://ecoinformatics.org/documentation-2.1.0" targetNamespace="eml://ecoinformatics.org/dataset-2.1.0">
+  <xs:import namespace="eml://ecoinformatics.org/documentation-2.1.0" schemaLocation="eml-documentation.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/resource-2.1.0" schemaLocation="eml-resource.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/party-2.1.0" schemaLocation="eml-party.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/access-2.1.0" schemaLocation="eml-access.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/entity-2.1.0" schemaLocation="eml-entity.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/dataTable-2.1.0" schemaLocation="eml-dataTable.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/project-2.1.0" schemaLocation="eml-project.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/methods-2.1.0" schemaLocation="eml-methods.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/spatialRaster-2.1.0" schemaLocation="eml-spatialRaster.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/spatialVector-2.1.0" schemaLocation="eml-spatialVector.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/storedProcedure-2.1.0" schemaLocation="eml-storedProcedure.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/text-2.1.0" schemaLocation="eml-text.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/view-2.1.0" schemaLocation="eml-view.xsd"/>
+  <xs:annotation>
+    <xs:documentation>
+       '$RCSfile: eml-dataset.xsd,v $'
+       Copyright: 1997-2002 Regents of the University of California,
+                            University of New Mexico, and
+                            Arizona State University
+        Sponsors: National Center for Ecological Analysis and Synthesis and
+                  Partnership for Interdisciplinary Studies of Coastal Oceans,
+                     University of California Santa Barbara
+                  Long-Term Ecological Research Network Office,
+                     University of New Mexico
+                  Center for Environmental Studies, Arizona State University
+   Other funding: National Science Foundation (see README for details)
+                  The David and Lucile Packard Foundation
+     For Details: http://knb.ecoinformatics.org/
+
+        '$Author: obrien $'
+          '$Date: 2009/02/25 23:51:54 $'
+      '$Revision: 1.59 $'
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    </xs:documentation>
+    <xs:appinfo>
+      <doc:moduleDocs>
+        <doc:moduleName>eml-dataset</doc:moduleName>
+        <doc:moduleDescription>
+          <section xmlns="">
+            <title>
+              The eml-dataset module - Dataset specific
+              information
+            </title>
+            <para>
+              The eml-dataset module contains general information that describes
+              dataset resources. It is intended to provide overview information
+              about the dataset: broad information such as the title, abstract,
+              keywords, contacts, maintenance history, purpose, and distribution
+              of the data themselves. The eml-dataset module also imports many
+              other modules that are used to describe the dataset in fine
+              detail.  Specifically, it uses the eml-methods module to
+              describe methodology used in collecting or processing the
+              dataset, the eml-project module to describe the overarching
+              research context and experimental design, the eml-access module
+              to define access control rules for the data and metadata, and
+              the eml-entity module to provide detailed information about the
+              logical structure of the dataset. A dataset can be (and often is)
+              composed of a series of data entities (tables) that are linked
+              together by particular integrity constraints.
+            </para>
+            <para>
+              The eml-dataset module, like other modules, may be
+              "referenced" via the &lt;references&gt; tag.  This
+              allows a dataset to be described once, and then used as a
+              reference in other locations within the EML document via its ID.
+            </para>
+          </section>
+        </doc:moduleDescription>
+        <doc:recommendedUsage>all datasets</doc:recommendedUsage>
+        <doc:standAlone>yes</doc:standAlone>
+      </doc:moduleDocs>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="dataset" type="DatasetType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Dataset Descriptors</doc:tooltip>
+        <doc:summary>The dataset field encompasses all information about
+        a single dataset.</doc:summary>
+        <doc:description>The dataset field encompasses all information about
+        a single dataset.  A dataset is defined as all of the
+        information describing a data collection event.  This event may take
+        place over some period of time and include many actual collections (a
+        time series or remote sensing application)
+        or it could be just one actual collection
+        (a day in the field).</doc:description>
+      </xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="DatasetType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Dataset</doc:tooltip>
+        <doc:summary>DatasetType is the base type for the dataset
+        element.</doc:summary>
+        <doc:description>DatasetType is the base type for the dataset element.
+        The dataset field encompasses all information about
+        a single dataset.  A dataset is defined as all of the
+        information describing a data collection event.  This event may take
+        place over some period of time and include many actual collections (a
+        time series or remote sensing application)
+        or it could be just one actual collection
+        (a day in the field).</doc:description>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:choice>
+      <xs:sequence>
+        <xs:group ref="res:ResourceGroup"/>
+        <xs:element name="purpose" type="txt:TextType" minOccurs="0">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Purpose</doc:tooltip>
+              <doc:summary>A description of the purpose of this
+              dataset.</doc:summary>
+              <doc:description>A description of the purpose of this
+              dataset.  Note that this element requires DocBook style
+              formatting.  See eml-text for more information.</doc:description>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="maintenance" type="MaintenanceType" minOccurs="0">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Maintenance</doc:tooltip>
+              <doc:summary>A description of the maintenance of this data
+              resource.</doc:summary>
+              <doc:description>A description of the maintenance of this data
+              resource. This includes information about the frequency of
+              update, and whether there is ongoing data
+              collection.</doc:description>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="contact" type="rp:ResponsibleParty" maxOccurs="unbounded">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Contact</doc:tooltip>
+              <doc:summary>The contact for this dataset</doc:summary>
+              <doc:description>The contact field contains contact information
+              for this dataset. This is the
+              person or institution to contact with questions about the use,
+              interpretation of a data set.</doc:description>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="publisher" type="rp:ResponsibleParty" minOccurs="0">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Data Set Publisher</doc:tooltip>
+              <doc:summary>The publisher of this data set</doc:summary>
+              <doc:description>The publisher of this data set. At times this is
+              a traditional publishing house, but it may also simply be an
+              institution that is making the data available in a published (ie,
+              citable) format.</doc:description>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="pubPlace" type="res:NonEmptyStringType" minOccurs="0">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Publication place</doc:tooltip>
+              <doc:summary>The location that the resource was
+              published.</doc:summary>
+              <doc:description>The pubPlace field is the location where the
+              resource was published, which may be different from where the
+              resource was created.</doc:description>
+              <doc:example>San Francisco, CA, USA</doc:example>
+              <doc:example>New York, NY, USA</doc:example>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="methods" type="md:MethodsType" minOccurs="0">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>methods</doc:tooltip>
+              <doc:summary>The methods field documents scientific methods
+              used in the collection of this dataset.</doc:summary>
+              <doc:description>The methods field documents scientific methods
+              used in the collection of this dataset.  It includes information
+              on items such as tools, instrument calibration and
+              software.</doc:description>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="project" type="proj:ResearchProjectType" minOccurs="0">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>project</doc:tooltip>
+              <doc:summary>The project field contains information on
+              the project in which this dataset was collected.</doc:summary>
+              <doc:description>The project field contains information on
+              the project in which this dataset was collected.  It includes
+              information such as project personnel, funding, study area,
+              project design and related projects.  The project description
+              can also contain documentation on subprojects.</doc:description>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="dataTable" type="dat:DataTableType">
+            <xs:annotation>
+              <xs:appinfo>
+                <doc:tooltip>data table</doc:tooltip>
+                <doc:summary>The dataTable field documents the dataTable(s)
+                that make up this dataset.</doc:summary>
+                <doc:description>The dataTable field documents the dataTable(s)
+                that make up this dataset.  A dataTable could be anything from
+                a Comma Separated Value (CSV) file to a spreadsheet to a table
+                in an RDBMS.</doc:description>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="spatialRaster" type="sr:SpatialRasterType">
+            <xs:annotation>
+              <xs:appinfo>
+                <doc:tooltip>spatial raster</doc:tooltip>
+                <doc:summary>The spatialRaster field describes any
+                spatial raster images included in this dataset.</doc:summary>
+                <doc:description>The spatialRaster field describes any
+                spatial raster images included in this dataset.</doc:description>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="spatialVector" type="sv:SpatialVectorType">
+            <xs:annotation>
+              <xs:appinfo>
+                <doc:tooltip>spatial vector</doc:tooltip>
+                <doc:summary>The spatialVector field describes any
+                spatial vectors included in this dataset.</doc:summary>
+                <doc:description>The spatialVector field describes any
+                spatial vectors included in this dataset.</doc:description>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="storedProcedure" type="sp:StoredProcedureType">
+            <xs:annotation>
+              <xs:appinfo>
+                <doc:tooltip>stored procedure</doc:tooltip>
+                <doc:summary>The storedProcedure field contains information
+                about any stored procedures included with this
+                dataset.</doc:summary>
+                <doc:description>The storedProcedure field contains information
+                about any stored procedures included with this dataset.
+                This usually implies that the dataset is stored in a DBMS or
+                some other data management system capable of processing your
+                dataset.</doc:description>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="view" type="v:ViewType">
+            <xs:annotation>
+              <xs:appinfo>
+                <doc:tooltip>view</doc:tooltip>
+                <doc:summary>The view field contains information
+                about any views included with this
+                dataset.</doc:summary>
+                <doc:description>The view field contains information
+                about any view included with this dataset.
+                This usually implies that the dataset is stored in a DBMS or
+                some other data management system capable of processing your
+                dataset.</doc:description>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="otherEntity" type="ent:OtherEntityType">
+            <xs:annotation>
+              <xs:appinfo>
+                <doc:tooltip>other entity</doc:tooltip>
+                <doc:summary>The otherEntity field contains information
+                about any entity in the dataset that is not any of the
+                preceding entities.</doc:summary>
+                <doc:description>The otherEntity field contains information
+                about any entity in the dataset that is not any of the
+                preceding entities.  (i.e. it is not a table, spatialRaster,
+                spatialVector, storedProcedure or view.)  OtherEntity allows
+                the documentation of basic entity fields as well as
+                a plain text field to allow you to type your
+                entity.</doc:description>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+        </xs:choice>
+      </xs:sequence>
+      <xs:group ref="res:ReferencesGroup"/>
+    </xs:choice>
+    <xs:attribute name="id" type="res:IDType" use="optional"/>
+    <xs:attribute name="system" type="res:SystemType" use="optional"/>
+    <xs:attribute name="scope" type="res:ScopeType" use="optional" default="document"/>
+  </xs:complexType>
+  <xs:complexType name="MaintenanceType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Maintenance Type</doc:tooltip>
+        <doc:summary>The maintenance type defines the fields for the
+        maintenance element.  It encompasses all information related to
+        the maintenance and upkeep of this dataset.</doc:summary>
+        <doc:description>The maintenance type defines the fields for the
+        maintenance element.</doc:description>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="description" type="txt:TextType">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Maintenance Description</doc:tooltip>
+            <doc:summary>A text description of the maintenance of this data
+              resource.</doc:summary>
+            <doc:description>A text description of the maintenance of this data
+              resource.  Note that this field must be marked up using DocBook
+              like tagging.  See eml-text for more information.</doc:description>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="maintenanceUpdateFrequency" type="MaintUpFreqType" minOccurs="0">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Maintenance Update Frequency</doc:tooltip>
+            <doc:summary>Frequency with which changes and additions are made
+            to the dataset
+            after the initial dataset is completed.</doc:summary>
+            <doc:description>Frequency with which changes and additions are made
+            to the dataset
+            after the initial dataset is completed.  The values for this
+            field must come from the enumeration MaintUpFreqType.</doc:description>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="changeHistory" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Change History</doc:tooltip>
+            <doc:summary>A description of changes made to the data since its
+            release.</doc:summary>
+            <doc:description>A description of changes made to the data since
+            its release.</doc:description>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="changeScope" type="res:NonEmptyStringType">
+              <xs:annotation>
+                <xs:appinfo>
+                  <doc:tooltip>Change Scope</doc:tooltip>
+                  <doc:summary>An expression describing the scope to which the
+                  documented change was
+                  applied.</doc:summary>
+                  <doc:description>The expression should unambiguously identify
+                  the entity(s) and attribute(s) that were
+                  changed.</doc:description>
+                </xs:appinfo>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="oldValue" type="res:NonEmptyStringType">
+              <xs:annotation>
+                <xs:appinfo>
+                  <doc:tooltip>Old Value</doc:tooltip>
+                  <doc:summary>The previous value of the data prior to the
+                  change.</doc:summary>
+                  <doc:description>The previous value or an expression that
+                  describes the previous value of the
+                  data.</doc:description>
+                </xs:appinfo>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="changeDate" type="xs:date">
+              <xs:annotation>
+                <xs:appinfo>
+                  <doc:tooltip>Change Date</doc:tooltip>
+                  <doc:summary>The date the changes were applied.</doc:summary>
+                  <doc:description>The date the changes were
+                  applied.</doc:description>
+                </xs:appinfo>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="comment" type="res:NonEmptyStringType" minOccurs="0">
+              <xs:annotation>
+                <xs:appinfo>
+                  <doc:tooltip>Comment</doc:tooltip>
+                  <doc:summary>Explanation or justification for the change
+                  made to the data.</doc:summary>
+                  <doc:description>Explanation or justification for the change
+                  made to the data.</doc:description>
+                </xs:appinfo>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="MaintUpFreqType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="annually"/>
+      <xs:enumeration value="asNeeded"/>
+      <xs:enumeration value="biannually"/>
+      <xs:enumeration value="continually"/>
+      <xs:enumeration value="daily"/>
+      <xs:enumeration value="irregular"/>
+      <xs:enumeration value="monthly"/>
+      <xs:enumeration value="notPlanned"/>
+      <xs:enumeration value="weekly"/>
+      <xs:enumeration value="unkown"/>
+      <xs:enumeration value="otherMaintenancePeriod"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

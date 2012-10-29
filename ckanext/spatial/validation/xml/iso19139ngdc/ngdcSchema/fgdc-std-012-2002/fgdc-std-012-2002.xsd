@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" blockDefault="#all"
+	xmlns:sch="http://www.ascc.net/xml/schematron">
+	<xsd:annotation>
+		<xsd:documentation>
+	======================================================================
+	 FGDC Metadata XML Schema 1.0.0 20030801
+
+	 This is the XML Schema for formal metadata, metadata conforming to
+	 the Content Standards for Digital Geospatial Metadata of the Federal
+	 Geographic Data Committee.  This schema corresponds to the June,
+	 1998 version of the standard, FGDC-STD-001-1998.
+
+	 This file is the primary XML Schema and loads the definitions for
+	 sections 1-10 of the standard from separate schema modules.
+
+	 Element names:
+	     Element names are a maximum of 8-characters long, to coincide
+	     with the Reference Concrete Syntax.
+
+	 Element ordering:
+	     Generally the order of elements is now significant.  XML makes
+	     it difficult to write a DTD that allows elements to be in any
+	     order.  Although XML Schemas do not have this restriction, it
+	     was decided to keep the significance of element order in order
+	     not to break the DTD validity of XML-encoded metadata files.
+
+	 Authors:
+	     Richard E. Rathmann (PSGS/NOAA Coastal Services Center,
+	     Charleston, SC) with assistance from Mike Moeller (PSGS/NOAA
+	     CSC) and Doug Nebert (Federal Geographic Data Committee).
+
+	 Revisions:
+	     20020826 (RER) Locally scoped the definition of "onlink" in
+	                      Section 7 (7.11.1) within "metextns" (7.11)
+	                      rather than referencing "onlink" definition in
+	                      Section 8 (8.10).
+	     20030801 (RER) Removed 'xml:space="preserve"' from all
+	                      'xsd:documentation' elements.  I originally put
+	                      this in to say "whitespace is significant", but
+	                      both XML Spy and IBM's  Schema Quality Checker
+	                      complain about them.
+	     20030801 (RER) Corrected the second regular expression pattern
+	                      for the "FGDCtime" simple type in this schema
+	                      module.  The "-" in the "[+-]" character class
+	                      for the sign character needed to be escaped, as
+	                      in "[+\-]".
+	     20030801 (RER) Changed types of "srcused" (2.5.2.2) and "srcprod"
+	                      (2.5.2.5) in Section 2 to reference the type
+	                      defined for "srccitea" (2.5.1.5) to comply with
+	                      XML Schema constraint that key/keyref field
+	                      value pairs be of the same type.
+
+
+	======================================================================
+		</xsd:documentation>
+	</xsd:annotation>
+
+	<xsd:annotation>
+		<xsd:documentation>
+			LOADING OF SCHEMA MODULES FOR SECTIONS 1-10 AND BASE TYPES
+		</xsd:documentation>
+	</xsd:annotation>
+	
+
+<xsd:include schemaLocation="fgdc-std-012-2002-base-types.xsd">
+    <xsd:annotation>
+        <xsd:documentation>
+            Import base types.
+        </xsd:documentation>
+   </xsd:annotation>
+</xsd:include>
+<xsd:include schemaLocation="fgdc-std-012-2002-sect01.xsd">
+	<xsd:annotation>
+		<xsd:documentation>Import section 1 module.</xsd:documentation>
+	</xsd:annotation>
+</xsd:include>
+<xsd:include schemaLocation="fgdc-std-012-2002-sect02.xsd">
+	<xsd:annotation>
+		<xsd:documentation>Import section 2 module.</xsd:documentation>
+	</xsd:annotation>
+</xsd:include>
+<xsd:include schemaLocation="fgdc-std-012-2002-sect03.xsd" >
+	<xsd:annotation>
+		<xsd:documentation>Import section 3 module.</xsd:documentation>
+	</xsd:annotation>
+</xsd:include>
+<xsd:include schemaLocation="fgdc-std-012-2002-sect04.xsd" >
+	<xsd:annotation>
+		<xsd:documentation>Import section 4 module.</xsd:documentation>
+	</xsd:annotation>
+</xsd:include>
+<xsd:include schemaLocation="fgdc-std-012-2002-sect05.xsd" >
+	<xsd:annotation>
+		<xsd:documentation>Import section 5 module.</xsd:documentation>
+	</xsd:annotation>
+</xsd:include>
+<xsd:include schemaLocation="../fgdc-std-001-1998/fgdc-std-001-1998-sect06-ann.xsd" >
+	<xsd:annotation>
+		<xsd:documentation>Import section 6 module from base standard.</xsd:documentation>
+	</xsd:annotation>
+</xsd:include>
+<xsd:include schemaLocation="../fgdc-std-001-1998/fgdc-std-001-1998-sect07-ann.xsd" >
+	<xsd:annotation>
+		<xsd:documentation>Import section 7 module from the base standard.</xsd:documentation>
+	</xsd:annotation>
+</xsd:include>
+<xsd:include schemaLocation="../fgdc-std-001-1998/fgdc-std-001-1998-sect08-ann.xsd" >
+	<xsd:annotation>
+		<xsd:documentation>Import section 8 module from the base standard.</xsd:documentation>
+	</xsd:annotation>
+</xsd:include>
+<xsd:include schemaLocation="../fgdc-std-001-1998/fgdc-std-001-1998-sect09-ann.xsd" >
+	<xsd:annotation>
+		<xsd:documentation>Import section 9 module from the base standard.</xsd:documentation>
+	</xsd:annotation>
+</xsd:include>
+<xsd:include schemaLocation="../fgdc-std-001-1998/fgdc-std-001-1998-sect10-ann.xsd" >
+	<xsd:annotation>
+		<xsd:documentation>Import section 10 module from the base standard.</xsd:documentation>
+	</xsd:annotation>
+</xsd:include>
+<xsd:include schemaLocation="fgdc-std-012-2002-plmiinfo.xsd" >
+	<xsd:annotation>
+		<xsd:documentation>Import the platform and mission module.</xsd:documentation>
+	</xsd:annotation>
+</xsd:include>
+<xsd:include schemaLocation="fgdc-std-012-2002-instinfo.xsd" >
+	<xsd:annotation>
+		<xsd:documentation>Import the instrument information module.</xsd:documentation>
+	</xsd:annotation>
+</xsd:include>
+
+
+
+<xsd:element name="metadata" type="rseMetadataType" >
+	<xsd:annotation>
+		<xsd:documentation>
+			Element: Metadata
+			Section: 0
+			Description: data about the content, quality, condition, and other characteristics of data.
+		</xsd:documentation>
+		<xsd:appinfo>
+			<sch:title>Metadata</sch:title>
+		</xsd:appinfo>
+	</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="rseMetadataType">
+    <xsd:sequence>
+        <xsd:element name="idinfo" type="rseIdinfoType">
+        	<xsd:annotation>
+		<xsd:documentation>
+			Element: Identification Information
+			Section: 1
+			Description: basic information about the data set.
+		</xsd:documentation>
+        		<xsd:appinfo>
+        			<sch:title>Identification Information</sch:title>
+        		</xsd:appinfo>
+        	</xsd:annotation>
+        </xsd:element>
+        <xsd:element name="dataqual" type="rseDataqualType" minOccurs="0">
+        	<xsd:annotation>
+	        	<xsd:documentation>
+	        		Element: Data Quality Information
+	        		Section: 2
+	        		Description: a general assessment of the quality of the data set. (Recommendations on information to be reported and tests to be performed are found in "Spatial Data Quality," which is chapter 3 of part 1 in Department of Commerce, 1992, Spatial Data Transfer Standard (SDTS) (Federal Information Processing Standard 173): Washington, Department of Commerce, National Institute of Standards and Technology.)
+	        	</xsd:documentation>
+	        	<xsd:appinfo>
+	        		<sch:title>Data Quality Information</sch:title>
+	        	</xsd:appinfo>
+        	</xsd:annotation>
+        </xsd:element>
+        <xsd:element name="spdoinfo" type="rseSpdoinfoType" minOccurs="0">
+        	<xsd:annotation>
+        		<xsd:documentation>
+        			Element: Spatial Data Organization Information
+        			Section: 3
+        			Description: the mechanism used to represent spatial information in the data set.
+        		</xsd:documentation>
+        		<xsd:appinfo>
+        			<sch:title>Spatial Data Organization Information</sch:title>
+        		</xsd:appinfo>
+        	</xsd:annotation>
+        </xsd:element>
+        <xsd:element name="spref" type="rseSprefType" minOccurs="0">
+        	<xsd:annotation>
+        		<xsd:documentation>
+        			Element: Spatial Reference Information
+        			Section: 4
+        			Description: the description of the reference frame for, and the means to encode, coordinates in the data set.
+        		</xsd:documentation>
+        		<xsd:appinfo>
+        			<sch:title>Spatial Reference Information</sch:title>
+        		</xsd:appinfo>
+        	</xsd:annotation>
+        </xsd:element>
+        <xsd:element name="eainfo" type="rseEainfo" minOccurs="0">
+        	<xsd:annotation>
+        		<xsd:documentation>
+        			Element: Entity and Attribute Information
+        			Section: 5
+        			Description: details about the information content of the data set, including the entity types, their attributes, and the domains from which attribute values may be assigned.
+        		</xsd:documentation>
+        		<xsd:appinfo>
+        			<sch:title>Entity and Attribute Information</sch:title>
+        		</xsd:appinfo>
+        	</xsd:annotation>
+        </xsd:element>
+        <xsd:element ref="distinfo" minOccurs="0" maxOccurs="unbounded"/>
+        <xsd:element ref="metainfo"/>
+        <xsd:element ref="plmiinfo" minOccurs="0"/>
+        <xsd:element ref="instinfo" minOccurs="0" maxOccurs="unbounded" />
+   </xsd:sequence>
+</xsd:complexType>
+
+
+</xsd:schema>

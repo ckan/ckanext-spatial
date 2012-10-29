@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" blockDefault="#all"
+        xmlns:sch="http://www.ascc.net/xml/schematron">
+    <xsd:element name="locainfo" type="locainfoType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Location Information Description: Information about the
+                location of a set of one or more points. (Note: this section provides a means of
+                describing position in a coordinate system relevant to the calling element and is
+                used by other sections of the metadata extensions. This section is never used alone.
+                It differs from the Spatial Reference Information in that it provides positions in a
+                coordinate system relevant to metadata elements, whereas the Spatial Reference
+                Information refers only to positions at which the data are located.) Rationale:
+                There are numerous metadata elements that consist of one or more coordinate points.
+                Since the concept appears so frequently, creating one standard compound element is
+                preferable to repeating the same structure at many points throughout the standard. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Location Information</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType mixed="true" name="locainfoType">
+        <xsd:sequence>
+            <xsd:element ref="numpoint" />
+            <!-- TODO: the actual validation for coordsys element is present and mandatory if and only if not defined in referencing element" -->
+            <xsd:element ref="coordsys" minOccurs="0"/>
+            <!-- TODO; the acutal validation for coordxyu might be immpossible to represent in a schema:
+                Conditional - present and mandatory if and only if  the coordinates correspond to physical dimensions and are not specified elsewhere.
+                -->
+            <xsd:element ref="coordxyu" minOccurs="0"/>
+            <xsd:element ref="coordzu" minOccurs="0"/>
+            <!-- TODO: The actual validatio for coordpt is =Number_of_Points -->
+            <xsd:element ref="coordpt" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+            <xsd:element name="numpoint" type="positiveIntegerType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Number of Points Description: Number of coordinate
+                        positions. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Number of Points</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="coordsys" type="coordsysType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Coordinate System Description: Definition of axes
+                        of coordinate system in which location of positions is provided. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Coordinate System</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="coordxyu" type="coordxyuType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Coordinate XY Units Description: Physical dimension
+                        corresponding to value of unity in x and y coordinate directions as defined
+                        in Coordinate System or referencing element, where the coordinates
+                        correspond to physical dimensions. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Coordinate XY Units</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="coordzu" type="coordzuType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Coordinate Z Units Description: Physical dimension
+                        corresponding to value of unity in z coordinate directions Coordinate System
+                        or referencing element, where the coordinates correspond to physical
+                        dimensions. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Coordinate Z Units</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="coordpt" type="coordptType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Coordinate Point Description: Location of a
+                        coordinate point described by the referencing element. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Coordinate Point</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+    <xsd:simpleType name="coordxyuType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:simpleType name="coordzuType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:complexType name="coordsysType">
+        <xsd:choice>
+            <xsd:element name="unrefsys" type="FGDCstring">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Unreferenced Coordinate System Description:
+                        Coordinate system which is not georeferenced and for which georeferencing
+                        information is unavailable or irrelevant. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Unreferenced Coordinate System</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="refsys" type="refsysType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Referenced Coordinate System Description:
+                        Coordinate system that can be georeferenced.. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Referenced Coordinate System</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:choice>
+    </xsd:complexType>
+    <xsd:complexType name="refsysType">
+        <xsd:sequence>
+            <xsd:element name="spref" type="rseSprefType" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="coordptType">
+        <xsd:sequence>
+            <xsd:element name="coorxval" type="xsd:double">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Coordinate x Value Description: Location of point
+                        along x-axis. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Coordinate x Value</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="cooryval" type="xsd:double">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Coordinate y Value Description: Location of point
+                        along y-axis. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Coordinate y Value</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="coorzval" type="xsd:double" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Coordinate z Value Description: Location of point
+                        along z-axis. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Coordinate z Value</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>

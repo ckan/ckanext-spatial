@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:sch="http://www.ascc.net/xml/schematron" blockDefault="#all">
+    <xsd:element name="procinfo" type="procinfoType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Processing Information Description: Comprehensive
+                information about the procedure by which the algorithm was applied to derive
+                geographic data from the raw instrument measurements, such as datasets, software
+                used, and the processing environment. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Processing Information</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="procinfoType">
+        <xsd:sequence>
+            <xsd:element name="procidfs" type="procidfsType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Processing Identifiers Description: Information to
+                        identify processing package that produced the data. Rationale: Allows users
+                        to distinguish data from different eras of processing. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Processing Identifiers</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="procinp" type="procinpType" minOccurs="1" maxOccurs="unbounded" >
+                <xsd:annotation>
+                    <xsd:documentation> Element: Processing Input Dataset Description: The data used
+                        as input to single or multistage processing used to derive product. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Processing Input Dataset</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="ancdata" type="ancdataType" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Ancillary Dataset Description: Data other than
+                        input required to process the input data. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Ancillary Dataset</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="procsoft" type="procsoftType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Processing Software Description: The computer
+                        programs used to process data from one level to another. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Processing Software</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="procprcd" type="procprcdType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Processing Procedure Description: Description of
+                        decision parameters in and circumstances and methods of processing. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Processing Procedure</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="procchhi" type="procchhiType" minOccurs="0" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Processing Change History Description: Description
+                        of the changes in processing procedure from version to version. Rationale:
+                        Allows users to understand any differences that may arise from differences
+                        between the way the current version was processed and the way previous
+                        versions they used were processed. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Processing Change History</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="procdoc" type="procdocType" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Processing Documentation Description: Reference to
+                        documentation describing the processing. Rationale: A full description of
+                        all aspects of the processing may be too detailed for inclusion in
+                        accompanying metadata. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Processing Documentation</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <!-- procidsfs hierarchy -->
+    <xsd:complexType name="procidfsType">
+        <xsd:sequence>
+            <xsd:element ref="citeinfo"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <!-- procinp hierarchy -->
+    <xsd:complexType name="procinpType">
+        <xsd:sequence>
+            <xsd:element name="inpdatid" type="inpdatidType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Input Dataset Identifier Description: Unique
+                        identifier for input dataset. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Input Dataset Identifier</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:choice>
+                <xsd:element name="prindesc" type="prindescType">
+                    <xsd:annotation>
+                        <xsd:documentation> Element: Input Description Description: Description of
+                            input datasets for processing. </xsd:documentation>
+                        <xsd:appinfo>
+                            <sch:title>Input Description</sch:title>
+                        </xsd:appinfo>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="prinref" type="prinrefType">
+                    <xsd:annotation>
+                        <xsd:documentation> Element: Input Reference Description: Reference to
+                            document describing input to processing. </xsd:documentation>
+                        <xsd:appinfo>
+                            <sch:title>Input Reference</sch:title>
+                        </xsd:appinfo>
+                    </xsd:annotation>
+                </xsd:element>
+            </xsd:choice>
+            <xsd:element name="prinlevl" type="prinlevlType" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Input Level Description: Data distributor's code
+                        that identifies the degree of radiometric and geometric processing applied
+                        to the data defined in Processing Input Dataset. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Input Level</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="inpdatidType">
+        <xsd:sequence>
+            <xsd:element ref="datsetid"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:simpleType name="prindescType">
+        <xsd:restriction base="FGDCstring"/>
+    </xsd:simpleType>
+    <xsd:complexType name="prinrefType">
+        <xsd:sequence>
+            <xsd:element ref="citeinfo"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="prinlevlType">
+        <xsd:sequence>
+            <xsd:element name="proclevl" type="proclevlType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Processing Level Description: Degree of data
+                        processing applied to the measurements, as exemplified in Appendixes AC. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Processing Level</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <!-- ancdata hierarchy -->
+    <xsd:complexType name="ancdataType">
+        <xsd:sequence>
+            <xsd:element name="ancdatid" type="ancdatidType" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Ancillary Dataset Identifier Description: Unique
+                        identifier for ancillary dataset. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Ancillary Dataset Identifier</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:choice>
+                <xsd:element name="ancdesc" type="ancdescType">
+                    <xsd:annotation>
+                        <xsd:documentation> Element: Ancillary Description Description: Description
+                            of ancillary data and descriptive parameters used in processing step. </xsd:documentation>
+                        <xsd:appinfo>
+                            <sch:title>Ancillary Description</sch:title>
+                        </xsd:appinfo>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="ancref" type="ancrefType">
+                    <xsd:annotation>
+                        <xsd:documentation> Element: Ancillary Reference Description: Reference to
+                            document describing ancillary data. </xsd:documentation>
+                        <xsd:appinfo>
+                            <sch:title>Ancillary Reference</sch:title>
+                        </xsd:appinfo>
+                    </xsd:annotation>
+                </xsd:element>
+            </xsd:choice>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="ancdatidType">
+        <xsd:sequence>
+            <xsd:element ref="datsetid"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="ancdescType">
+        <xsd:sequence>
+            <xsd:element name="ancdsdes" type="ancdsdesType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Ancillary Dataset Description Description:
+                        Description of ancillary datasets for processing. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Ancillary Dataset Description</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="procpmcl" type="procpmclType" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Command Line Processing Parameter Description:
+                        Parameters to control processing operations, entered at run time. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Command Line Processing Parameter</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="ancrefType">
+        <xsd:sequence>
+            <xsd:element ref="citeinfo"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:simpleType name="ancdsdesType">
+        <xsd:restriction base="FGDCstring"/>
+    </xsd:simpleType>
+    <xsd:simpleType name="procpmclType">
+        <xsd:restriction base="FGDCstring"/>
+    </xsd:simpleType>
+    <!-- procsoft hierarchy -->
+    <xsd:complexType name="procsoftType">
+        <xsd:choice>
+            <xsd:element name="prsodesc" type="prsodescType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Processing Software Description Description: Text
+                        description of processing software. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Processing Software Description</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="prsoref" type="prsorefType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Processing Software Reference Description:
+                        Reference to document describing processing software. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Processing Software Reference</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:choice>
+    </xsd:complexType>
+    <xsd:simpleType name="prsodescType">
+        <xsd:restriction base="FGDCstring"/>
+    </xsd:simpleType>
+    <xsd:complexType name="prsorefType">
+        <xsd:sequence>
+            <xsd:element ref="citeinfo"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <!-- procprcd hierarch -->
+    <xsd:complexType name="procprcdType">
+        <xsd:sequence>
+            <xsd:element name="prunhist" type="prunhistType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Processing Run History Description: History of
+                        processing runs that create data set described by metadata. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Processing Run History</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="procenv" type="procenvType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Processing Environment Description: The environment
+                        in which the processing was carried out, including, but not limited to, the
+                        platform, the operating system name and version, and other configuration
+                        control information. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Processing Environment</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element ref="procpdes" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="prunhistType">
+        <xsd:sequence>
+            <xsd:element ref="procstep" minOccurs="1" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="procenvType">
+        <xsd:sequence>
+            <xsd:element ref="native"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="procpdes" type="procpdesType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Processing Procedure Description Description: Additional
+                details about the processing procedure. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Processing Procedure Description</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="procpdesType">
+        <xsd:restriction base="FGDCstring"/>
+    </xsd:simpleType>
+    <!-- procchhi hierarchy -->
+    <xsd:complexType name="procchhiType">
+        <xsd:sequence>
+            <xsd:element ref="procstep" minOccurs="1" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <!-- procdoc hierarch -->
+    <xsd:complexType name="procdocType">
+        <xsd:sequence>
+            <xsd:element ref="citeinfo"/>
+        </xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>

@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:doc="eml://ecoinformatics.org/documentation-2.1.0" xmlns:unit="eml://ecoinformatics.org/units-2.1.0" targetNamespace="eml://ecoinformatics.org/units-2.1.0">
+  <xs:import namespace="eml://ecoinformatics.org/documentation-2.1.0" schemaLocation="eml-documentation.xsd"/>
+  <xs:annotation>
+    <xs:documentation>
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    </xs:documentation>
+    <xs:appinfo>
+      <doc:moduleDocs>
+        <doc:moduleName>eml-unitTypeDefinitions</doc:moduleName>
+        <doc:moduleDescription>
+          <section xmlns="">
+            <title>EML Unit Type Definitions</title>
+            <section>
+              <title>Philosophy of Units</title>
+              <para>The concept of "unit" represents one of the most fundamental
+            categories of metadata. The classic example of data entropy is the
+            case in which a reported numeric value loses meaning due to lack of
+            associated units. Much of Ecology is driven by measurement, and
+            most measurements are inherently comparative. Good data description
+            requires a representation of the basis for comparison, i.e., the
+            unit. In modeling units, the authors of EML drew
+            inspiration from the
+            <ulink url="http://physics.nist.gov/cuu/Units/introduction.html">
+            NIST Reference on Constants, Units, and Uncertainty</ulink>.
+            This document defines a unit as "a particular physical quantity,
+            defined and adopted by convention, with which other particular
+            quantities of the same kind are compared to express their value."
+            The authors of the EML 2 specification (hereafter "the authors")
+            decided to make the unit element required, wherever
+            possible.</para>
+              <para>The units are defined in the 
+        <ulink url="http://www.ch.ic.ac.uk/rzepa/codata2/">STMML language</ulink> 
+        in a document that is shipped with each release of
+        EML. See the accompanying STMML file, eml-unitDictionary.xml, for
+        precise, quantitative definitions of each of these units and their
+        relationships to base SI units</para>
+              <para>which modules use these types (and which could but dont yet?)</para>
+              <para>anything else?</para>
+            </section>
+          </section>
+        </doc:moduleDescription>
+        <doc:recommendedUsage>any module that needs units</doc:recommendedUsage>
+        <doc:standAlone>no</doc:standAlone>
+      </doc:moduleDocs>
+    </xs:appinfo>
+  </xs:annotation>
+  <!-- 
+
+
+the dictionary of all the units -->
+  <xs:simpleType name="StandardUnitDictionary">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Standard Units</doc:tooltip>
+        <doc:summary>The enumerated list of standard units, mainly S unitsI</doc:summary>
+        <doc:description>
+          <para>The unitDictionary is the standard set
+        of units included with the EML distribution, mainly from the
+        SI standard. These unit names should  be used in the standardUnit field to
+        describe an attribute. See the accompanying STMML file, eml-unitDictionary.xml, for
+        precise, quantitative definitions of each of these units and their
+        relationships to base SI units.</para>
+          <para>The standard Unit Dictionary is built from a union of simpleTypes. 
+          This construct allows unit types to be used individually as appropriate 
+          in EML content (e.g., LengthUnitType for distances )</para>
+        </doc:description>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:union memberTypes="unit:LengthUnitType unit:MassUnitType unit:otherUnitType"/>
+  </xs:simpleType>
+  <!-- 
+
+length units -->
+  <xs:simpleType name="LengthUnitType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Length Units</doc:tooltip>
+        <doc:summary>The  list of units which are of length type, or have a parentSI of meter
+        SI</doc:summary>
+        <doc:description>
+          <para>The LengthUnitType is the enumerated list of units which are of length type, or have a parentSI of meter. 
+        These unit names can be used where ever content should be restricted to a length, such as a distance or 
+        altitude. The units are defined in the STMML
+        language in a document that is shipped with each release of
+        EML called  eml-unitDictionary.xml. See this file for
+        precise, quantitative definitions of each of these units and their
+        relationships to base SI units.</para>
+        </doc:description>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="meter"/>
+      <xs:enumeration value="nanometer"/>
+      <xs:enumeration value="micrometer"/>
+      <xs:enumeration value="micron"/>
+      <xs:enumeration value="millimeter"/>
+      <xs:enumeration value="centimeter"/>
+      <xs:enumeration value="decimeter"/>
+      <xs:enumeration value="dekameter"/>
+      <xs:enumeration value="hectometer"/>
+      <xs:enumeration value="kilometer"/>
+      <xs:enumeration value="megameter"/>
+      <xs:enumeration value="angstrom"/>
+      <xs:enumeration value="inch"/>
+      <xs:enumeration value="Foot_US"/>
+      <xs:enumeration value="foot"/>
+      <xs:enumeration value="Foot_Gold_Coast"/>
+      <xs:enumeration value="fathom"/>
+      <xs:enumeration value="nauticalMile"/>
+      <xs:enumeration value="yard"/>
+      <xs:enumeration value="Yard_Indian"/>
+      <xs:enumeration value="Link_Clarke"/>
+      <xs:enumeration value="Yard_Sears"/>
+      <xs:enumeration value="mile"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- 
+
+
+mass units -->
+  <xs:simpleType name="MassUnitType">
+     <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Mass Units</doc:tooltip>
+        <doc:summary>The  list of units which are of mass type, or have a parentSI of kilogram
+        </doc:summary>
+        <doc:description>
+          <para>The MassUnitType is the enumerated list of units which are of mass type, or have a parentSI of kilogram. 
+        These unit names can be used where ever content should be restricted to a mass, such as an amount. 
+        The units are defined in the STMML
+        language in a document that is shipped with each release of
+        EML called  eml-unitDictionary.xml. See this file for
+        precise, quantitative definitions of each of these units and their
+        relationships to base SI units.</para>
+        </doc:description>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="kilogram"/>
+      <xs:enumeration value="nanogram"/>
+      <xs:enumeration value="microgram"/>
+      <xs:enumeration value="milligram"/>
+      <xs:enumeration value="centigram"/>
+      <xs:enumeration value="decigram"/>
+      <xs:enumeration value="gram"/>
+      <xs:enumeration value="dekagram"/>
+      <xs:enumeration value="hectogram"/>
+      <xs:enumeration value="megagram"/>
+      <xs:enumeration value="tonne"/>
+      <xs:enumeration value="pound"/>
+      <xs:enumeration value="ton"/>
+    </xs:restriction>
+  </xs:simpleType>
+ 
+  <!-- 
+
+
+the other units, not previously described -->
+  <xs:simpleType name="otherUnitType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Other Standard Units</doc:tooltip>
+        <doc:summary>The enumerated list of standard units that are not 
+        included in the any other named simpleType</doc:summary>
+        <doc:description>
+          <para>The unitDictionary is the standard set
+        of units included with the EML distribution, mainly from the
+        SI standard. These unit names can be used in the standardUnit field to
+        describe an attribute. The units are defined in the STMML
+        language in a document that is shipped with each release of
+        EML. See the accompanying STMML file eml-unitDictionary.xml for
+        precise, quantitative definitions of each of these units and their
+        relationships to base SI units.</para>
+          <para>The standard Unit Dictionary is built from a union of simpleTypes. This Type 
+enumerates the units which are not in other Type definitions, but are to be 
+included as standard.</para>
+        </doc:description>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="dimensionless"/>
+      <xs:enumeration value="second"/>
+      <xs:enumeration value="kelvin"/>
+      <xs:enumeration value="coulomb"/>
+      <xs:enumeration value="ampere"/>
+      <xs:enumeration value="mole"/>
+      <xs:enumeration value="candela"/>
+      <xs:enumeration value="number"/>
+    <xs:enumeration value="radian"/>
+      <xs:enumeration value="degree"/>
+      <xs:enumeration value="grad"/>   
+      <xs:enumeration value="cubicMeter"/>
+      <xs:enumeration value="nominalMinute"/>
+      <xs:enumeration value="nominalHour"/>
+      <xs:enumeration value="nominalDay"/>
+      <xs:enumeration value="nominalWeek"/>
+      <xs:enumeration value="nominalYear"/>
+      <xs:enumeration value="nominalLeapYear"/>
+      <xs:enumeration value="celsius"/>
+      <xs:enumeration value="fahrenheit"/>
+      <xs:enumeration value="nanosecond"/>
+      <xs:enumeration value="microsecond"/>
+      <xs:enumeration value="millisecond"/>
+      <xs:enumeration value="centisecond"/>
+      <xs:enumeration value="decisecond"/>
+      <xs:enumeration value="dekasecond"/>
+      <xs:enumeration value="hectosecond"/>
+      <xs:enumeration value="kilosecond"/>
+      <xs:enumeration value="megasecond"/>
+      <xs:enumeration value="minute"/>
+      <xs:enumeration value="hour"/>
+      <xs:enumeration value="kiloliter"/>
+      <xs:enumeration value="microliter"/>
+      <xs:enumeration value="milliliter"/>
+      <xs:enumeration value="liter"/>
+      <xs:enumeration value="gallon"/>
+      <xs:enumeration value="quart"/>
+      <xs:enumeration value="bushel"/>
+      <xs:enumeration value="cubicInch"/>
+      <xs:enumeration value="pint"/>
+      <xs:enumeration value="megahertz"/>
+      <xs:enumeration value="kilohertz"/>
+      <xs:enumeration value="hertz"/>
+      <xs:enumeration value="millihertz"/>
+      <xs:enumeration value="newton"/>
+      <xs:enumeration value="joule"/>
+      <xs:enumeration value="calorie"/>
+      <xs:enumeration value="britishThermalUnit"/>
+      <xs:enumeration value="footPound"/>
+      <xs:enumeration value="lumen"/>
+      <xs:enumeration value="lux"/>
+      <xs:enumeration value="becquerel"/>
+      <xs:enumeration value="gray"/>
+      <xs:enumeration value="sievert"/>
+      <xs:enumeration value="katal"/>
+      <xs:enumeration value="henry"/>
+      <xs:enumeration value="megawatt"/>
+      <xs:enumeration value="kilowatt"/>
+      <xs:enumeration value="watt"/>
+      <xs:enumeration value="milliwatt"/>
+      <xs:enumeration value="megavolt"/>
+      <xs:enumeration value="kilovolt"/>
+      <xs:enumeration value="volt"/>
+      <xs:enumeration value="millivolt"/>
+      <xs:enumeration value="farad"/>
+      <xs:enumeration value="ohm"/>
+      <xs:enumeration value="ohmMeter"/>
+      <xs:enumeration value="siemen"/>
+      <xs:enumeration value="weber"/>
+      <xs:enumeration value="tesla"/>
+      <xs:enumeration value="pascal"/>
+      <xs:enumeration value="megapascal"/>
+      <xs:enumeration value="kilopascal"/>
+      <xs:enumeration value="atmosphere"/>
+      <xs:enumeration value="bar"/>
+      <xs:enumeration value="millibar"/>
+      <xs:enumeration value="kilogramsPerSquareMeter"/>
+      <xs:enumeration value="gramsPerSquareMeter"/>
+      <xs:enumeration value="milligramsPerSquareMeter"/>
+      <xs:enumeration value="kilogramsPerHectare"/>
+      <xs:enumeration value="tonnePerHectare"/>
+      <xs:enumeration value="poundsPerSquareInch"/>
+      <xs:enumeration value="kilogramPerCubicMeter"/>
+      <xs:enumeration value="milliGramsPerMilliLiter"/>
+      <xs:enumeration value="gramsPerLiter"/>
+      <xs:enumeration value="milligramsPerCubicMeter"/>
+      <xs:enumeration value="microgramsPerLiter"/>
+      <xs:enumeration value="milligramsPerLiter"/>
+      <xs:enumeration value="gramsPerCubicCentimeter"/>
+      <xs:enumeration value="gramsPerMilliliter"/>
+      <xs:enumeration value="gramsPerLiterPerDay"/>
+      <xs:enumeration value="litersPerSecond"/>
+      <xs:enumeration value="cubicMetersPerSecond"/>
+      <xs:enumeration value="cubicFeetPerSecond"/>
+      <xs:enumeration value="squareMeter"/>
+      <xs:enumeration value="are"/>
+      <xs:enumeration value="hectare"/>
+      <xs:enumeration value="squareKilometers"/>
+      <xs:enumeration value="squareMillimeters"/>
+      <xs:enumeration value="squareCentimeters"/>
+      <xs:enumeration value="acre"/>
+      <xs:enumeration value="squareFoot"/>
+      <xs:enumeration value="squareYard"/>
+      <xs:enumeration value="squareMile"/>
+      <xs:enumeration value="litersPerSquareMeter"/>
+      <xs:enumeration value="bushelsPerAcre"/>
+      <xs:enumeration value="litersPerHectare"/>
+      <xs:enumeration value="squareMeterPerKilogram"/>
+      <xs:enumeration value="metersPerSecond"/>
+      <xs:enumeration value="metersPerDay"/>
+      <xs:enumeration value="feetPerDay"/>
+      <xs:enumeration value="feetPerSecond"/>
+      <xs:enumeration value="feetPerHour"/>
+      <xs:enumeration value="yardsPerSecond"/>
+      <xs:enumeration value="milesPerHour"/>
+      <xs:enumeration value="milesPerSecond"/>
+      <xs:enumeration value="milesPerMinute"/>
+      <xs:enumeration value="centimetersPerSecond"/>
+      <xs:enumeration value="millimetersPerSecond"/>
+      <xs:enumeration value="centimeterPerYear"/>
+      <xs:enumeration value="knots"/>
+      <xs:enumeration value="kilometersPerHour"/>
+      <xs:enumeration value="metersPerSecondSquared"/>
+      <xs:enumeration value="waveNumber"/>
+      <xs:enumeration value="cubicMeterPerKilogram"/>
+      <xs:enumeration value="cubicMicrometersPerGram"/>
+      <xs:enumeration value="amperePerSquareMeter"/>
+      <xs:enumeration value="amperePerMeter"/>
+      <xs:enumeration value="molePerCubicMeter"/>
+      <xs:enumeration value="molarity"/>
+      <xs:enumeration value="molality"/>
+      <xs:enumeration value="candelaPerSquareMeter"/>
+      <xs:enumeration value="metersSquaredPerSecond"/>
+      <xs:enumeration value="metersSquaredPerDay"/>
+      <xs:enumeration value="feetSquaredPerDay"/>
+      <xs:enumeration value="kilogramsPerMeterSquaredPerSecond"/>
+      <xs:enumeration value="gramsPerCentimeterSquaredPerSecond"/>
+      <xs:enumeration value="gramsPerMeterSquaredPerYear"/>
+      <xs:enumeration value="gramsPerHectarePerDay"/>
+      <xs:enumeration value="kilogramsPerHectarePerYear"/>
+      <xs:enumeration value="kilogramsPerMeterSquaredPerYear"/>
+      <xs:enumeration value="molesPerKilogram"/>
+      <xs:enumeration value="molesPerGram"/>
+      <xs:enumeration value="millimolesPerGram"/>
+      <xs:enumeration value="molesPerKilogramPerSecond"/>
+      <xs:enumeration value="nanomolesPerGramPerSecond"/>
+      <xs:enumeration value="kilogramsPerSecond"/>
+      <xs:enumeration value="tonnesPerYear"/>
+      <xs:enumeration value="gramsPerYear"/>
+      <xs:enumeration value="numberPerMeterSquared"/>
+      <xs:enumeration value="numberPerKilometerSquared"/>
+      <xs:enumeration value="numberPerMeterCubed"/>
+      <xs:enumeration value="numberPerLiter"/>
+      <xs:enumeration value="numberPerMilliliter"/>
+      <xs:enumeration value="metersPerGram"/>
+      <xs:enumeration value="numberPerGram"/>
+      <xs:enumeration value="gramsPerGram"/>
+      <xs:enumeration value="microgramsPerGram"/>
+      <xs:enumeration value="cubicCentimetersPerCubicCentimeters"/>
+      <!-- removed the mass units to their named type -->
+      <!-- removed the length units to their named type -->
+      <!-- removed the angle units to their named type -->
+    </xs:restriction>
+  </xs:simpleType>
+ <!-- 
+
+angle units -->
+  <xs:simpleType name="angleUnitType">
+   <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Angle Units</doc:tooltip>
+        <doc:summary>An example of a group of units which could be added. These units are a 
+        derived typein the group of derived SI units with a special name or symbol.</doc:summary>
+        <doc:description>
+          <para>The AngleUnitType is the enumerated list of angle units. For example,
+            plane angle (radian, rad) and solid angle (steradian, sr) are actually 
+            dimensionless, and their symbols used as appropriate 
+       (e.g, sr in photometry). These unit names could be used where 
+       ever content should be restricted.</para>
+        </doc:description>
+      </xs:appinfo>
+      </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="radian"/>
+      <xs:enumeration value="degree"/>
+      <xs:enumeration value="grad"/>
+      <!--    <xs:enumeration value="steradian"/> -->
+    </xs:restriction>
+  </xs:simpleType>  
+  
+</xs:schema>

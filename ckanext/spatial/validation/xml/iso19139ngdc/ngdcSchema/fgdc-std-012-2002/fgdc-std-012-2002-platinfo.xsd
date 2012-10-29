@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" blockDefault="#all"
+    xmlns:sch="http://www.ascc.net/xml/schematron">
+    <xsd:element name="platinfo" type="platinfoType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Platform Information Description: General information about
+                the platform from which the data were taken. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Platform Information</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="platinfoType">
+        <xsd:sequence>
+            <!-- TODO: this is NOT an FGDC RSE element!! It should be moved to an NGDC local extension -->
+            <xsd:element name="platflnm" type="platflnmType" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Platform Full Name Description: The complete name
+                        of the platform. Rationale: The complete name is needed for clear
+                        identification of the platform. This element is an NGDC local extension.</xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Platform Full Name</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="platstdt" type="platstdtType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Platform Start Date Description: Start date of
+                        platform operation. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Platform Start Date</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="platspon" type="FGDCstring" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Platform Sponsor Description: An organization
+                        responsible for building, launch, or operation of the platform, and its
+                        role. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Platform Sponsor</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="platdesc" type="FGDCstring" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Platform Description Description: Narrative
+                        description of the platform from which the data were taken. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Platform Description</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="platforb" type="platforbType" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Platform Orbit Description: Orbital parameters of
+                        instrument platform. Rationale: Informs the user about potential spatial and
+                        temporal coverage of the data. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Platform Orbit</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="fltprot" type="fltprotType" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Flight Protocol Description: Description of
+                        circumstances and properties of the flight track relevant to use of the
+                        images and data. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Flight Protocol</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="platstdtType">
+        <xsd:sequence>
+            <xsd:element ref="sngdate"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="platforbType">
+        <xsd:sequence>
+            <xsd:element name="ephem" type="ephemerisType">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Element: Ephemeris
+                        Description: Time at which nominal platform orbit or geostationary position is valid.
+                    </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Ephemeris</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            
+            <xsd:choice>
+                <xsd:element name="kepleror" type="keplerorType">
+                    <xsd:annotation>
+                        <xsd:documentation> Element: Keplerian Orbit Description: Nominal Keplerian
+                            elements of platform orbit. </xsd:documentation>
+                        <xsd:appinfo>
+                            <sch:title>Keplerian Orbit</sch:title>
+                        </xsd:appinfo>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="ngeopos" type="ngeoposType">
+                    <xsd:annotation>
+                        <xsd:documentation> Element: Nominal Geostationary Position Description:
+                            Nominal location of platform designed to remain stationary over one
+                            point on earth. </xsd:documentation>
+                        <xsd:appinfo>
+                            <sch:title>Nominal Geostationary Position</sch:title>
+                        </xsd:appinfo>
+                    </xsd:annotation>
+                </xsd:element>
+            </xsd:choice>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="ephemerisType">
+        <xsd:sequence>
+            <xsd:element ref="sngdate"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <!-- kepleror -->
+    <xsd:complexType name="keplerorType">
+        <xsd:sequence>
+            <xsd:choice maxOccurs="2">
+                <!-- TODO: The following two element, semimaax and orbitpd should 
+                have an and/or relationship.  Max one each -->
+                <xsd:element ref="semimaax"/>
+                <xsd:element name="orbitpd" type="orbitpdType">
+                    <xsd:annotation>
+                        <xsd:documentation> Element: Orbit Period Description: Time from one perigee
+                            to the next. (Note: The orbit period is related to the semimajor axis of
+                            the orbit by P ^2=4 pie^2 a^3/[G(M+m)], where P is the orbit period, a
+                            is the semimajor axis, G the universal gravitational constant, M the
+                            mass of the Earth, and m the mass of the satellite. In practice, because
+                            the product GM is easier to obtain than G or M, and because
+                            m&lt;&lt;M, the form P^2=4pe^2 a^3/GM is often used.) </xsd:documentation>
+                        <xsd:appinfo>
+                            <sch:title>Orbit Period</sch:title>
+                        </xsd:appinfo>
+                    </xsd:annotation>
+                </xsd:element>
+            </xsd:choice>
+            <xsd:element ref="eccentry"/>
+            <xsd:element name="orbangun" type="orbangunType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Orbit Angle Units Description: Unit of measure used
+                        to express orbital angles. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Orbit Angle Units</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="inclinat" type="inclinatType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Inclination Description: Angle between orbit and
+                        equator, in units given by Orbit Angle Units. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Inclination</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="raascnod" type="raascnodType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Right Ascension of Ascending Node Description: The
+                        right ascension (angle eastward from the vernal equinox) where the satellite
+                        orbit crosses the equator, moving northward, in units given by Orbit Angle
+                        Units. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Right Ascension of Ascending Node</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element ref="argupgee"/>
+            <xsd:element name="peripass" type="peripassType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Perigee Passage Time Description: One date and time
+                        where platform was at closest point to earth in its orbit. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Perigee Passage Time</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:simpleType name="orbangunType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="semimaax" type="semimaaxType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Semimajor Axis Description: Semimajor axis of platform
+                orbit, in kilometers. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Semimajor Axis</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="semimaaxType">
+        <xsd:restriction base="xsd:double">
+            <xsd:minExclusive value="6378.2"/>
+            <xsd:maxExclusive value="261000"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:complexType name="orbitpdType">
+        <xsd:sequence>
+            <xsd:element name="orpdunit" type="orpdunitType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Orbit Period Units Description: Unit of measure
+                        used to express orbit period. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Orbit Period Units</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element ref="orpdval"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:simpleType name="orpdunitType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="orpdval" type="orpdvalType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Orbit Period Value Description: Time required for one
+                platform orbit, in units given by Orbit Period Units. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Orbit Period Value</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="orpdvalType">
+        <xsd:restriction base="xsd:double">
+            <xsd:minExclusive value="0"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:element name="eccentry" type="eccentryType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Eccentricity Description: Eccentricity of orbit, equal to
+                (1-b/a)1/2, where a is the length of the major axis and b is the length of the minor
+                axis of the orbit. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Eccentricity</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="eccentryType">
+        <xsd:restriction base="xsd:double">
+            <xsd:minInclusive value="0"/>
+            <xsd:maxExclusive value="1"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="inclinatType">
+        <xsd:restriction base="xsd:double">
+            <xsd:minInclusive value="0"/>
+            <xsd:maxInclusive value="180"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="raascnodType">
+        <xsd:restriction base="xsd:double">
+            <xsd:minInclusive value="0"/>
+            <xsd:maxExclusive value="360"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:element name="argupgee" type="argupgeeType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Argument of Perigee Description: The angle between the
+                ascending node and perigee, measured from the ascending node in the direction of the
+                platform's motion along the plane of the orbit, in units given by Orbit Angle Units. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Argument of Perigee</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="argupgeeType">
+        <xsd:restriction base="xsd:double">
+            <xsd:minInclusive value="0"/>
+            <xsd:maxExclusive value="360"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:complexType name="peripassType">
+        <xsd:sequence>
+            <xsd:element ref="sngdate"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <!-- ngeopos -->
+    <xsd:complexType name="ngeoposType">
+        <xsd:sequence>
+            <xsd:element ref="pnomlong" />
+            <xsd:element ref="gpnalti" />
+        </xsd:sequence>
+    </xsd:complexType>
+            <xsd:element name="pnomlong" type="FGDClongitude">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Platform Nominal Longitude Description: Nominal
+                        value for longitude of subsatellite point for geostationary satellite. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Platform Nominal Longitude</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="gpnalti" type="gpnaltiType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Platform Nominal Altitude Description: Nominal
+                        altitude of geostationary satellite above the surface given by Altitude
+                        Datum Name defined in base standard. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Platform Nominal Altitude</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+    <xsd:complexType name="gpnaltiType">
+        <xsd:sequence>
+            <xsd:element name="gpnaltun" type="gpnaltunType" >
+                <xsd:annotation>
+                    <xsd:documentation> Element: Platform Nominal Altitude Units Description: Units
+                        of measure in which nominal altitude for platform is expressed. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Platform Nominal Altitude Units</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="gpnaltva" type="FGDCstring">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Platform Nominal Altitude Value Description: Value
+                        for nominal altitude of platform, in units given by Platform Nominal
+                        Altitude Units. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Platform Nominal Altitude Value</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    
+    <xsd:complexType name="gpnaltunType">
+        <xsd:sequence>
+            <xsd:element ref="altunits" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="fltprotType">
+        <xsd:sequence>
+            <xsd:element ref="flyhite"/>
+            <xsd:element ref="gpsavail" minOccurs="0"/>
+            <xsd:element ref="insavail" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="flyhite" type="flyhiteType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Flying Height Description: Height of platform above ground
+                in meters, with an uncertainty of 10-100 meters. Rationale: This value is used for
+                planning purposes or photo interpretation. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Flying Height</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="flyhiteType">
+        <xsd:restriction base="xsd:double">
+            <xsd:minExclusive value="0"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:element name="gpsavail" type="gpsavailType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Element: GPS Information System Availability
+                Description: Availability of three-dimensional Global Positioning System (GPS) positions.
+            </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>GPS Information System Availability</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="gpsavailType">
+        <xsd:restriction base="xsd:token">
+            <xsd:enumeration value="available"/>
+            <xsd:enumeration value="not available"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:element name="insavail" type="insavailType">
+        <xsd:annotation>
+            <xsd:documentation> Element: INS Reading Availability Description: Availability of
+                Inertial Navigation System (INS) readings along the flight line. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>INS Reading Availability</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="insavailType">
+        <xsd:restriction base="xsd:token">
+            <xsd:enumeration value="available"/>
+            <xsd:enumeration value="not available"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+</xsd:schema>
