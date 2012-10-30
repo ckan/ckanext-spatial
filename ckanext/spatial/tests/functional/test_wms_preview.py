@@ -13,6 +13,7 @@ log = logging.getLogger(__name__)
 
 
 class TestWMSPreview(FunctionalTestCase,SpatialTestBase):
+
     def setup(self):
         CreateTestData.create()
 
@@ -20,6 +21,8 @@ class TestWMSPreview(FunctionalTestCase,SpatialTestBase):
         model.repo.rebuild_db()
 
     def test_link_and_map_shown(self):
+        from nose.plugins.skip import SkipTest
+        raise SkipTest('TODO: Need to update this to use logic functions')
 
         name = u'annakarenina'
         

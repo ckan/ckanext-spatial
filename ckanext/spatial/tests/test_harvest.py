@@ -9,7 +9,6 @@ from ckan import model
 from ckan.model import Session,Package
 from ckan.logic.schema import default_update_package_schema
 from ckan.logic import get_action
-import ckanext.inspire
 from ckanext.harvest.model import (setup as harvest_model_setup,
                                    HarvestSource, HarvestJob, HarvestObject)
 from ckanext.spatial.validation import Validators, SchematronValidator
@@ -790,7 +789,7 @@ class TestHarvest(HarvestFixtureBase):
         Session.refresh(second_obj)
         Session.refresh(third_obj)
 
-        after_package_dict = get_action('package_show_rest')(self.context,{'id':imported_objects[0]['package_id']})
+        after_package_dict = get_action('package_show_rest')(self.context,{'id':first_obj.package_id})
 
         # Package was updated, and the current object remains the same
         assert after_package_dict, before_package_dict['id'] == after_package_dict['id']

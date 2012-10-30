@@ -24,22 +24,19 @@ import logging
 
 from lxml import etree
 from pylons import config
-from sqlalchemy.sql import update,and_, bindparam
+from sqlalchemy.sql import update, bindparam
 from sqlalchemy.exc import InvalidRequestError
-from owslib.csw import namespaces
 from owslib import wms
 
 from ckan import model
-from ckan.model import Session, repo, \
-                        Package, Resource, PackageExtra, \
-                        setup_default_user_roles
+from ckan.model import Session, Package
 from ckan.lib.munge import munge_title_to_name
 from ckan.plugins.core import SingletonPlugin, implements
 from ckan.lib.helpers import json
 
 from ckan import logic
 from ckan.logic import get_action, ValidationError
-from ckan.lib.navl.validators import not_empty, ignore_missing
+from ckan.lib.navl.validators import not_empty
 
 from ckanext.harvest.interfaces import IHarvester
 from ckanext.harvest.model import HarvestObject, HarvestGatherError, \
@@ -598,6 +595,7 @@ class GeminiCswHarvester(GeminiHarvester, SingletonPlugin):
                     continue
 
         except Exception, e:
+            log.error('Exception: %s' % text_traceback())
             self._save_gather_error('Error gathering the identifiers from the CSW server [%s]' % str(e), harvest_job)
             return None
 
