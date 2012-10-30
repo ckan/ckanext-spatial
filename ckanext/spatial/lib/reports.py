@@ -7,8 +7,6 @@ from ckanext.spatial.lib.report import ReportTable
 from ckan import model
 from ckanext.harvest.model import HarvestObject
 
-log = logging.getLogger(__name__)
-
 def validation_report(package_id=None):
     '''
     Looks at every harvested metadata record and compares the
@@ -17,6 +15,7 @@ def validation_report(package_id=None):
 
     Returns a ReportTable.
     '''
+    log = logging.getLogger(__name__ + '.validation_report')
 
     validators = SpatialHarvester()._get_validator()
     log.debug('Validators: %r', validators.profiles)
@@ -38,18 +37,25 @@ def validation_report(package_id=None):
         'Old validation errors',
         'New validation errors'])
 
+    old_validation_failure_count = 0
+    new_validation_failure_count = 0
+
     for harvest_object in query:
         validation_errors = []
         for err in harvest_object.errors:
             if 'not a valid Gemini' in err.message or \
                    'Validating against' in err.message:
                 validation_errors.append(err.message)
+        if validation_errors:
+            old_validation_failure_count += 1
 
         groups = harvest_object.package.get_groups()
         publisher = groups[0].title if groups else '(none)'
 
         xml = etree.fromstring(harvest_object.content.encode("utf-8"))
         valid, errors = validators.is_valid(xml)
+        if not valid:
+            new_validation_failure_count += 1
                          
         report.add_row_dict({
                              'Harvest Object id': harvest_object.id,
@@ -63,4 +69,6 @@ def validation_report(package_id=None):
                              })
 
     log.debug('%i results', query.count())
+    log.debug('%i failed old validation', old_validation_failure_count)
+    log.debug('%i failed new validation', new_validation_failure_count)
     return report
