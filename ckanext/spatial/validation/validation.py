@@ -265,6 +265,7 @@ class Validators(object):
             self.validators = {} # name: class
             for validator_class in all_validators:
                 self.validators[validator_class.name] = validator_class
+        log.debug('Starting validation against profile(s) %s' % ','.join(self.profiles))
         for name in self.profiles:
             validator = self.validators[name]
             is_valid, error_message_list = validator.is_valid(xml)
