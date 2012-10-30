@@ -92,7 +92,7 @@ class SpatialHarvester(object):
         3. Default value as defined in DEFAULT_VALIDATOR_PROFILES
         '''
         if not hasattr(self, '_validator'):
-            if self.config and self.config.get('validator_profiles',None):
+            if hasattr(self, 'config') and self.config.get('validator_profiles',None):
                 profiles = self.config.get('validator_profiles')
             elif config.get('ckan.spatial.validator.profiles', None):
                 profiles = [
