@@ -67,7 +67,7 @@ class ISO19139Schema(XsdValidator):
 
 class ISO19139EdenSchema(XsdValidator):
     name = 'iso19139eden'
-    title = 'ISO19139 XSD Schema (EDEN)'
+    title = 'ISO19139 XSD Schema (EDEN 2009-03-16)'
 
     @classmethod
     def is_valid(cls, xml):
