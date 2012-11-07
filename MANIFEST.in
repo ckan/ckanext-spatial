@@ -1,5 +1,6 @@
 recursive-include ckanext/spatial/templates                                           *
 recursive-include ckanext/spatial/public                                              *
+recursive-include ckanext/spatial/validation/xml                                      *
 
 recursive-include ckanext/spatial/public/ckanext/spatial/js/openlayers/               *.js
 recursive-include ckanext/spatial/public/ckanext/spatial/js/openlayers/               *.txt
