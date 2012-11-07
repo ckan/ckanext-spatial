@@ -171,7 +171,7 @@ class SchematronValidator(BaseValidator):
 
 class ConstraintsSchematron(SchematronValidator):
     name = 'constraints'
-    title = 'ISO19139 Table A.1 Constraints Schematron 1.3'
+    title = 'ISO19139 Table A.1 Constraints Schematron (Medin 1.3)'
 
     @classmethod
     def get_schematrons(cls):
