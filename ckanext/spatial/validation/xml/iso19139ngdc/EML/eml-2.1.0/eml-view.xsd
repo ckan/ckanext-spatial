@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    xmlns="eml://ecoinformatics.org/view-2.1.0" 
+    xmlns:cov="eml://ecoinformatics.org/coverage-2.1.0" 
+    xmlns:prot="eml://ecoinformatics.org/protocol-2.1.0" 
+    xmlns:phys="eml://ecoinformatics.org/physical-2.1.0" 
+    xmlns:att="eml://ecoinformatics.org/attribute-2.1.0" 
+    xmlns:ent="eml://ecoinformatics.org/entity-2.1.0" 
+    xmlns:res="eml://ecoinformatics.org/resource-2.1.0" 
+    xmlns:con="eml://ecoinformatics.org/constraint-2.1.0" 
+    xmlns:doc="eml://ecoinformatics.org/documentation-2.1.0" 
+    targetNamespace="eml://ecoinformatics.org/view-2.1.0">
+  <xs:import namespace="eml://ecoinformatics.org/entity-2.1.0" 
+  schemaLocation="eml-entity.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/documentation-2.1.0" 
+  schemaLocation="eml-documentation.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/attribute-2.1.0" 
+  schemaLocation="eml-attribute.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/protocol-2.1.0" 
+  schemaLocation="eml-protocol.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/physical-2.1.0" 
+  schemaLocation="eml-physical.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/coverage-2.1.0" 
+  schemaLocation="eml-coverage.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/resource-2.1.0" 
+  schemaLocation="eml-resource.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/constraint-2.1.0" 
+  schemaLocation="eml-constraint.xsd"/>
+  <xs:annotation>
+    <xs:documentation>
+       '$RCSfile: eml-view.xsd,v $'
+       Copyright: 1997-2002 Regents of the University of California,
+                            University of New Mexico, and
+                            Arizona State University
+        Sponsors: National Center for Ecological Analysis and Synthesis and
+                  Partnership for Interdisciplinary Studies of Coastal Oceans,
+                     University of California Santa Barbara
+                  Long-Term Ecological Research Network Office,
+                     University of New Mexico
+                  Center for Environmental Studies, Arizona State University
+   Other funding: National Science Foundation (see README for details)
+                  The David and Lucile Packard Foundation
+     For Details: http://knb.ecoinformatics.org/
+
+        '$Author: obrien $'
+          '$Date: 2008/11/14 23:50:13 $'
+      '$Revision: 1.43 $'
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    </xs:documentation>
+    <xs:appinfo>
+      <doc:moduleDocs>
+        <doc:moduleName>eml-view</doc:moduleName>
+        <doc:moduleDescription>
+        <section xmlns="">
+          <title>
+            The eml-view module - Data tables resulting from a
+            database query
+          </title>
+          <para>
+            The eml-view module describes a view from a database management system.
+            A view is a query statement that is stored as a database object and
+            executed each time the view is called.
+          </para>
+        </section>
+        </doc:moduleDescription>
+        <doc:recommendedUsage>all datasets that contain one or more
+        views</doc:recommendedUsage>
+        <doc:standAlone>yes</doc:standAlone>
+      </doc:moduleDocs>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="view" type="ViewType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>View</doc:tooltip>
+        <doc:summary>The View element is a container for documenting a
+        view.</doc:summary>
+        <doc:description>The View element is a container for documenting a
+        view. The structure of the view element is defined by the
+        ViewType.</doc:description>
+        
+      </xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="ViewType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>ViewType</doc:tooltip>
+        <doc:summary>The ViewType complex type defines the structure for
+        documenting a view.</doc:summary>
+        <doc:description>The ViewType complex type defines the structure for
+        documenting a view. This type extends the EntityGroup with a
+        queryStatement.</doc:description>
+        
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:choice>
+      <xs:sequence>
+        <xs:group ref="ent:EntityGroup"/>
+        <xs:element name="attributeList" type="att:AttributeListType">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Attribute List</doc:tooltip>
+              <doc:summary>The list of attributes associated with this
+              entity.</doc:summary>
+              <doc:description>The list of attributes associated with this
+              entity.  For more information see the eml-attribute
+              module.</doc:description>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="constraint" type="con:ConstraintType" minOccurs="0" maxOccurs="unbounded">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Constraint</doc:tooltip>
+              <doc:summary/>
+              <doc:description>Description of any relational constraints on '
+              this entity.  For more information see the eml-constraint
+              module.</doc:description>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="queryStatement" type="res:NonEmptyStringType">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Query Statement</doc:tooltip>
+              <doc:summary>Query syntax that produced the view</doc:summary>
+              <doc:description>The value of a queryStatement field is the
+              actual query statement stored in the database is entered here.
+              The query statement generates the entity being
+              documented.</doc:description>
+              <doc:example>Select site as SiteID,common_name as CommonName,
+              count as CountOfIndividuals from samples inner join taxonlist
+              on samples.speciesid=taxonlist.speciesid</doc:example>
+              
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+      <xs:group ref="res:ReferencesGroup"/>
+    </xs:choice>
+    <xs:attribute name="id" type="res:IDType" use="optional"/>
+    <xs:attribute name="system" type="res:SystemType" use="optional"/>
+    <xs:attribute name="scope" type="res:ScopeType" use="optional" default="document"/>
+  </xs:complexType>
+</xs:schema>

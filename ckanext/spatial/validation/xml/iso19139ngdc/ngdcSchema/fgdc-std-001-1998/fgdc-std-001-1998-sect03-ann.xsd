@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" blockDefault="#all"
+	xmlns:sch="http://www.ascc.net/xml/schematron">
+<xsd:annotation>
+	<xsd:documentation>
+		Section 3 : Spatial Data Organization Information
+	</xsd:documentation>
+</xsd:annotation>
+
+<xsd:element name="spdoinfo" type="spdoinfoType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Spatial Data Organization Information
+		Section: 3
+		Description: the mechanism used to represent spatial information in the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Spatial Data Organization Information</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="spdoinfoType">
+	<xsd:sequence>
+		<xsd:element ref="indspref" minOccurs="0"/>
+		<xsd:sequence minOccurs="0">
+			<xsd:element ref="direct"/>
+			<xsd:choice minOccurs="0">
+				<xsd:element ref="ptvctinf"/>
+				<xsd:element ref="rastinfo"/>
+			</xsd:choice>
+		</xsd:sequence>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="indspref" type="indsprefType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Indirect Spatial Reference
+		Section: 3.1
+		Description: name of types of geographic features, addressing schemes, or other means through which locations are referenced in the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Indirect Spatial Reference</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="indsprefType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="direct" type="directType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Direct Spatial Reference Method
+		Section: 3.2
+		Description: the system of objects used to represent space in the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Direct Spatial Reference Method</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="directType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "Point" "Vector" "Raster"
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:token">
+		<xsd:enumeration value="Point"/>
+		<xsd:enumeration value="Vector"/>
+		<xsd:enumeration value="Raster"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="ptvctinf" type="ptvctinfType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Point and Vector Object Information
+		Section: 3.3
+		Description: the types and numbers of vector or nongridded point spatial objects in the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Point and Vector Object Information</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="ptvctinfType">
+	<xsd:choice>
+		<xsd:element ref="sdtsterm" maxOccurs="unbounded"/>
+		<xsd:element ref="vpfterm"/>
+	</xsd:choice>
+</xsd:complexType>
+
+<xsd:element name="sdtsterm" type="sdtstermType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: SDTS Terms Description
+		Section: 3.3.1
+		Description: point and vector object information using the terminology and concepts from "Spatial Data Concepts," which is Chapter 2 of Part 1 in Department of Commerce, 1992, Spatial Data Transfer Standard (SDTS) (Federal Information Processing Standard 173): Washington, Department of Commerce, National Institute of Standards and Technology. (Note that this reference to the SDTS is used ONLY to provide a set of terminology for the point and vector objects.)
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>SDTS Terms Description</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="sdtstermType">
+	<xsd:sequence>
+		<xsd:element ref="sdtstype"/>
+		<xsd:element ref="ptvctcnt" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="sdtstype" type="sdtstypeType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: SDTS Point and Vector Object Type
+		Section: 3.3.1.1
+		Description: name of point and vector spatial objects used to locate zero-, one-, and two-dimensional spatial locations in the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>SDTS Point and Vector Object Type</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="sdtstypeType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: (The domain is from "Spatial Data Concepts," which is Chapter 2 of Part 1 in Department of Commerce, 1992, Spatial Data Transfer Standard (SDTS) (Federal Information Processing Standard 173): Washington, Department of Commerce, National Institute of Standards and Technology): "Point" "Entity point" "Label point" "Area point" "Node, planar graph" "Node, network" "String" "Link" "Complete chain" "Area chain" "Network chain, planar graph" "Network chain, nonplanar graph" "Circular arc, three point center" "Elliptical arc" "Uniform B-spline" "Piecewise Bezier" "Ring with mixed composition" "Ring composed of strings" "Ring composed of chains" "Ring composed of arcs" "G-polygon" "GT-polygon composed of rings" "GT-polygon composed of chains" "Universe polygon composed of rings" "Universe polygon composed of chains" "Void polygon composed of rings" "Void polygon composed of chains"
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:token">
+		<xsd:enumeration value="Point"/>
+		<xsd:enumeration value="Entity point"/>
+		<xsd:enumeration value="Label point"/>
+		<xsd:enumeration value="Area point"/>
+		<xsd:enumeration value="Node, planar graph"/>
+		<xsd:enumeration value="Node, network"/>
+		<xsd:enumeration value="String"/>
+		<xsd:enumeration value="Link"/>
+		<xsd:enumeration value="Complete chain"/>
+		<xsd:enumeration value="Area chain"/>
+		<xsd:enumeration value="Network chain, planar graph"/>
+		<xsd:enumeration value="Network chain, nonplanar graph"/>
+		<xsd:enumeration value="Circular arc, three point center"/>
+		<xsd:enumeration value="Elliptical arc"/>
+		<xsd:enumeration value="Uniform B-spline"/>
+		<xsd:enumeration value="Piecewise Bezier"/>
+		<xsd:enumeration value="Ring with mixed composition"/>
+		<xsd:enumeration value="Ring composed of strings"/>
+		<xsd:enumeration value="Ring composed of chains"/>
+		<xsd:enumeration value="Ring composed of arcs"/>
+		<xsd:enumeration value="G-polygon"/>
+		<xsd:enumeration value="GT-polygon composed of rings"/>
+		<xsd:enumeration value="GT-polygon composed of chains"/>
+		<xsd:enumeration value="Universe polygon composed of rings"/>
+		<xsd:enumeration value="Universe polygon composed of chains"/>
+		<xsd:enumeration value="Void polygon composed of rings"/>
+		<xsd:enumeration value="Void polygon composed of chains"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="ptvctcnt" type="ptvctcntType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Point and Vector Object Count
+		Section: 3.3.1.2
+		Description: the total number of the point or vector object type occurring in the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Point and Vector Object Count</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="ptvctcntType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: integer
+			Domain: Point and Vector Object Count &gt; 0
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:integer">
+		<xsd:minExclusive value="0"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="vpfterm" type="vpftermType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: VPF Terms Description
+		Section: 3.3.2
+		Description: point and vector object information using the terminology and concepts from Department of Defense, 1992, Vector Product Format (MIL-STD-600006): Philadelphia, Department of Defense, Defense Printing Service Detachment Office.  (Note that this reference to the VPF is used ONLY to provide a set of terminology for the point and vector objects.)
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>VPF Terms Description</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="vpftermType">
+	<xsd:sequence>
+		<xsd:element ref="vpflevel"/>
+		<xsd:element ref="vpfinfo" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="vpflevel" type="vpflevelType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: VPF Topology Level
+		Section: 3.3.2.1
+		Description: the completeness of the topology carried by the data set. The levels of completeness are defined in Department of Defense, 1992, Vector Product Format (MIL-STD-600006): Philadelphia, Department of Defense, Defense Printing Service Detachment Office.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>VPF Topology Level</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="vpflevelType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: integer
+			Domain: 0 &lt;= VPF Topology Level &lt;= 3
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:integer">
+		<xsd:minInclusive value="0"/>
+		<xsd:maxInclusive value="3"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="vpfinfo" type="vpfinfoType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: VPF Point and Vector Object Information
+		Section: 3.3.2.2
+		Description: information about VPF point and vector objects
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>VPF Point and Vector Object Information</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="vpfinfoType">
+	<xsd:sequence>
+		<xsd:element ref="vpftype"/>
+		<xsd:element ref="ptvctcnt" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="vpftype" type="vpftypeType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: VPF Point and Vector Object Type
+		Section: 3.3.2.2.1
+		Description: name of point and vector spatial objects used to locate zero-, one-, and two-dimensional spatial locations in the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>VPF Point and Vector Object Type</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="vpftypeType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: (The domain is from Department of Defense, 1992, Vector Product Format (MIL-STD-600006): Philadelphia, Department of Defense, Defense Printing Service Detachment Office): "Node" "Edge" "Face" "Text"
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:token">
+		<xsd:enumeration value="Node"/>
+		<xsd:enumeration value="Edge"/>
+		<xsd:enumeration value="Face"/>
+		<xsd:enumeration value="Text"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="rastinfo" type="rastinfoType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Raster Object Information
+		Section: 3.4
+		Description: the types and numbers of raster spatial objects in the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Raster Object Information</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="rastinfoType">
+	<xsd:sequence>
+		<xsd:element ref="rasttype"/>
+		<xsd:sequence minOccurs="0">
+			<xsd:element ref="rowcount"/>
+			<xsd:element ref="colcount"/>
+			<xsd:element ref="vrtcount" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="rasttype" type="rasttypeType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Raster Object Type
+		Section: 3.4.1
+		Description: raster spatial objects used to locate zero-, two-, or three-dimensional locations in the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Raster Object Type</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="rasttypeType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: (With the exception of "voxel", the domain is from "Spatial Data Concepts," which is chapter 2 of part 1 in Department of Commerce, 1992, Spatial Data Transfer Standard (SDTS) (Federal Information Processing Standard 173): Washington, Department of Commerce, National Institute of Standards and Technology): "Point" "Pixel" "Grid Cell" "Voxel"
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:token">
+		<xsd:enumeration value="Point"/>
+		<xsd:enumeration value="Pixel"/>
+		<xsd:enumeration value="Grid Cell"/>
+		<xsd:enumeration value="Voxel"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="rowcount" type="rowcountType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Row Count
+		Section: 3.4.2
+		Description: the maximum number of raster objects along the ordinate (y) axis. For use with rectangular raster objects.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Row Count</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="rowcountType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: Integer
+			Domain: Row Count &gt; 0
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:positiveInteger"/>
+</xsd:simpleType>
+
+<xsd:element name="colcount" type="colcountType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Column Count
+		Section: 3.4.3
+		Description: the maximum number of raster objects along the abscissa (x) axis. For use with rectangular raster objects.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Column Count</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="colcountType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: Integer
+			Domain: Column Count &gt; 0
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:positiveInteger"/>
+</xsd:simpleType>
+
+<xsd:element name="vrtcount" type="vrtcountType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Vertical Count
+		Section: 3.4.4
+		Description: the maximum number of raster objects along the vertical (z) axis. For use with rectangular volumetric raster objects (voxels).
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Vertical Count</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="vrtcountType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: Integer
+			Domain: Depth Count &gt; 0
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:positiveInteger"/>
+</xsd:simpleType>
+
+</xsd:schema>

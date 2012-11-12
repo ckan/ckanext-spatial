@@ -103,6 +103,57 @@ class ISO19139EdenSchema(XsdValidator):
         gemini = GeminiDocument(xml_tree=xml)
         return gemini.read_value('resource-type')
 
+class ISO19139NGDCSchema(XsdValidator):
+    '''
+    XSD based validation for ISO 19139 documents.
+
+    Uses XSD schema from the NOAA National Geophysical Data Center:
+
+    http://ngdc.noaa.gov/metadata/published/xsd/
+
+    '''
+    name = 'iso19139ngdc'
+    title = 'ISO19139 XSD Schema (NGDC)'
+
+    @classmethod
+    def is_valid(cls, xml):
+        xsd_path = 'xml/iso19139ngdc'
+
+        xsd_filepath = os.path.join(os.path.dirname(__file__),
+                                        xsd_path, 'schema.xsd')
+        is_valid, errors = cls._is_valid(xml, xsd_filepath, 'NGDC Schema (schema.xsd)')
+
+        if is_valid:
+            return True, []
+
+        return False, errors
+
+class FGDCSchema(XsdValidator):
+    '''
+    XSD based validation for FGDC metadata documents.
+
+    Uses XSD schema from the Federal Geographic Data Comittee:
+
+    http://www.fgdc.gov/schemas/metadata/
+
+    '''
+
+    name = 'fgdc'
+    title = 'FGDC XSD Schema'
+
+    @classmethod
+    def is_valid(cls, xml):
+        xsd_path = 'xml/fgdc'
+
+        xsd_filepath = os.path.join(os.path.dirname(__file__),
+                                        xsd_path, 'fgdc-std-001-1998.xsd')
+        is_valid, errors = cls._is_valid(xml, xsd_filepath, 'FGDC Schema (fgdc-std-001-1998.xsd)')
+
+        if is_valid:
+            return True, []
+
+        return False, errors
+
 class SchematronValidator(BaseValidator):
     '''Base class for a validator that uses Schematron.'''
     has_init = False
@@ -192,6 +243,8 @@ class Gemini2Schematron(SchematronValidator):
 
 all_validators = (ISO19139Schema,
                   ISO19139EdenSchema,
+                  ISO19139NGDCSchema,
+                  FGDCSchema,
                   ConstraintsSchematron,
                   Gemini2Schematron)
 
@@ -212,6 +265,7 @@ class Validators(object):
             self.validators = {} # name: class
             for validator_class in all_validators:
                 self.validators[validator_class.name] = validator_class
+        log.debug('Starting validation against profile(s) %s' % ','.join(self.profiles))
         for name in self.profiles:
             validator = self.validators[name]
             is_valid, error_message_list = validator.is_valid(xml)

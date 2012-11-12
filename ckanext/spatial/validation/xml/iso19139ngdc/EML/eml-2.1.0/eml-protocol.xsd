@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="eml://ecoinformatics.org/protocol-2.1.0" xmlns:res="eml://ecoinformatics.org/resource-2.1.0" xmlns:md="eml://ecoinformatics.org/methods-2.1.0" xmlns:doc="eml://ecoinformatics.org/documentation-2.1.0" xmlns:acc="eml://ecoinformatics.org/access-2.1.0" targetNamespace="eml://ecoinformatics.org/protocol-2.1.0" elementFormDefault="unqualified" attributeFormDefault="unqualified">
+  <xs:import namespace="eml://ecoinformatics.org/resource-2.1.0" schemaLocation="eml-resource.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/methods-2.1.0" schemaLocation="eml-methods.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/documentation-2.1.0" schemaLocation="eml-documentation.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/access-2.1.0" schemaLocation="eml-access.xsd"/>
+  <xs:annotation>
+    <xs:documentation>
+    '$RCSfile: eml-protocol.xsd,v $'
+       Copyright: 1997-2002 Regents of the University of California,
+                            University of New Mexico, and
+                            Arizona State University
+        Sponsors: National Center for Ecological Analysis and Synthesis and
+                  Partnership for Interdisciplinary Studies of Coastal Oceans,
+                     University of California Santa Barbara
+                  Long-Term Ecological Research Network Office,
+                     University of New Mexico
+                  Center for Environmental Studies, Arizona State University
+   Other funding: National Science Foundation (see README for details)
+                  The David and Lucile Packard Foundation
+     For Details: http://knb.ecoinformatics.org/
+
+        '$Author: obrien $'
+          '$Date: 2008/09/26 23:59:46 $'
+      '$Revision: 1.60 $'
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    </xs:documentation>
+    <xs:appinfo>
+      <doc:moduleDocs>
+        <doc:moduleName>eml-protocol</doc:moduleName>
+        <doc:moduleDescription>
+          <section xmlns="">
+            <title>
+              The eml-protocol module - Research protocol specific information
+            </title>
+            <para>
+              The EML Protocol Module is used to define
+              abstract, prescriptive procedures for generating or processing
+              data.  Conceptually, a protocol is a standardized method.
+            </para>
+            <para>
+              Eml-protocol resembles eml-methods; however, eml-methods is
+              descriptive (often
+              written in the declarative mood:  "I took five subsamples...")
+              whereas eml-protocol is prescriptive (often written in the
+              imperative mood:  "Take five subsamples...").  A protocol
+              may have versions, whereas methods (as used in eml-methods)
+              should not.
+            </para>
+          </section>
+        </doc:moduleDescription>
+        <doc:recommendedUsage>Use eml-protocol to describe prescriptive
+        procedures that can be associated with other descriptive or
+        prescriptive procedures.</doc:recommendedUsage>
+        <doc:standAlone>yes</doc:standAlone>
+      </doc:moduleDocs>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:complexType name="ProtocolType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>A prescriptive procedure; a standardized method
+        </doc:tooltip>
+        <doc:summary>A reusable container for information related to
+        a prescriptive procedure.</doc:summary>
+        <doc:description>The ProtocolType container defines a number of
+        reusable fields that can be referenced from multiple EML
+        modules.  It represents well-defined, prescriptive procedures
+        that can be used to document other prescriptive procedures or
+        descriptive procedures such as methods.</doc:description>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:choice>
+      <xs:sequence>
+        <xs:group ref="res:ResourceGroup"/>
+        <xs:element name="proceduralStep" type="md:ProcedureStepType" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:group ref="res:ReferencesGroup"/>
+    </xs:choice>
+    <xs:attribute name="id" type="res:IDType" use="optional"/>
+    <xs:attribute name="system" type="res:SystemType" use="optional"/>
+    <xs:attribute name="scope" type="res:ScopeType" use="optional" default="document"/>
+  </xs:complexType>
+  <xs:element name="protocol" type="ProtocolType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>A prescriptive procedure</doc:tooltip>
+        <doc:summary>A reusable container for information related to
+        a prescriptive procedure.</doc:summary>
+        <doc:description>The protocol field provides a container for other
+        related fields, such as proceduralStep and ResourceGroup.
+        </doc:description>
+      </xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+</xs:schema>

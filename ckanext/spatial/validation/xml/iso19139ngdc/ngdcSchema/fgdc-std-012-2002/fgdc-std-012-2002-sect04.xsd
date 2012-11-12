@@ -1,0 +1,900 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" blockDefault="#all"
+    xmlns:sch="http://www.ascc.net/xml/schematron">
+    <xsd:include schemaLocation="../fgdc-std-001-1998/fgdc-std-001-1998-sect04-ann.xsd"/>
+    <xsd:complexType name="rseSprefType">
+        <xsd:sequence>
+            <xsd:element ref="horizsys" minOccurs="0"/>
+            <xsd:element name="vertdef" type="rseVertdefType" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Element: Vertical Coordinate System Definition
+                        Section: 4.2
+                        Description: the reference frame or system from which vertical distances (altitudes or depths) are measured.
+                    </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Vertical Coordinate System Definition</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element ref="georefin" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="rseVertdefType">
+        <xsd:sequence>
+            <xsd:element name="altsys" type="rseAltsysType" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Element: Altitude System Definition
+                        Description: The reference frame or system from which altitudes (elevation)
+                        are measured.  The term "altitude" is used instead of the common term "elevation" to conform
+                        to the terminology in Federal Information Processing Standards 70-1 and 173.
+                    </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Altitude System Definition</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element ref="depthsys" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="rseAltsysType">
+        <xsd:sequence>
+            <xsd:element ref="altdatum"/>
+            <xsd:element ref="altres" maxOccurs="unbounded"/>
+            <xsd:choice>
+                <xsd:element ref="altunits"/>
+                <xsd:element ref="altlayer"/>
+            </xsd:choice>
+            <xsd:element ref="altenc"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="altlayer" type="altlayerType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Altitude Distance Layer Description: System of atmospheric
+                levels in which altitudes are recorded. Rationale: The added layers are standard for
+                describing atmospheric datasets and should be specifically identified among those
+                preferred. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Altitude Distance Layer</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="altlayerType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="georefin" type="georefinType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Georeferencing Information Description: Information that
+                will allow determination of geographical location of raster points. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Georeferencing Information</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="georefinType">
+        <xsd:choice>
+            <xsd:element ref="georecra" />
+            <xsd:element name="georbler" type="georblerType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Georeferenceable Raster Description: Raster whose
+                        cells may be irregularly spaced in any geographic or map projection
+                        coordinate system, whose cells can be geolocated using geolocation
+                        information supplied with the data but not from the raster properties alone. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Georeferenceable Raster</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:choice>
+    </xsd:complexType>
+    <xsd:element name="georecra" type="georecraType">
+        <xsd:annotation>
+            <xsd:documentation> 
+                Element: Georectified Raster 
+                Description: Raster whose cells
+                are regularly spaced in a geographic or map coordinate system defined in
+                some Spatial Referencing System, such that any cell can be geolocated given
+                its raster coordinate and the raster origin, cell spacing, and orientation,
+                possibly including a terrain model. (Note: Let amn be the pixel grid point
+                in the mth row and the nth column, with (x,y) the position of that grid
+                point in map coordinates. Let the map position corresponding to the first
+                element of the grid a11 be (x0,y0). Then x= x0 + (m-1)xm +(n-1)ym and y=
+                y0 + (m-1)xn +(n-1)yn, where the  terms are defined in the elements
+                below. The overlay is shown in Figure 3, with definitions of the individual
+                pixels.) Rationale: Provides user geographic locations of all points in the
+                case of a regular georectified grid. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Georectified Raster</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="georecraType">
+        <xsd:sequence>
+            <xsd:element name="pixlreso" type="pixlresoType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Pixel Resolution Description: Geographic dimensions
+                        corresponding to one raster pixel of processed data. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Pixel Resolution</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="gridinit" type="gridinitType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Grid First Element Description: Point on map
+                        (x0,y0) corresponding to first element of the pixel array. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Grid First Element</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="gridori" type="gridoriType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Grid Orientation Description: Orientation of image
+                        pixel grid relative to map on which it is overlaid. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Grid Orientation</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element ref="ptpos"/>
+            <xsd:element ref="storord"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="pixlresoType">
+        <xsd:sequence>
+            <xsd:element ref="coordrep"/>
+            <xsd:element ref="plandu"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="gridinitType">
+        <xsd:sequence>
+            <xsd:element ref="grinitx"/>
+            <xsd:element ref="grinity"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="grinitx" type="grinitxType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Grid First Element Map X Coordinate Description: Value x0
+                of x-coordinate on map at point corresponding to first element of pixel system. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Grid First Element Map X Coordinate</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="grinitxType">
+        <xsd:restriction base="xsd:double" />
+    </xsd:simpleType>
+    <xsd:element name="grinity" type="grinityType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Grid First Element Map Y Coordinate Description: Value y0
+                of y-coordinate on map at point corresponding to first element of pixel system. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Grid First Element Map Y Coordinate</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="grinityType">
+        <xsd:restriction base="xsd:double" />
+    </xsd:simpleType>
+    <xsd:complexType name="gridoriType">
+        <xsd:sequence>
+            <xsd:element ref="rowdeltx"/>
+            <xsd:element ref="rowdelty"/>
+            <xsd:element ref="coldeltx"/>
+            <xsd:element ref="coldelty"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="rowdeltx" type="rowdeltxType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Row Delta X Description: Increment xm in map x-coordinates
+                corresponding to increment of one grid row; a negative value means that map
+                x-coordinate decreases with increasing row number. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Row Delta X</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="rowdeltxType">
+        <xsd:restriction base="xsd:double" />
+    </xsd:simpleType>
+    <xsd:element name="rowdelty" type="rowdeltyType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Row Delta Y Description: Increment ym in map y-coordinates
+                corresponding to increment of one grid row; a negative value means that map
+                y-coordinate decreases with increasing row number. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Row Delta Y</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="rowdeltyType">
+        <xsd:restriction base="xsd:double" />
+    </xsd:simpleType>
+    <xsd:element name="coldeltx" type="coldeltxType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Column Delta X Description: Increment xn in map
+                x-coordinates corresponding to increment of one grid column; a negative value means
+                that map x-coordinate decreases with increasing column number. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Column Delta X</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="coldeltxType">
+        <xsd:restriction base="xsd:double" />
+    </xsd:simpleType>
+    <xsd:element name="coldelty" type="coldeltyType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Column Delta Y Description: Increment yn in map
+                y-coordinates corresponding to increment of one grid column; a negative value means
+                that map y-coordinate decreases with increasing column number. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Column Delta Y</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="coldeltyType">
+        <xsd:restriction base="xsd:double" />
+    </xsd:simpleType>
+    <xsd:element name="ptpos" type="ptposType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Point Position In Pixel Description: The point in the pixel
+                corresponding to the earth location of the pixel. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Point Position In Pixel</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="ptposType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="storord" type="storordType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Storage Order Description: Description of which index
+                varies most rapidly in the sequential storage of raster elements  row index (row
+                major) or column index (column major). </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Storage Order</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="storordType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:complexType name="georblerType">
+        <xsd:sequence>
+            <xsd:element name="georefde" type="georefdeType" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Georeferencing Description Description: Description
+                        of information provided in metadata that allows the geographic or map
+                        location of raster points to be located. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Georeferencing Description</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="aerotref" type="aerotrefType" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Aerotriangulation Reference Description: Reference
+                        containing information describing photogrammetric triangulation using aerial
+                        images. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Aerotriangulation Reference</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="swtrkinf" type="swtrkinfType" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Swath Track Information Description: Properties of
+                        the swath track on the ground. Rationale: Aids the user in deriving
+                        coordinates of all image points. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Swath Track Information</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="georefdeType">
+        <xsd:choice>
+            <xsd:element name="gcptinfo" type="gcptinfoType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Ground Control Point Information
+                        Description: Information describing data points for which both
+                        raster and geographic locations are available that can be used to
+                        relate raster and geographic coordinates at other points. Rationale:
+                        If ground control points are used to geolocate data, information on
+                        them must be supplied to help the user understand how the process
+                        was carried out. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Ground Control Point Information</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="insspgeo" type="insspgeoType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Instrument Specific Georeferencing
+                        Description: Information relating coordinate system of a particular
+                        instrument to ground coordinate system. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Instrument Specific Georeferencing</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="refrpoly" type="refrpolyType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Referencing Polynomial Description:
+                        Polynomial function used to relate image and ground positions. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Referencing Polynomial</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element ref="othrefde"/>
+        </xsd:choice>
+    </xsd:complexType>
+    <xsd:complexType name="gcptinfoType">
+        <xsd:sequence>
+            <xsd:element ref="gcporg"/>
+            <xsd:element name="gcptdesc" type="gcptdescType" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Ground Control Point Description Description:
+                        Lineage and applicability of ground control points. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Ground Control Point Description</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="gcptpos" type="gcptposType" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Ground Control Point Position Description: Location
+                        of individual control points, defined separately for every point, in both
+                        raster and geographic or map coordinate systems. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Ground Control Point Position</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="gcporg" type="gcporgType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Ground Control Point Organization Description:
+                Specification as to whether geographic locations of control points are supplied
+                together with raster points or are in separate library. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Ground Control Point Organization</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="gcporgType">
+        <xsd:restriction base="xsd:token">
+            <xsd:enumeration value="location"/>
+            <xsd:enumeration value="library"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:complexType name="gcptdescType">
+        <xsd:sequence>
+            <xsd:element ref="gcptype"/>
+            <xsd:element ref="gcpori" minOccurs="0"/>
+            <xsd:element ref="gcpusefl" minOccurs="0"/>
+            <xsd:element ref="gcpxaccu" minOccurs="0"/>
+            <xsd:element ref="gcpyaccu" minOccurs="0"/>
+            <xsd:element ref="gcpzaccu" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="gcptype" type="gcptypeType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Control Point Type Description: Direction or directions for
+                which control point provides georeference information. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Control Point Type</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="gcptypeType">
+        <xsd:restriction base="xsd:token">
+            <xsd:enumeration value="full"/>
+            <xsd:enumeration value="horizontal"/>
+            <xsd:enumeration value="verticle"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:element name="gcpori" type="gcporiType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Control Point Origin Description: The source of the ground
+                control point measurement. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Control Point Origin</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="gcporiType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="gcpusefl" type="gcpuseflType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Control Point Use Flag Description: Whether the ground
+                control point has previously been used and verified. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Control Point Use Flag</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="gcpuseflType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="gcpxaccu" type="gcpxaccuType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Control Point Horizontal X Accuracy Description: A priori
+                standard deviation of the horizontal coordinates of the ground control point, in
+                coordinate units specified under Horizontal Coordinate System Definition. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Control Point Horizontal X Accuracy</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="gcpxaccuType">
+        <xsd:restriction base="nonNegativeDoubleType" />
+    </xsd:simpleType>
+    <xsd:element name="gcpyaccu" type="gcpyaccuType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Control Point Horizontal Y Accuracy Description: A priori
+                standard deviation of the horizontal coordinates of the ground control point, in
+                coordinate units specified under Horizontal Coordinate System Definition. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Control Point Horizontal Y Accuracy</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="gcpyaccuType">
+        <xsd:restriction base="nonNegativeDoubleType" />
+    </xsd:simpleType>
+    <xsd:element name="gcpzaccu" type="gcpzaccuType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Control Point Vertical Accuracy Description: A priori
+                standard deviation of the vertical coordinate of the ground control point, in units
+                specified by Altitude Distance Units. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Control Point Vertical Accuracy</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="gcpzaccuType">
+        <xsd:restriction base="nonNegativeDoubleType" />
+    </xsd:simpleType>
+    <xsd:complexType name="gcptposType">
+        <xsd:sequence>
+            <xsd:element name="conptrpo" type="conptrpoType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Control Point Raster Position Description: Position
+                        in raster array of individual ground control point used in geolocating data. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Control Point Raster Position</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <!-- TODO the following should have the following validation:
+                        present and mandatory if value of Ground Control Point Organization is 'location' -->
+            <xsd:element name="gcpearlc" type="gcpearlcType" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Control Point Earth Location Description:
+                        Geographic or map location of ground control point. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Control Point Earth Location</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <!-- TODO the following should have the following validation:
+                        present and mandatory if value of Ground Control Point Organization is 'library' -->
+            <xsd:element name="gcpidnt" type="gcpidntType" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Control Point Identification Description:
+                        Information allowing the user to find the location of a control point from a
+                        catalogue. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Control Point Identification</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="conptrpoType">
+        <xsd:sequence>
+            <xsd:element ref="gcprow"/>
+            <xsd:element ref="gcpcolum"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="gcprow" type="gcprowType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Control Point Row Description: Value of row coordinate at
+                ground control point position in raster grid. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Control Point Row</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="gcprowType">
+        <xsd:restriction base="nonNegativeDoubleType" />
+    </xsd:simpleType>
+    <xsd:element name="gcpcolum" type="gcpcolumType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Control Point Column Description: Value of column
+                coordinate at ground control point position in raster grid. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Control Point Column</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="gcpcolumType">
+        <xsd:restriction base="nonNegativeDoubleType" />
+    </xsd:simpleType>
+    <xsd:complexType name="gcpearlcType">
+        <xsd:sequence>
+            <xsd:element ref="gcpxval"/>
+            <xsd:element ref="gcpyval"/>
+            <xsd:element ref="gcpzval" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="gcpxval" type="gcpxvalType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Control Point x Value Description: Value of map
+                x-coordinate at control point location. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Control Point x Value</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="gcpxvalType">
+        <xsd:restriction base="xsd:double" />
+    </xsd:simpleType>
+    <xsd:element name="gcpyval" type="gcpyvalType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Control Point y Value Description: Value of map
+                y-coordinate at control point location. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Control Point y Value</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="gcpyvalType">
+        <xsd:restriction base="xsd:double" />
+    </xsd:simpleType>
+    <xsd:element name="gcpzval" type="gcpzvalType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Control Point z Value Description: Value of vertical
+                coordinate at control point location. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Control Point z Value</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="gcpzvalType">
+        <xsd:restriction base="xsd:double" />
+    </xsd:simpleType>
+    <xsd:complexType name="gcpidntType">
+        <xsd:sequence>
+            <xsd:element ref="gcpid"/>
+            <xsd:element name="gcpauth" type="gcpauthType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Control Point Authority Description: Contact who
+                        can supply ground control point coordinates given identifier. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Control Point Authority</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="gcpid" type="FGDCstring">
+        <xsd:annotation>
+            <xsd:documentation>
+                Element: Control Point ID
+                Description: Identifier assigned to control point in library.
+            </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Control Point ID</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="gcpauthType">
+        <xsd:sequence>
+            <xsd:element ref="citeinfo" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="insspgeoType">
+        <xsd:sequence>
+            <xsd:element name="posiinfo" type="posiinfoType" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Positional Information Description: Orientation of
+                        instrument and detector projection. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Positional Information</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="accexori" type="accexoriType" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Exterior Orientation Accuracy Description:
+                        Uncertainties in the parameters of exterior orientation. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Exterior Orientation Accuracy</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element ref="pcrotseq"/>
+            <xsd:element ref="axrotcon"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="posiinfoType">
+        <xsd:sequence>
+            <xsd:element ref="prjcxpos"/>
+            <xsd:element ref="prjcypos"/>
+            <xsd:element ref="prjczpos"/>
+            <xsd:element ref="omegarll"/>
+            <xsd:element ref="phipitch"/>
+            <xsd:element ref="kappayaw"/>
+            <xsd:element ref="attanglu"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="prjcxpos" type="prjcxposType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Projection Center X Position Description: X-component of
+                the position of the projection center in the ground coordinate system defined under
+                Horizontal Coordinate System Definition. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Projection Center X Position</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="prjcxposType">
+        <xsd:restriction base="xsd:double" />
+    </xsd:simpleType>
+    <xsd:element name="prjcypos" type="prjcyposType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Projection Center Y Position Description: Y-component of
+                the position of the projection center in the ground coordinate system defined under
+                Horizontal Coordinate System Definition. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Projection Center Y Position</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="prjcyposType">
+        <xsd:restriction base="xsd:double" />
+    </xsd:simpleType>
+    <xsd:element name="prjczpos" type="prjczposType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Projection Center Z Position Description: Z-component of
+                the position of the projection center in the ground coordinate system defined under
+                Vertical Coordinate System Definition. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Projection Center Z Position</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="prjczposType">
+        <xsd:restriction base="xsd:double" />
+    </xsd:simpleType>
+    <xsd:element name="omegarll" type="omegarllType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Roll Description: Roll angle omega of image coordinate
+                system relative to ground coordinate system, in units defined by Attitude Angular
+                Units, measured clockwise around the positive x-axis (the direction of motion). </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Roll</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="omegarllType">
+        <xsd:restriction base="xsd:double" />
+    </xsd:simpleType>
+    <xsd:element name="phipitch" type="phipitchType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Pitch Description: Pitch angle phi of image coordinate
+                system relative to ground coordinate system, in units defined by Attitude Angular
+                Units, measured clockwise around the positive y-axis (z  x). </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Pitch</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="phipitchType">
+        <xsd:restriction base="xsd:double" />
+    </xsd:simpleType>
+    <xsd:element name="kappayaw" type="kappayawType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Yaw Description: Yaw angle kappa of image coordinate system
+                relative to ground coordinate system, in units defined by Attitude Angular Units,
+                measured clockwise around the positive z-axis (vertical). </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Yaw</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="kappayawType">
+        <xsd:restriction base="xsd:double" />
+    </xsd:simpleType>
+    <xsd:element name="attanglu" type="attangluType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Attitude Angular Units Description: Units of angular
+                measure in which Roll, Pitch, and Yaw are expressed. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Attitude Angular Units</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="attangluType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:complexType name="accexoriType">
+        <xsd:sequence>
+            <xsd:element ref="accxpos"/>
+            <xsd:element ref="accypos"/>
+            <xsd:element ref="acczpos"/>
+            <xsd:element ref="accomega"/>
+            <xsd:element ref="accphi"/>
+            <xsd:element ref="acckappa"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="accxpos" type="accxposType">
+        <xsd:annotation>
+            <xsd:documentation> Element: X Position Accuracy Description: Standard deviation of x
+                coordinate of projection center. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>X Position Accuracy</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="accxposType">
+        <xsd:restriction base="nonNegativeDoubleType" />
+    </xsd:simpleType>
+    <xsd:element name="accypos" type="accyposType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Y Position Accuracy Description: Standard deviation of y
+                coordinate of projection center. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Y Position Accuracy</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="accyposType">
+        <xsd:restriction base="nonNegativeDoubleType" />
+    </xsd:simpleType>
+    <xsd:element name="acczpos" type="acczposType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Z Position Accuracy Description: Standard deviation of z
+                coordinate of projection center. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Z Position Accuracy</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="acczposType">
+        <xsd:restriction base="nonNegativeDoubleType" />
+    </xsd:simpleType>
+    <xsd:element name="accomega" type="accomegaType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Roll Accuracy Description: Standard deviation of roll
+                angle, omega, in same units as angle. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Roll Accuracy</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="accomegaType">
+        <xsd:restriction base="nonNegativeDoubleType" />
+    </xsd:simpleType>
+    <xsd:element name="accphi" type="accphiType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Pitch Accuracy Description: Standard deviation of pitch
+                angle, phi, in same units as angle. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Pitch Accuracy</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="accphiType">
+        <xsd:restriction base="nonNegativeDoubleType" />
+    </xsd:simpleType>
+    <xsd:element name="acckappa" type="acckappaType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Yaw Accuracy Description: Standard deviation of yaw angle,
+                kappa, in same units as angle. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Yaw Accuracy</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="acckappaType">
+        <xsd:restriction base="nonNegativeDoubleType" />
+    </xsd:simpleType>
+    <xsd:element name="pcrotseq" type="pcrotseqType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Rotation Sequence Description: Sequence of rotations in
+                roll, pitch and yaw: 1 represents roll, 2 represents pitch, and 3 represents yaw,
+                such that "132" would represent a rotation in the sequence roll, yaw, pitch. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Rotation Sequence</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="pcrotseqType">
+        <xsd:restriction base="xsd:token">
+            <xsd:enumeration value="123"/>
+            <xsd:enumeration value="132"/>
+            <xsd:enumeration value="213"/>
+            <xsd:enumeration value="231"/>
+            <xsd:enumeration value="312"/>
+            <xsd:enumeration value="321"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:element name="axrotcon" type="axrotconType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Axis Rotation Convention Description: Description of
+                whether the coordinate system axes are rotated or remain fixed with each step of
+                application of the rotation matrix. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Axis Rotation Convention</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="axrotconType">
+        <xsd:restriction base="xsd:token">
+            <xsd:enumeration value="rotated"/>
+            <xsd:enumeration value="fixed"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:complexType name="refrpolyType">
+        <xsd:sequence>
+            <xsd:element ref="polyfunc"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="othrefde" type="othrefdeType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Other Georeferencing Description Description: Text
+                description of other method for georeferencing. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Other Georeferencing Description</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="othrefdeType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:complexType name="aerotrefType">
+        <xsd:sequence>
+            <xsd:element ref="citeinfo"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="swtrkinfType">
+        <xsd:sequence>
+            <xsd:element ref="grndshpe"/>
+            <xsd:element ref="xtrckmot"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="grndshpe" type="grndshpeType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Ground Shape Description: Shape of pixel on ground. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Ground Shape</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="grndshpeType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="xtrckmot" type="xtrckmotType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Cross Track Motion Description: Direction and pattern of
+                measurements relative to track. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Cross Track Motion</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="xtrckmotType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+</xsd:schema>

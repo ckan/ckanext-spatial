@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:con="eml://ecoinformatics.org/constraint-2.1.0" xmlns:res="eml://ecoinformatics.org/resource-2.1.0" xmlns:doc="eml://ecoinformatics.org/documentation-2.1.0" xmlns:cov="eml://ecoinformatics.org/coverage-2.1.0" xmlns:phys="eml://ecoinformatics.org/physical-2.1.0" xmlns:md="eml://ecoinformatics.org/methods-2.1.0" xmlns:att="eml://ecoinformatics.org/attribute-2.1.0" xmlns:txt="eml://ecoinformatics.org/text-2.1.0" xmlns="eml://ecoinformatics.org/entity-2.1.0" targetNamespace="eml://ecoinformatics.org/entity-2.1.0">
+  <xs:import namespace="eml://ecoinformatics.org/documentation-2.1.0" schemaLocation="eml-documentation.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/coverage-2.1.0" schemaLocation="eml-coverage.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/physical-2.1.0" schemaLocation="eml-physical.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/methods-2.1.0" schemaLocation="eml-methods.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/attribute-2.1.0" schemaLocation="eml-attribute.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/resource-2.1.0" schemaLocation="eml-resource.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/constraint-2.1.0" schemaLocation="eml-constraint.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/text-2.1.0" schemaLocation="eml-text.xsd"/>
+  <xs:annotation>
+    <xs:documentation>
+       '$RCSfile: eml-entity.xsd,v $'
+       Copyright: 1997-2002 Regents of the University of California,
+                            University of New Mexico, and
+                            Arizona State University
+        Sponsors: National Center for Ecological Analysis and Synthesis and
+                  Partnership for Interdisciplinary Studies of Coastal Oceans,
+                     University of California Santa Barbara
+                  Long-Term Ecological Research Network Office,
+                     University of New Mexico
+                  Center for Environmental Studies, Arizona State University
+   Other funding: National Science Foundation (see README for details)
+                  The David and Lucile Packard Foundation
+     For Details: http://knb.ecoinformatics.org/
+
+        '$Author: obrien $'
+          '$Date: 2009/02/25 23:51:54 $'
+      '$Revision: 1.89 $'
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    </xs:documentation>
+    <xs:appinfo>
+      <doc:moduleDocs>
+        <doc:moduleName>eml-entity</doc:moduleName>
+        <doc:moduleDescription>
+          <section xmlns="">
+            <title>
+              The eml-entity module - Entity level information within datasets
+            </title>
+            <para>
+              The eml-entity module defines the logical characteristics of
+              each entity in the dataset. Entities are usually tables of
+              data (eml-dataTable). Data tables may be ascii text files,
+              relational database tables, spreadsheets or other type of
+              tabular data with a fixed logical structure. Related to data
+              tables are views (eml-view) and stored
+              procedures (eml-storedProcedure). Views and stored procedures
+              are produced by an RDBMS or related system. Other types of data
+              such as: raster (eml-spatialRaster), vector (eml-spatialVector) or
+              spatialReference image data are also data entities. An
+              otherEntity element would be used to describe types of entities
+              that are not described by any other entity type.
+            </para>
+            <para>
+              The eml-entity module, like other modules, may be
+              "referenced" via the &lt;references&gt; tag.  This
+              allows an entity document to be described once, and then
+              used as a reference in other locations within the EML document
+              via its ID.
+            </para>
+          </section>
+        </doc:moduleDescription>
+        <doc:recommendedUsage>This module is used to describe data
+        entities.</doc:recommendedUsage>
+        <doc:standAlone>Only when 'otherEntity' is used.</doc:standAlone>
+      </doc:moduleDocs>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="otherEntity" type="OtherEntityType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Other Entity</doc:tooltip>
+        <doc:summary>Descriptor of single data entity in a dataset of a type
+        not specifically described in eml.</doc:summary>
+        <doc:description>The other entity element is a descriptor of a
+        not-otherwise-defined entity in the dataset, identified by its name.
+        The element can contain information about the entity's basic identity,
+        its temporal, geographic and taxonomic coverage, and its
+        type.</doc:description>
+        <doc:example>Photograph of rocky intertidal plot 12 from Santa Cruz
+        Island</doc:example>
+      </xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="OtherEntityType">
+    <xs:choice>
+      <xs:sequence>
+        <xs:group ref="EntityGroup"/>
+        <xs:sequence>
+          <xs:element name="attributeList" type="att:AttributeListType" minOccurs="0">
+            <xs:annotation>
+              <xs:appinfo>
+                <doc:tooltip>Attribute List</doc:tooltip>
+                <doc:summary>The list of attributes associated with this
+                entity.</doc:summary>
+                <doc:description>The list of attributes associated with this
+                entity.  For more information see the eml-attribute
+                module.</doc:description>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="constraint" type="con:ConstraintType" minOccurs="0" maxOccurs="unbounded">
+            <xs:annotation>
+              <xs:appinfo>
+                <doc:tooltip>Constraint</doc:tooltip>
+                <doc:summary/>
+                <doc:description>Description of any relational constraints on '
+                this entity.  For more information see the eml-constraint
+                module.</doc:description>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="entityType" type="res:NonEmptyStringType">
+            <xs:annotation>
+              <xs:appinfo>
+                <doc:tooltip>Entity type</doc:tooltip>
+                <doc:summary>Contains the name of the type for this
+                entity.</doc:summary>
+                <doc:description>The entityType field contains the name of the
+                entity's type. The entity's type is typically the name of the
+                type of data represented in the entity, such as "photograph".
+                This field is used only if this is an 'other' entity and you
+                want to specify the kind of "other" entity this
+                is.</doc:description>
+                <doc:example>Photograph</doc:example>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+      </xs:sequence>
+      <xs:group ref="res:ReferencesGroup"/>
+    </xs:choice>
+    <xs:attribute name="id" type="res:IDType" use="optional"/>
+    <xs:attribute name="system" type="res:SystemType" use="optional"/>
+    <xs:attribute name="scope" type="res:ScopeType" use="optional" default="document"/>
+  </xs:complexType>
+  <xs:group name="EntityGroup">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Base Entity descriptors</doc:tooltip>
+        <doc:summary>Basic information about an entity common to all entity
+        types.</doc:summary>
+        <doc:description>The EntityGroup defines the common structure for
+        descriptions of any type of entity, including the name and attributes
+        of the entity. The term entity is used in the sense of an entity in a
+        relational model. The most common entity is a table, something with
+        columns and rows, but can also represent an image or other type of
+        data. See 'eml-attribute' for descriptions of the required attribute
+        fields.</doc:description>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="alternateIdentifier" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Alternate Identifier</doc:tooltip>
+            <doc:summary>A secondary identifier for this entity</doc:summary>
+            <doc:description>An additional, secondary identifier for this
+            entity. The primary identifier belongs in the "id" attribute, but
+            additional identifiers that are used to label this entity, possibly
+            from different data management systems, can be listed
+            here.</doc:description>
+            <doc:example>VCR3465</doc:example>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:string">
+              <xs:attribute name="system" type="res:SystemType" use="optional">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <doc:tooltip>Identifier System</doc:tooltip>
+                    <doc:summary>The system in which this id is
+                    relevant</doc:summary>
+                    <doc:description>The information management system within
+                    which this identifier has relevance. Generally, the
+                    identifier would be unique within the "system" and would be
+                    sufficient to retrieve the entity from the system. The
+                    system is often a URL or URI that identifies the main entry
+                    point for the information management
+                    system.</doc:description>
+                    <doc:example>
+                    http://knb.ecoinformatics.org/knb/</doc:example>
+                  </xs:appinfo>
+                </xs:annotation>
+              </xs:attribute>
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="entityName" type="res:NonEmptyStringType">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Entity name</doc:tooltip>
+            <doc:summary>The name of the entity name</doc:summary>
+            <doc:description>The name identifies the entity in the dataset:
+            file name, name of database table, etc.</doc:description>
+            <doc:example>SpeciesAbundance1996</doc:example>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="entityDescription" type="res:NonEmptyStringType" minOccurs="0">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Entity description</doc:tooltip>
+            <doc:summary>General description of the entity and its
+            contents</doc:summary>
+            <doc:description>Text generally describing the entity, its type,
+            and relevant information about the data in the
+            entity.</doc:description>
+            <doc:example>Species abundance data for 1996 at the VCR LTER
+            site</doc:example>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="physical" type="phys:PhysicalType" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>physical descriptors</doc:tooltip>
+            <doc:summary>Description of the physical format of the entity
+            </doc:summary>
+            <doc:description>Information on the physical format of this entity.
+            Each logical entity can be serialized in one or more physical
+            formats, which can be described here.  For each physical format,
+            provide a "physical" element that describes the format and how
+            to obtain that version.  Two physical elements MUST describe
+            the same entity precisely (i.e., after obtaining and parsing
+            the physical data stream described under each physical element,
+            one MUST end with an identical logical entity).
+            For more information see the eml-physical module.</doc:description>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="coverage" type="cov:Coverage" minOccurs="0">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>coverage descriptors</doc:tooltip>
+            <doc:summary>Information on the geographic, spatial and temporal
+            coverages used in this entity.</doc:summary>
+            <doc:description>Information on the geographic, spatial and temporal
+            coverages used in this entity.  Please see the eml-coverage module
+            for more information.</doc:description>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="methods" type="md:MethodsType" minOccurs="0">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>method descriptions</doc:tooltip>
+            <doc:summary/>
+            <doc:description>Information on the specific methods used to collect
+            information in this entity.  Please see the eml-methods module for
+            more information.</doc:description>
+            <doc:example/>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="additionalInfo" type="txt:TextType" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Additional Information</doc:tooltip>
+            <doc:summary>Any extra information pertitent to the
+            entity.</doc:summary>
+            <doc:description>This field provides any information that is not
+            characterized by the other entity metadata
+            fields.</doc:description>
+            <doc:example>Multiple sampling events represented</doc:example>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+</xs:schema>

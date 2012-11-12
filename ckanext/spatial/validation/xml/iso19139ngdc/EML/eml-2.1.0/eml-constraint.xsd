@@ -1,0 +1,588 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    xmlns="eml://ecoinformatics.org/constraint-2.1.0" 
+    xmlns:res="eml://ecoinformatics.org/resource-2.1.0" 
+    xmlns:doc="eml://ecoinformatics.org/documentation-2.1.0" 
+    targetNamespace="eml://ecoinformatics.org/constraint-2.1.0">
+  <xs:import namespace="eml://ecoinformatics.org/documentation-2.1.0" 
+  schemaLocation="eml-documentation.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/resource-2.1.0" 
+  schemaLocation="eml-resource.xsd"/>
+  <xs:annotation>
+    <xs:documentation>
+               '$RCSfile: eml-constraint.xsd,v $'
+       Copyright: 1997-2002 Regents of the University of California,
+                            University of New Mexico, and
+                            Arizona State University
+        Sponsors: National Center for Ecological Analysis and Synthesis and
+                  Partnership for Interdisciplinary Studies of Coastal Oceans,
+                     University of California Santa Barbara
+                  Long-Term Ecological Research Network Office,
+                     University of New Mexico
+                  Center for Environmental Studies, Arizona State University
+   Other funding: National Science Foundation (see README for details)
+                  The David and Lucile Packard Foundation
+     For Details: http://knb.ecoinformatics.org/
+
+        '$Author: obrien $'
+          '$Date: 2009/02/25 23:51:54 $'
+      '$Revision: 1.53 $'
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    </xs:documentation>
+    <xs:appinfo>
+      <doc:moduleDocs>
+        <doc:moduleName>eml-constraint</doc:moduleName>
+        <doc:moduleDescription>
+        <section xmlns="">
+          <title>
+            The eml-constraint module - Relationships among and within
+            dataset entities
+          </title>
+          <para>
+            The eml-constraint schema defines the integrity constraints
+            between entities (e.g., data tables) as they would be maintained in
+            a relational management system.  These constraints include primary
+            key constraints, foreign key constraints, unique key constraints,
+            check constraints, and not null constraints, among potential others.
+          </para>
+        </section>
+        </doc:moduleDescription>
+        <doc:recommendedUsage>All datasets where there are logical constraints
+        between entities</doc:recommendedUsage>
+        <doc:standAlone>no</doc:standAlone>
+      </doc:moduleDocs>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:complexType name="ConstraintType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Relational integrity constraint descriptors</doc:tooltip>
+        <doc:summary>Describes the relational integrity constraints of a
+        relational database.</doc:summary>
+        <doc:description>The ConstraintType type describes the relational
+        integrity constraints of a relational database. This includes primary
+        keys, foreign keys, unique keys, etc. When an eml-constraint module is
+        created, it should be linked into a dataset using the "triple" element,
+        and all of the entities that are referenced in the constraints should be
+        accessible within that same package.</doc:description>
+        
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:choice>
+      <xs:element name="primaryKey">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Primary Key</doc:tooltip>
+            <doc:summary>The primary key in the entity</doc:summary>
+            <doc:description>The primaryKey element declares the primary key in
+            the entity to which the defined constraint
+            pertains.</doc:description>
+            <doc:example>date</doc:example>
+            <doc:example>site</doc:example>
+            
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:group ref="ConstraintBaseGroup"/>
+            <xs:element name="key">
+              <xs:annotation>
+                <xs:appinfo>
+                  <doc:tooltip>Key</doc:tooltip>
+                  <doc:summary>The set of attributes to which this constraint
+                  applies.</doc:summary>
+                  <doc:description>The key element defines the set of attributes
+                  to which this constraint applies. For a primary key or a
+                  unique key, the set of attributes must be identifying. For a
+                  foreign key, the set of attributes must match an identifying
+                  key in the referenced entity. For a 'not null' constraint, the
+                  key indicates the attribute which should not be
+                  null.</doc:description>
+                  <doc:example>site</doc:example>
+                  <doc:example>plot</doc:example>
+                  
+                </xs:appinfo>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="attributeReference" type="res:NonEmptyStringType" maxOccurs="unbounded">
+                    <xs:annotation>
+                      <xs:appinfo>
+                        <doc:tooltip>Attribute Reference</doc:tooltip>
+                        <doc:summary>The identifier of an attribute found
+                        in the identified entity</doc:summary>
+                        <doc:description>The attributeReference element is the
+                        identifier of an attribute that can be found in the
+                        identified entity. This id will be unique within an
+                        entity and specifies that the attribute participates
+                        in the key that is being defined.</doc:description>
+                        <doc:example>site</doc:example>
+                      </xs:appinfo>
+                    </xs:annotation>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="uniqueKey">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Unique Key</doc:tooltip>
+            <doc:summary>A unique key in the entity</doc:summary>
+            <doc:description>The uniqueKey element represents a unique key
+            within the referenced entity. This is different from a primary key
+            in that it does not form any implicit foreign key relationships to
+            other entities, however it is required to be unique within the
+            entity.</doc:description>
+            <doc:example>date</doc:example>
+            
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:group ref="ConstraintBaseGroup"/>
+            <xs:element name="key">
+              <xs:annotation>
+                <xs:appinfo>
+                  <doc:tooltip>Key</doc:tooltip>
+                  <doc:summary>The set of attributes to which this constraint
+                  applies.</doc:summary>
+                  <doc:description>The key element defines the set of attributes
+                  to which this constraint applies. For a primary key or a
+                  unique key, the set of attributes must be identifying. For a
+                  foreign key, the set of attributes must match an identifying
+                  key in the referenced entity. For a 'not null' constraint, the
+                  key indicates the attribute which should not be
+                  null.</doc:description>
+                  <doc:example>date, site, plot</doc:example>
+                  
+                </xs:appinfo>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="attributeReference" type="res:NonEmptyStringType" maxOccurs="unbounded">
+                    <xs:annotation>
+                      <xs:appinfo>
+                        <doc:tooltip>Attribute Reference</doc:tooltip>
+                        <doc:summary>The identifier of an attribute found
+                        in the identified entity</doc:summary>
+                        <doc:description>The attributeReference element is the
+                        identifier of an attribute that can be found in the
+                        identified entity. This id will be unique within an
+                        entity and specifies that the attribute participates
+                        in the key that is being defined.</doc:description>
+                        <doc:example>site</doc:example>
+                      </xs:appinfo>
+                    </xs:annotation>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="checkConstraint">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Check Constraint</doc:tooltip>
+            <doc:summary>A constraint which checks a conditional clause
+            within an entity.</doc:summary>
+            <doc:description>The checkConstraint element defines a constraint
+            which checks a conditional clause within an
+            entity.</doc:description>
+            <doc:example>if site&gt;1 then plot&gt;10</doc:example>
+            
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:group ref="ConstraintBaseGroup"/>
+            <xs:element name="checkCondition" type="res:NonEmptyStringType">
+              <xs:annotation>
+                <xs:appinfo>
+                  <doc:tooltip>Check Condition</doc:tooltip>
+                  <doc:summary>An SQL statement or other language
+                  implementation of the condition for a check
+                  constraint.</doc:summary>
+                  <doc:description>The checkCondition element defines an SQL
+                  statement or other language implementation of the condition
+                  for a check constraint.  Generally this provides a means for
+                  constraining the values within and among
+                  entities.</doc:description>
+                  <doc:example>(year &gt; 1900 and year &lt;
+                  1990)</doc:example>
+                  
+                </xs:appinfo>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="language" type="xs:string" use="optional">
+            <xs:annotation>
+              <xs:appinfo>
+                <doc:tooltip>Language</doc:tooltip>
+                <doc:summary>The language that the is used to express or
+                implement the check constraint.</doc:summary>
+                <doc:description>The language element declares the language
+                that is used to implement the check constraint.  This is
+                typically the name and version of a programming language such as
+                Java, C, Perl, Basic, or other.  Sometime it is the name and
+                version of a scriptable analysis system such as SAS, Matlab, R,
+                or SPlus.
+                </doc:description>
+                <doc:example>Perl 5.6.1</doc:example>
+                
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="foreignKey">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Foreign Key</doc:tooltip>
+            <doc:summary>A foreign key relationship among entities</doc:summary>
+            <doc:description>The foreignKey element defines a foreign key
+            relationship among entities which relates this entity to another's
+            primary key.
+            </doc:description>
+            
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:group ref="ForeignKeyGroup"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="joinCondition">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Join Condition</doc:tooltip>
+            <doc:summary>A non primary/foreign key join</doc:summary>
+            <doc:description>The joinCondition element describes any join of two
+            tables that is not done with a primary/foreign key
+            relationship.</doc:description>
+            <doc:example>JOIN code</doc:example>
+            
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:group ref="ForeignKeyGroup"/>
+            <xs:element name="referencedKey">
+              <xs:annotation>
+                <xs:appinfo>
+                  <doc:tooltip>Key</doc:tooltip>
+                  <doc:summary>The set of attributes to which a foreign key
+                  constraint refers.</doc:summary>
+                  <doc:description>The referencedKey element defines set of
+                  attributes to which a foreign key constraint refers. If the
+                  key refers to the primary key in the referenced entity, then
+                  the "referencedKey" is optional.  For a foreign key, the set
+                  of attributes must match an identifying key in the referenced
+                  entity.</doc:description>
+                  <doc:example>site, plot</doc:example>
+                  
+                </xs:appinfo>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="attributeReference" type="res:NonEmptyStringType" maxOccurs="unbounded">
+                    <xs:annotation>
+                      <xs:appinfo>
+                        <doc:tooltip>Attribute Reference</doc:tooltip>
+                        <doc:summary>The identifier of an attribute found
+                        in the identified entity</doc:summary>
+                        <doc:description>The attributeReference element is the
+                        identifier of an attribute that can be found in the
+                        identified entity. This id will be unique within an
+                        entity and specifies that the attribute participates
+                        in the key that is being defined.</doc:description>
+                        <doc:example>site</doc:example>
+                      </xs:appinfo>
+                    </xs:annotation>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="notNullConstraint">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Not Null Constraint</doc:tooltip>
+            <doc:summary>A constraint that indicates that no null values
+            should be present for an attribute.</doc:summary>
+            <doc:description>The notNullConstraint element defines a constraint
+            that indicates that no null values should be present for an
+            attribute in this entity.</doc:description>
+            
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:group ref="ConstraintBaseGroup"/>
+            <xs:element name="key">
+              <xs:annotation>
+                <xs:appinfo>
+                  <doc:tooltip>Key</doc:tooltip>
+                  <doc:summary>The set of attributes to which this constraint
+                  applies.</doc:summary>
+                  <doc:description>The key element defines the set of attributes
+                  to which this constraint applies. For a primary key or a
+                  unique key, the set of attributes must be identifying. For a
+                  foreign key, the set of attributes must match an identifying
+                  key in the referenced entity. For a 'not null' constraint, the
+                  key indicates the attribute which should not be
+                  null.</doc:description>
+                  
+                </xs:appinfo>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="attributeReference" type="res:NonEmptyStringType" maxOccurs="unbounded">
+                    <xs:annotation>
+                      <xs:appinfo>
+                        <doc:tooltip>Attribute Reference</doc:tooltip>
+                        <doc:summary>The identifier of an attribute found
+                        in the identified entity</doc:summary>
+                        <doc:description>The attributeReference element is the
+                        identifier of an attribute that can be found in the
+                        identified entity. This id will be unique within an
+                        entity and specifies that the attribute participates
+                        in the key that is being defined.</doc:description>
+                        <doc:example>site</doc:example>
+                      </xs:appinfo>
+                    </xs:annotation>
+                  </xs:element>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
+    <xs:attribute name="id" type="res:IDType" use="optional"/>
+    <xs:attribute name="system" type="res:SystemType" use="optional"/>
+    <xs:attribute name="scope" type="res:ScopeType" use="optional" default="document"/>
+  </xs:complexType>
+  <xs:simpleType name="CardinalityChildOccurancesType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Child portion of a cardinality expression</doc:tooltip>
+        <doc:summary>Child portion of a cardinality expression Allowed values
+        are positive integers including zero or the string value
+        "many".</doc:summary>
+        <doc:description>The CardinalityChildOccurancesType element defines the
+        child portion of a cardinality expression.  Allowed values are positive
+        integers including zero or the string value "many".</doc:description>
+        <doc:example>0,1, 2, 15,many</doc:example>
+        
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:union memberTypes="xs:integer">
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="many"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+  <xs:group name="ConstraintBaseGroup">
+    <xs:sequence>
+      <xs:element name="constraintName" type="res:NonEmptyStringType">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Name of the constraint</doc:tooltip>
+            <doc:summary>A meaningfull name of the constraint.</doc:summary>
+            <doc:description>The constraintName element is a name which
+            represents a human readable and meaningful name for the
+            constraint.</doc:description>
+            <doc:example>PrimaryKey_birdSurvey</doc:example>
+            
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="constraintDescription" minOccurs="0">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Description of the constraint</doc:tooltip>
+            <doc:summary>Descibes the purpose of the constraint.</doc:summary>
+            <doc:description>The constraintDescription element describes the
+            nature of the constraint. It might be a description of a check
+            condition, or a statement about the composition of a primary key or
+            the nature of the relationship between two database tables or two
+            ascii files.</doc:description>
+            <doc:example>1.Must be greater than 0 but less than 100 2. "The
+            primary key of the table BIRD_SURVEY is composed of two
+            attributes:speciesCode and observationDate 3. The species name
+            associated with the species code in survey.txt can be found in the
+            file speciesList.txt</doc:example>
+            
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="ForeignKeyGroup">
+    <xs:sequence>
+      <xs:group ref="ConstraintBaseGroup"/>
+      <xs:element name="key">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Key</doc:tooltip>
+            <doc:summary>The set of attributes to which this constraint
+            applies.</doc:summary>
+            <doc:description>The key element defines the set of attributes to
+            which this constraint applies. For a primary key or a unique key,
+            the set of attributes must be identifying. For a foreign key, the
+            set of attributes must match an identifying key in the referenced
+            entity. For a 'not null' constraint, the key indicates the attribute
+            which should not be null.</doc:description>
+            
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="attributeReference" type="res:NonEmptyStringType" maxOccurs="unbounded">
+              <xs:annotation>
+                <xs:appinfo>
+                  <doc:tooltip>Attribute Reference</doc:tooltip>
+                  <doc:summary>The identifier of an attribute found
+                  in the identified entity</doc:summary>
+                  <doc:description>The attributeReference element is the
+                  identifier of an attribute that can be found in the
+                  identified entity. This id will be unique within an
+                  entity and specifies that the attribute participates
+                  in the key that is being defined.</doc:description>
+                  <doc:example>site</doc:example>
+                </xs:appinfo>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="entityReference" type="res:NonEmptyStringType">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Referenced Entity ID</doc:tooltip>
+            <doc:summary>The id of the parent-entity in a foreign key
+            constraint.</doc:summary>
+            <doc:description>The entityReference element contains the id of the
+            entity to which a foreign key refers, otherwise known as the
+            parent-entity or parent-table. This should be an identifier that
+            matches one of the "identifier" elements for an
+            entity.</doc:description>
+            <doc:example>knb.79.4</doc:example>
+            
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="relationshipType" minOccurs="0">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Relationship type: Identifying or
+            non-identifying</doc:tooltip>
+            <doc:summary>Relationship type: Identifying or
+            non-identifying</doc:summary>
+            <doc:description>The relationshipType element defines identifying
+            relationships that propagate from the parent entity's primary key to
+            the child's primary key. Non-identifying relationships propagate the
+            parent's primary key as a non-key attribute of the child
+            entity.</doc:description>
+            <doc:example>relationshipType code</doc:example>
+            
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="identifying"/>
+            <xs:enumeration value="non-identifying"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="cardinality" minOccurs="0">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Cardinality of the relationship between two
+            entities.</doc:tooltip>
+            <doc:summary>Cardinality of the relationship between a parent
+            entity and a child entity.</doc:summary>
+            <doc:description>The cardinality element represents a statement of
+            the relationship between parent and child entities. Cardinality is
+            expressed as the ratio of related parent and child
+            entities. Cardinality 1 to N is a specific form of cardinality in
+            which zero or one parent records are related to a specified number
+            of child records. The cardinality ratio for the parent entity
+            depends on whether the "existence" is mandatory (one or more) or
+            optional (zero to ...).</doc:description>
+            <doc:example>One to many</doc:example>
+            <doc:example>One to 10</doc:example>
+            <doc:example>Zero or One to Many</doc:example>
+            
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="parentOccurences">
+              <xs:annotation>
+                <xs:appinfo>
+                  <doc:tooltip>Parent portion of a 1 to exactly N
+                  cardinality</doc:tooltip>
+                  <doc:summary>Parent portion of a 1 to exactly N cardinality.
+                  May have a value of either 0 or 1.</doc:summary>
+                  <doc:description>The parentOccurences element describes the
+                  Parent portion of a 1 to exactly N cardinality. May have a
+                  value of either 0 or 1. Value of 0 implies that the
+                  "existence" of a child record is optional.  Value of 1 implies
+                  that the "existence" of a child record is
+                  mandatory.</doc:description>
+                  <doc:example>One to 10, Zero or One to Many</doc:example>
+                  
+                </xs:appinfo>
+              </xs:annotation>
+              <xs:simpleType>
+                <xs:restriction base="xs:integer">
+                  <xs:enumeration value="0"/>
+                  <xs:enumeration value="1"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:element>
+            <xs:element name="childOccurences" type="CardinalityChildOccurancesType">
+              <xs:annotation>
+                <xs:appinfo>
+                  <doc:tooltip>Child portion of the cardinality
+                  expression</doc:tooltip>
+                  <doc:summary>Child portion of a cardinality expression
+                  Allowed values are positive integers including zero or the
+                  string value "many".</doc:summary>
+                  <doc:description>The childOccurences element describes the
+                  child portion of a cardinality expression Allowed values are
+                  positive integers including zero or the string value
+                  "many"</doc:description>
+                  <doc:example>2, 15, many</doc:example>
+                  
+                </xs:appinfo>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+</xs:schema>

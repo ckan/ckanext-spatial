@@ -1,0 +1,838 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" blockDefault="#all"
+	xmlns:sch="http://www.ascc.net/xml/schematron">
+<xsd:annotation>
+	<xsd:documentation>
+		Section 2 : Data Quality Information
+	</xsd:documentation>
+</xsd:annotation>
+
+<xsd:element name="dataqual" type="dataqualType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Data Quality Information
+		Section: 2
+		Description: a general assessment of the quality of the data set. (Recommendations on information to be reported and tests to be performed are found in "Spatial Data Quality," which is chapter 3 of part 1 in Department of Commerce, 1992, Spatial Data Transfer Standard (SDTS) (Federal Information Processing Standard 173): Washington, Department of Commerce, National Institute of Standards and Technology.)
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Data Quality Information</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="dataqualType">
+	<xsd:sequence>
+		<xsd:element ref="attracc" minOccurs="0"/>
+		<xsd:element ref="logic"/>
+		<xsd:element ref="complete"/>
+		<xsd:element ref="posacc" minOccurs="0"/>
+		<xsd:element ref="lineage"/>
+		<xsd:element ref="cloud" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="attracc" type="attraccType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Attribute Accuracy
+		Section: 2.1
+		Description: an assessment of the accuracy of the identification of entities and assignment of attribute values in the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Attribute Accuracy</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="attraccType">
+	<xsd:sequence>
+		<xsd:element ref="attraccr"/>
+		<xsd:element ref="qattracc" minOccurs="0" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="attraccr" type="attraccrType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Attribute Accuracy Report
+		Section: 2.1.1
+		Description: an explanation of the accuracy of the identification of the entities and assignments of values in the data set and a description of the tests used.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Attribute Accuracy Report</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="attraccrType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="qattracc" type="qattraccType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Quantitative Attribute Accuracy Assessment
+		Section: 2.1.2
+		Description: a value assigned to summarize the accuracy of the identification of the entities and assignments of values in the data set and the identification of the test that yielded the value.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Quantitative Attribute Accuracy Assessment</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="qattraccType">
+	<xsd:sequence>
+		<xsd:element ref="attraccv"/>
+		<xsd:element ref="attracce"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="attraccv" type="attraccvType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Attribute Accuracy Value
+		Section: 2.1.2.1
+		Description: an estimate of the accuracy of the identification of the entities and assignments of attribute values in the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Attribute Accuracy Value</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="attraccvType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "Unknown" free text
+		</xsd:documentation>
+		<xsd:documentation>
+			Enumerated value also matches "free text"
+
+			<![CDATA[
+				<xsd:restriction base="xsd:token">
+					<xsd:enumeration value="Unknown"/>
+				</xsd:restriction>
+			]]>
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="attracce" type="attracceType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Attribute Accuracy Explanation
+		Section: 2.1.2.2
+		Description: the identification of the test that yielded the Attribute Accuracy Value.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Attribute Accuracy Explanation</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="attracceType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="logic" type="logicType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Logical Consistency Report
+		Section: 2.2
+		Description: an explanation of the fidelity of relationships in the data set and tests used.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Logical Consistency Report</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="logicType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="complete" type="completeType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Completeness Report
+		Section: 2.3
+		Description: information about omissions, selection criteria, generalization, definitions used, and other rules used to derive the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Completeness Report</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="completeType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="posacc" type="posaccType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Positional Accuracy
+		Section: 2.4
+		Description: an assessment of the accuracy of the positions of spatial objects.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Positional Accuracy</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="posaccType">
+	<xsd:sequence>
+		<xsd:element ref="horizpa" minOccurs="0"/>
+		<xsd:element ref="vertacc" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="horizpa" type="horizpaType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Horizontal Positional Accuracy
+		Section: 2.4.1
+		Description: an estimate of accuracy of the horizontal positions of the spatial objects.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Horizontal Positional Accuracy</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="horizpaType">
+	<xsd:sequence>
+		<xsd:element ref="horizpar"/>
+		<xsd:element ref="qhorizpa" minOccurs="0" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="horizpar" type="horizparType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Horizontal Positional Accuracy Report
+		Section: 2.4.1.1
+		Description: an explanation of the accuracy of the horizontal coordinate measurements and a description of the tests used.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Horizontal Positional Accuracy Report</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="horizparType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="qhorizpa" type="qhorizpaType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Quantitative Horizontal Positional Accuracy Assessment
+		Section: 2.4.1.2
+		Description: numeric value assigned to summarize the accuracy of the horizontal coordinate measurements and the identification of the test that yielded the value.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Quantitative Horizontal Positional Accuracy Assessment</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="qhorizpaType">
+	<xsd:sequence>
+		<xsd:element ref="horizpav"/>
+		<xsd:element ref="horizpae"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="horizpav" type="horizpavType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Horizontal Positional Accuracy Value
+		Section: 2.4.1.2.1
+		Description: an estimate of the accuracy of the horizontal coordinate measurements in the data set expressed in (ground) meters.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Horizontal Positional Accuracy Value</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="horizpavType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: free real
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:double"/>
+</xsd:simpleType>
+
+<xsd:element name="horizpae" type="horizpaeType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Horizontal Positional Accuracy Explanation
+		Section: 2.4.1.2.2
+		Description: the identification of the test that yielded the Horizontal Positional Accuracy Value.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Horizontal Positional Accuracy Explanation</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="horizpaeType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="vertacc" type="vertaccType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Vertical Positional Accuracy
+		Section: 2.4.2
+		Description: an estimate of accuracy of the vertical positions in the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Vertical Positional Accuracy</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="vertaccType">
+	<xsd:sequence>
+		<xsd:element ref="vertaccr"/>
+		<xsd:element ref="qvertpa" minOccurs="0" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="vertaccr" type="vertaccrType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Vertical Positional Accuracy Report
+		Section: 2.4.2.1
+		Description: an explanation of the accuracy of the vertical coordinate measurements and a description of the tests used.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Vertical Positional Accuracy Report</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="vertaccrType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="qvertpa" type="qvertpaType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Quantitative Vertical Positional Accuracy Assessment
+		Section: 2.4.2.2
+		Description: numeric value assigned to summarize the accuracy of vertical coordinate measurements and the identification of the test that yielded the value.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Quantitative Vertical Positional Accuracy Assessment</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="qvertpaType">
+	<xsd:sequence>
+		<xsd:element ref="vertaccv"/>
+		<xsd:element ref="vertacce"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="vertaccv" type="vertaccvType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Vertical Positional Accuracy Value
+		Section: 2.4.2.2.1
+		Description: an estimate of the accuracy of the vertical coordinate measurements in the data set expressed in (ground) meters.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Vertical Positional Accuracy Value</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="vertaccvType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: free real
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:double"/>
+</xsd:simpleType>
+
+<xsd:element name="vertacce" type="vertacceType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Vertical Positional Accuracy Explanation
+		Section: 2.4.2.2.2
+		Description: the identification of the test that yielded the Vertical Positional Accuracy Value.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Vertical Positional Accuracy Explanation</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="vertacceType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="lineage" type="lineageType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Lineage
+		Section: 2.5
+		Description: information about the events, parameters, and source data which constructed the data set, and information about the responsible parties.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Lineage</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+<xsd:key name="srcciteaKey">
+	<xsd:selector xpath="srcinfo" />
+	<xsd:field xpath="srccitea" />
+</xsd:key>
+<xsd:keyref name="srcusedKeyRef" refer="srcciteaKey">
+	<xsd:selector xpath="procstep/srcused" />
+	<xsd:field xpath="." />
+</xsd:keyref>
+<xsd:keyref name="srcprodKeyRef" refer="srcciteaKey">
+	<xsd:selector xpath="procstep/srcprod" />
+	<xsd:field xpath="." />
+</xsd:keyref>
+</xsd:element>
+<xsd:complexType name="lineageType">
+	<xsd:sequence>
+		<xsd:element ref="srcinfo" minOccurs="0" maxOccurs="unbounded"/>
+		<xsd:element ref="procstep" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="srcinfo" type="srcinfoType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Source Information
+		Section: 2.5.1
+		Description: list of sources and a short discussion of the information contributed by each.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Source Information</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="srcinfoType">
+	<xsd:sequence>
+		<xsd:element ref="srccite"/>
+		<xsd:element ref="srcscale" minOccurs="0"/>
+		<xsd:element ref="typesrc"/>
+		<xsd:element ref="srctime"/>
+		<xsd:element ref="srccitea"/>
+		<xsd:element ref="srccontr"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="srccite" type="srcciteType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Source Citation
+		Section: 2.5.1.1
+		Description: reference for a source data set (see Section 8 for schema definitions).
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Source Citation</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="srcciteType">
+	<xsd:sequence>
+		<xsd:element ref="citeinfo"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="srcscale" type="srcscaleType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Source Scale Denominator
+		Section: 2.5.1.2
+		Description: the denominator of the representative fraction on a map (for example, on a 1:24,000-scale map, the Source Scale Denominator is 24000).
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Source Scale Denominator</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="srcscaleType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: integer
+			Domain: Source Scale Denominator &gt; 1
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:integer">
+		<xsd:minExclusive value="1"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="typesrc" type="typesrcType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Type of Source Media
+		Section: 2.5.1.3
+		Description: the medium of the source data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Type of Source Media</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="typesrcType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "paper" "stable-base material" "microfiche" "microfilm" "audiocassette" "chart" "filmstrip" "transparency" "videocassette" "videodisc" "videotape" "physical model" "computer program" "disc" "cartridge tape" "magnetic tape" "online" "CD-ROM" "electronic bulletin board" "electronic mail system" free text
+		</xsd:documentation>
+		<xsd:documentation>
+			Enumerated values also match "free text"
+
+			<![CDATA[
+				<xsd:restriction base="xsd:token">
+					<xsd:enumeration value="paper"/>
+					<xsd:enumeration value="stable-base material"/>
+					<xsd:enumeration value="microfiche"/>
+					<xsd:enumeration value="microfilm"/>
+					<xsd:enumeration value="audiocassette"/>
+					<xsd:enumeration value="chart"/>
+					<xsd:enumeration value="filmstrip"/>
+					<xsd:enumeration value="transparency"/>
+					<xsd:enumeration value="videocassette"/>
+					<xsd:enumeration value="videodisc"/>
+					<xsd:enumeration value="videotape"/>
+					<xsd:enumeration value="physical model"/>
+					<xsd:enumeration value="computer program"/>
+					<xsd:enumeration value="disc"/>
+					<xsd:enumeration value="cartridge tape"/>
+					<xsd:enumeration value="magnetic tape"/>
+					<xsd:enumeration value="online"/>
+					<xsd:enumeration value="CD-ROM"/>
+					<xsd:enumeration value="electronic bulletin board"/>
+					<xsd:enumeration value="electronic mail system"/>
+				</xsd:restriction>
+			]]>
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="srctime" type="srctimeType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Source Time Period of Content
+		Section: 2.5.1.4
+		Description: time period(s) for which the source data set corresponds to the ground.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Source Time Period of Content</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="srctimeType">
+	<xsd:sequence>
+		<xsd:element ref="timeinfo">
+			<xsd:annotation>
+				<xsd:documentation>See Section 9 for schema definitions.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:element>
+		<xsd:element ref="srccurr"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="srccurr" type="srccurrType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Source Currentness Reference
+		Section: 2.5.1.4.1
+		Description: the basis on which the source time period of content information of the source data set is determined.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Source Currentness Reference</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="srccurrType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "ground condition" "publication date" free text
+		</xsd:documentation>
+		<xsd:documentation>
+			Enumerated values also match "free text"
+
+			<![CDATA[
+				<xsd:restriction base="xsd:token">
+					<xsd:enumeration value="ground condition"/>
+					<xsd:enumeration value="publication date"/>
+				</xsd:restriction>
+			]]>
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="srccitea" type="srcciteaType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Source Citation Abbreviation
+		Section: 2.5.1.5
+		Description: short-form alias for the source citation.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Source Citation Abbreviation</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="srcciteaType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:token"/>
+</xsd:simpleType>
+
+<xsd:element name="srccontr" type="srccontrType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Source Contribution
+		Section: 2.5.1.6
+		Description: brief statement identifying the information contributed by the source to the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Source Contribution</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="srccontrType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="procstep" type="procstepType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Process Step
+		Section: 2.5.2
+		Description: information about a single event.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Process Step</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="procstepType">
+	<xsd:sequence>
+		<xsd:element ref="procdesc"/>
+		<xsd:element ref="srcused" minOccurs="0" maxOccurs="unbounded"/>
+		<xsd:element ref="procdate"/>
+		<xsd:element ref="proctime" minOccurs="0"/>
+		<xsd:element ref="srcprod" minOccurs="0" maxOccurs="unbounded"/>
+		<xsd:element ref="proccont" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="procdesc" type="procdescType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Process Description
+		Section: 2.5.2.1
+		Description: an explanation of the event and related parameters or tolerances.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Process Description</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="procdescType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="srcused" type="srcciteaType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Source Used Citation Abbreviation
+		Section: 2.5.2.2
+		Description: the Source Citation Abbreviation of a data set used in the processing step.
+		Domain: Source Citation Abbreviations from the Source Information entries for the data set (see Lineage (2.5) for key constraint definitions).
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Source Used Citation Abbreviation</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+
+<xsd:element name="procdate" type="procdateType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Process Date
+		Section: 2.5.2.3
+		Description: the date when the event was completed.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Process Date</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="procdateType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: date
+			Domain: "Unknown" "Not complete" free date
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:union memberTypes="FGDCdate">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:token">
+				<xsd:enumeration value="Unknown"/>
+				<xsd:enumeration value="Not complete"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:union>
+</xsd:simpleType>
+
+<xsd:element name="proctime" type="proctimeType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Process Time
+		Section: 2.5.2.4
+		Description: the time when the event was completed.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Process Time</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="proctimeType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: time
+			Domain: free time
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCtime"/>
+</xsd:simpleType>
+
+<xsd:element name="srcprod" type="srcciteaType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Source Produced Citation Abbreviation
+		Section: 2.5.2.5
+		Description: the Source Citation Abbreviation of an intermediate data set that (1) is significant in the opinion of the data producer, (2) is generated in the processing step, and (3) is used in later processing steps.
+		Domain: Source Citation Abbreviations from the Source Information entries for the data set (see Lineage (2.5) for key constraint definitions).
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Source Produced Citation Abbreviation</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+
+<xsd:element name="proccont" type="proccontType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Process Contact
+		Section: 2.5.2.6
+		Description: the party responsible for the processing step information (see Section 10 for schema definitions).
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Process Contact</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="proccontType">
+	<xsd:sequence>
+		<xsd:element ref="cntinfo"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="cloud" type="cloudType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Cloud Cover
+		Section: 2.6
+		Description: area of a data set obstructed by clouds, expressed as a percentage of the spatial extent.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Cloud Cover</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="cloudType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: integer
+			Domain: 0 &lt;= Cloud Cover &lt;= 100; "Unknown"
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:union>
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:integer">
+				<xsd:minInclusive value="0"/>
+				<xsd:maxInclusive value="100"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:token">
+				<xsd:enumeration value="Unknown"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:union>
+</xsd:simpleType>
+
+</xsd:schema>

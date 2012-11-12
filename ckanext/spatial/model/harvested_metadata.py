@@ -268,7 +268,8 @@ class GeminiReferenceDate(GeminiElement):
                 "gmd:date/gco:Date/text()",
                 "gmd:date/gco:DateTime/text()",
             ],
-            multiplicity="1",
+            # TODO: check
+            multiplicity="*",
         ),
     ]
 
@@ -315,7 +316,7 @@ class GeminiDocument(MappedXmlDocument):
                 "gmd:language/gmd:LanguageCode/@codeListValue",
                 "gmd:language/gmd:LanguageCode/text()",
             ],
-            multiplicity="1",
+            multiplicity="0..1",
         ),
         GeminiElement(
             name="resource-type",
@@ -323,7 +324,7 @@ class GeminiDocument(MappedXmlDocument):
                 "gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue",
                 "gmd:hierarchyLevel/gmd:MD_ScopeCode/text()",
             ],
-            multiplicity="1",
+            multiplicity="0..1",
         ),
         GeminiResponsibleParty(
             name="metadata-point-of-contact",
@@ -517,7 +518,7 @@ class GeminiDocument(MappedXmlDocument):
                 "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:westBoundLongitude/gco:Decimal/text()",
                 "gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:westBoundLongitude/gco:Decimal/text()",
             ],
-            multiplicity="1",
+            multiplicity="0..1",
         ),
         GeminiElement(
             name="bbox-east-long",
@@ -525,7 +526,7 @@ class GeminiDocument(MappedXmlDocument):
                 "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:eastBoundLongitude/gco:Decimal/text()",
                 "gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:eastBoundLongitude/gco:Decimal/text()",
             ],
-            multiplicity="1",
+            multiplicity="0..1",
         ),
         GeminiElement(
             name="bbox-north-lat",
@@ -533,7 +534,7 @@ class GeminiDocument(MappedXmlDocument):
                 "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:northBoundLatitude/gco:Decimal/text()",
                 "gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:northBoundLatitude/gco:Decimal/text()",
             ],
-            multiplicity="1",
+            multiplicity="0..1",
         ),
         GeminiElement(
             name="bbox-south-lat",
@@ -541,7 +542,7 @@ class GeminiDocument(MappedXmlDocument):
                 "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:southBoundLatitude/gco:Decimal/text()",
                 "gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:southBoundLatitude/gco:Decimal/text()",
             ],
-            multiplicity="1",
+            multiplicity="0..1",
         ),
         GeminiElement(
             name="temporal-extent-begin",

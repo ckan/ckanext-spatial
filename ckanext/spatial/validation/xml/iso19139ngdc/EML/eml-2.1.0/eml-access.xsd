@@ -1,0 +1,377 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:doc="eml://ecoinformatics.org/documentation-2.1.0" xmlns:res="eml://ecoinformatics.org/resource-2.1.0" xmlns="eml://ecoinformatics.org/access-2.1.0" targetNamespace="eml://ecoinformatics.org/access-2.1.0">
+  <xs:import namespace="eml://ecoinformatics.org/documentation-2.1.0" schemaLocation="eml-documentation.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/resource-2.1.0" schemaLocation="eml-resource.xsd"/>
+  <xs:annotation>
+    <xs:documentation>
+       '$RCSfile: eml-access.xsd,v $'
+       Copyright: 1997-2002 Regents of the University of California,
+                            University of New Mexico, and
+                            Arizona State University
+        Sponsors: National Center for Ecological Analysis and Synthesis and
+                  Partnership for Interdisciplinary Studies of Coastal Oceans,
+                     University of California Santa Barbara
+                  Long-Term Ecological Research Network Office,
+                     University of New Mexico
+                  Center for Environmental Studies, Arizona State University
+   Other funding: National Science Foundation (see README for details)
+                  The David and Lucile Packard Foundation
+     For Details: http://knb.ecoinformatics.org/
+
+        '$Author: jones $'
+          '$Date: 2009/03/05 18:59:36 $'
+      '$Revision: 1.82 $'
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    </xs:documentation>
+    <xs:appinfo>
+      <doc:moduleDocs>
+        <doc:moduleName>eml-access</doc:moduleName>
+        <doc:moduleDescription>
+          <section xmlns="">
+            <title>
+              The eml-access module - Access control rules for resources
+            </title>
+            <para>
+              The eml-access module describes the level of access that is
+              to be allowed or denied to a resource for a particular user or 
+              group of users, and can be described independently for metadata 
+              and data.  The eml-access
+              module uses a reference to a particular authentication system
+              to determine the set of principals (users or groups) that can be
+              specified in the access rules.
+              The special principal 'public' can be used to indicate that any
+              user or group has access permission, thereby making
+              it easier to specify that anonymous access is allowed. 
+             </para>
+            <para>        
+              There are two mechanisms for including access control 
+              via the eml-access module: 
+			  <orderedlist>
+			  <listitem>
+			  <para>
+			  1) The top-level "eml" element may have an optional
+              &lt;access&gt; element 
+              that is used to establish the default access
+              control for the entire EML package.  
+              If this access element is omitted from the
+              document, then the package submitter should be
+              given full access to the package but all other users should
+              be denied all access.  To allow the package to be publicly viewable,
+              the EML author must explicitly include a rule stating so.
+              </para>
+			  </listitem>
+			  <listitem>
+			  <para>
+			  2) Exceptions for particular entity-level
+              components of the package can be controlled at a finer grain by
+              using an access description in that entity's physical/distribution
+              tree.  
+              When access control rules are specified at this level, they apply
+              only to the data in the parent distribution element, and not to the metadata.
+              Thus, it will control access to the content of the &lt;inline&gt;
+              element, as well as resources that are referenced by the
+              &lt;online/url&gt; and &lt;online/connection&gt; paths.
+              These exceptions to access for particular data resources are
+              applied after the default access rules at the package-level have been
+               applied, 
+              so  they effectively override the default rules when they overlap.
+			  </para></listitem></orderedlist>
+              </para>
+			  <para>In previous versions of EML access rules for entity-level
+              distribution were contained
+              in &lt;additionalMetadata&gt; sections and referenced via the 
+              &lt;describes&gt; tag. Although in theory these could have referenced 
+             any node, in application such node-level access control is problematic. 
+             Since the most common uses of access control rules were to limit access
+             to specific data entities, the access tree has been placed there explicitly
+             in EML 2.1.0. </para>
+            
+            <para>
+            Access is specified with a choice of child elements, either &lt;allow&gt;
+              or &lt;deny&gt;. Within these rules, values can be assigned for each
+              &lt;principal&gt; using the &lt;permission&gt;
+              element. Users given "read" permission can view the resource;
+              "write" allows changes to the resource excluding changes to the
+              access rules; "changePermission" includes "write" plus the
+              changing of access rules. Users allowed "all" permissions; may do all
+              of the above.
+             </para>
+            <para>
+              An example is given below, with non-critical sections deleted:
+<literalLayout>
+  &lt;eml&gt;
+      &lt;access 
+          authSystem="ldap://ldap.ecoinformatics.org:389/dc=ecoinformatics,dc=org" 
+          order="allowFirst"&gt;
+        &lt;allow&gt;
+          &lt;principal&gt;uid=alice,o=NASA,dc=ecoinformatics,dc=org&lt;/principal&gt;
+          &lt;permission&gt;read&lt;/permission&gt;
+          &lt;permission&gt;write&lt;/permission&gt;
+        &lt;allow&gt;
+      &lt;/access&gt;
+      &lt;dataset&gt;
+      ...
+      ...
+      &lt;dataTable id="entity123"&gt;
+      ...
+        &lt;physical&gt;
+        ...
+          &lt;distribution&gt;
+          ...
+            &lt;access id="access123"
+            authSystem="ldap://ldap.ecoinformatics.org:389/dc=ecoinformatics,dc=org" 
+            order="allowFirst"&gt;
+              &lt;deny&gt;
+                &lt;principal&gt;uid=alice,o=NASA,dc=ecoinformatics,dc=org&lt;/principal&gt;
+                &lt;permission&gt;write&lt;/permission&gt;
+            &lt;/deny&gt;
+          &lt;/access&gt;
+         &lt;/distribution&gt;
+       &lt;/physical&gt;
+      &lt;/dataTable&gt;
+      &lt;dataTable id="entity234"&gt;
+        ...
+        &lt;physical&gt;
+        ...
+          &lt;distribution&gt;
+            ...
+            &lt;access&gt;
+              &lt;references&gt;access123&lt;/references&gt;
+            &lt;/access&gt;
+          &lt;/distribution&gt;
+        &lt;/physical&gt;
+      &lt;/dataTable&gt;
+      ...    
+    &lt;/dataset&gt;
+  &lt;eml&gt;
+</literalLayout>
+              In this example, the overall default access is to allow the 
+              user=alice (but no one else) to read and write all metadata and data.
+              However,
+              under "entity123" and "entity234", there is an additional rule
+              saying that user=alice does not have write permission.  The net
+              effect is that Alice can read and make changes to the metadata,
+              but cannot make changes to the two data entities. In addition, Alice 
+              cannot change these access rules; although the submitter can.
+            </para>
+            <para>
+              This example also shows how the eml-access module, like other modules,
+              may be "referenced" via the &lt;references&gt; tag.  This
+              allows an access control document to be described once, and then
+              used as a reference in other locations within the EML document
+              via its ID.
+            </para>
+            <para>
+            In summary, access rules can be applied in two places in an
+            eml document. Default access rules are established
+            in the top &lt;access&gt; element for the main eml document (e.g.,
+            "/eml/access").  These default rules can be overridden
+            for particular data entities by adding additional &lt;access&gt;
+            elements in the physical/distribution trees of those entities.
+           </para>
+          </section>
+        </doc:moduleDescription>
+        <doc:recommendedUsage>all data where controlling user access to the
+        dataset is an issue</doc:recommendedUsage>
+        <doc:standAlone>yes</doc:standAlone>
+      </doc:moduleDocs>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="access" type="AccessType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Access control rules</doc:tooltip>
+        <doc:summary>The rules defined in this element will determine the level
+        of access to a resource for the defined users and groups.</doc:summary>
+        <doc:description>The access element contains a list of rules defining
+        permissions for this resource. For descriptions of the individual elements, 
+        see the AccessType.The permission rules defined here can be overridden 
+         by rules added to an access tree in the PhysicalDistributionType  
+        at the entity level. </doc:description>
+        <doc:example>See the description of the AccessType.</doc:example>
+      </xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="AccessType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Access control rules</doc:tooltip>
+        <doc:summary>The rules defined in this element will determine the level
+        of access to a resource for the defined users and groups.</doc:summary>
+        <doc:description>The access element contains a list of rules that define
+        the level of access for a resource. There are two uses of access trees: to
+        control access to either metadata or data. To control access to metadata 
+        use the eml/access tree. By default, these rules will also apply to the contained 
+        data. To override the default controls for specific data entities, use the 
+        access element available in the entity's physical/distribution tree.  A 
+        combination of access trees and their "order rules" (see description of 
+        the "order" attribute) allows EML authors
+        to have fine control over permissions for individuals and groups.
+        </doc:description>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:choice>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element name="allow" type="AccessRule">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Allow rule</doc:tooltip>
+              <doc:summary>A rule that grants a permission
+              type.</doc:summary>
+              <doc:description>The allow element indicates that a particular
+              user or group is granted the defined permission.</doc:description>
+              <doc:example>allow</doc:example>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="deny" type="AccessRule">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Deny rule</doc:tooltip>
+              <doc:summary>A rule that revokes a permission
+              type.</doc:summary>
+              <doc:description>The deny element indicates that a particular
+              user or group is not granted the defined
+              permission.</doc:description>
+              <doc:example>deny</doc:example>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+      <xs:group ref="res:ReferencesGroup"/>
+    </xs:choice>
+    <xs:attribute name="id" type="res:IDType" use="optional"/>
+    <xs:attribute name="system" type="res:SystemType" use="optional"/>
+    <xs:attribute name="scope" type="res:ScopeType" use="optional" default="document"/>
+    <xs:attribute name="order" use="optional" default="allowFirst">
+      <xs:annotation>
+        <xs:appinfo>
+          <doc:tooltip>Rule order</doc:tooltip>
+          <doc:summary>The order in which the allow and deny rules should be
+          applied.</doc:summary>
+          <doc:description>To obtain the desired access control, use the order 
+          attribute to define which rules should be applied first. The acceptable
+          values are 'allowFirst' and 'denyFirst'. If 'allowFirst' is
+          specified, then all 'allow' rules are processed, and then overridden
+          by all 'deny' rules.  If 'denyFirst' is specified, then all 'deny'
+          rules are processed, and then overridden by all 'allow' rules.  
+          </doc:description>
+          <doc:example>allowFirst</doc:example>
+        </xs:appinfo>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="allowFirst"/>
+          <xs:enumeration value="denyFirst"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="authSystem" type="xs:string" use="required">
+      <xs:annotation>
+        <xs:appinfo>
+          <doc:tooltip>Authentication system</doc:tooltip>
+          <doc:summary>The authentication system is used to verify the user or
+          group to whom access is allowed or denied.</doc:summary>
+          <doc:description>The authentication system determines the set of
+          principals (users + groups) that can be used in the access control
+          list, and the membership of users in groups. This element is intended
+          to provide a reference to the authentication system that is used to
+          verify the user or group. This reference is typically in the form
+          of a URI, which includes the connection protocol, Internet host, and
+          path to the authentication mechanism.</doc:description>
+          <doc:example>
+          ldap://ldap.ecoinformatics.org:389/dc=ecoinformatics,dc=org
+          </doc:example>
+        </xs:appinfo>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="AccessRule">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Access Rule</doc:tooltip>
+        <doc:summary>Access Rules define a user's access to a
+        resource.</doc:summary>
+        <doc:description>The AccessRule type defines a list of users that are
+        derived from a particular authentication system (such as an LDAP
+        directory), whether the user or group is allowed or denied access, the
+        extent of their access (read, write , or changePermission
+        access).</doc:description>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="principal" type="res:NonEmptyStringType" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>User or group</doc:tooltip>
+            <doc:summary>The user or group (principal) for which the access
+            control applies.</doc:summary>
+            <doc:description>The principal element defines the user or group to
+            which the access control rule applies. The users and groups must be
+            defined in the authentication system described in the authSystem
+            element.  The special principal 'public' can be used to indicate
+            that any user or group has a particular access permission, thereby
+            making it easier to specify that anonymous access is allowed.
+            </doc:description>
+            <doc:example>public</doc:example>
+            <doc:example>uid=alice,o=LTER,dc=ecoinformatics,dc=org</doc:example>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="permission" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Type of permission</doc:tooltip>
+            <doc:summary>The type of permission being granted or denied.
+            </doc:summary>
+            <doc:description>
+              <doc:section xmlns="">
+                <para>
+            The permission that is being granted or denied
+            to a particular user or group for a given resource. The list of
+            permissions come from a predetermined list:
+            </para>
+                <para>'read' - allow or deny viewing of the resource, </para>
+                <para>'write' - allow or deny modification of the resource (except for access rules),  </para>
+                <para>'changePermission' - modifications including access rules, and  </para>
+                <para>'all' - all of the above. </para>
+                <para>
+               
+                This element also allows other permission values that may be applicable to some other authentication systems but are not defined in this specification (if these other values are used, access rule enforcement is indeterminate outside of the originating system).</para>
+              </doc:section>
+            </doc:description>
+            <doc:example>read</doc:example>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:union>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="read"/>
+                <xs:enumeration value="write"/>
+                <xs:enumeration value="changePermission"/>
+                <xs:enumeration value="all"/>
+              </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType>
+              <xs:restriction base="xs:string"/>
+            </xs:simpleType>
+          </xs:union>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

@@ -1,0 +1,3302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+  xmlns="http://www.xml-cml.org/schema/stmml-1.1"   
+  xmlns:sch="http://www.ascc.net/xml/schematron"  
+  targetNamespace="http://www.xml-cml.org/schema/stmml-1.1" 
+  elementFormDefault="qualified">
+  <xsd:annotation>
+    <xsd:documentation xml:lang="en">
+      <div class="curation">
+        <ul>
+          <li>created by hand
+      2001-11-20</li>
+          <li>First draft 2001-11-20</li>
+        </ul>
+        <p>STMML supports domain-independent STM information components</p>
+      </div>
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:annotation>
+    <xsd:appinfo>
+      <sch:title>Schematron validation</sch:title>
+      <sch:ns uri="http://www.xml-cml.org/schema/stmml-1.1"/>
+    </xsd:appinfo>
+  </xsd:annotation>
+  <xsd:annotation>
+    <xsd:documentation>
+      <div class="heading">Data Types and Data Structure</div>
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:annotation>
+    <xsd:documentation>
+      <div class="subheading">Overview</div>
+      <div class="description">
+        <p>STM-ML defines a number of data types suited to STM. It also defines
+    a number of complex data strucures such as arrays, matrices and tables.
+    the constraints are sometimes created through elements and sometimes
+    through attributes. We classify the general components as follows:</p>
+        <p>
+          <b>Abstract Data Structures</b>
+        </p>
+        <ul>
+          <li>
+            <a href="el.scalar">scalar</a>. A scalar quantity, expressible as a string, but
+    with many optional facets such as errors, units, ranges, etc. Most elements
+    may have <a href="st.countType">countType</a> attribute to indicate more than
+    one instance.</li>
+          <li>
+            <a href="el.array">array</a>. An array of homogeneous <tt>scalar</tt>s
+    whose size is described by <a href="st.sizeType">sizeType</a>. <a href="st.delimiterType">
+    Delimiter</a>s in string representations can ve varied.</li>
+          <li>
+            <a href="el.matrix">matrix</a>. A rectangular (often square) matrix of
+    homogeneous <tt>scalar</tt>s. Many matrices have special functions
+    (see <a href="el.matrixType">matrixType</a>) such as geometric
+    transformations</li>
+          <li>
+            <a href="el.table">table</a>. An table where the columns are homogeneous
+    <tt>array</tt>s. </li>
+          <li>
+            <a href="el.list">list</a>. A list of heterogeneous components from any
+    namespace.</li>
+          <li>
+            <a href="st.sizeType">sizeType</a>. Size of arrays</li>
+          <li>
+            <a href="st.delimiterType">delimiterType</a>. A lexical delimiter</li>
+        </ul>
+        <p>
+          <b>Links and References</b>
+        </p>
+        <ul>
+          <li>
+            <a href="el.link">link</a>. Support for simple hyperlinks and link structures</li>
+          <li>
+            <a href="st.refType">refType</a>. A reference to an element</li>
+          <li>
+            <a href="st.namespaceRefType">namespaceRefType</a>. A reference to an element, including
+    namespace-like prefixes</li>
+        </ul>
+        <p>
+          <b>Data-based simpleTypes</b>
+        </p>
+        <ul>
+          <li>
+            <a href="st.coordinate2Type">coordinate2Type</a>. A 2-D coordinate</li>
+          <li>
+            <a href="st.coordinate3Type">coordinate3Type</a>. A 3-D coordinate</li>
+          <li>
+            <a href="st.dataTypeType">dataTypeType</a>. An enumeration of
+    data types (similar to those in XML Schema).</li>
+          <li>
+            <a href="st.errorBasisType">errorBasisType</a>. Basis of numeric error estimates</li>
+          <li>
+            <a href="st.minType">minType</a>. Minimum value</li>
+          <li>
+            <a href="st.maxType">maxType</a>. Maximum value</li>
+        </ul>
+        <p>
+          <b>Common attribute types</b>
+        </p>
+        <ul>
+          <li>
+            <a href="st.idType">idType</a>. Specifies lexical patterns for IDs</li>
+          <li>
+            <a href="attGp.idGroup">idGroup</a>. ID attribute (highly encouraged)</li>
+          <li>
+            <a href="attGp.titleGroup">titleGroup</a>. Title attribute (highly encouraged)</li>
+          <li>
+            <a href="attGp.convGroup">convGroup</a>. Convention attribute</li>
+        </ul>
+      </div>
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:annotation>
+    <xsd:documentation>
+      <div class="subheading">Data structure</div>
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:element name="array" id="el.array">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">
+            A homogenous 1-dimensional array of similar objects.</div>
+        <div class="description">
+          <p>
+            <tt>array</tt> manages a homogenous 1-dimensional array of similar objects. These
+            can be encoded as strings (i.e. XSD-like datatypes) and are concatenated as
+            string content. The size of the array should always be &gt;= 1.
+         </p>
+          <p>The default delimiter is whitespace. The <tt>normalize-space()</tt> function of
+         XSLT could be used to normalize all whitespace to single spaces and this would not affect
+         the value of the array elements. To extract the elements <tt>java.lang.StringTokenizer</tt>
+         could be used. If the elements themselves contain whitespace then a different delimiter
+         must be used and is identified through the <tt>delimiter</tt> attribute. This method is
+         mandatory if it is required to represent empty strings. If a delimiter is used it MUST
+         start and end the array - leading and trailing whitespace is ignored. Thus <tt>size+1</tt>
+         occurrences of the delimiter character are required. If non-normalized whitespace is to be
+         encoded (e.g. newlines, tabs, etc) you are recommended to translate it character-wise
+         to XML character entities.
+         </p>
+          <p>Note that normal Schema validation tools cannot validate the elements
+         of <b>array</b> (they are defined as <tt>string</tt>) However if the string is
+         split, a temporary schema
+         can be constructed from the type and used for validation. Also the type
+         can be contained in a dictionary and software could decide to retrieve this
+         and use it for validation.</p>
+          <p>When the elements of the <tt>array</tt> are not simple scalars
+         (e.g. <a href="el.scalar">scalar</a>s with a value and an error, the
+         <tt>scalar</tt>s should be used as the elements. Although this is
+         verbose, it is simple to understand. If there is a demand for
+         more compact representations, it will be possible to define the
+         syntax in a later version.</p>
+        </div>
+        <div class="example">
+          <pre>
+&lt;array size="5" title="value"
+  dataType="xsd:decimal"&gt;  1.23 2.34 3.45 4.56 5.67&lt;/array&gt;
+
+</pre>
+          <p>the <tt>size</tt> attribute is not mandatory but provides a useful validity
+         check): </p>
+        </div>
+        <div class="example">
+          <pre>
+&lt;array size="5" title="initials" dataType="xsd:string"
+  delimiter="/"&gt;/A B//C/D-E/F/&lt;/array&gt;
+
+</pre>
+          <p>Note that the second array-element is the empty string ''.</p>
+        </div>
+        <div class="example">
+          <pre>
+&lt;array title="mass" size="4"
+  units="unit:g"
+  errorBasis="observedStandardDeviation"
+  minValues="10 11 10 9"
+  maxValues="12 14 12 11"
+  errorValues="1 2 1 1"
+  dataType="xsd:float"&gt;11 12.5 10.9 10.2
+&lt;/array&gt;
+
+</pre>
+        </div>
+      </xsd:documentation>
+      <xsd:appinfo>
+        <sch:pattern xmlns="http://www.ascc.net/xml/schematron" name="array">
+         </sch:pattern>
+      </xsd:appinfo>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:simpleContent>
+        <xsd:extension base="xsd:string">
+          <xsd:attributeGroup ref="tit_id_conv_dictGroup"/>
+          <xsd:attribute name="dataType" type="dataTypeType" default="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+                <div class="summary">all elements of the array must have the same dataType</div>
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:attribute>
+          <xsd:attribute name="errorValues" type="floatArrayType">
+            <xsd:annotation>
+              <xsd:documentation>
+                <div class="summary">an optional array of error values for numeric arrays</div>
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:attribute>
+          <xsd:attribute name="errorBasis" type="errorBasisType">
+            <xsd:annotation>
+              <xsd:documentation>
+                <div class="summary">A string describing the basis of the errors</div>
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:attribute>
+          <xsd:attribute name="minValues" type="floatArrayType">
+            <xsd:annotation>
+              <xsd:documentation>
+                <div class="summary">an optional array of minimum values for numeric arrays</div>
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:attribute>
+          <xsd:attribute name="maxValues" type="floatArrayType">
+            <xsd:annotation>
+              <xsd:documentation>
+                <div class="summary">an optional array of maximum values for numeric arrays</div>
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:attribute>
+          <xsd:attribute name="units" type="unitsType">
+            <xsd:annotation>
+              <xsd:documentation>
+                <div class="summary">a string denoting the units (recommended for numeric quantities!!).
+                   All elements must have the same units</div>
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:attribute>
+          <xsd:attribute name="delimiter" type="delimiterType"/>
+          <xsd:attribute name="size" type="xsd:positiveInteger"/>
+        </xsd:extension>
+      </xsd:simpleContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="scalar" id="el.scalar">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">An element to hold scalar data.</div>
+        <div class="description">
+          <p>
+            <tt>scalar</tt> holds scalar data under a single
+            generic container. The semantics are usually resolved by
+            linking to a dictionary.
+             <b>scalar</b> defaults to a scalar string but
+             has attributes which affect the type.
+         </p>
+          <p>
+            <tt>scalar</tt> does not necessarily reflect a physical object (for which
+         <a href="el.object">object</a> should be used). It may reflect a property of an object
+         such as temperature, size, etc. </p>
+          <p>Note that normal Schema validation tools cannot validate the data type
+         of <b>scalar</b> (it is defined as <tt>string</tt>), but that a temporary schema
+         can be constructed from the type and used for validation. Also the type
+         can be contained in a dictionary and software could decide to retrieve this
+         and use it for validation.</p>
+        </div>
+        <div class="example">
+          <pre>
+&lt;scalar
+    dataType="xsd:decimal"
+    errorValue="1.0"
+    errorBasis="observedStandardDeviation"
+    title="body weight"
+    dictRef="zoo:bodywt"
+    units="units:g"&gt;34.3&lt;/scalar&gt;
+
+        </pre>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:simpleContent>
+        <xsd:extension base="xsd:string">
+          <xsd:attributeGroup ref="tit_id_conv_dictGroup"/>
+          <xsd:attribute name="dataType" type="dataTypeType" default="xsd:string"/>
+          <xsd:attribute name="errorValue" type="xsd:decimal"/>
+          <xsd:attribute name="errorBasis" type="errorBasisType"/>
+          <xsd:attribute name="minValue" type="minType"/>
+          <xsd:attribute name="maxValue" type="maxType"/>
+          <xsd:attribute name="units" type="unitsType"/>
+        </xsd:extension>
+      </xsd:simpleContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="matrix" id="el.matrix">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">A rectangular matrix of any quantities</div>
+        <div class="description">
+          <p>By default <tt>matrix</tt> represents
+        a rectangular matrix of any quantities
+            representable as XSD or STMML dataTypes. It consists of
+            <tt>rows*columns</tt> elements, where <tt>columns</tt> is the
+     fasting moving index. Assuming the elements are counted from 1 they are
+     ordered <tt>V[1,1],V[1,2],...V[1,columns],V[2,1],V[2,2],...V[2,columns],
+     ...V[rows,1],V[rows,2],...V[rows,columns]</tt>
+          </p>
+          <p>By default whitespace is used to separate matrix elements; see
+     <a href="el.array">array</a> for details. There are NO characters or markup
+     delimiting the end of rows; authors must be careful!. The <tt>columns</tt>
+     and <tt>rows</tt> attributes have no default values; a row vector requires
+     a <tt>rows</tt> attribute of 1.</p>
+          <p>
+            <tt>matrix</tt> also supports many types of square matrix, but at present we
+     require all elements to be given, even if the matrix is symmetric, antisymmetric
+     or banded diagonal. The <tt>matrixType</tt> attribute allows software to
+     validate and process the type of matrix.</p>
+        </div>
+        <div class="example">
+          <pre>
+&lt;matrix id="m1" title="mattrix-1" dictRef="foo:bar"
+  rows="3" columns="3" dataType="xsd:decimal"
+  delimiter="|" matrixType="squareSymmetric" units="unit:m"
+  &gt;|1.1|1.2|1.3|1.2|2.2|2.3|1.3|2.3|3.3!&lt;/matrix&gt;
+
+        </pre>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:simpleContent>
+        <xsd:extension base="xsd:string">
+          <xsd:attribute name="dataType" type="dataTypeType" default="xsd:float"/>
+          <xsd:attribute name="delimiter" type="delimiterType"/>
+          <xsd:attribute name="rows" type="sizeType" use="required">
+            <xsd:annotation>
+              <xsd:documentation>
+                <div class="summary">
+                  <p>Number of rows</p>
+                </div>
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:attribute>
+          <xsd:attribute name="columns" type="sizeType" use="required">
+            <xsd:annotation>
+              <xsd:documentation>
+                <div class="summary">
+                  <p>Number of columns</p>
+                </div>
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:attribute>
+          <xsd:attribute name="units" type="unitsType">
+            <xsd:annotation>
+              <xsd:documentation>
+                <div class="summary">
+                  <p>units (recommended for numeric quantities!!)</p>
+                </div>
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:attribute>
+          <xsd:attributeGroup ref="tit_id_conv_dictGroup"/>
+          <xsd:attribute name="matrixType" type="matrixType">
+            <xsd:annotation>
+              <xsd:documentation>
+                <div class="summary">
+                  <p>Type of matrix (mainly square ones)</p>
+                </div>
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:attribute>
+          <xsd:attribute name="errorValues" type="floatArrayType">
+            <xsd:annotation>
+              <xsd:documentation>
+                <div class="summary">an optional array of error values for numeric matrices</div>
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:attribute>
+          <xsd:attribute name="errorBasis" type="errorBasisType">
+            <xsd:annotation>
+              <xsd:documentation>
+                <div class="summary">A string describing the basis of the errors</div>
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:attribute>
+          <xsd:attribute name="minValues" type="floatArrayType">
+            <xsd:annotation>
+              <xsd:documentation>
+                <div class="summary">an optional array of minimum values for numeric matrices</div>
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:attribute>
+          <xsd:attribute name="maxValues" type="floatArrayType">
+            <xsd:annotation>
+              <xsd:documentation>
+                <div class="summary">an optional array of maximum values for numeric matrices</div>
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:attribute>
+        </xsd:extension>
+      </xsd:simpleContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="table" id="el.table">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">A rectangular table of any quantities</div>
+        <div class="description">
+          <p>By default <tt>table</tt> represents a rectangular table of any quantities
+               representable as XSD or STMML dataTypes. The default layout is columnwise,
+               with <tt>columns</tt> columns,
+               where each column is a (homogeneous) <a href="el.array">array</a> of
+               size <tt>rows</tt> data. This is the "normal" orientation of data tables
+               but the table display could be transposed by XSLT transformation if required.
+         Access is to columns, and thence to the data within them. DataTyping, delimiters,
+         etc are delegated to the arrays, which must all be of the same size. For
+         verification it is recommended that every array carries a <tt>size</tt>
+         attribute.
+               </p>
+        </div>
+        <div class="example">
+          <pre>&lt;table rows="3" columns="2" title="people"&gt;
+  &lt;array title="age" dataType="xsd:integer"&gt;3 5 7&lt;/array&gt;
+  &lt;array title="name" dataType="xsd:string"&gt;Sue Fred Sandy&lt;/array&gt;
+&lt;/table&gt;
+</pre>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="array" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="rows" type="sizeType" use="required">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="description">
+              <p>Number of rows</p>
+            </div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+      <xsd:attribute name="columns" type="sizeType" use="required">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="description">
+              <p>Number of columns</p>
+            </div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+      <xsd:attributeGroup ref="tit_id_conv_dictGroup"/>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="list" id="el.list">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">A generic container with no implied semantics</div>
+        <div class="description">
+          <p>
+       A generic container with no implied semantics. It just contains
+      things and can have attributes which bind conventions to it. It could often
+      act as the root element in an STM document.</p>
+        </div>
+        <div class="example">
+          <pre>
+&lt;list&gt;
+  &lt;array title="animals"&gt;frog bear toad&lt;/array&gt;
+  &lt;scalar title="weight" dataType="xsd:float"&gt;3.456&lt;/scalar&gt;
+&lt;/list&gt;
+
+      </pre>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:any minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attributeGroup ref="tit_id_conv_dictGroup"/>
+      <xsd:attribute name="type" type="xsd:string"/>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:annotation>
+    <xsd:documentation>
+      <div class="subheading">Data-based simpleTypes</div>
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:simpleType name="coordinate2Type" id="st.coordinate2Type">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">An x/y coordinate pair</div>
+        <div class="description">
+          <p>An x/y coordinate pair consisting of
+         two real numbers, separated by whitespace or a comma.
+         In arrays and matrices, it may be useful to set a separate delimiter</p>
+        </div>
+        <div class="example">
+          <pre>
+
+&lt;list&gt;
+  &lt;array
+      &gt;1.2,3.4   3.2,4.5   6.7,23.1 &lt;/array&gt;
+  &lt;array delimiter="/"
+      &gt;/1.2 3.4/3.2 4.5/6.7 23.1/&lt;/array&gt;
+&lt;/list&gt;
+
+        </pre>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="\s*([\-]|[+])?\d*\.?\d*(\s+|[,])([\-]|[+])?\d*\.?\d*\s*"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="coordinate3Type" id="st.coordinate3Type">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">An x/y/z coordinate triple</div>
+        <div class="description">
+          <p>An x/y/z coordinate triple consisting of
+            three real numbers, separated by whitespace or commas.
+            In arrays and matrices, it may be useful to set a separate delimiter</p>
+        </div>
+        <div class="example">
+          <pre>
+&lt;list&gt;
+  &lt;array&gt;1.2,3.4,1.2
+    3.2,4.5,7.3   6.7,23.1,5.6 &lt;/array&gt;
+  &lt;array delimiter="/"
+  &gt;/1.2 3.4 3.3/3.2 4.5 4.5/6.7 23.1 5.6/&lt;/array&gt;
+&lt;/list&gt;
+
+           </pre>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="\s*([\-]|[+])?\d*\.?\d*(\s+|[,])([\-]|[+])?\d*\.?\d*(\s+|[,])([\-]|[+])?\d*\.?\d*\s*"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="dataTypeType" id="st.dataTypeType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">
+          <p>an enumerated type for all builtin allowed dataTypes in STM</p>
+        </div>
+        <div class="description">
+          <p>
+            <tt>dataTypeType</tt> represents an enumeration of allowed dataTypes
+               (at present identical with those in XML-Schemas (Part2- datatypes).
+               This means that implementers should be able to use standard XMLSchema-based
+               tools for validation without major implementation problems.
+            </p>
+          <p>It will often be used an an attribute on
+            <a href="el.scalar">scalar</a>,
+            <a href="el.array">array</a> or
+            <a href="el.matrix">matrix</a>
+            elements.</p>
+        </div>
+        <div class="example">
+          <pre>
+&lt;list xmlns="http://www.xml-cml.org/schema/core"&gt;
+  &lt;scalar dataType="xsd:boolean" title="she loves me"&gt;true&lt;/scalar&gt;
+  &lt;scalar dataType="xsd:float" title="x"&gt;23.2&lt;/scalar&gt;
+  &lt;scalar dataType="xsd:duration" title="egg timer"&gt;PM4&lt;/scalar&gt;
+  &lt;scalar dataType="xsd:dateTime" title="current data and time"&gt;2001-02-01:00:30&lt;/scalar&gt;
+  &lt;scalar dataType="xsd:time" title="wake up"&gt;06:00&lt;/scalar&gt;
+  &lt;scalar dataType="xsd:date" title="where is it"&gt;1752-09-10&lt;/scalar&gt;
+  &lt;scalar dataType="xsd:anyURI" title="CML site"&gt;http://www.xml-cml.org/&lt;/scalar&gt;
+  &lt;scalar dataType="xsd:QName" title="CML atom"&gt;cml:atom&lt;/scalar&gt;
+  &lt;scalar dataType="xsd:normalizedString" title="song"&gt;the mouse ran up the clock&lt;/scalar&gt;
+  &lt;scalar dataType="xsd:language" title="UK English"&gt;en-GB&lt;/scalar&gt;
+  &lt;scalar dataType="xsd:Name" title="atom"&gt;atom&lt;/scalar&gt;
+  &lt;scalar dataType="xsd:ID" title="XML ID"&gt;_123&lt;/scalar&gt;
+  &lt;scalar dataType="xsd:integer" title="the answer"&gt;42&lt;/scalar&gt;
+  &lt;scalar dataType="xsd:nonPositiveInteger" title="zero"&gt;0&lt;/scalar&gt;
+&lt;/list&gt;
+
+           </pre>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="xsd:string"/>
+      <xsd:enumeration value="xsd:boolean"/>
+      <xsd:enumeration value="xsd:float"/>
+      <xsd:enumeration value="xsd:double"/>
+      <xsd:enumeration value="xsd:decimal"/>
+      <xsd:enumeration value="xsd:duration"/>
+      <xsd:enumeration value="xsd:dateTime"/>
+      <xsd:enumeration value="xsd:time"/>
+      <xsd:enumeration value="xsd:date"/>
+      <xsd:enumeration value="xsd:gYearMonth"/>
+      <xsd:enumeration value="xsd:gYear"/>
+      <xsd:enumeration value="xsd:gMonthDay"/>
+      <xsd:enumeration value="xsd:gDay"/>
+      <xsd:enumeration value="xsd:gMonth"/>
+      <xsd:enumeration value="xsd:hexBinary"/>
+      <xsd:enumeration value="xsd:base64Binary"/>
+      <xsd:enumeration value="xsd:anyURI"/>
+      <xsd:enumeration value="xsd:QName"/>
+      <xsd:enumeration value="xsd:NOTATION"/>
+      <xsd:enumeration value="xsd:normalizedString"/>
+      <xsd:enumeration value="xsd:token"/>
+      <xsd:enumeration value="xsd:language"/>
+      <xsd:enumeration value="xsd:IDREFS"/>
+      <xsd:enumeration value="xsd:ENTITIES"/>
+      <xsd:enumeration value="xsd:NMTOKEN"/>
+      <xsd:enumeration value="xsd:NMTOKENS"/>
+      <xsd:enumeration value="xsd:Name"/>
+      <xsd:enumeration value="xsd:NCName"/>
+      <xsd:enumeration value="xsd:ID"/>
+      <xsd:enumeration value="xsd:IDREF"/>
+      <xsd:enumeration value="xsd:ENTITY"/>
+      <xsd:enumeration value="xsd:integer"/>
+      <xsd:enumeration value="xsd:nonPositiveInteger"/>
+      <xsd:enumeration value="xsd:negativeInteger"/>
+      <xsd:enumeration value="xsd:long"/>
+      <xsd:enumeration value="xsd:int"/>
+      <xsd:enumeration value="xsd:short"/>
+      <xsd:enumeration value="xsd:byte"/>
+      <xsd:enumeration value="xsd:nonNegativeInteger"/>
+      <xsd:enumeration value="xsd:unsignedLong"/>
+      <xsd:enumeration value="xsd:unsignedInt"/>
+      <xsd:enumeration value="xsd:unsignedShort"/>
+      <xsd:enumeration value="xsd:unsignedByte"/>
+      <xsd:enumeration value="xsd:positiveInteger"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:annotation>
+    <xsd:documentation>
+      <div class="summary">Array-based simpleTypes</div>
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:simpleType name="sizeType" id="st.sizeType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">The size of an array</div>
+        <div class="description">
+          <p>The size of an array. Redundant, but serves as a check
+         for processing software (useful if delimiters are used)</p>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:positiveInteger"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="delimiterType" id="st.delimiterType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">A non-whitespace character used in arrays to separate components</div>
+        <div class="description">
+          <p>Some STM-ML elements (such as <a href="el.array">array</a>) have
+        content representing concatenated values. The default separator is
+        whitespace (which can be normalised) and this should be used whenever
+        possible. However in some cases the values are empty, or contain whitespace or other
+        problematic punctuation, and a delimiter is required.</p>
+          <p>Note that the content string MUST start and end with the delimiter so
+        there is no ambiguity as to what the components are. Only printable
+        characters from the ASCII character set should be used, and character
+        entities should be avoided.</p>
+          <p>When delimiters are used to separate precise whitespace this should always
+        consist of spaces and not the other allowed whitespace characters
+        (newline, tabs, etc.). If the latter are important it is probably best to redesign
+        the application.</p>
+        </div>
+        <div class="example">
+          <pre>
+&lt;array size="4" delimiter="|"&gt;|A|B12||D and   E|&lt;/array&gt;
+
+
+ <em>The values in the array are</em>
+  "A", "B12", "" (empty string) and "D and   E"
+ <em>note the spaces</em>
+          </pre>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="floatArrayType" id="st.floatArrayType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">An array of floats</div>
+        <div class="description">
+          <p>An array of floats or other real numbers.
+            Not used in STM Schema, but re-used by CML.
+            </p>
+        </div>
+        <div class="example">
+          <pre>
+&lt;atomArray xmlns="http://www.xml-cml.org/schema/core"
+  x2="1.2 2.3 3.4 5.6"/&gt;
+
+           </pre>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:list itemType="xsd:decimal"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="matrixType" id="st.matrixType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">Allowed <a href="el.matrix">matrix</a> types</div>
+        <div class="description">
+          <p>Allowed <tt>matrix</tt> types.
+       These are mainly square matrices</p>
+        </div>
+        <div class="example">
+          <pre>
+&lt;matrix id="m1" title="mattrix-1" dictRef="foo:bar"
+  rows="3" columns="3" dataType="xsd:decimal"
+  delimiter="|" matrixType="squareSymmetric" units="unit:m"
+  &gt;|1.1|1.2|1.3|1.2|2.2|2.3|1.3|2.3|3.3!&lt;/matrix&gt;
+
+      </pre>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:union>
+      <xsd:simpleType>
+        <xsd:restriction base="xsd:string">
+          <xsd:enumeration value="rectangular"/>
+          <xsd:enumeration value="square"/>
+          <xsd:enumeration value="squareSymmetric"/>
+          <xsd:enumeration value="squareAntisymmetric"/>
+          <xsd:enumeration value="diagonal">
+            <xsd:annotation>
+              <xsd:documentation>
+                <div class="description">Symmetric. Elements are zero except on the diagonal</div>
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="upperTriangular">
+            <xsd:annotation>
+              <xsd:documentation>
+                <div class="description">Square. Elements are zero below the diagonal
+            <pre>
+1 2 3 4
+0 3 5 6
+0 0 4 8
+0 0 0 2
+      </pre>
+                </div>
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="lowerTriangular">
+            <xsd:annotation>
+              <xsd:documentation>
+                <div class="description">Symmetric. Elements are zero except on the diagonal</div>
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:enumeration>
+          <xsd:enumeration value="unitary"/>
+          <xsd:enumeration value="rowEigenvectors"/>
+          <xsd:enumeration value="rotation22"/>
+          <xsd:enumeration value="rotationTranslation32"/>
+          <xsd:enumeration value="homogeneous33"/>
+          <xsd:enumeration value="rotation33"/>
+          <xsd:enumeration value="rotationTranslation43"/>
+          <xsd:enumeration value="homogeneous44"/>
+          <xsd:enumeration value="square"/>
+          <xsd:enumeration value="square"/>
+        </xsd:restriction>
+      </xsd:simpleType>
+      <xsd:simpleType>
+        <xsd:restriction base="namespaceRefType"/>
+      </xsd:simpleType>
+    </xsd:union>
+  </xsd:simpleType>
+  <xsd:simpleType name="countType" id="st.countType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">
+          <p>A count multiplier for certain elements</p>
+        </div>
+        <div class="description">
+          <p>A count multiplier for certain elements, such as
+            <tt>action</tt> or <tt>object</tt>.</p>
+        </div>
+        <div class="example">
+          <pre>
+&lt;list&gt;
+&lt;object title="frog" count="10"/&gt;
+&lt;action title="step3" count="3"&gt;
+  &lt;p&gt;Add 10 ml reagent&lt;/p&gt;
+&lt;/action&gt;
+&lt;/list&gt;
+
+           </pre>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:integer">
+      <xsd:minInclusive value="1"/>
+      <xsd:maxInclusive value="999999999999"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:annotation>
+    <xsd:documentation>
+      <div class="summary">General simpleTypes</div>
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:simpleType name="idType" id="st.idType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">A unique ID for STM elements</div>
+        <div class="description">
+          <p>A unique ID for STM elements. This is not formally
+          of type ID (an XML NAME which must start with a letter and contain only letters,
+          digits and <tt>.-_:</tt>). It is recommended that IDs start with a letter,
+          and contain no punctuation or whitespace. The function <tt>generate-id()</tt>
+          in XSLT will generate semantically void unique IDs</p>.
+          <p>It is difficult to ensure uniqueness when documents are merged. We suggest
+          namespacing IDs, perhaps using the containing elements as the base.
+          Thus <tt>mol3:a1</tt> could be a useful unique ID.
+          However this is still experimental.</p>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[A-Za-z0-9_\-]+(:[A-Za-z0-9_\-]+)?"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:attributeGroup name="idGroup" id="attGp.id">
+    <xsd:attribute name="id" type="idType" id="att.id">
+      <xsd:annotation>
+        <xsd:documentation>
+          <div class="summary">A attribute prividing a unique ID for STM elements</div>
+          <div class="description">
+            <p>See <a href="st.idType">idType</a> for full documentation.</p>
+          </div>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:attributeGroup>
+  <xsd:attributeGroup name="titleGroup" id="attGp.title">
+    <xsd:attribute name="title" type="xsd:string" id="att.title">
+      <xsd:annotation>
+        <xsd:documentation>
+          <div class="summary">An (optional) title on most STM elements. Uncontrolled</div>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:attributeGroup>
+  <xsd:attributeGroup name="convGroup" id="attGp.conv">
+    <xsd:attribute name="convention" type="namespaceRefType" default="CML" id="att.convention">
+      <xsd:annotation>
+        <xsd:documentation>
+          <div class="summary">A reference to a convention</div>
+          <div class="description">
+            <p>A reference to a convention which is inherited by all the subelements.</p>
+            <p>It may be useful to create conventions with namespaces,
+         </p>
+            <p>this attribute is inherited by its child elements; thus a <tt>molecule</tt>
+    with a convention sets the default for its bonds and atoms. This can be overwritten
+    if necessary by an explicit <tt>convention</tt>.</p>
+            <p>Use of convention will normally require non-STM-ML semantics, and should be used with
+    caution. We would expect that conventions prefixed with "ISO" would be useful,
+    such as ISO8601 for dateTimes.</p>
+          </div>
+          <div class="example">
+            <pre>
+&lt;bond convention="fooChem" order="-5"
+   xmlns:fooChem="http://www.fooChem/conventions"/&gt;
+
+     </pre>
+          </div>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:attributeGroup>
+  <xsd:annotation>
+    <xsd:documentation>
+      <div class="summary">Numeric types</div>
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:simpleType name="errorBasisType" id="st.errorBasisType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">The basis of an error value</div>
+        <div class="description">
+          <p>Errors in values can be of several types and this simpleType
+         provides a small controlled vocabulary</p>
+        </div>
+        <div class="example">
+          <pre>
+&lt;scalar
+    dataType="xsd:decimal"
+    errorValue="1.0"
+    errorBasis="observedStandardDeviation"
+    title="body weight"
+    dictRef="zoo:bodywt"
+    units="units:g"&gt;34.3&lt;/scalar&gt;
+
+           </pre>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="observedRange"/>
+      <xsd:enumeration value="observedStandardDeviation"/>
+      <xsd:enumeration value="observedStandardError"/>
+      <xsd:enumeration value="estimatedStandardDeviation"/>
+      <xsd:enumeration value="estimatedStandardError"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="maxType" id="st.maxType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">The maximum INCLUSIVE value of a quantity</div>
+        <div class="description">
+          <p>The maximum INCLUSIVE value of a sortable quantity such as
+          numeric, date or string. It should be ignored for dataTypes such as URL.
+          The use of <tt>min</tt> and
+        <tt>max</tt> attributes can be used to give a range for the quantity.
+       The statistical basis of this range is not defined. The value of <tt>max</tt>
+       is usually an observed
+       quantity (or calculated from observations). To restrict a value, the <tt>
+       maxExclusive</tt> type in a dictionary should be used.</p>
+          <p>The type of the maximum is the same as the quantity to which it refers - numeric,
+       date and string are currently allowed</p>
+        </div>
+        <div class="example">
+          <pre>&lt;scalar dataType="xsd:float" maxValue="20" minValue="12"&gt;15&lt;/scalar&gt;
+</pre>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string"/>
+  </xsd:simpleType>
+  <xsd:simpleType name="minType" id="st.minType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">The minimum INCLUSIVE value of a quantity</div>
+        <div class="description">
+          <p>The minimum INCLUSIVE value of a sortable quantity such as
+            numeric, date or string. It should be ignored for dataTypes such as URL.
+            The use of <tt>min</tt> and
+          <tt>min</tt> attributes can be used to give a range for the quantity.
+         The statistical basis of this range is not defined. The value of <tt>min</tt>
+         is usually an observed
+         quantity (or calculated from observations). To restrict a value, the <tt>
+         minExclusive</tt> type in a dictionary should be used.</p>
+          <p>The type of the minimum is the same as the quantity to which it refers - numeric,
+         date and string are currently allowed</p>
+        </div>
+        <div class="example">
+          <pre>&lt;scalar dataType="xsd:float" maxValue="20" minValue="12"&gt;15&lt;/scalar&gt;
+</pre>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string"/>
+  </xsd:simpleType>
+  <xsd:annotation>
+    <xsd:documentation>
+      <div class="subheading">Links and References</div>
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:element name="link" id="el.link">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">An internal or external link to STMML or other object(s)</div>
+        <div class="description">
+          <p>
+            <tt>link</tt> is an internal or external link to STMML or other object(s). </p>
+          <p>
+            <b>Semantics are similar to XLink, but simpler and only a subset is implemented.</b>
+         This is intended to make the instances easy to create and read, and software
+         relatively easy to implement. The architecture is:</p>
+          <ul>
+            <li>
+              <b>A single element (<tt>link</tt>) used for all linking purposes</b>. </li>
+            <li>
+              <b>The link types are determined by the <tt>type</tt> attribute and can be:</b>.
+        <ul>
+                <li>
+                  <b>locator</b>. This points to a single target and must carry either a <tt>ref</tt> or <tt>href</tt> attribute.
+        <tt>locator</tt> links are usually children of an extended link.
+        <li>
+                    <b>arc</b>. This is a 1:1 link with both ends (<tt>from</tt> and <tt>to</tt>) defined.</li>
+                  <li>
+                    <b>extended</b>. This is usually a parent of several locator links and serves
+        to create a grouping of link ends (i.e. a list of references in documents).</li>
+        Many-many links can be built up from arcs linking extended elements</li>
+              </ul>
+              <p>All links can have optional <tt>role</tt> attributes. The semantics of this are not defined;
+        you are encouraged to use a URI as described in the XLink specification.</p>
+              <p>There are two address spaces: </p>
+              <ul>
+                <li>The <tt>href</tt> attribute on locators behaves in the same way as <tt>href</tt> in
+        HTML and is of type <tt>xsd:anyURI</tt>. Its primary use is to use XPointer to reference
+        elements outside the document.</li>
+                <li>The <tt>ref</tt> attribute on locators and the <tt>from</tt> and <tt>to</tt>
+        attributes on <tt>arc</tt>s refer to IDs (<em>without</em> the '#' syntax).</li>
+              </ul>
+              <p>Note: several other specific linking mechanisms are defined elsewhere in STM. <a href="         el.relatedEntry">relatedEntry</a> should be used in dictionaries, and <a href="st.dictRef">dictRef</a>
+        should be used to link to dictionaries. There are no required uses of <tt>link</tt> in STM-ML
+        but we have used it to map atoms, electrons and bonds in reactions in CML</p>
+            </li>
+          </ul>
+          <p>
+            <b>Relation to XLink</b>.
+         At present (2002) we are not aware of generic XLink
+         processors from which we would benefit, so the complete implementation brings little
+         extra value.
+         Among the simplifications from Xlink are:</p>
+          <ul>
+            <li>
+              <tt>type</tt> supports only <tt>extended</tt>, <tt>locator</tt> and <tt>arc</tt>
+            </li>
+            <li>
+              <tt>label</tt> is not supported and <tt>id</tt>s are used as targets of links.</li>
+            <li>
+              <tt>show</tt> and <tt>actuate</tt> are not supported.</li>
+            <li>
+              <tt>xlink:title</tt> is not supported (all STM elements can have a <tt>title</tt>
+         attribute).</li>
+            <li>
+              <tt>xlink:role</tt> supports any string (i.e. does not have to be a namespaced resource).
+         This mechanism can, of course, still be used and we shall promote it where STM
+         benefits from it</li>
+            <li>The <tt>to</tt> and <tt>from</tt> attributes point to IDs rather than labels</li>
+            <li>The xlink namespace is not used</li>
+            <li>It is not intended to create independent linkbases, although some collections of
+         links may have this property and stand outside the documents they link to</li>
+          </ul>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:any minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attributeGroup ref="tit_id_conv_dictGroup"/>
+      <xsd:attribute name="from" type="namespaceRefType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="summary">The starting point of an arc</div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+      <xsd:attribute name="to" type="namespaceRefType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="summary">The endpoint of an arc</div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+      <xsd:attribute name="ref" type="namespaceRefType">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="summary">An ID referenced within a locator</div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+      <xsd:attribute name="role" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="summary">The role of the link. Xlink adds semantics through a
+          URI; we shall not be this strict. We shall not normally use this mechanism
+          and use dictionaries instead</div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+      <xsd:attribute name="href" type="xsd:anyURI">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="summary">The target of the (locator) link, outside the document</div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+      <xsd:attribute name="type">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="summary">The type of the link</div>
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="extended">
+              <xsd:annotation>
+                <xsd:documentation>
+                  <div class="summary">A container for locators</div>
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="locator">
+              <xsd:annotation>
+                <xsd:documentation>
+                  <div class="summary">A link to an element</div>
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+            <xsd:enumeration value="arc">
+              <xsd:annotation>
+                <xsd:documentation>
+                  <div class="summary">A labelled link</div>
+                </xsd:documentation>
+              </xsd:annotation>
+            </xsd:enumeration>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:attribute>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:annotation>
+    <xsd:documentation>
+      <div class="summary">References</div>
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:simpleType name="namespaceRefType" id="st.namespaceRefType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">
+         A string referencing a dictionary, units, convention or other metadata.
+      </div>
+        <div class="description">
+          <p>A string referencing a dictionary, units, convention or other
+      metadata. The namespace is optional but recommended where possible</p>
+          <p>Note: this convention is only used within STM-ML and related languages;
+      it is NOT a URI.</p>
+        </div>
+        <div class="example">
+          <pre>
+&lt;list&gt;
+&lt;!-- dictRef is of namespaceRefType --&gt;
+  &lt;scalar dictRef="chem:mpt"&gt;123&lt;/scalar&gt;
+&lt;!-- error --&gt;
+  &lt;scalar dictRef="mpt23"&gt;123&lt;/scalar&gt;
+&lt;/list&gt;
+
+        </pre>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[A-Za-z][A-Za-z0-9_]*(:[A-Za-z][A-Za-z0-9_]*)?"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:simpleType name="refType" id="st.refType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">A reference to an existing element</div>
+        <div class="description">
+          <p>A reference to an existing element in the document.
+            The target of the
+            ref attribute (which may be namepsaced) must exist. The test for validity
+            will normally occur in the element's <tt>appinfo</tt>
+          </p>
+          <p>Any DOM Node created from this element will normally be a <i>reference</i>
+            to another Node, so that if the target node is modified a the dereferenced
+            content is modified. At present there are no deep copy semantics hardcoded
+            into the schema.</p>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="idType"/>
+  </xsd:simpleType>
+  <xsd:annotation>
+    <xsd:documentation>
+      <div class="heading">General information components</div>
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:annotation>
+    <xsd:documentation>
+      <div class="heading">General components</div>
+      <div class="description">
+        <p>STM-ML provides a very small number of abstract elements to capture
+    frequently encountered concepts in STM documents. There are no predetermined
+    semantics or ontology; it is expected that descriptive metadata
+    will be added through dictionaries.
+    </p>
+        <p>All elements can contain any element children and can carry the common
+    STM attributes. Currently there are the following:</p>
+        <ul>
+          <li>
+            <a href="el.object">object</a>. Almost anything - concrete, abstract, representable by
+    a noun. Objects can have properties added through <a href="el.scalar">scalar</a>, etc.
+    </li>
+          <li>
+            <a href="el.action">action</a>. Represents an action performed during a scientific narrative.
+    It has attributes describing a time-line and conditions so that a procedure could be replayed.
+    It has a container <a href="el.actionList">actionList</a> which shares these attributes
+    and which can describe sets of actions.
+    </li>
+          <li>
+            <a href="el.observation">observation</a>. Contains narrative or other elements describing
+    an observation, planned or unplanned</li>
+        </ul>
+      </div>
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:element name="action" id="el.action">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">An action which might occur in scientific data or narrative.</div>
+        <div class="description">
+          <p>An action which might occur in scientific data or narrative.
+      The definition is deliberately vague, intending to collect examples of
+      possible usage. Thus an action could be addition of materials,
+      measurement, application of heat or radiation.
+      The content model is unrestricted. <tt>action</tt> iself is
+      normally a child of <a href="#el.actionList">actionList</a>
+          </p>
+          <p>The start, end and duration attributes should be interpreted as
+      </p>
+          <ul>
+            <li>XSD dateTimes and XSD durations. This allows precise recording of
+      time of day, etc, or duration
+      after start of actionList. A <tt>convention="xsd"</tt> attribute should be used
+      to enforce XSD.</li>
+            <li>a numerical value, with a units attribute linked to a dictionary.</li>
+            <li>a human-readable string (unlikely to be machine processable)</li>
+          </ul>
+          <p>
+            <tt>startCondition</tt> and <tt>endCondition</tt>
+      values are not constrained, which allows XSL-like <tt>test</tt> attribute values.
+      The semantics of the conditions are yet to be defined and at present are simply
+      human readable.
+      </p>
+          <p>The order of the <tt>action</tt> elements in the document may, but will not always, define
+      the order that they actually occur in.</p>
+          <p>A delay can be shown by an <tt>action</tt> with no content. Repeated actions or
+      actionLists are indicated through the count attribute.</p>
+        </div>
+        <div class="example">
+          <pre>
+&lt;actionList title="boiling two eggs for breakfast"&gt;
+  &lt;!-- start cooking at 9am --&gt;
+  &lt;action title="turn on heat" start="T09:00:00" convention="xsd"/&gt;
+  &lt;!-- human readable description of time to start action --&gt;
+  &lt;action title="put egg into pan" startCondition="water is boiling" count="2"/&gt;
+  &lt;!-- the duration is expressed in ISO8601 format --&gt;
+  &lt;action title="boil eggs for 4 minutes" duration="4" units="units:min"/&gt;
+  &lt;!-- action immediately follows last action --&gt;
+  &lt;action title="remove egg from pan" count="1"/&gt;
+  &lt;action title="boil second egg for a bit longer" duration="about half a minute"/&gt;
+  &lt;!-- action immediately follows last action --&gt;
+  &lt;action title="remove egg from pan" count="1"/&gt;
+&lt;/actionList&gt;
+
+         </pre>
+        </div>
+        <div class="example">
+          <pre>
+&lt;actionList title="preparation of silanols"&gt;
+  &lt;p&gt;This is a conversion of a chemical synthesis to STM-ML. We
+  have deliberately not marked up the chemistry in this example!&lt;/p&gt;
+  &lt;action title="step2"&gt;
+    &lt;p&gt;Take 1 mmol of the diol and dissolve in dioxan in
+      &lt;object title="flask"&gt;
+        &lt;scalar title="volume" units="units:ml"&gt;25&lt;/scalar&gt;
+      &lt;/object&gt;
+    &lt;/p&gt;
+  &lt;/action&gt;
+  &lt;action title="step2"&gt;
+    &lt;p&gt;Place flask in water bath with magnetic stirrer&lt;/p&gt;
+  &lt;/action&gt;
+  &lt;!-- wait until certain condition --&gt;
+  &lt;actionList endCondition="bath temperature stabilised"/&gt;
+  &lt;action title="step3"&gt;
+    &lt;p&gt;Add 0.5 ml 1 M H2SO4&lt;/p&gt;
+  &lt;/action&gt;
+
+  &lt;!-- carry out reaction --&gt;
+  &lt;actionList endCondition="reaction complete; no diol spot remains on TLC"&gt;
+    &lt;actionList title="check tlc"&gt;
+      &lt;!-- wait for half an hour --&gt;
+      &lt;action duration="half an hour"/&gt;
+      &lt;action title="tlc"&gt;
+        &lt;p&gt;extract solution and check diol spot on TLC&lt;/p&gt;
+      &lt;/action&gt;
+    &lt;/actionList&gt;
+  &lt;/actionList&gt;
+
+  &lt;!-- work up reaction --&gt;
+  &lt;action title="step5"&gt;
+    &lt;p&gt;Add 10 ml water to flask&lt;/p&gt;
+  &lt;/action&gt;
+  &lt;action title="step6"&gt;
+    &lt;p&gt;Neutralize acid with 10% NaHCO3&lt;/p&gt;
+  &lt;/action&gt;
+  &lt;action title="step7" count="3"&gt;
+    &lt;p&gt;Extract with 10ml ether&lt;/p&gt;
+  &lt;/action&gt;
+  &lt;action title="step8"&gt;
+    &lt;p&gt;Combine ether layers&lt;/p&gt;
+  &lt;/action&gt;
+  &lt;action title="step9" count="2"&gt;
+    &lt;p&gt;Wash ether with 10 ml water&lt;/p&gt;
+  &lt;/action&gt;
+  &lt;action title="step10"&gt;
+    &lt;p&gt;Wash ether with 10 ml saturated NaCl&lt;/p&gt;
+  &lt;/action&gt;
+  &lt;action title="step11"&gt;
+    &lt;p&gt;Dry over anhydrous Na2SO4 and remove solvent on rotary evaporator&lt;/p&gt;
+  &lt;/action&gt;
+&lt;/actionList&gt;
+
+         </pre>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType mixed="true">
+      <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+        <xsd:any processContents="lax"/>
+      </xsd:sequence>
+      <xsd:attributeGroup ref="tit_id_conv_dictGroup"/>
+      <xsd:attributeGroup ref="actionGroup"/>
+      <xsd:attribute name="type" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="summary">The type of the action; semantics are not controlled.</div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="actionList" id="el.actionList">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">A container for a group of <a href="el.action">actions</a>
+        </div>
+        <div class="description">
+          <p>
+            <tt>ActionList</tt> contains a series of <tt>action</tt>s or
+        nested <tt>actionList</tt>s.</p>
+        </div>
+        <div class="example">See examples in <a href="el.action">action</a>
+        </div>
+        <div class="example">
+          <pre>
+&lt;!-- demonstrating parallel and sequential actions --&gt;
+&lt;actionList order="parallel" endCondition="all food cooked"&gt;
+  &lt;!-- meat and potatoes are cooked in parallel --&gt;
+  &lt;actionList title="meat"&gt;
+    &lt;action title="cook" endCondition="cooked"&gt;
+      &lt;p&gt;Roast meat&lt;/p&gt;
+    &lt;/action&gt;
+    &lt;action&gt;&lt;p&gt;Keep warm in oven&lt;/p&gt;&lt;/action&gt;
+  &lt;/actionList&gt;
+  &lt;actionList title="vegetables"&gt;
+    &lt;actionList title="cookVeg" endCondition="cooked"&gt;
+      &lt;action title="boil water" endCondition="water boiling"&gt;
+        &lt;p&gt;Heat water&lt;/p&gt;
+      &lt;/action&gt;
+      &lt;action title="cook" endCondition="potatoes cooked"&gt;
+        &lt;p&gt;Cook potatoes&lt;/p&gt;
+      &lt;/action&gt;
+    &lt;/actionList&gt;
+    &lt;action&gt;&lt;p&gt;Keep warm in oven&lt;/p&gt;&lt;/action&gt;
+  &lt;/actionList&gt;
+&lt;/actionList&gt;
+
+        </pre>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType mixed="true">
+      <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+        <xsd:any processContents="lax"/>
+      </xsd:sequence>
+      <xsd:attributeGroup ref="tit_id_conv_dictGroup"/>
+      <xsd:attributeGroup ref="actionGroup"/>
+      <xsd:attribute name="type" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="summary">The type of the actionList; no defined semantics</div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+      <xsd:attribute name="order" default="sequential">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="description">Describes whether child elements are sequential or parallel</div>
+          </xsd:documentation>
+        </xsd:annotation>
+        <xsd:simpleType>
+          <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="sequential"/>
+            <xsd:enumeration value="parallel"/>
+          </xsd:restriction>
+        </xsd:simpleType>
+      </xsd:attribute>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="object" id="el.object">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">An object which might occur in scientific data or narrative</div>
+        <div class="description">
+          <p>Deliberately vague. Thus an instrument might be built from sub component
+        objects, or a program could be composed of smaller modules (objects).
+        Unrestricted content model</p>
+        </div>
+        <div class="example">
+          <pre>&lt;object title="frog" type="amphibian" count="5"&gt;
+  &lt;scalar dataType="xsd:float" title="length" units="unit:cm"&gt;5&lt;/scalar&gt;
+  &lt;obj1/&gt;
+&lt;/object&gt;
+</pre>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType mixed="true">
+      <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+        <xsd:any processContents="lax"/>
+      </xsd:sequence>
+      <xsd:attributeGroup ref="tit_id_conv_dictGroup"/>
+      <xsd:attribute name="type" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="summary">Type of the object. Uncontrolled semantics</div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+      <xsd:attribute name="count" type="countType"/>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="observation" id="el.observation">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">An observation or occurrence</div>
+        <div class="description">
+          <p>A container for any events that
+        need to be recorded, whether planned or not. They can include notes,
+        measurements, conditions that may be referenced elsewhere, etc. There are
+        no controlled semantics </p>
+          <div class="example">
+            <pre>&lt;observation type="ornithology"&gt;
+  &lt;object title="sparrow" count="3"/&gt;
+  &lt;observ/&gt;
+&lt;/observation&gt;
+</pre>
+          </div>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType mixed="true">
+      <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+        <xsd:any processContents="lax"/>
+      </xsd:sequence>
+      <xsd:attributeGroup ref="tit_id_conv_dictGroup"/>
+      <xsd:attribute name="type" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="summary">Type of observation (uncontrolled vocabulary)</div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+      <xsd:attribute name="count" type="countType"/>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="stmml" id="el.stmml">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">An element to hold stmml data.</div>
+        <div class="description">
+          <p>
+            <tt>stmml</tt> holds stmml data under a single
+            generic container. Other namespaces may be present as children.
+            No semantics implied.
+         </p>
+        </div>
+        <div class="example">
+          <pre>
+&lt;stmml&gt;
+  &lt;actionList&gt;
+    &lt;action&gt;&lt;/action&gt;
+  &lt;/actionList&gt;
+  &lt;object&gt;&lt;/object&gt;
+  &lt;observation&gt;&lt;/observation&gt;
+
+&lt;!-- ==================== DICTIONARY =========== --&gt;
+
+  &lt;dictionary&gt;
+    &lt;annotation&gt;
+      &lt;documentation&gt;&lt;/documentation&gt;
+      &lt;appinfo&gt;&lt;/appinfo&gt;
+    &lt;/annotation&gt;
+    &lt;entry term="foo"&gt;
+      &lt;definition&gt;&lt;/definition&gt;
+      &lt;alternative&gt;&lt;/alternative&gt;
+      &lt;description&gt;&lt;/description&gt;
+      &lt;enumeration&gt;&lt;/enumeration&gt;
+      &lt;relatedEntry&gt;&lt;/relatedEntry&gt;
+    &lt;/entry&gt;
+  &lt;/dictionary&gt;
+
+&lt;!-- =================  METADATA ================== --&gt;
+
+  &lt;metadataList&gt;
+    &lt;metadata&gt;&lt;/metadata&gt;
+  &lt;/metadataList&gt;
+
+&lt;!-- =================  SCIENTIFIC UNITS ================== --&gt;
+
+  &lt;unitList&gt;
+    &lt;unitType id="ut1" name="u"&gt;
+      &lt;dimension name="mass"&gt;&lt;/dimension&gt;
+    &lt;/unitType&gt;
+    &lt;unit id="u1"&gt;&lt;/unit&gt;
+  &lt;/unitList&gt;
+
+&lt;/stmml&gt;
+
+
+
+        </pre>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+        <xsd:any processContents="lax"/>
+      </xsd:sequence>
+      <xsd:attributeGroup ref="tit_id_conv_dictGroup"/>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:annotation>
+    <xsd:documentation>
+      <div class="subheading">Dictionary components</div>
+      <div class="description">
+        <p>Dictionaries are a major part of STM-ML and supported as follows:</p>
+        <p>The dictionary itself:</p>
+        <ul>
+          <li>
+            <a href="el.dictionary">dictionary</a>. This element defines a dictionary
+    and is often the root element (though a data instance might also be combined
+    with a dictionary). The dictionary play a similar role to a simple schema, by defining
+    data types and other constraints (such as enumerations). By transforming a dictionary to
+    schema format, schema-based tools can be used for validation. A dictionary is
+    normally composed of <a href="el.entry">entry</a>s.</li>
+          <li>
+            <a href="el.entry">entry</a>. An entry contanins information which <em>describes</em>
+    or <em>constrains</em> elements in a data instance. The link is made through a
+    <a href="st.dictRef">dictRef</a> attribute on the data element.
+    Descriptive information can apply to any type of element (not necessarily
+    part of or derived from the STM Schema). Constraints are similar to those in XML Schemas
+    and use the same vocabulary (dataTypes, value ranges, enumerations, patterns, etc.). They normally
+    apply to elements from the STM Schema or derived from it.<br/>
+    In addition entrys can constrain elements to have the same
+    higher-level structures and constraints defined by STM Schema. Thus entrys can require a
+    data element to be a matrix, of a given type, with fixed number os rows and columns. These
+    constraints are usually attributes on the entry element, which therefore maps
+    directly onto the instance. Every entry has a mandatory <tt>term</tt> attribute
+    which is the formal text string representing the concept. This string can contain any allowed
+    XML characters (e.g. greek characters) but not markup (e.g. MathML or CML).</li>
+          <li>
+            <a href="el.definition">definition</a>. An almost mandatory child element of entry, giving
+    a formal definition of the term</li>
+          <li>
+            <a href="el.description">description</a>. Additional descriptive informati&gt;on for an entry.
+    This can contain any content, often HTML, but also MathML, CML for description of
+    equations, chemical formulae, etc.</li>
+          <li>
+            <a href="el.alternative">alternative</a>. Alternative strings for describing the
+    concept. These can be any of the stnadard lexical and terminological data categories
+    such as synonyms, abbreviations, homonyms, etc. (see ISO12620 for a full range).</li>
+          <li>
+            <a href="el.enumeration">enumeration</a>. A list of allowed values for the data
+    element (or elements in arrays, matrices).</li>
+          <li>
+            <a href="el.relatedEntry">relatedEntry</a>. A related entry. Sometimes this is
+    descriptive (e.g. "seeAlso" provides additional information on related concepts).
+    It can also be used for constraints, and there is a small controlled vocabulary
+    of relationships, but no universal syntax. We
+    support parentage (e.g. through "partitiveParent" = "partOf"). In principle this can
+    be used with <a href="el.appinfo">appinfo</a> to provide algorithmically constructed
+    relationships.
+    </li>
+          <li>
+            <em>attributes</em>. A wide range of constraints is provided through attributes,
+    several being similar to facets on XML Schema datatypes:
+    <ul>
+              <li>
+                <b>rows</b> and <b>columns</b>, the structure of the data element.</li>
+              <li>
+                <b>recommendedUnits</b>, <b>units</b> and <b>unitType</b>, the units of the data element.</li>
+              <li>
+                <b>minExclusive</b>, <b>minInclusive</b>, <b>maxExclusive</b> and <b>maxInclusive</b>,
+    the value of the data element.</li>
+              <li>
+                <b>totalDigits</b>, <b>fractionDigits</b>, <b>length</b>, <b>maxLength</b>, <b>minLength</b>
+    and <b>pattern</b>. The lexical form of the  data element.</li>
+            </ul>
+          </li>
+          <li>
+            <a href="el.annotation">annotation</a>. Similar to XML Schema, this has children
+    <a href="el.documentation">documentation</a> for information about the entry (normally
+    curatorial) and <a href="el.appinfo">appinfo</a> to describe entries and constraints
+    in machine-processable fashion.
+    .</li>
+        </ul>
+      </div>
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:element name="dictionary" id="el.dictionary">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">A dictionary</div>
+        <div class="description">
+          <p>A dictionary is a container for <a href="el.entry">entry</a>
+        elements. Dictionaries can also contain unit-related information.</p>
+          <p>The dictRef attribute on a <tt>dictionary</tt> element
+         sets a namespace-like prefix allowing the dictionary to be referenced from
+         within the document. In general dictionaries are
+         referenced from an element using the
+         <a href="gp.dictRefGroup">dictRef</a> attribute.</p>
+        </div>
+        <div class="example">
+          <pre>
+&lt;stm:dictionary xmlns:stm="http://www.xml-cml.org/schema/stmml-1.1"&gt;
+  &lt;stm:entry id="a001" term="Amplitude for charge density mixing"
+    dataType="stm:decimal"
+    units="arbitrary"&gt;
+    &lt;stm:annotation&gt;
+      &lt;stm:documentation&gt;
+        &lt;div class="summary"&gt;Amplitude for charge density mixing&lt;/div&gt;
+        &lt;div class="description"&gt;Not yet filled in...&lt;/div&gt;
+      &lt;/stm:documentation&gt;
+    &lt;/stm:annotation&gt;
+    &lt;stm:alternative type="abbreviation"&gt;CDMixAmp&lt;/stm:alternative&gt;
+  &lt;/stm:entry&gt;
+&lt;/stm:dictionary&gt;
+
+        </pre>
+        </div>
+        <div class="example">
+          <p>
+            <tt>dictionary</tt> can be used in an instance
+        document to reference the dictionary used. Example:</p>
+          <pre>
+&lt;list&gt;
+  &lt;dictionary
+     dictRef="core" href="../dictionary/coreDict.xml"/&gt;
+&lt;/list&gt;
+
+        </pre>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="unitList" minOccurs="0" maxOccurs="unbounded">
+          <xsd:annotation>
+            <xsd:documentation>
+              <div class="description">
+                <p>This is so that a reference to a UnitList can be put in a dictionary.</p>
+              </div>
+            </xsd:documentation>
+          </xsd:annotation>
+        </xsd:element>
+        <xsd:element ref="annotation" minOccurs="0" maxOccurs="unbounded"/>
+        <xsd:element ref="description" minOccurs="0" maxOccurs="unbounded"/>
+        <xsd:element ref="entry" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attributeGroup ref="tit_id_conv_dictGroup"/>
+      <xsd:attribute name="href" type="xsd:anyURI">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="summary">URI giving the location of the document. Mandatory if <tt>dictRef</tt>
+            present.
+          </div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="entry" id="el.entry">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">A dictionary entry</div>
+        <div class="example">
+          <pre>
+&lt;entry id="a003" term="alpha"
+  dataType="float"
+  minInclusive="0.0"
+  maxInclusive="180.0"
+  recommendedUnits="degrees"&gt;
+  &lt;definition&gt;The alpha cell angle&lt;/definition&gt;
+&lt;/entry&gt;
+
+         </pre>
+        </div>
+        <div class="example">
+          <pre>
+&lt;entry id="a003"
+  term="matrix1"
+  dataType="float"
+  rows="3"
+  columns="4"
+  unitType="unit:length"
+  minInclusive="0.0"
+  maxInclusive="100.0"
+  recommendedUnits="unit:m"
+  totalDigits="8"
+  fractionDigits="3"&gt;
+    &lt;definition&gt;A matrix of lengths&lt;/definition&gt;
+    &lt;description&gt;A data instance will have a matrix which points
+  to this entry (e.g. dictRef="foo:matrix1"). The matrix must
+  be 3*4, composed of floats in 8.3 format, of type length,
+  values between 0 and 100 and with recommended units metres.
+    &lt;/description&gt;
+&lt;/entry&gt;
+
+         </pre>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="definition" minOccurs="0"/>
+        <xsd:choice minOccurs="0" maxOccurs="unbounded">
+          <xsd:element ref="alternative"/>
+          <xsd:element ref="annotation"/>
+          <!-- <xsd:element ref="definition"/> -->
+          <xsd:element ref="description"/>
+          <xsd:element ref="enumeration"/>
+          <xsd:element ref="relatedEntry"/>
+        </xsd:choice>
+      </xsd:sequence>
+      <xsd:attributeGroup ref="tit_id_convGroup"/>
+      <xsd:attribute name="dataType" type="xsd:string"/>
+      <xsd:attribute name="rows" type="xsd:positiveInteger" default="1"/>
+      <xsd:attribute name="columns" type="xsd:positiveInteger" default="1"/>
+      <xsd:attribute name="recommendedUnits" type="unitsType"/>
+      <xsd:attribute name="unitType" type="xsd:string"/>
+      <xsd:attribute name="minExclusive" type="xsd:decimal"/>
+      <xsd:attribute name="minInclusive" type="xsd:decimal"/>
+      <xsd:attribute name="maxExclusive" type="xsd:decimal"/>
+      <xsd:attribute name="maxInclusive" type="xsd:decimal"/>
+      <xsd:attribute name="totalDigits" type="xsd:positiveInteger"/>
+      <xsd:attribute name="fractionDigits" type="xsd:nonNegativeInteger"/>
+      <xsd:attribute name="length" type="xsd:nonNegativeInteger"/>
+      <xsd:attribute name="minLength" type="xsd:nonNegativeInteger"/>
+      <xsd:attribute name="maxLength" type="xsd:positiveInteger"/>
+      <xsd:attribute name="units" type="unitsType"/>
+      <xsd:attribute name="whiteSpace" type="xsd:string"/>
+      <xsd:attribute name="pattern" type="xsd:string"/>
+      <xsd:attribute name="term" type="xsd:string" use="required"/>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="definition" id="el.definition">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">
+          <p>The definition for a dictionary entry, scientific units, etc.</p>
+        </div>
+        <div class="description">
+          <p>The definition should be a short nounal phrase definining the
+         subject of the entry. Definitions should not include commentary, implementations,
+         equations or formulae (unless the subject is one of these) or examples. The
+         <tt>description</tt> element can be used for these.</p>
+          <p>The definition can be in any markup language, but normally XHTML will be used,
+        perhaps with links to other XML namespaces such as CML for chemistry.</p>
+        </div>
+        <div class="example">
+          <em>From the IUPAC Dictionary of Medicinal Chemistry</em>
+          <br/>
+          <pre>
+&lt;entry id="a7" term="Allosteric enzyme"&gt;
+  &lt;definition&gt;An &lt;a href="#e3"&gt;enzyme&lt;/a&gt;
+that contains a region to which small, regulatory molecules
+("effectors") may bind in addition to and separate from the
+substrate binding site and thereby affect the catalytic
+activity.
+  &lt;/definition&gt;
+  &lt;description&gt;On binding the effector, the catalytic activity of the
+&lt;strong&gt;enzyme&lt;/strong&gt; towards the substrate may be enhanced, in
+which case the effector is an activator, or reduced, in which case
+it is a de-activator or inhibitor.
+  &lt;/description&gt;
+&lt;/entry&gt;
+
+           </pre>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType mixed="true">
+      <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+        <xsd:any processContents="lax"/>
+      </xsd:sequence>
+      <xsd:attributeGroup ref="sourceGroup"/>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="description" id="el.description">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">Descriptive information in a dictionary entry, etc.</div>
+        <div class="description">
+          <p>Entries should have at least one separate <a href="el.definition">definition</a>s.
+         <tt>description</tt> is then used for most of the other information, including
+         examples. The <tt>class</tt> attribute has an uncontrolled vocabulary and
+         can be used to clarify the purposes of the <tt>description</tt>
+         elements.</p>
+        </div>
+        <div class="example">
+          <em>From IUPAC Dictionary of Medicinal Chemistry</em>
+          <pre>
+&lt;entry id="a7" term="Allosteric enzyme"&gt;
+  &lt;definition&gt;An &lt;a href="#e3"&gt;enzyme&lt;/a&gt;
+that contains a region to which small, regulatory molecules
+("effectors") may bind in addition to and separate from the
+substrate binding site and thereby affect the catalytic
+activity.
+  &lt;/definition&gt;
+  &lt;description&gt;On binding the effector, the catalytic activity of the
+&lt;strong&gt;enzyme&lt;/strong&gt; towards the substrate may be enhanced, in
+which case the effector is an activator, or reduced, in which case
+it is a de-activator or inhibitor.
+  &lt;/description&gt;
+&lt;/entry&gt;
+
+           </pre>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType mixed="true">
+      <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+        <xsd:any processContents="lax"/>
+      </xsd:sequence>
+      <xsd:attributeGroup ref="sourceGroup"/>
+      <xsd:attribute name="class" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="description">
+              <p>The type of this information. This is not controlled, but examples
+            might include:</p>
+              <ul>
+                <li>description</li>
+                <li>summary</li>
+                <li>note</li>
+                <li>usage</li>
+                <li>qualifier</li>
+              </ul>
+            </div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="enumeration" id="el.enumeration">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">An enumeration of string values associated
+        with an <a href="el.entry">entry</a>
+        </div>
+        <div class="description">
+          <p>An enumeration of string values. Used where a dictionary entry constrains
+        the possible values in a document instance. The dataTypes (if any) must all be
+        identical and are defined by the dataType of the containing element.</p>
+        </div>
+        <div class="example">
+          <pre>
+&lt;entry term="crystal system" id="cryst1" dataType="string"&gt;
+  &lt;definition&gt;A crystal system&lt;/definition&gt;
+  &lt;enumeration value="triclinic"&gt;
+    &lt;annotation&gt;
+      &lt;documentation&gt;
+        &lt;div class="summary"&gt;No constraints on lengths and angles&lt;/div&gt;
+      &lt;/documentation&gt;
+    &lt;/annotation&gt;
+  &lt;/enumeration&gt;
+  &lt;enumeration value="monoclinic"&gt;
+    &lt;annotation&gt;
+      &lt;documentation&gt;
+        &lt;div class="summary"&gt;Two cell angles are right angles; no other constraints&lt;/div&gt;
+      &lt;/documentation&gt;
+    &lt;/annotation&gt;
+  &lt;/enumeration&gt;
+  &lt;enumeration value="orthorhombic"&gt;
+    &lt;annotation&gt;
+      &lt;documentation&gt;
+        &lt;div class="summary"&gt;All three angles are right angles; no other constraints&lt;/div&gt;
+      &lt;/documentation&gt;
+    &lt;/annotation&gt;
+  &lt;/enumeration&gt;
+  &lt;enumeration value="tetragonal"&gt;
+    &lt;annotation&gt;
+      &lt;documentation&gt;
+        &lt;div class="summary"&gt;Fourfold axis of symmetry; All three angles are right angles; two equal cell lengths; no other constraints&lt;/div&gt;
+      &lt;/documentation&gt;
+    &lt;/annotation&gt;
+  &lt;/enumeration&gt;
+  &lt;enumeration value="trigonal"&gt;
+    &lt;annotation&gt;
+      &lt;documentation&gt;
+        &lt;div class="summary"&gt;Threefold axis of symmetry; Two angles are right angles; one is 120 degrees; two equal lengths; no other constraints&lt;/div&gt;
+      &lt;/documentation&gt;
+    &lt;/annotation&gt;
+  &lt;/enumeration&gt;
+  &lt;enumeration value="hexagonal"&gt;
+    &lt;annotation&gt;
+      &lt;documentation&gt;
+        &lt;div class="summary"&gt;Sixfold axis of symmetry; Two angles are right angles; one is 120 degrees; two equal lengths; no other constraints&lt;/div&gt;
+      &lt;/documentation&gt;
+    &lt;/annotation&gt;
+  &lt;/enumeration&gt;
+  &lt;enumeration value="cubic"&gt;
+    &lt;annotation&gt;
+      &lt;documentation&gt;
+        &lt;div class="summary"&gt;All three angles are right angles; all cell lengths are equal&lt;/div&gt;
+      &lt;/documentation&gt;
+    &lt;/annotation&gt;
+  &lt;/enumeration&gt;
+&lt;/entry&gt;
+
+           </pre>
+        </div>
+        <div class="description">
+          <p>An enumeration of string values. The dataTypes (if any) must all be
+        identical and are defined by the dataType of the containing element.</p>
+          <p>Documentation can be added through an <a href="el.enumeration">enumeration</a>
+        child</p>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="annotation" minOccurs="0"/>
+      </xsd:sequence>
+      <xsd:attribute name="value" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="summary">The value of the enumerated element.</div>
+            <div class="description">
+            Must be compatible
+            with the dataType of the containing element (not schema-checkable directly
+            but possible if dictionary is transformed to schema).</div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="alternative" id="el.alternative">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">
+          <p>An alternative name for an entry</p>
+        </div>
+        <div class="description">
+          <p>At present a child of <a href="#el.entry">entry</a> which represents
+           an alternative string that refers to the concept. There is a partial controlled
+           vocabulary in <tt>alternativeType</tt> with values such as :
+         </p>
+          <ul>
+            <li>synonym</li>
+            <li>acronym</li>
+            <li>abbreviation</li>
+          </ul>
+        </div>
+        <div class="example">
+          <pre>
+ &lt;entry term="ammonia" id="a1"&gt;
+   &lt;alternative type="synonym"&gt;Spirits of hartshorn&lt;/alternative&gt;
+   &lt;alternative type="my:formula"&gt;NH3&lt;/alternative&gt;
+ &lt;/entry&gt;
+
+        </pre>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:annotation>
+        <xsd:documentation>
+          <div class="summary">the type of an
+          <a href="#el.alternative">alternative</a> element.
+        </div>
+          <div class="description">
+            <p>
+              <tt>alternativeType</tt> represents a the type of an
+            <a href="#el.alternative">alternative</a> element.
+          </p>
+          </div>
+        </xsd:documentation>
+      </xsd:annotation>
+      <xsd:simpleContent>
+        <xsd:extension base="xsd:string">
+          <xsd:attribute name="type">
+            <xsd:simpleType>
+              <xsd:union>
+                <xsd:simpleType>
+                  <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="synonym"/>
+                    <xsd:enumeration value="quasi-synonym"/>
+                    <xsd:enumeration value="acronym"/>
+                    <xsd:enumeration value="abbreviation"/>
+                    <xsd:enumeration value="homonym"/>
+                    <xsd:enumeration value="identifier"/>
+                  </xsd:restriction>
+                </xsd:simpleType>
+                <xsd:simpleType>
+                  <xsd:restriction base="namespaceRefType"/>
+                </xsd:simpleType>
+              </xsd:union>
+            </xsd:simpleType>
+          </xsd:attribute>
+        </xsd:extension>
+      </xsd:simpleContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="relatedEntry" id="el.relatedEntry">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">An entry related in some way to a dictionary entry, scientific units, etc.</div>
+        <div class="description">
+          <p>The range of relationships is not restricted
+        but should include parents, aggregation, seeAlso
+        etc. dataCategories from ISO12620 can be referenced through the <tt>namespaced</tt>
+        mechanism.</p>
+        </div>
+        <div class="example">
+          <pre>
+&lt;stm:entry id="a14" term="Autoreceptor"
+  xmlns:stm="http://www.xml-cml.org/schema/core"&gt;
+  &lt;stm:definition&gt;An &lt;strong&gt;autoreceptor&lt;/strong&gt;, present at a nerve ending, is
+    a &lt;a href="#r1"&gt;receptor&lt;/a&gt;
+    that regulates, via positive or negative feedback processes, the
+    synthesis and/or release of its own physiological ligand.
+  &lt;/stm:definition&gt;
+  &lt;stm:relatedEntry type="seeAlso" href="#h4"&gt;Heteroreceptor).&lt;/stm:relatedEntry&gt;
+  &lt;stm:relatedEntry type="my:antonym" href="#h4"&gt;antiheteroreceptor).&lt;/stm:relatedEntry&gt;
+  &lt;relatedEntry1/&gt;
+&lt;/stm:entry&gt;
+
+               </pre>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType mixed="true">
+      <xsd:attribute name="type">
+        <xsd:simpleType>
+          <xsd:annotation>
+            <xsd:documentation>
+              <div class="description">
+                <p>
+                  <tt>relatedEntryType</tt> represents a the type of relationship in a
+                     <a href="#el.relatedEntry">relatedEntry</a> element.
+                  </p>
+              </div>
+            </xsd:documentation>
+          </xsd:annotation>
+          <xsd:union>
+            <xsd:simpleType>
+              <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="parent"/>
+                <xsd:enumeration value="partitiveParent"/>
+                <xsd:enumeration value="child"/>
+                <xsd:enumeration value="partitiveChild"/>
+                <xsd:enumeration value="related"/>
+                <xsd:enumeration value="synonym"/>
+                <xsd:enumeration value="quasi-synonym"/>
+                <xsd:enumeration value="antonym"/>
+                <xsd:enumeration value="homonym"/>
+                <xsd:enumeration value="see"/>
+                <xsd:enumeration value="seeAlso"/>
+                <xsd:enumeration value="abbreviation"/>
+                <xsd:enumeration value="acronym"/>
+              </xsd:restriction>
+            </xsd:simpleType>
+            <xsd:simpleType>
+              <xsd:restriction base="namespaceRefType"/>
+            </xsd:simpleType>
+          </xsd:union>
+        </xsd:simpleType>
+      </xsd:attribute>
+      <xsd:attribute name="href" type="xsd:anyURI"/>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="annotation" id="el.annotation">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">
+          <p>A documentation container similar to <tt>annotation</tt> in XML Schema.</p>
+        </div>
+        <div class="description">
+          <p>A documentation container similar to <tt>annotation</tt> in XML Schema.
+        At present this is experimental and designed to be used for dictionaries, units, etc.
+        One approach is to convert these into XML Schemas when the <tt>documentation</tt>
+        and <tt>appinfo</tt> children will emerge in their correct position in the
+        derived schema.</p>
+          <p>It is possible that this may develop as a useful tool for annotating components
+        of complex objects such as molecules. </p>
+        </div>
+        <div class="example">
+          <pre>
+&lt;entry term="matrix"&gt;
+  &lt;annotation&gt;
+    &lt;documentation&gt;This refers to mathematical matrices&lt;/documentation&gt;
+    &lt;appinfo&gt;... some code to describe and support matrices ...&lt;/appinfo&gt;
+  &lt;/annotation&gt;
+&lt;/entry&gt;
+
+           </pre>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType mixed="true">
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+        <xsd:element ref="documentation"/>
+        <xsd:element ref="appinfo"/>
+      </xsd:choice>
+      <xsd:attribute name="source" type="xsd:anyURI"/>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="documentation" id="el.documentation">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">Documentation in the <a href="el.annotation">annotation</a> of an <a href="el.entry">entry</a>
+        </div>
+        <div class="description">
+          <p>A container similar to <tt>documentation</tt> in XML Schema.
+        This is NOT part of the textual content of an entry but is designed to
+        support the transformation of dictionary entrys into schemas for validation.
+        This is experimental and should only be used for dictionaries, units, etc.
+        One approach is to convert these into XML Schemas when the <tt>documentation</tt>
+        and <tt>appinfo</tt> children will emerge in their correct position in the
+        derived schema.</p>
+          <p>Do NOT confuse documentation with the <a href="el.definition">definition</a>
+        or the <a href="el.definition">definition</a> which are part of the content
+        of the dictionary</p>
+          <p>If will probably only be used when there is significant <a href="el.appinfo">appinfo</a>
+        in the entry or where the entry defines an XSD-like datatype of an element in the document.</p>
+        </div>
+        <div class="example">
+          <pre>
+&lt;stm:documentation id="source"
+xmlns:stm="http://www.xml-cml.org/schema/stmml-1.1"&gt;
+Transcribed from IUPAC website
+&lt;/stm:documentation&gt;
+
+           </pre>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType mixed="true">
+      <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+        <xsd:any processContents="lax"/>
+      </xsd:sequence>
+      <xsd:attributeGroup ref="sourceGroup"/>
+      <xsd:attributeGroup ref="idGroup"/>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="appinfo" id="el.appinfo">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">
+          <p>A container similar to <tt>appinfo</tt> in XML Schema.</p>
+        </div>
+        <div class="description">
+          <p>A container for machine processable documentation for an entry.
+           This is likely to be platform and/or language specific. It is possible
+           that XSLT, RDF or XBL will emerge as generic languages</p>
+          <p>See <a href="el.annotation">annotation</a> and <a href="el.documentation">documentation</a> for further information</p>
+        </div>
+        <div class="example">
+          <p>An example in XSLT where an element <tt>foo</tt> calls a bespoke
+         template</p>.
+         <pre>
+&lt;s:appinfo
+  xmlns:s="http://www.xml-cml.org/schema/core"
+  xmlns="http://www.w3.org/1999/XSL/Transform"&gt;
+  &lt;template match="foo"&gt;
+    &lt;call-template name="processFoo"/&gt;
+  &lt;/template&gt;
+&lt;/s:appinfo&gt;
+
+         </pre>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType mixed="true">
+      <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+        <xsd:any processContents="lax"/>
+      </xsd:sequence>
+      <xsd:attribute name="source" type="xsd:anyURI"/>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:attributeGroup name="dictRefGroup" id="attGp.dictRefGroup">
+    <xsd:attribute name="dictRef" type="namespaceRefType" id="att.dictRef">
+      <xsd:annotation>
+        <xsd:documentation>
+          <div class="summary">
+            <p>A reference to a dictionary entry.</p>
+          </div>
+          <div class="description">
+            <p>Elements in data instances such as <a href="el.scalar">scalar</a> may have a
+         <tt>dictRef</tt> attribute to point to an entry in a dictionary. To avoid
+         excessive use of (mutable) filenames and URIs we recommend a namespace
+         prefix, mapped to a namespace URI in the normal manner. In this case,
+         of course, the namespace URI must point to a real XML document containing
+         <a href="el.entry">entry</a> elements and validated against STM-ML Schema.</p>
+            <p>Where there is concern about the dictionary becoming separated from the document
+         the dictionary entries can be physically included as part of the data instance
+         and the normal XPointer addressing mechanism can be used.</p>
+            <p>This attribute can also be used on <a href="el.dictionary">dictionary</a>
+         elements to define the namespace prefix</p>
+          </div>
+          <div class="example">
+            <pre>
+&lt;scalar dataType="xsd:float" title="surfaceArea"
+  dictRef="cmlPhys:surfArea"
+  xmlns:cmlPhys="http://www.xml-cml.org/dict/physical"
+  units="units:cm2"&gt;50&lt;/scalar&gt;
+
+           </pre>
+          </div>
+          <div class="example">
+            <pre>
+&lt;stm:list xmlns:stm="http://www.xml-cml.org/schema/stmml-1.1"&gt;
+  &lt;stm:observation&gt;
+    &lt;p&gt;We observed &lt;object count="3" dictRef="#p1"/&gt;
+      constructing dwellings of different material&lt;/p&gt;
+  &lt;/stm:observation&gt;
+  &lt;stm:entry id="p1" term="pig"&gt;
+    &lt;stm:definition&gt;A domesticated animal.&lt;/stm:definition&gt;
+    &lt;stm:description&gt;Predators include wolves&lt;/stm:description&gt;
+    &lt;stm:description class="scientificName"&gt;Sus scrofa&lt;/stm:description&gt;
+  &lt;/stm:entry&gt;
+&lt;/stm:list&gt;
+
+           </pre>
+          </div>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:attributeGroup>
+  <xsd:annotation>
+    <xsd:documentation>
+      <div class="subheading">Metadata</div>
+      <div class="description">
+        <p>STM-ML supports metadata through the element
+    <a href="el.metadata">metadata</a>. If necessary
+    several of these can be contained in
+    a <a href="el.metadataList">metadataList</a> element.
+    </p>
+      </div>
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:element name="metadata" id="el.metadata">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">A general container for metadata</div>
+        <div class="description">
+          <p>A general container for metadata, including at least
+      Dublin Core (DC) and CML-specific metadata</p>
+          <p>In its simple form each element provides a name and content in a similar
+      fashion to the <tt>meta</tt> element in HTML. <tt>metadata</tt> may have simpleContent
+      (i.e. a string for adding further information - this is not controlled).</p>
+        </div>
+        <div class="example">
+          <pre>
+&lt;list&gt;
+  &lt;metadataList&gt;
+    &lt;metadata name="dc:coverage" content="Europe"/&gt;
+    &lt;metadata name="dc:description" content="Ornithological chemistry"/&gt;
+    &lt;metadata name="dc:identifier"  content="ISBN:1234-5678"/&gt;
+    &lt;metadata name="dc:format" content="printed"/&gt;
+    &lt;metadata name="dc:relation" content="abc:def123"/&gt;
+    &lt;metadata name="dc:rights" content="licence:GPL"/&gt;
+    &lt;metadata name="dc:subject" content="Informatics"/&gt;
+    &lt;metadata name="dc:title" content="birds"/&gt;
+    &lt;metadata name="dc:type" content="bird books on chemistry"/&gt;
+    &lt;metadata name="dc:contributor" content="Tux Penguin"/&gt;
+    &lt;metadata name="dc:creator" content="author"/&gt;
+    &lt;metadata name="dc:publisher" content="Penguinone publishing"/&gt;
+    &lt;metadata name="dc:source" content="penguinPub"/&gt;
+    &lt;metadata name="dc:language" content="en-GB"/&gt;
+    &lt;metadata name="dc:date" content="1752-09-10"/&gt;
+  &lt;/metadataList&gt;
+  &lt;metadataList&gt;
+    &lt;metadata name="cmlm:safety" content="mostly harmless"/&gt;
+    &lt;metadata name="cmlm:insilico" content="electronically produced"/&gt;
+    &lt;metadata name="cmlm:structure" content="penguinone"/&gt;
+    &lt;metadata name="cmlm:reaction" content="synthesis of penguinone"/&gt;
+    &lt;metadata name="cmlm:identifier" content="smiles:O=C1C=C(C)C(C)(C)C(C)=C1"/&gt;
+  &lt;/metadataList&gt;
+&lt;/list&gt;
+</pre>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:simpleContent>
+        <xsd:extension base="xsd:string">
+          <xsd:attribute name="name" type="metadataType">
+            <xsd:annotation>
+              <xsd:documentation>
+                <div class="summary">The metadata type</div>
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:attribute>
+          <xsd:attribute name="content" type="xsd:string">
+            <xsd:annotation>
+              <xsd:documentation>
+                <div class="summary">The metadata</div>
+              </xsd:documentation>
+            </xsd:annotation>
+          </xsd:attribute>
+        </xsd:extension>
+      </xsd:simpleContent>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="metadataList" id="el.metadataList">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">A general container for metadata elements</div>
+        <div class="example">
+          <pre>&lt;list&gt;
+  &lt;metadataList&gt;
+    &lt;metadata name="dc:coverage" content="Europe"/&gt;
+    &lt;metadata name="dc:description" content="Ornithological chemistry"/&gt;
+    &lt;metadata name="dc:identifier"  content="ISBN:1234-5678"/&gt;
+    &lt;metadata name="dc:format" content="printed"/&gt;
+    &lt;metadata name="dc:relation" content="abc:def123"/&gt;
+    &lt;metadata name="dc:rights" content="licence:GPL"/&gt;
+    &lt;metadata name="dc:subject" content="Informatics"/&gt;
+    &lt;metadata name="dc:title" content="birds"/&gt;
+    &lt;metadata name="dc:type" content="bird books on chemistry"/&gt;
+    &lt;metadata name="dc:contributor" content="Tux Penguin"/&gt;
+    &lt;metadata name="dc:creator" content="author"/&gt;
+    &lt;metadata name="dc:publisher" content="Penguinone publishing"/&gt;
+    &lt;metadata name="dc:source" content="penguinPub"/&gt;
+    &lt;metadata name="dc:language" content="en-GB"/&gt;
+    &lt;metadata name="dc:date" content="1752-09-10"/&gt;
+  &lt;/metadataList&gt;
+  &lt;metadataList&gt;
+    &lt;metadata name="cmlm:safety" content="mostly harmless"/&gt;
+    &lt;metadata name="cmlm:insilico" content="electronically produced"/&gt;
+    &lt;metadata name="cmlm:structure" content="penguinone"/&gt;
+    &lt;metadata name="cmlm:reaction" content="synthesis of penguinone"/&gt;
+    &lt;metadata name="cmlm:identifier" content="smiles:O=C1C=C(C)C(C)(C)C(C)=C1"/&gt;
+  &lt;/metadataList&gt;
+&lt;/list&gt;
+</pre>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="metadata" maxOccurs="unbounded"/>
+      </xsd:sequence>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:simpleType name="metadataType" id="md.metadataType">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="dc:coverage">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="definition">The extent or scope of the
+            content of the resource.</div>
+            <div class="description">Coverage will typically include
+            spatial location (a place name or geographic
+            coordinates), temporal period (a period label, date, or
+            date range) or jurisdiction (such as a named
+            administrative entity). Recommended best practice is to
+            select a value from a controlled vocabulary (for
+            example, the Thesaurus of Geographic Names [TGN]) and
+            that, where appropriate, named places or time periods
+            be used in preference to numeric identifiers such as
+            sets of coordinates or date ranges.
+          </div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="dc:description">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="definition">An account of the content of the
+            resource.</div>
+            <div class="description">Description may include but is not
+            limited to: an abstract, table of contents, reference
+            to a graphical representation of content or a free-text
+            account of the content.
+          </div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="dc:identifier">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="definition">An unambiguous reference to the
+            resource within a given context.</div>
+            <div class="description">Recommended best practice is to
+            identify the resource by means of a string or number
+            conforming to a formal identification system. Example
+            formal identification systems include the Uniform
+            Resource Identifier (URI) (including the Uniform
+            Resource Locator (URL)), the Digital Object Identifier
+            (DOI) and the International Standard Book Number
+            (ISBN).
+          </div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="dc:format">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="definition">The physical or digital
+            manifestation of the resource.</div>
+            <div class="description">Typically, Format may include the
+            media-type or dimensions of the resource. Format may be
+            used to determine the software, hardware or other
+            equipment needed to display or operate the resource.
+            Examples of dimensions include size and duration.
+            Recommended best practice is to select a value from a
+            controlled vocabulary (for example, the list of
+            Internet Media Types [MIME] defining computer media
+            formats).
+          </div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="dc:relation">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="definition">A reference to a related
+            resource.</div>
+            <div class="description">Recommended best practice is to
+            reference the resource by means of a string or number
+            conforming to a formal identification system.
+          </div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="dc:rights">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="definition">Information about rights held in
+            and over the resource.</div>
+            <div class="description">Typically, a Rights element will
+            contain a rights management statement for the resource,
+            or reference a service providing such information.
+            Rights information often encompasses Intellectual
+            Property Rights (IPR), Copyright, and various Property
+            Rights. If the Rights element is absent, no assumptions
+            can be made about the status of these and other rights
+            with respect to the resource.
+          </div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="dc:subject">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="definition">The topic of the content of the
+            resource.</div>
+            <div class="description">Typically, a Subject will be
+            expressed as keywords, key phrases or classification
+            codes that describe a topic of the resource.
+            Recommended best practice is to select a value from a
+            controlled vocabulary or formal classification
+            scheme.
+          </div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="dc:title">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="definition">A name given to the resource.</div>
+            <div class="description">Typically, a Title will be a name by
+            which the resource is formally known.
+          </div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="dc:type">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="definition">The nature or genre of the
+            content of the resource.</div>
+            <div class="description">Type includes terms describing
+            general categories, functions, genres, or aggregation
+            levels for content. Recommended best practice is to
+            select a value from a controlled vocabulary (for
+            example, the working draft list of Dublin Core Types
+            [DCT1]). To describe the physical or digital
+            manifestation of the resource, use the FORMAT
+            element.
+          </div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="dc:contributor">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="definition">An entity responsible for making
+            contributions to the content of the resource.</div>
+            <div class="description">Examples of a Contributor include a
+            person, an organisation, or a service. Typically, the
+            name of a Contributor should be used to indicate the
+            entity.
+          </div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="dc:creator">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="definition">An entity primarily responsible
+            for making the content of the resource.</div>
+            <div class="description">Examples of a Creator include a
+            person, an organisation, or a service. Typically, the
+            name of a Creator should be used to indicate the
+            entity.
+          </div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="dc:publisher">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="definition">An entity responsible for making
+            the resource available</div>
+            <div class="description">Examples of a Publisher include a
+            person, an organisation, or a service. Typically, the
+            name of a Publisher should be used to indicate the
+            entity.
+          </div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="dc:source">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="definition">A Reference to a resource from
+            which the present resource is derived.</div>
+            <div class="description">The present resource may be derived
+            from the Source resource in whole or in part.
+            Recommended best practice is to reference the resource
+            by means of a string or number conforming to a formal
+            identification system.
+          </div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="dc:language">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="definition">A language of the intellectual
+            content of the resource.</div>
+            <div class="description">Recommended best practice for the
+            values of the Language element is defined by RFC 1766
+            [RFC1766] which includes a two-letter Language Code
+            (taken from the ISO 639 standard [ISO639]), followed
+            optionally, by a two-letter Country Code (taken from
+            the ISO 3166 standard [ISO3166]). For example, 'en' for
+            English, 'fr' for French, or 'en-uk' for English used
+            in the United Kingdom.
+          </div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="dc:date">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="definition">A date associated with an event
+            in the life cycle of the resource.</div>
+            <div class="description">Typically, Date will be associated
+            with the creation or availability of the resource.
+            Recommended best practice for encoding the date value
+            is defined in a profile of ISO 8601 [W3CDTF] and
+            follows the YYYY-MM-DD format.
+          </div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="cmlm:safety">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="definition">Entry contains information
+            relating to chemical safety</div>
+            <div class="description">Typically the content will be a
+            reference to a handbook, MSDS, threshhold or other
+            human-readable string
+          </div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="cmlm:insilico">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="definition">Part or whole of the information
+            was computer-generated</div>
+            <div class="description">Typically the content will be the
+            name of a method or a program
+          </div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="cmlm:structure">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="definition">3D structure included</div>
+            <div class="description">details included
+          </div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+      <xsd:enumeration value="cmlm:reaction"/>
+      <xsd:enumeration value="cmlm:identifier"/>
+      <xsd:enumeration value="other"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:annotation>
+    <xsd:documentation>
+      <div class="heading">Scientific Units</div>
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:element name="dimension" id="el.dimension">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">A dimension supporting scientific units</div>
+        <div class="description">
+          <p>This will be primarily used within the defintion of
+        <a href="el.unit">units</a>s.</p>
+        </div>
+        <div class="example">
+          <pre>
+&lt;unitType id="energy" name="energy"&gt;
+  &lt;dimension name="length"/&gt;
+  &lt;dimension name="mass"/&gt;
+  &lt;dimension name="time" power="-1"/&gt;
+&lt;/unitType&gt;
+
+
+       </pre>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence/>
+      <xsd:attribute name="name" type="dimensionType" use="required">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="summary">The type of the dimension</div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+      <xsd:attribute name="power" type="xsd:decimal" default="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="summary">The power to which the dimension should be raised</div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:simpleType name="dimensionType" id="st.dimensionType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">Allowed values for dimension Types (for quantities).</div>
+        <div class="description">
+          <p>These are the 7 types prescribed by the SI system, together
+         with the "dimensionless" type. We intend to be somewhat uncoventional
+         and explore enhanced values of "dimensionless", such as "angle".
+         This may be heretical, but we find the present system impossible to implement
+         in many cases.</p>
+          <p>Used for constructing entries in a dictionary of units</p>
+        </div>
+        <div class="example">
+          <pre>
+&lt;unitType id="energy" name="energy"&gt;
+  &lt;dimension name="length"/&gt;
+  &lt;dimension name="mass"/&gt;
+  &lt;dimension name="time" power="-1"/&gt;
+&lt;/unitType&gt;
+
+        </pre>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="mass"/>
+      <xsd:enumeration value="length"/>
+      <xsd:enumeration value="time"/>
+      <xsd:enumeration value="current"/>
+      <xsd:enumeration value="amount"/>
+      <xsd:enumeration value="luminosity"/>
+      <xsd:enumeration value="temperature"/>
+      <xsd:enumeration value="dimensionless"/>
+      <xsd:enumeration value="angle">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="summary">An angle (formally dimensionless, but useful to have units).</div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:enumeration>
+    </xsd:restriction>
+  </xsd:simpleType>
+  <xsd:element name="unitList" id="el.unitList">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">A container for several unit entries</div>
+        <div class="description">Usually forms the complete units dictionary (along with metadata)</div>
+        <div class="example">
+          <pre>&lt;stm:unitList xmlns:stm="http://www.xml-cml.org/schema/stmml-1.1"&gt;
+
+&lt;!-- ======================================================================= --&gt;
+&lt;!-- ========================= fundamental types =========================== --&gt;
+&lt;!-- ======================================================================= --&gt;
+
+&lt;stm:unitType id="length" name="length"&gt;
+  &lt;stm:dimension name="length"/&gt;
+&lt;/stm:unitType&gt;
+
+&lt;stm:unitType id="time" name="time"&gt;
+  &lt;stm:dimension name="time"/&gt;
+&lt;/stm:unitType&gt;
+
+&lt;!-- ... --&gt;
+
+&lt;stm:unitType id="dimensionless" name="dimensionless"&gt;
+  &lt;stm:dimension name="dimensionless"/&gt;
+&lt;/stm:unitType&gt;
+
+&lt;!-- ======================================================================= --&gt;
+&lt;!-- ========================== derived types ============================== --&gt;
+&lt;!-- ======================================================================= --&gt;
+
+&lt;stm:unitType id="acceleration" name="acceleration"&gt;
+  &lt;stm:dimension name="length"/&gt;
+  &lt;stm:dimension name="time" power="-2"/&gt;
+&lt;/stm:unitType&gt;
+
+&lt;!-- ... --&gt;
+
+&lt;!-- ======================================================================= --&gt;
+&lt;!-- ====================== fundamental SI units =========================== --&gt;
+&lt;!-- ======================================================================= --&gt;
+
+&lt;stm:unit id="second" name="second" unitType="time"&gt;
+  &lt;stm:description&gt;The SI unit of time&lt;/stm:description&gt;
+&lt;/stm:unit&gt;
+
+&lt;stm:unit id="meter" name="meter" unitType="length"
+  abbreviation="m"&gt;
+  &lt;stm:description&gt;The SI unit of length&lt;/stm:description&gt;
+&lt;/stm:unit&gt;
+
+&lt;!-- ... --&gt;
+
+&lt;stm:unit id="kg" name="nameless" unitType="dimensionless"
+  abbreviation="nodim"&gt;
+  &lt;stm:description&gt;A fictitious parent for dimensionless units&lt;/stm:description&gt;
+&lt;/stm:unit&gt;
+
+&lt;!-- ======================================================================= --&gt;
+&lt;!-- ===================== derived SI units ================================ --&gt;
+&lt;!-- ======================================================================= --&gt;
+
+&lt;stm:unit id="newton" name="newton" unitType="force"&gt;
+  &lt;stm:description&gt;The SI unit of force&lt;/stm:description&gt;
+&lt;/stm:unit&gt;
+
+&lt;!-- ... --&gt;
+
+&lt;!-- multiples of fundamental SI units --&gt;
+
+&lt;stm:unit id="g" name="gram" unitType="mass"
+  parentSI="kg"
+  multiplierToSI="0.001"
+  abbreviation="g"&gt;
+  &lt;stm:description&gt;0.001 kg. &lt;/stm:description&gt;
+&lt;/stm:unit&gt;
+
+&lt;stm:unit id="celsius" name="Celsius" parentSI="k"
+  multiplierToSI="1"
+  constantToSI="273.18"&gt;
+  &lt;stm:description&gt;&lt;p&gt;A common unit of temperature&lt;/p&gt;&lt;/stm:description&gt;
+&lt;/stm:unit&gt;
+
+&lt;!-- fundamental non-SI units --&gt;
+
+&lt;stm:unit id="inch" name="inch" parentSI="meter"
+   abbreviation="in"
+  multiplierToSI="0.0254" &gt;
+  &lt;stm:description&gt;An imperial measure of length&lt;/stm:description&gt;
+&lt;/stm:unit&gt;
+
+&lt;!-- derived non-SI units --&gt;
+
+&lt;stm:unit id="l" name="litre" unitType="volume"
+   parentSI="meterCubed"
+   abbreviation="l"
+   multiplierToSI="0.001"&gt;
+  &lt;stm:description&gt;Nearly 1 dm**3 This is not quite exact&lt;/stm:description&gt;
+&lt;/stm:unit&gt;
+
+&lt;!-- ... --&gt;
+
+&lt;stm:unit id="fahr" name="fahrenheit" parentSI="k"
+   abbreviation="F"
+  multiplierToSI="0.55555555555555555"
+  constantToSI="-17.777777777777777777"&gt;
+  &lt;stm:description&gt;An obsolescent unit of temperature still used in popular
+  meteorology&lt;/stm:description&gt;
+&lt;/stm:unit&gt;
+
+&lt;/stm:unitList&gt;
+</pre>
+        </div>
+        <div class="example">
+          <pre>&lt;stm:unitList
+    xmlns:stm="http://www.xml-cml.org/schema/stmml-1.1"
+    dictRef="unit" href="units.xml" /&gt;
+</pre>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="unitType" minOccurs="0" maxOccurs="unbounded"/>
+        <xsd:element ref="unit" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attributeGroup ref="tit_id_conv_dictGroup"/>
+      <xsd:attribute name="href" type="xsd:anyURI">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="summary">Maps a <a href="st.dictRefType">dictRef</a>
+            prefix to the location of a dictionary.</div>
+            <div class="description">This requires the prefix and the physical URI
+            address to be contained within the same file. We can anticipate that
+            better mechanisms will arise - perhaps through XMLCatalogs.
+            At least it works at present.</div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="unitType" id="el.unitType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">An element containing the description of a scientific unit</div>
+        <div class="description">
+          <p>Mandatory for SI Units,
+          optional for nonSI units since they should be able to obtain this
+          from their parent. For complex derived units without parents it may be
+          useful.</p>
+          <p>Used within a unitList</p>
+          <p>Distinguish carefully from <a href="st.unitsType">unitsType</a>
+          which is primarily used for attributes describing the units that elements
+          carry</p>
+        </div>
+        <div class="example">
+          <pre>&lt;stm:unitList xmlns:stm="http://www.xml-cml.org/schema/stmml-1.1"&gt;
+
+&lt;!-- ======================================================================= --&gt;
+&lt;!-- ========================= fundamental types =========================== --&gt;
+&lt;!-- ======================================================================= --&gt;
+
+&lt;stm:unitType id="length" name="length"&gt;
+  &lt;stm:dimension name="length"/&gt;
+&lt;/stm:unitType&gt;
+
+&lt;stm:unitType id="time" name="time"&gt;
+  &lt;stm:dimension name="time"/&gt;
+&lt;/stm:unitType&gt;
+
+&lt;!-- ... --&gt;
+
+&lt;stm:unitType id="dimensionless" name="dimensionless"&gt;
+  &lt;stm:dimension name="dimensionless"/&gt;
+&lt;/stm:unitType&gt;
+
+&lt;!-- ======================================================================= --&gt;
+&lt;!-- ========================== derived types ============================== --&gt;
+&lt;!-- ======================================================================= --&gt;
+
+&lt;stm:unitType id="acceleration" name="acceleration"&gt;
+  &lt;stm:dimension name="length"/&gt;
+  &lt;stm:dimension name="time" power="-2"/&gt;
+&lt;/stm:unitType&gt;
+
+&lt;!-- ... --&gt;
+
+&lt;!-- ======================================================================= --&gt;
+&lt;!-- ====================== fundamental SI units =========================== --&gt;
+&lt;!-- ======================================================================= --&gt;
+
+&lt;stm:unit id="second" name="second" unitType="time"&gt;
+  &lt;stm:description&gt;The SI unit of time&lt;/stm:description&gt;
+&lt;/stm:unit&gt;
+
+&lt;stm:unit id="meter" name="meter" unitType="length"
+  abbreviation="m"&gt;
+  &lt;stm:description&gt;The SI unit of length&lt;/stm:description&gt;
+&lt;/stm:unit&gt;
+
+&lt;!-- ... --&gt;
+
+&lt;stm:unit id="kg" name="nameless" unitType="dimensionless"
+  abbreviation="nodim"&gt;
+  &lt;stm:description&gt;A fictitious parent for dimensionless units&lt;/stm:description&gt;
+&lt;/stm:unit&gt;
+
+&lt;!-- ======================================================================= --&gt;
+&lt;!-- ===================== derived SI units ================================ --&gt;
+&lt;!-- ======================================================================= --&gt;
+
+&lt;stm:unit id="newton" name="newton" unitType="force"&gt;
+  &lt;stm:description&gt;The SI unit of force&lt;/stm:description&gt;
+&lt;/stm:unit&gt;
+
+&lt;!-- ... --&gt;
+
+&lt;!-- multiples of fundamental SI units --&gt;
+
+&lt;stm:unit id="g" name="gram" unitType="mass"
+  parentSI="kg"
+  multiplierToSI="0.001"
+  abbreviation="g"&gt;
+  &lt;stm:description&gt;0.001 kg. &lt;/stm:description&gt;
+&lt;/stm:unit&gt;
+
+&lt;stm:unit id="celsius" name="Celsius" parentSI="k"
+  multiplierToSI="1"
+  constantToSI="273.18"&gt;
+  &lt;stm:description&gt;&lt;p&gt;A common unit of temperature&lt;/p&gt;&lt;/stm:description&gt;
+&lt;/stm:unit&gt;
+
+&lt;!-- fundamental non-SI units --&gt;
+
+&lt;stm:unit id="inch" name="inch" parentSI="meter"
+   abbreviation="in"
+  multiplierToSI="0.0254" &gt;
+  &lt;stm:description&gt;An imperial measure of length&lt;/stm:description&gt;
+&lt;/stm:unit&gt;
+
+&lt;!-- derived non-SI units --&gt;
+
+&lt;stm:unit id="l" name="litre" unitType="volume"
+   parentSI="meterCubed"
+   abbreviation="l"
+   multiplierToSI="0.001"&gt;
+  &lt;stm:description&gt;Nearly 1 dm**3 This is not quite exact&lt;/stm:description&gt;
+&lt;/stm:unit&gt;
+
+&lt;!-- ... --&gt;
+
+&lt;stm:unit id="fahr" name="fahrenheit" parentSI="k"
+   abbreviation="F"
+  multiplierToSI="0.55555555555555555"
+  constantToSI="-17.777777777777777777"&gt;
+  &lt;stm:description&gt;An obsolescent unit of temperature still used in popular
+  meteorology&lt;/stm:description&gt;
+&lt;/stm:unit&gt;
+
+&lt;/stm:unitList&gt;
+</pre>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element ref="dimension" minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+      <xsd:attribute name="id" type="idType" use="required"/>
+      <xsd:attribute name="name" type="xsd:string" use="required"/>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:element name="unit" id="el.unit">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">A scientific unit</div>
+        <div class="description">
+          <p>A scientific unit. Units are of the following types:</p>
+          <ul>
+            <li>SI Units. These may be one of the seven fundamental types
+        (e.g. meter) or may be derived (e.g. joule). An SI unit is
+        identifiable because it has no parentSI attribute and will have
+        a unitType attribute.</li>
+            <li>nonSI Units. These will normally have a parent SI unit
+        (e.g. calorie has joule as an SI parent). </li>
+            <li/>
+          </ul>
+          <p>Example:</p>
+          <pre>
+&lt;unit id="units:fahr" name="fahrenheit" parentSI="units:K"
+  multiplierToSI="0.55555555555555555"
+  constantToSI="-17.777777777777777777"&gt;
+    &lt;description&gt;An obsolescent unit of temperature still used in popular
+      meteorology&lt;/description&gt;
+&lt;/unit&gt;
+
+        </pre>
+        </div>
+      </xsd:documentation>
+      <xsd:appinfo>
+
+      </xsd:appinfo>
+    </xsd:annotation>
+    <xsd:complexType>
+      <xsd:choice minOccurs="0" maxOccurs="unbounded">
+        <xsd:element ref="description"/>
+        <xsd:element ref="annotation"/>
+      </xsd:choice>
+      <xsd:attribute name="id" type="xsd:string" use="required"/>
+      <xsd:attribute name="abbreviation" type="xsd:string"/>
+      <xsd:attribute name="name" type="xsd:string"/>
+      <xsd:attribute name="parentSI" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="summary">
+        A reference to the parent SI unit (forbidden for SI Units themselves).
+          </div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+      <xsd:attribute name="unitType" type="xsd:string">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="summary">
+        A reference to the unitType (required for SI Units).
+          </div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+      <xsd:attribute name="multiplierToSI" type="xsd:decimal" default="1">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="summary">
+              <p>The factor by which the non-SI unit should be multiplied to
+        convert a quantity to its representation in SI Units.
+        This is applied <b>before</b>
+                <tt>constantToSI</tt>.
+        Mandatory for nonSI units; forbidden for SI units</p>
+            </div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+      <xsd:attribute name="constantToSI" type="xsd:decimal" default="0">
+        <xsd:annotation>
+          <xsd:documentation>
+            <div class="summary">
+              <p>The amount to add to a quantity in non-SI units to
+    convert its representation to SI Units.
+    This is applied <b>after</b>
+                <tt>multiplierToSI</tt>.
+    Optional for nonSI units; forbidden for SI units.
+  </p>
+            </div>
+          </xsd:documentation>
+        </xsd:annotation>
+      </xsd:attribute>
+    </xsd:complexType>
+  </xsd:element>
+  <xsd:simpleType name="unitsType" id="st.unitsType">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">Scientific units</div>
+        <div class="description">
+          <p>Scientific units. These will be linked to dictionaries of units with
+         conversion information, using namespaced references (e.g. <tt>si:m</tt>)
+          </p>
+          <p>Distinguish carefully from <a href="st.unitType">unitType</a>
+          which is an element describing a type of a unit in a <a href="el.unitList">unitList</a>
+          </p>
+        </div>
+        <div class="example">
+          <pre>&lt;stm:unitList xmlns:stm="http://www.xml-cml.org/schema/stmml-1.1"&gt;
+
+&lt;!-- ======================================================================= --&gt;
+&lt;!-- ========================= fundamental types =========================== --&gt;
+&lt;!-- ======================================================================= --&gt;
+
+&lt;stm:unitType id="length" name="length"&gt;
+  &lt;stm:dimension name="length"/&gt;
+&lt;/stm:unitType&gt;
+
+&lt;stm:unitType id="time" name="time"&gt;
+  &lt;stm:dimension name="time"/&gt;
+&lt;/stm:unitType&gt;
+
+&lt;!-- ... --&gt;
+
+&lt;stm:unitType id="dimensionless" name="dimensionless"&gt;
+  &lt;stm:dimension name="dimensionless"/&gt;
+&lt;/stm:unitType&gt;
+
+&lt;!-- ======================================================================= --&gt;
+&lt;!-- ========================== derived types ============================== --&gt;
+&lt;!-- ======================================================================= --&gt;
+
+&lt;stm:unitType id="acceleration" name="acceleration"&gt;
+  &lt;stm:dimension name="length"/&gt;
+  &lt;stm:dimension name="time" power="-2"/&gt;
+&lt;/stm:unitType&gt;
+
+&lt;!-- ... --&gt;
+
+&lt;!-- ======================================================================= --&gt;
+&lt;!-- ====================== fundamental SI units =========================== --&gt;
+&lt;!-- ======================================================================= --&gt;
+
+&lt;stm:unit id="second" name="second" unitType="time"&gt;
+  &lt;stm:description&gt;The SI unit of time&lt;/stm:description&gt;
+&lt;/stm:unit&gt;
+
+&lt;stm:unit id="meter" name="meter" unitType="length"
+  abbreviation="m"&gt;
+  &lt;stm:description&gt;The SI unit of length&lt;/stm:description&gt;
+&lt;/stm:unit&gt;
+
+&lt;!-- ... --&gt;
+
+&lt;stm:unit id="kg" name="nameless" unitType="dimensionless"
+  abbreviation="nodim"&gt;
+  &lt;stm:description&gt;A fictitious parent for dimensionless units&lt;/stm:description&gt;
+&lt;/stm:unit&gt;
+
+&lt;!-- ======================================================================= --&gt;
+&lt;!-- ===================== derived SI units ================================ --&gt;
+&lt;!-- ======================================================================= --&gt;
+
+&lt;stm:unit id="newton" name="newton" unitType="force"&gt;
+  &lt;stm:description&gt;The SI unit of force&lt;/stm:description&gt;
+&lt;/stm:unit&gt;
+
+&lt;!-- ... --&gt;
+
+&lt;!-- multiples of fundamental SI units --&gt;
+
+&lt;stm:unit id="g" name="gram" unitType="mass"
+  parentSI="kg"
+  multiplierToSI="0.001"
+  abbreviation="g"&gt;
+  &lt;stm:description&gt;0.001 kg. &lt;/stm:description&gt;
+&lt;/stm:unit&gt;
+
+&lt;stm:unit id="celsius" name="Celsius" parentSI="k"
+  multiplierToSI="1"
+  constantToSI="273.18"&gt;
+  &lt;stm:description&gt;&lt;p&gt;A common unit of temperature&lt;/p&gt;&lt;/stm:description&gt;
+&lt;/stm:unit&gt;
+
+&lt;!-- fundamental non-SI units --&gt;
+
+&lt;stm:unit id="inch" name="inch" parentSI="meter"
+   abbreviation="in"
+  multiplierToSI="0.0254" &gt;
+  &lt;stm:description&gt;An imperial measure of length&lt;/stm:description&gt;
+&lt;/stm:unit&gt;
+
+&lt;!-- derived non-SI units --&gt;
+
+&lt;stm:unit id="l" name="litre" unitType="volume"
+   parentSI="meterCubed"
+   abbreviation="l"
+   multiplierToSI="0.001"&gt;
+  &lt;stm:description&gt;Nearly 1 dm**3 This is not quite exact&lt;/stm:description&gt;
+&lt;/stm:unit&gt;
+
+&lt;!-- ... --&gt;
+
+&lt;stm:unit id="fahr" name="fahrenheit" parentSI="k"
+   abbreviation="F"
+  multiplierToSI="0.55555555555555555"
+  constantToSI="-17.777777777777777777"&gt;
+  &lt;stm:description&gt;An obsolescent unit of temperature still used in popular
+  meteorology&lt;/stm:description&gt;
+&lt;/stm:unit&gt;
+
+&lt;/stm:unitList&gt;
+</pre>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:restriction base="xsd:string"/>
+  </xsd:simpleType>
+  <xsd:annotation>
+    <xsd:documentation>
+      <div class="heading">Groups (for schema maintenance and re-use)</div>
+    </xsd:documentation>
+  </xsd:annotation>
+  <xsd:attributeGroup name="actionGroup" id="attGp.action">
+    <xsd:attribute name="start" type="xsd:string">
+      <xsd:annotation>
+        <xsd:documentation>
+          <div class="summary">The start time</div>
+          <div class="description">
+            <p>The start time in any allowable XSD representation of date, time or dateTime.
+          This will normally be a clock time or date.</p>
+          </div>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="startCondition" type="xsd:string"/>
+    <xsd:attribute name="duration" type="xsd:string"/>
+    <xsd:attribute name="end" type="xsd:string">
+      <xsd:annotation>
+        <xsd:documentation>
+          <div class="summary">The end time</div>
+          <div class="description">
+            <p>The start time in any allowable XSD representation of date, time or dateTime.
+          This will normally be a clock time or date.</p>
+          </div>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="endCondition" type="xsd:string">
+      <xsd:annotation>
+        <xsd:documentation>
+          <div class="summary">
+            <p>The end condition</p>
+          </div>
+          <div class="description">
+            <p>At present a human-readable string describing some condition when the
+          ac tion should end. As XML develops it may be possible to add machine-processable
+          semantics in this field.</p>
+          </div>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="units" type="unitsType">
+      <xsd:annotation>
+        <xsd:documentation>
+          <div class="summary">Units for the time attributes</div>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+    <xsd:attribute name="count" type="countType">
+      <xsd:annotation>
+        <xsd:documentation>
+          <div class="summary">Number of times the action should be repeated</div>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:attributeGroup>
+  <xsd:group name="dataGroup" id="gp.dataGroup">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">
+          <p>A grouping of <tt>list</tt> and <tt>scalar</tt> elements for use by
+           other schemas. Experimental.</p>
+        </div>
+        <div class="description">
+          <p>This is to allow non-STM schemas to include a generic "data" component
+           in their elements. It is messy and probably should not survive. Better
+           extensibility mechanisms should be found.</p>
+          <p>Use only within Schemas</p>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:choice>
+      <xsd:element ref="list"/>
+      <xsd:element ref="scalar"/>
+    </xsd:choice>
+  </xsd:group>
+  <xsd:attributeGroup name="sourceGroup" id="attGp.source">
+    <xsd:attribute name="source" type="xsd:anyURI" id="att.source">
+      <xsd:annotation>
+        <xsd:documentation>
+          <div class="summary">An attribute linking to the source of the information</div>
+          <div class="description">
+            <p>A simple way of adding metadata to a piece of information.
+           Likely to be fragile since the URI may disappear.</p>
+          </div>
+          <div class="example">
+            <pre>
+&lt;list&gt;
+  &lt;definition source="foo.html#a3"&gt;An animal with four legs&lt;/definition&gt;
+  &lt;definition source="http://www.foo.com/index.html"&gt;
+    An animal with six legs&lt;/definition&gt;
+&lt;/list&gt;
+
+           </pre>
+          </div>
+        </xsd:documentation>
+      </xsd:annotation>
+    </xsd:attribute>
+  </xsd:attributeGroup>
+  <xsd:attributeGroup name="tit_id_convGroup" id="attGp.tit_id_convGroup">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">An group of attribute applicable to most STM-ML elements</div>
+        <div class="description">
+          <p>A group of attribute applicable to most STM-ML elements. It is
+        recommended that IDs are used widely. Titles have no semantics but
+        are useful for humans (e.g. a bond angle could be labelled "ortho"
+        or "gamma". Coventions are inherited by subelements; the default is the
+        current schema.</p>
+        </div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:attributeGroup ref="idGroup"/>
+    <xsd:attributeGroup ref="titleGroup"/>
+    <xsd:attributeGroup ref="convGroup"/>
+  </xsd:attributeGroup>
+  <xsd:attributeGroup name="tit_id_conv_dictGroup" id="attGp.tit_id_conv_dictGroup">
+    <xsd:annotation>
+      <xsd:documentation>
+        <div class="summary">Addition of the <tt>dictRef</tt> attribute to the <tt>tit_id_conv</tt> group.</div>
+      </xsd:documentation>
+    </xsd:annotation>
+    <xsd:attributeGroup ref="tit_id_convGroup"/>
+    <xsd:attributeGroup ref="dictRefGroup"/>
+  </xsd:attributeGroup>
+  <xsd:attribute name="foo" type="xsd:string" id="att.foo345"/>
+</xsd:schema>

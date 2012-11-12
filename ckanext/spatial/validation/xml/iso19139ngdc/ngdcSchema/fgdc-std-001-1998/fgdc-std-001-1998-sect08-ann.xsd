@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" blockDefault="#all"
+	xmlns:sch="http://www.ascc.net/xml/schematron">
+<xsd:annotation>
+	<xsd:documentation>
+		Section 8 : Citation Information
+	</xsd:documentation>
+</xsd:annotation>
+
+<xsd:element name="citeinfo" type="citeinfoType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Citation Information
+		Section: 8
+		Description: the recommended reference to be used for the data set. (Note: this section provides a means of stating the citation of a data set, and is used by other sections of the metadata standard. This section is never used alone.)
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Citation Information</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="citeinfoType">
+	<xsd:sequence>
+		<xsd:element ref="origin" maxOccurs="unbounded"/>
+		<xsd:element ref="pubdate"/>
+		<xsd:element ref="pubtime" minOccurs="0"/>
+		<xsd:element ref="title"/>
+		<xsd:element ref="edition" minOccurs="0"/>
+		<xsd:element ref="geoform" minOccurs="0"/>
+		<xsd:element ref="serinfo" minOccurs="0"/>
+		<xsd:element ref="pubinfo" minOccurs="0"/>
+		<xsd:element ref="othercit" minOccurs="0"/>
+		<xsd:element ref="onlink" minOccurs="0" maxOccurs="unbounded"/>
+		<xsd:element ref="lworkcit" minOccurs="0"/>
+	</xsd:sequence>
+	</xsd:complexType>
+
+<xsd:element name="origin" type="originType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Originator
+		Section: 8.1
+		Description: the name of an organization or individual that developed the data set. If the name of editors or compilers are provided, the name must be followed by "(ed.)" or "(comp.)" respectively.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Originator</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="originType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "Unknown" free text
+		</xsd:documentation>
+		<xsd:documentation>
+			Enumerated value also matches "free text"
+
+			<![CDATA[
+				<xsd:restriction base="xsd:token">
+					<xsd:enumeration value="Unknown"/>
+				</xsd:restriction>
+			]]>
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="pubdate" type="pubdateType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Publication Date
+		Section: 8.2
+		Description: the date when the data set is published or otherwise made available for release.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Publication Date</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="pubdateType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: date
+			Domain: "Unknown" "Unpublished material" free date
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:union memberTypes="FGDCdate">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:token">
+				<xsd:enumeration value="Unknown"/>
+				<xsd:enumeration value="Unpublished material"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:union>
+</xsd:simpleType>
+
+<xsd:element name="pubtime" type="pubtimeType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Publication Time
+		Section: 8.3
+		Description: the time of day when the data set is published or otherwise made available for release.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Publication Time</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="pubtimeType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: time
+			Domain: "Unknown" free time
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:union memberTypes="FGDCtime">
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:token">
+				<xsd:enumeration value="Unknown"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:union>
+</xsd:simpleType>
+
+<xsd:element name="title" type="titleType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Title
+		Section: 8.4
+		Description: the name by which the data set is known.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Title</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="titleType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="edition" type="editionType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Edition
+		Section: 8.5
+		Description: the version of the title.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Edition</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="editionType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="geoform" type="geoformType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Geospatial Data Presentation Form
+		Section: 8.6
+		Description: the mode in which the geospatial data are represented.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Geospatial Data Presentation Form</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="geoformType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: (the listed domain is partially from pp. 88-91 in Anglo-American Committee on Cataloguing of Cartographic Materials, 1982, Cartographic materials: A manual of interpretation for AACR2: Chicago, American Library Association): "atlas" "audio" "diagram" "document" "globe" "map" "model" "multimedia presentation" "profile" "raster digital data" "remote-sensing image" "section" "spreadsheet" "tabular digital data" "vector digital data" "video" "view" free text
+		</xsd:documentation>
+		<xsd:documentation>
+			Enumerated values also match "free text"
+
+			<![CDATA[
+				<xsd:restriction base="xsd:token">
+					<xsd:enumeration value="atlas"/>
+					<xsd:enumeration value="audio"/>
+					<xsd:enumeration value="diagram"/>
+					<xsd:enumeration value="document"/>
+					<xsd:enumeration value="globe"/>
+					<xsd:enumeration value="map"/>
+					<xsd:enumeration value="model"/>
+					<xsd:enumeration value="multimedia presentation"/>
+					<xsd:enumeration value="profile"/>
+					<xsd:enumeration value="raster digital data"/>
+					<xsd:enumeration value="remote-sensing image"/>
+					<xsd:enumeration value="section"/>
+					<xsd:enumeration value="spreadsheet"/>
+					<xsd:enumeration value="tabular digital data"/>
+					<xsd:enumeration value="vector digital data"/>
+					<xsd:enumeration value="video"/>
+					<xsd:enumeration value="view"/>
+				</xsd:restriction>
+			]]>
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="serinfo" type="serinfoType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Series Information
+		Section: 8.7
+		Description: the identification of the series publication of which the data set is a part.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Series Information</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="serinfoType">
+	<xsd:sequence>
+		<xsd:element ref="sername"/>
+		<xsd:element ref="issue"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="sername" type="sernameType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Series Name
+		Section: 8.7.1
+		Description: the name of the series publication of which the data set is a part.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Series Name</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="sernameType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="issue" type="issueType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Issue Identification
+		Section: 8.7.2
+		Description: information identifying the issue of the series publication of which the data set is a part.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Issue Identification</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="issueType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="pubinfo" type="pubinfoType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Publication Information
+		Section: 8.8
+		Description: publication details for published data sets.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Publication Information</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="pubinfoType">
+	<xsd:sequence>
+		<xsd:element ref="pubplace"/>
+		<xsd:element ref="publish"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="pubplace" type="pubplaceType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Publication Place
+		Section: 8.8.1
+		Description: the name of the city (and state or province, and country, if needed to identify the city) where the data set was published or released.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Publication Place</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="pubplaceType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="publish" type="publishType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Publisher
+		Section: 8.8.2
+		Description: the name of the individual or organization that published the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Publisher</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="publishType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="othercit" type="othercitType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Other Citation Details
+		Section: 8.9
+		Description: other information required to complete the citation.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Other Citation Details</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="othercitType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="onlink" type="onlinkType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Online Linkage
+		Section: 8.10
+		Description: the name of an online computer resource that contains the data set. Entries should follow the Uniform Resource Locator convention of the Internet.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Online Linkage</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="onlinkType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="lworkcit" type="lworkcitType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Larger Work Citation
+		Section: 8.11
+		Description: the information identifying a larger work in which the data set is included.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Larger Work Citation</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="lworkcitType">
+	<xsd:sequence>
+		<xsd:element ref="citeinfo"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+</xsd:schema>

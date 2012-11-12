@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns="eml://ecoinformatics.org/text-2.1.0"
+    xmlns:txt="eml://ecoinformatics.org/text-2.1.0"
+    xmlns:doc="eml://ecoinformatics.org/documentation-2.1.0"
+    targetNamespace="eml://ecoinformatics.org/text-2.1.0">
+  <xs:import namespace="eml://ecoinformatics.org/documentation-2.1.0"
+  schemaLocation="eml-documentation.xsd"/>
+
+  <xs:annotation>
+    <xs:documentation>
+       '$RCSfile: eml-text.xsd,v $'
+       Copyright: 1997-2002 Regents of the University of California,
+                            University of New Mexico, and
+                            Arizona State University
+        Sponsors: National Center for Ecological Analysis and Synthesis and
+                  Partnership for Interdisciplinary Studies of Coastal Oceans,
+                     University of California Santa Barbara
+                  Long-Term Ecological Research Network Office,
+                     University of New Mexico
+                  Center for Environmental Studies, Arizona State University
+   Other funding: National Science Foundation (see README for details)
+                  The David and Lucile Packard Foundation
+     For Details: http://knb.ecoinformatics.org/
+
+        '$Author: obrien $'
+          '$Date: 2009/02/25 23:51:54 $'
+      '$Revision: 1.23 $'
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    </xs:documentation>
+
+    <xs:appinfo>
+      <doc:moduleDocs>
+        <doc:moduleName>eml-text</doc:moduleName>
+        <doc:moduleDescription>
+        <section xmlns="">
+          <title>The eml-text module - Text field formatting</title>
+          <para>
+          The eml-text module is a wrapper container that allows general
+            text descriptions to be used within the various modules of eml.
+            It can include either structured or unstructured text blocks.
+            It isn't really appropriate to use this module outside of the
+            context of a parent module, because the parent module determines
+            the appropriate context to which this text description applies.
+            The eml-text module allows one to provide structure to a text
+            description in order to convey concepts such as sections
+            (paragraphs), hierarchy (ordered and unordered lists), emphasis
+            (bold, superscript, subscript) etc.  The structured elements
+            are a subset of <ulink url="http://www.docbook.org">DocBook</ulink>
+            so the predefined DocBook stylesheets can be used to style
+            EML fields that implement this module.
+          </para>
+        </section>
+        </doc:moduleDescription>
+        <doc:recommendedUsage>any module</doc:recommendedUsage>
+        <doc:standAlone>no</doc:standAlone>
+      </doc:moduleDocs>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="text" type="TextType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Text</doc:tooltip>
+        <doc:summary>A simple text desription.</doc:summary>
+        <doc:description>The "text" element allows for both formatted and
+        unformatted text blocks to be included in EML. It can contain a number
+        of relevant subsections that allow the use of titles, sections, and
+        paragraphs in the text block. This markup is a subset of DocBook.
+        </doc:description>
+
+      </xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="TextType" mixed="true">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Text</doc:tooltip>
+        <doc:summary>A simple text desription.</doc:summary>
+        <doc:description>The "text" element allows for both formatted and
+        unformatted text blocks to be included in EML. It can contain a number
+        of relevant subsections that allow the use of titles, sections, and
+        paragraphs in the text block. This markup is a subset of DocBook.
+        </doc:description>
+
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:choice maxOccurs="unbounded">
+      <xs:element name="section" type="SectionType" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Section</doc:tooltip>
+            <doc:summary>A section of related text.</doc:summary>
+            <doc:description>The "section" element allows for
+            grouping related paragraphs of text together, with
+            an optional title.  This markup is a subset of DocBook.
+            </doc:description>
+
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="para" type="ParagraphType" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Paragraph</doc:tooltip>
+            <doc:summary>A simple paragraph of text.</doc:summary>
+            <doc:description>The "paragraph" element allows for
+            both formatted and unformatted text blocks to be included
+            in EML. It can be plain text or text with a limited set of
+            markup tags, including emphasis, subscript,
+            superscript, and lists. This markup is a subset of DocBook.
+            </doc:description>
+
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="ParagraphType" mixed="true">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Paragraph</doc:tooltip>
+        <doc:summary>A simple paragraph of text.</doc:summary>
+        <doc:description>The "paragraph" element allows for
+        both formatted and unformatted text blocks to be included
+        in EML. It can be plain text or text with a limited set of
+        markup tags, including emphasis, subscript,
+        superscript, lists and links. This markup is a subset of DocBook.
+        </doc:description>
+
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="itemizedlist" type="ListType">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Itemized List</doc:tooltip>
+            <doc:summary>A list of items in a text paragraph.
+            </doc:summary>
+            <doc:description>A list of items in a text paragraph.  The
+            list is generally displayed as a bulleted list.
+            This markup is a subset of DocBook.
+            </doc:description>
+
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="orderedlist" type="ListType">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Ordered List</doc:tooltip>
+            <doc:summary>An ordered list of items in a text paragraph.
+            </doc:summary>
+            <doc:description>An ordered list of items in a text
+            paragraph.  The list is generally displayed as a numbered
+            list. This markup is a subset of DocBook.
+            </doc:description>
+
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="emphasis" type="xs:string">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Emphasis</doc:tooltip>
+            <doc:summary>A span of emphasized text in a paragraph.</doc:summary>
+            <doc:description>A span of emphasized text in a paragraph.
+             Emphasized text is generally rendered as boldfaced or otherwise
+             distinct from the surrounding text.
+             This markup is a subset of DocBook.</doc:description>
+
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="subscript" type="SubSuperScriptType">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Subscript</doc:tooltip>
+            <doc:summary>A subscript in a text paragraph.</doc:summary>
+            <doc:description>A subscript in a text paragraph.
+             This markup is a subset of DocBook.</doc:description>
+
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="superscript" type="SubSuperScriptType">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Superscript</doc:tooltip>
+            <doc:summary>A superscript in a text paragraph.</doc:summary>
+            <doc:description>A superscript in a text paragraph.
+             This markup is a subset of DocBook.</doc:description>
+
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="literalLayout" type="xs:string">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>literalLayout</doc:tooltip>
+            <doc:summary>The equivalent to &lt;pre&gt; in html.</doc:summary>
+            <doc:description>This element specifies that the structure of
+            the text within the tag, specifically the whitespace, should not
+            be altered.</doc:description>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      
+      
+      <!--
+        
+      -->
+      <xs:element name="ulink" minOccurs="0">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>ulink</doc:tooltip>
+            <doc:summary>a link that addresses its target by means of a URL</doc:summary>
+            <doc:description>this element and its children allow paragraphs to contain
+              urls and titles for anchor tags. This markup is a subset of DocBook.</doc:description>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType mixed="true">
+          <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="citetitle">
+                 <xs:annotation>
+                <xs:appinfo>
+                  <doc:tooltip>citetitle</doc:tooltip>
+                  <doc:summary>the title of the cited work</doc:summary>
+                  <doc:description>the citetitle element  contains a text title for the url. It can be displayed in an anchor tag. This markup is a subset of DocBook.</doc:description>
+                  <doc:example>The Dublin Core Metadata Initiative</doc:example>
+                </xs:appinfo>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+          <xs:attribute name="url" use="optional">
+            <xs:annotation>
+              <xs:appinfo>
+                <doc:tooltip>url</doc:tooltip>
+                <doc:summary>the Uniform Resource Locator for the cited work</doc:summary>
+                <doc:description>the url attribute contains the location of the work for a link. This markup is a subset of DocBook.</doc:description>
+                <doc:example>url="http://dublincore.org/documents/usageguide/"</doc:example>
+              </xs:appinfo>
+            </xs:annotation>            
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+      <!--
+        
+        
+      -->
+      
+      
+      
+      
+      
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="SectionType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Section</doc:tooltip>
+        <doc:summary>A section of related text.</doc:summary>
+        <doc:description>The "section" element allows for
+        grouping related paragraphs (or other sections) of text together, with
+        an optional title.  This markup is a subset of DocBook.
+        </doc:description>
+
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="title" type="xs:string" minOccurs="0">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Title</doc:tooltip>
+            <doc:summary>The optional title of the section.</doc:summary>
+            <doc:description>The optional title for a section.
+            This markup is a subset of DocBook.
+            </doc:description>
+
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element name="para" type="ParagraphType">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Paragraph</doc:tooltip>
+              <doc:summary>A simple paragraph of text.</doc:summary>
+              <doc:description>The "paragraph" element allows for
+              both formatted and unformatted text blocks to be included
+              in EML. It can be plain text or text with a limited set of
+              markup tags, including emphasis, subscript,
+              superscript, and lists. This markup is a subset of DocBook.
+              </doc:description>
+
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="section" type="SectionType">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Section</doc:tooltip>
+              <doc:summary>A section of related text.</doc:summary>
+              <doc:description>The "section" element allows for
+              grouping related paragraphs of text together, with
+              an optional title.  This markup is a subset of DocBook.
+              </doc:description>
+
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ListType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>ListType</doc:tooltip>
+        <doc:summary>A list of items in a text paragraph.</doc:summary>
+        <doc:description>A list of items in a text paragraph.  The ListType
+        is used by both orderedlist elements and itemizedlist elements.
+        This markup is a subset of DocBook.
+        </doc:description>
+
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+        <xs:element name="listitem" minOccurs="1" maxOccurs="unbounded">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>List Item</doc:tooltip>
+              <doc:summary>An item in a list of items.</doc:summary>
+              <doc:description>An item in a list of items.  Each list item
+              is formatted as a bulleted or numbered item depending on the
+              list type in which it resides. List items contain paragraphs
+              which in turn can be plain text or text with a limited set of
+              markup tags, including emphasis, subscript,
+              superscript, and lists. This markup is a subset of DocBook.
+              </doc:description>
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:choice minOccurs="1" maxOccurs="unbounded">
+              <xs:element name="para" type="ParagraphType">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <doc:tooltip>Paragraph</doc:tooltip>
+                    <doc:summary>A simple paragraph of text.</doc:summary>
+                    <doc:description>The "paragraph" element allows for
+                    both formatted and unformatted text blocks to be included
+                    in EML. It can be plain text or text with a limited set of
+                    markup tags, including emphasis, subscript,
+                    superscript, and lists. This markup is a subset of DocBook.
+                    </doc:description>
+
+                  </xs:appinfo>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="itemizedlist" type="ListType">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <doc:tooltip>Itemized List</doc:tooltip>
+                    <doc:summary>A list of items in a text paragraph.
+                    </doc:summary>
+                    <doc:description>A list of items in a text paragraph.  The
+                    list is generally displayed as a bulleted list.
+                    This markup is a subset of DocBook.
+                    </doc:description>
+
+                  </xs:appinfo>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="orderedlist" type="ListType">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <doc:tooltip>Ordered List</doc:tooltip>
+                    <doc:summary>An ordered list of items in a text paragraph.
+                    </doc:summary>
+                    <doc:description>An ordered list of items in a text
+                    paragraph.  The list is generally displayed as a numbered
+                    list. This markup is a subset of DocBook.
+                    </doc:description>
+
+                  </xs:appinfo>
+                </xs:annotation>
+              </xs:element>
+            </xs:choice>
+          </xs:complexType>
+        </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SubSuperScriptType" mixed="true">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Subscript/Superscript Type</doc:tooltip>
+        <doc:summary>A subscript or a superscript in a text paragraph.
+        </doc:summary>
+        <doc:description>A subscript or a superscript in a text paragraph.
+        This type is used by both subscript and superscript elements to define
+        their recursive content. This markup is a subset of DocBook.
+        </doc:description>
+
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element name="subscript" type="SubSuperScriptType">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Subscript</doc:tooltip>
+            <doc:summary>A subscript in a text paragraph.</doc:summary>
+            <doc:description>A subscript in a text paragraph.
+             This markup is a subset of DocBook.</doc:description>
+
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="superscript" type="SubSuperScriptType">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Superscript</doc:tooltip>
+            <doc:summary>A superscript in a text paragraph.</doc:summary>
+            <doc:description>A superscript in a text paragraph.
+             This markup is a subset of DocBook.</doc:description>
+
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:choice>
+  </xs:complexType>
+</xs:schema>

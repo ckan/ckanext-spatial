@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" blockDefault="#all"
+        xmlns:sch="http://www.ascc.net/xml/schematron">
+    <xsd:element name="missinfo" type="missinfoType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Mission Information Description: General information about
+                the overall data gathering program to which the data contribute. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Mission Information</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="missinfoType">
+        <xsd:sequence>
+            <xsd:element name="missdesc" type="FGDCstring" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Mission Description Description: Description of the
+                        mission of which the platform observations are part and the objectives of
+                        that mission. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Mission Description</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="misshist" type="misshistType" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Mission History Description: Significant events and
+                        dates over the history of the mission. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Mission History</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="misshistType">
+        <xsd:sequence>
+            <xsd:element name="missstdt" type="missstdtType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Mission Start Date Description: Date that mission
+                        during which data were taken began. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Mission Start Date</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="misssige" type="misssigeType" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Element: Mission Significant Event
+                        Description: Date and description of a major occurrence during mission.
+                    </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Mission Significant Event</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="misscomp" type="misscompType" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Mission Completion Description: Scheduled or actual
+                        end date of mission during which data were taken. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Mission Completion</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="missstdtType">
+        <xsd:sequence>
+            <xsd:element ref="sngdate"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="misssigeType">
+        <xsd:sequence>
+            <xsd:element ref="procstep" minOccurs="1" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="misscompType">
+        <xsd:sequence>
+            <xsd:element ref="sngdate"/>
+        </xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>

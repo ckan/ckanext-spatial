@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:sch="http://www.ascc.net/xml/schematron" blockDefault="#all">
+    <xsd:include schemaLocation="../fgdc-std-001-1998/fgdc-std-001-1998-sect02-ann.xsd"/>
+    <xsd:include schemaLocation="fgdc-std-012-2002-algoinfo.xsd"/>
+    <xsd:include schemaLocation="fgdc-std-012-2002-procinfo.xsd"/>
+    <!-- redefined for RSE -->
+    <xsd:complexType name="rseDataqualType">
+        <xsd:sequence>
+            <xsd:element ref="attracc" minOccurs="0"/>
+            <xsd:element ref="logic"/>
+            <xsd:element ref="complete"/>
+            <xsd:element ref="posacc" minOccurs="0"/>
+            <xsd:element name="lineage" type="rseLineageType">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Element: Lineage
+                        Section: 2.5
+                        Description: information about the events, parameters, and source data which constructed the data set, and information about the responsible parties.
+                    </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Lineage</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element ref="imagqual" minOccurs="0"/>
+            <xsd:element ref="acqinfo" minOccurs="0"/>
+            <xsd:element ref="cloud" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="rseLineageType">
+        <xsd:sequence>
+            <xsd:element ref="srcinfo" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element name="procstep" type="rseProcstepType" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Element: Process Step
+                        Description: Information about a signle event.
+                    </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Process Step</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="rseProcstepType">
+        <xsd:sequence>
+            <xsd:element ref="procdesc"/>
+            <xsd:element ref="srcused" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element ref="procdate"/>
+            <xsd:element ref="proctime" minOccurs="0"/>
+            <xsd:element ref="srcprod" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element ref="proccont" minOccurs="0"/>
+            <xsd:element ref="algoinfo" minOccurs="0"/>
+            <xsd:element ref="procinfo" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="imagqual" type="imagqualType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Image Quality Description: Qualitative description of image
+                quality. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Image Quality</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="imagqualType">
+        <xsd:restriction base="FGDCstring"/>
+    </xsd:simpleType>
+    <xsd:element name="acqinfo" type="acqinfoType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Acquisition Information Description: Information describing
+                configuration under which data were acquired, including satellite and solar position
+                and time correction. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Acquisition Information</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="acqinfoType">
+        <xsd:sequence>
+            <xsd:element name="satlocza" type="FGDClongitude">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Satellite/Local Zenith Angle Description: The angle
+                        at the viewed point between the zenith at the viewed point and the
+                        satellite, in degrees. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Satellite/Local Zenith Angle</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="satlocaa" type="FGDClongitude">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Satellite/Local Azimuth Angle Description: The
+                        angle at the viewed point, measured in the horizontal plane at the viewed
+                        point, between the north direction and the direction to the satellite,
+                        measured in degrees eastward from north. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Satellite/Local Azimuth Angle</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="solarzea" type="FGDClongitude">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Solar Zenith Angle Description: The angle at the
+                        viewed point between the zenith at the viewed point and the Sun, in degrees. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Solar Zenith Angle</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="solaraza" type="FGDClongitude">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Solar Azimuth Angle Description: The angle at the viewed
+                    point, between the north direction and the direction to the sun, measured in degrees eastward
+                    from north.
+                    </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Solar Azimuth Angle</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="relazi" type="FGDClongitude" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Relative Azimuth Description: The angle at the
+                        viewed point, measured in the horizontal plane at the viewed point,
+                        clockwise in degrees from the azimuth of the Sun to the azimuth of the
+                        satellite. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Relative Azimuth</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="clocdrft" type="clocdrftType">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Element: Clock Time/Drift
+                        Description: Error from GMT, needed to correct the time tag for scan data, in milliseconds.
+                    </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Clock Time/Drift</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="ascdscin" type="ascdscinType">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Element: Ascending/Descending Indicator
+                        Description: Flag indicating whether satellite is moving northward or southward. ( Note: 0 represents ascending or northward; 1 represents descending or southward.)
+                    </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Ascending/Descending Indicator</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="nadir" type="nadirType" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Nadir Description: Location of point directly
+                        underneath platform. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Nadir</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:simpleType name="acqinfoAngle">
+        <xsd:restriction base="xsd:double">
+            <xsd:minInclusive value="-90.0"/>
+            <xsd:maxInclusive value="90.0"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="clocdrftType">
+        <xsd:restriction base="xsd:double">
+            <xsd:minInclusive value="-75.0"/>
+            <xsd:maxInclusive value="75.0"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:simpleType name="ascdscinType">
+        <xsd:restriction base="xsd:token">
+            <xsd:enumeration value="0"/>
+            <xsd:enumeration value="1"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:complexType name="nadirType">
+        <xsd:sequence>
+            <xsd:element name="nadirlat" type="FGDClatitude">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Nadir Latitude Description: Latitude of nadir. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Nadir Latitude</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="nadirlon" type="FGDClongitude">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Nadir Longitude Description: Longitude of nadir. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Nadir Longitude</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>

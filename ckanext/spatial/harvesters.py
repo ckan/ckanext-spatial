@@ -44,9 +44,12 @@ from ckanext.harvest.model import HarvestObject, HarvestGatherError, \
 
 from ckanext.spatial.model import GeminiDocument
 from ckanext.spatial.lib.csw_client import CswService
-from ckanext.spatial.validation import Validators
+from ckanext.spatial.validation import Validators, all_validators
 
 log = logging.getLogger(__name__)
+
+DEFAULT_VALIDATOR_PROFILES = ['iso19139']
+
 
 def text_traceback():
     with warnings.catch_warnings():
@@ -76,14 +79,25 @@ class SpatialHarvester(object):
         return False
 
     def _get_validator(self):
+        '''
+        Returns the validator object using the relevant profiles
+
+        The profiles to be used are assigned in the following order:
+
+        1. 'validator_profiles' property of the harvest source config object
+        2. 'ckan.spatial.validator.profiles' configuration option in the ini file
+        3. Default value as defined in DEFAULT_VALIDATOR_PROFILES
+        '''
         if not hasattr(self, '_validator'):
-            profiles = [
-                x.strip() for x in
-                config.get(
-                    'ckan.spatial.validator.profiles',
-                    'iso19139,gemini2',
-                ).split(',')
-            ]
+            if hasattr(self, 'config') and self.config.get('validator_profiles',None):
+                profiles = self.config.get('validator_profiles')
+            elif config.get('ckan.spatial.validator.profiles', None):
+                profiles = [
+                    x.strip() for x in
+                    config.get('ckan.spatial.validator.profiles').split(',')
+                ]
+            else:
+                profiles = DEFAULT_VALIDATOR_PROFILES
             self._validator = Validators(profiles=profiles)
         return self._validator
 
@@ -111,6 +125,36 @@ class SpatialHarvester(object):
         url = url.replace(' ','%20')
         http_response = urllib2.urlopen(url)
         return http_response.read()
+
+    def _set_config(self,config_str):
+        if config_str:
+            self.config = json.loads(config_str)
+            log.debug('Using config: %r', self.config)
+        else:
+            self.config = {}
+
+    def validate_config(self,config):
+        if not config:
+            return config
+
+        try:
+            config_obj = json.loads(config)
+
+            if 'validator_profiles' in config_obj:
+                if not isinstance(config_obj['validator_profiles'],list):
+                    raise ValueError('validator_profiles must be a list')
+
+                # Check if all profiles exist
+                existing_profiles = [v.name for v in all_validators]
+                unknown_profiles = set(config_obj['validator_profiles']) - set(existing_profiles)
+
+                if len(unknown_profiles) > 0:
+                    raise ValueError('Unknown validation profile(s): %s' % ','.join(unknown_profiles))
+
+        except ValueError,e:
+            raise e
+
+        return config
 
 class GeminiHarvester(SpatialHarvester):
     '''Base class for spatial harvesting GEMINI2 documents for the UK Location

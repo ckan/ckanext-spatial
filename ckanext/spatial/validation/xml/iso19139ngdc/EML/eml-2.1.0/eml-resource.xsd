@@ -1,0 +1,1180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:doc="eml://ecoinformatics.org/documentation-2.1.0" xmlns:txt="eml://ecoinformatics.org/text-2.1.0" xmlns:rp="eml://ecoinformatics.org/party-2.1.0" xmlns:cov="eml://ecoinformatics.org/coverage-2.1.0" xmlns="eml://ecoinformatics.org/resource-2.1.0" targetNamespace="eml://ecoinformatics.org/resource-2.1.0">
+  <xs:import namespace="eml://ecoinformatics.org/documentation-2.1.0" schemaLocation="eml-documentation.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/party-2.1.0" schemaLocation="eml-party.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/coverage-2.1.0" schemaLocation="eml-coverage.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/text-2.1.0" schemaLocation="eml-text.xsd"/>
+  <xs:annotation>
+    <xs:documentation>
+       '$RCSfile: eml-resource.xsd,v $'
+       Copyright: 1997-2002 Regents of the University of California,
+                            University of New Mexico, and
+                            Arizona State University
+        Sponsors: National Center for Ecological Analysis and Synthesis and
+                  Partnership for Interdisciplinary Studies of Coastal Oceans,
+                     University of California Santa Barbara
+                  Long-Term Ecological Research Network Office,
+                     University of New Mexico
+                  Center for Environmental Studies, Arizona State University
+   Other funding: National Science Foundation (see README for details)
+                  The David and Lucile Packard Foundation
+     For Details: http://knb.ecoinformatics.org/
+
+        '$Author: obrien $'
+          '$Date: 2009/02/25 23:51:54 $'
+      '$Revision: 1.93 $'
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    </xs:documentation>
+    <xs:appinfo>
+      <doc:moduleDocs>
+        <doc:moduleName>eml-resource</doc:moduleName>
+        <doc:moduleDescription>
+          <section xmlns="">
+            <title>
+              The eml-resource module - Base information for
+              all resources
+            </title>
+            <para>
+              The eml-resource module contains general information that
+              describes dataset resources, literature resources, protocol
+              resources, and software resources. Each of the above four types of
+              resources share a common set of information, but also have
+              information that is unique to that particular resource type.  Each
+              resource type uses the eml-resource module to document the
+              information common to all resources, but then extend
+              eml-resource with modules that are specific to that particular
+              resource type.  For instance, all resources have creators,
+              titles, and perhaps keywords, but only the dataset resource would
+              have a "data table" within it.  Likewise, a literature
+              resource may have an "ISBN" number associated with it,
+              whereas the other resource types would not.
+            </para>
+            <para>
+              The eml-resource module is exclusively used by other modules, and is
+              therefore not a stand-alone module.
+            </para>
+          </section>
+        </doc:moduleDescription>
+        <doc:recommendedUsage>all datasets</doc:recommendedUsage>
+        <doc:standAlone>no</doc:standAlone>
+      </doc:moduleDocs>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:group name="ResourceGroup">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Resource Base</doc:tooltip>
+        <doc:summary>Generic information about any resource that is being
+        described.</doc:summary>
+        <doc:description>The 'ResourceBase' complexType contains information
+        that is inherited by each resource type that is being documented. The
+        sub-elements with the resource base are common to all
+        resources.</doc:description>
+        <doc:example>Please see the individual sub-fields for specific
+        examples.</doc:example>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="alternateIdentifier" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Alternate Identifier</doc:tooltip>
+            <doc:summary>A secondary identifier for this entity</doc:summary>
+            <doc:description>An additional, secondary identifier for this
+            entity. The primary identifier belongs in the "id" attribute, but
+            additional identifiers that are used to label this entity, possibly
+            from different data management systems, can be listed
+            here.</doc:description>
+            <doc:example>VCR3465</doc:example>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:string">
+              <xs:attribute name="system" type="SystemType" use="optional"/>
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="shortName" type="NonEmptyStringType" minOccurs="0">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Short Name</doc:tooltip>
+            <doc:summary>A short name that describes the resource, sometimes a
+            filename.</doc:summary>
+            <doc:description>The 'shortName' field provides a concise name that
+            describes the resource that is being documented. It is the
+            appropriate place to store a filename associated with other storage
+            systems.</doc:description>
+            <doc:example>vernal-data-1999</doc:example>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="title" type="NonEmptyStringType" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Title</doc:tooltip>
+            <doc:summary>A brief description of the resource, providing enough
+            detail to differentiate it from other similar
+            resources.</doc:summary>
+            <doc:description>The 'title' field provides a description of the
+            resource that is being documented that is long enough to
+            differentiate it from other similar resources. Multiple titles may
+            be provided, particularly when trying to express the title in more
+            than one language (use the "xml:lang" attribute to indicate the
+            language if not English/en).</doc:description>
+            <doc:example>Vernal pool amphibian density data, Isla Vista,
+            1990-1996.</doc:example>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="creator" type="rp:ResponsibleParty" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Creator</doc:tooltip>
+            <doc:summary>The people or organizations who created this
+            resource.</doc:summary>
+            <doc:description>The 'creator' element provides the full name of
+            the person, organization, or position who created the resource. The
+            list of creators for a resource represent the people and
+            organizations who should be cited for the
+            resource.</doc:description>
+            <doc:example>For a book, the creators are its
+            authors.</doc:example>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="metadataProvider" type="rp:ResponsibleParty" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Metadata Provider</doc:tooltip>
+            <doc:summary>The people or organizations who created provided
+            documentation and other metadata for this resource.</doc:summary>
+            <doc:description>The 'metadataProvider' element provides the full
+            name of the person, organization, or position who created
+            documentation for the resource.</doc:description>
+            <doc:example>The scientist who collected the data, sometimes a data
+            technician, or other individual.</doc:example>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="associatedParty" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Associated Party</doc:tooltip>
+            <doc:summary>Other people or organizations who should be associated
+            with this resource.</doc:summary>
+            <doc:description>The 'associatedParty' element provides the full
+            name of other people, organizations, or positions who should be
+            associated with the resource. These parties might play various
+            roles in the creation or maintenance of the resource, and these
+            roles should be indicated in the "role" element.</doc:description>
+            <doc:example>The technician who collected the data.</doc:example>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="rp:ResponsibleParty">
+              <xs:sequence>
+                <xs:element name="role" type="rp:RoleType">
+                  <xs:annotation>
+                    <xs:appinfo>
+                      <doc:tooltip>Role</doc:tooltip>
+                      <doc:summary>The role the party played with respect to
+                      the resource.</doc:summary>
+                      <doc:description>Use this field to describe the role the
+                      party played with respect to the resource. Some potential
+                      roles include technician, reviewer, principal
+                      investigator, and many others.</doc:description>
+                      <doc:example>principalInvestigator</doc:example>
+                    </xs:appinfo>
+                  </xs:annotation>
+                </xs:element>
+              </xs:sequence>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="pubDate" type="yearDate" minOccurs="0">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Publication date</doc:tooltip>
+            <doc:summary>The publication date of the resource.</doc:summary>
+            <doc:description>The 'pubDate' field represents the date that the
+            resource was published. The format should be represented as: CCYY,
+            which represents a 4 digit year, or as CCYY-MM-DD, which denotes
+            the full year, month, and day. Note that month and day are optional
+            components. Formats must conform to ISO 8601.</doc:description>
+            <doc:example>1999-10-26</doc:example>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="language" type="NonEmptyStringType" minOccurs="0">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Language</doc:tooltip>
+            <doc:summary>The language in which the resource is
+            written.</doc:summary>
+            <doc:description>The language in which the resource is written.
+            This can be a well-known language name, or one of the ISO language
+            codes to be more precise.</doc:description>
+            <doc:example>English</doc:example>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="series" type="NonEmptyStringType" minOccurs="0">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Series</doc:tooltip>
+            <doc:summary>The series from which the resource came.</doc:summary>
+            <doc:description>This field describes the series of resources that
+            include the resource being described. For example, a volume of a
+            journal may be part of a series of the journal for a particular
+            year.</doc:description>
+            <doc:example>Volume 20</doc:example>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="abstract" type="txt:TextType" minOccurs="0">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Abstract</doc:tooltip>
+            <doc:summary>A brief overview of the resource.</doc:summary>
+            <doc:description>A brief overview of the resource that is being
+            documented. The abstract should include basic information that
+            summarizes the resource.</doc:description>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="keywordSet" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Keyword information</doc:tooltip>
+            <doc:summary>Keyword information that describes the
+            resource.</doc:summary>
+            <doc:description>The 'keywordSet' element is a container for the
+            'keyword' and 'keywordThesaurus' fields. Each keywordSet field can
+            contain one or more keywords and a name of a thesaurus for the set
+            of keywords. Each keyword field should contain one and only one
+            keyword (i.e., keywords should not be separated by commas or other
+            delimiters).</doc:description>
+            <doc:example>Please see the examples for the subfields contained
+            within this field.</doc:example>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="keyword" maxOccurs="unbounded">
+              <xs:annotation>
+                <xs:appinfo>
+                  <doc:tooltip>Keyword</doc:tooltip>
+                  <doc:summary>A single keyword that describes the
+                  resource.</doc:summary>
+                  <doc:description>This field names a keyword or key phrase that
+                  concisely describes the resource or is related to the
+                  resource. Each keyword field should contain one and only one
+                  keyword (i.e., keywords should not be separated by commas or
+                  other delimiters).</doc:description>
+                  <doc:example>biodiversity</doc:example>
+                </xs:appinfo>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:simpleContent>
+                  <xs:extension base="NonEmptyStringType">
+                    <xs:attribute name="keywordType" type="KeyTypeCode" use="optional">
+                      <xs:annotation>
+                        <xs:appinfo>
+                          <doc:tooltip>Keyword type</doc:tooltip>
+                          <doc:summary>The type of each keyword.</doc:summary>
+                          <doc:description>This field classifies the keyword
+                          that has been provided from a list of pre-determined
+                          categories. The possible types are listed in the
+                          example.</doc:description>
+                          <doc:example>
+                          "place","stratum","temporal","theme",
+                          or "taxonomic"</doc:example>
+                        </xs:appinfo>
+                      </xs:annotation>
+                    </xs:attribute>
+                  </xs:extension>
+                </xs:simpleContent>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="keywordThesaurus" type="NonEmptyStringType" minOccurs="0">
+              <xs:annotation>
+                <xs:appinfo>
+                  <doc:tooltip>Keyword thesaurus</doc:tooltip>
+                  <doc:summary>The name of a thesaurus from which the keyword
+                  is derived.</doc:summary>
+                  <doc:description>This field provides the name of the official
+                  keyword thesaurus from which keyword was derived. The keyword
+                  thesauri are usually discipline specific.</doc:description>
+                  <doc:example>IRIS keyword thesaurus</doc:example>
+                </xs:appinfo>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="additionalInfo" type="txt:TextType" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Additional Information</doc:tooltip>
+            <doc:summary>Any extra information pertitent to the
+            resource.</doc:summary>
+            <doc:description>This field provides any information that is not
+            characterized by the other resource metadata
+            fields.</doc:description>
+            <doc:example>Copyright 2001, Robert Warner</doc:example>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="intellectualRights" type="txt:TextType" minOccurs="0">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Intellectual Property Rights</doc:tooltip>
+            <doc:summary>Intellectual property rights regarding usage and
+            licensing of this resource.</doc:summary>
+            <doc:description>Typically, an intellectual Rights element will
+            contain a rights management statement for the resource, or
+            reference a service providing such information. Rights information
+            encompasses Intellectual Property Rights (IPR), Copyright, and
+            various Property Rights. In the case of a data set, rights might
+            include requirements for use, requirements for attribution, or other
+            requirements the owner would like to impose.</doc:description>
+            <doc:example>Copyright 2001 Regents of the University of California
+            Santa Barbara. Free for use by all individuals provided that the
+            owners are acknowledged in any use or publication.</doc:example>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="distribution" type="DistributionType" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Distribution Information</doc:tooltip>
+            <doc:summary>Information on how the resource is distributed online
+            and offline</doc:summary>
+            <doc:description>This element provides information on how the
+            resource is distributed. When used at the resource level, this element can provide
+             only general information, but elements for describing connections to online
+            systems are provided. See the Type for specific recommendations and examples.</doc:description>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="coverage" type="cov:Coverage" minOccurs="0">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Resource coverage</doc:tooltip>
+            <doc:summary>Extent of the coverage of the resource.</doc:summary>
+            <doc:description>This element describes the extent of the coverage
+            of the resource in terms of its spatial extent, temporal extent,
+            and taxonomic extent. For data sets, this is useful to specify the
+            entire extent to which all of the data might
+            apply.</doc:description>
+            <doc:example>See the coverage module for examples.</doc:example>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:group name="ReferencesGroup">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>References Group</doc:tooltip>
+        <doc:summary>A group of elements repeatedly used throughout EML
+        to reference IDs.</doc:summary>
+        <doc:description>A group containing the "references" element that
+        is used throughout EML.</doc:description>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="references">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>References</doc:tooltip>
+            <doc:summary>The id of another element in this
+            EML document to be used to here in this context.
+            </doc:summary>
+            <doc:description>The id of another element in
+            this EML document to be used to here in this context.
+            This is used instead of duplicating information when an identical
+            piece of information needs to be used multiple times in an
+            EML document. For example, if the same person is the creator,
+            metadataProvider, and contact for a dataset, their name and address
+            can be provided once as part of the "creator" element, and then
+            their "id" can be used in the "references" element of 
+            metadataProvider and contact.  This reduces the likelihood of
+            error by reducing redundancy, and allows one to specify that
+            two pieces of information are identical.  To be a valid EML
+            document, the content of every "references" element MUST be
+            defined in the document as the value of an "id" attribute on
+            some element within the document.  Other critical rules
+            about the use of IDs and references in EML are provided in the
+            text of the EML specification.</doc:description>
+            <doc:example>knb.45.3</doc:example>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:simpleContent>
+            <xs:extension base="xs:string">
+              <xs:attribute name="system" type="SystemType" use="optional" default="document"/>
+            </xs:extension>
+          </xs:simpleContent>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:group>
+  <xs:simpleType name="KeyTypeCode">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Keyword type codes</doc:tooltip>
+        <doc:summary>The list of keyword categories</doc:summary>
+        <doc:description>This field provides a restricted list of categories
+        that a keyword may fall under.</doc:description>
+        <doc:example>place</doc:example>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="place">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Place Keywords</doc:tooltip>
+            <doc:summary>Keywords pertaining to a spatial location</doc:summary>
+            <doc:description>Keywords naming geographic locations associated 
+            with the data set.</doc:description>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="stratum">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Stratum Keywords</doc:tooltip>
+            <doc:summary>Keywords pertaining to a vertical stratum</doc:summary>
+            <doc:description>Keywords naming vertical strata associated 
+            with the data set (e.g., soil horizons).</doc:description>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="temporal">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Temporal Keywords</doc:tooltip>
+            <doc:summary>Keywords pertaining to temporal data</doc:summary>
+            <doc:description>Keywords listing time periods associated 
+            with the data set.</doc:description>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="theme">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Thematic Keywords</doc:tooltip>
+            <doc:summary>Keywords pertaining to thematic subject</doc:summary>
+            <doc:description>Keywords naming thematics subjects associated 
+            with the data set.</doc:description>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="taxonomic">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Taxonomic Keywords</doc:tooltip>
+            <doc:summary>Keywords pertaining to taxon information</doc:summary>
+            <doc:description>Keywords listing taxonomic terms associated 
+            with the data set.  Note that lists of species names or other taxon
+            lists should be presented in the taxonomicCoverage element.
+            </doc:description>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="yearDate">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Year or Date</doc:tooltip>
+        <doc:summary>A type allowing a year or date value</doc:summary>
+        <doc:description>This type is the union of the built-in types for year
+        and date.</doc:description>
+        <doc:example>1999, or 2001-03-15</doc:example>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:union memberTypes="xs:gYear xs:date"/>
+  </xs:simpleType>
+  <xs:simpleType name="IDType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Identifer</doc:tooltip>
+        <doc:summary>A unique identifier for this additional
+        metadata that can be used to reference it elsewhere.
+        </doc:summary>
+        <doc:description>A unique identifier for this additional
+        metadata that can be used to reference it elsewhere.
+        This is a formal field in that it is an error to provide
+        a value for the id attribute that is not unique within
+        the document's set of id attributes. This is designed to
+        allow other portions of the metadata to reference this
+        section formally.</doc:description>
+        <doc:example>knb.343.22</doc:example>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:list itemType="xs:string"/>
+  </xs:simpleType>
+  <xs:simpleType name="SystemType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Identifer System</doc:tooltip>
+        <doc:summary>The data management system within which an
+        identifier is in scope and therefore unique.
+        </doc:summary>
+        <doc:description>The data management system within which an
+        identifier is in scope and therefore unique. This is typically
+        a URL (Uniform Resource Locator) that indicates a data
+        management system.  All identifiers that share a system must
+        be unique. In other words, if the same identifier is used in
+        two locations with identical systems, then by definition the
+        objects at which they point are in fact the same object.
+        </doc:description>
+        <doc:example>http://metacat.somewhere.org/svc/mc/</doc:example>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:list itemType="xs:string"/>
+  </xs:simpleType>
+  <xs:simpleType name="ScopeType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Identifer Scope</doc:tooltip>
+        <doc:summary>The scope of the identifier.</doc:summary>
+        <doc:description>The scope of the identifier.  Scope is generally
+        set to either "system", meaning that it is scoped according to
+        the "system" attribute, or "document" if it is only to be in scope
+        within this single document instance.  In this particular use of
+        scope, it is FIXED to be "system" because the packageId is
+        required and always has the scope of the required "system".
+        </doc:description>
+        <doc:example>system</doc:example>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="system"/>
+      <xs:enumeration value="document"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="FunctionType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="download"/>
+      <xs:enumeration value="information"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="DistributionType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Distribution Information</doc:tooltip>
+        <doc:summary>Distribution information for accessing the
+              resource.</doc:summary>
+        <doc:description>
+          <section xmlns="">
+            <para>Distribution information for accessing the
+              resource by one of three methods: online, offline or inline. Generally, 
+              the Type at the resource level is intended to be informational, although 
+              elements are
+              included to describe a complex connection protocol.
+             </para>
+            <para>For more information, see the sub-elements. Also
+             compare to 
+             <ulink url="./eml-physical.html#PhysicalDistributionType">
+                <citetitle>
+             phys:PhysicalDistributionType</citetitle>
+              </ulink>.
+             
+             
+             </para>
+          </section>
+        </doc:description>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:choice>
+      <xs:choice>
+        <xs:element name="online" type="OnlineType">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>distribution/online</doc:tooltip>
+              <doc:summary>Online distribution information</doc:summary>
+              <doc:description>This element contains information for accessing the
+              resource online, represented either as a URL a connection, or 
+              a connectionDefinition which may be referenced in other parts of
+              the EML document. See the Type definition for more information. </doc:description>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="offline" type="OfflineType">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Offline distribution</doc:tooltip>
+              <doc:summary>data are available offline</doc:summary>
+              <doc:description>This element is for data which are distributed offline, 
+         generally by request. See the Type 
+        definition for more information.         </doc:description>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="inline" type="InlineType">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Inline distribution</doc:tooltip>
+              <doc:summary>data distributed inline in the metadata.</doc:summary>
+              <doc:description>The data are distributed inline, with the metadata. See the Type 
+        definition for more information.         </doc:description>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+      <xs:group ref="ReferencesGroup"/>
+    </xs:choice>
+    <xs:attribute name="id" type="IDType" use="optional"/>
+    <xs:attribute name="system" type="SystemType" use="optional"/>
+    <xs:attribute name="scope" type="ScopeType" use="optional" default="document"/>
+  </xs:complexType>
+  <xs:complexType name="ConnectionDefinitionType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Connection Definition</doc:tooltip>
+        <doc:summary>Definition of the connection protocol.   </doc:summary>
+        <doc:description>Definition of the connection protocol.   
+        The definition has a "scheme" which identifies the
+                            protocol by name, with a detailed description 
+                            and its required parameters. A connectionDefinition 
+                    lists all of the parameters needed for the connection
+                    and possible default values for each. A definition provided in this
+                    element may be used in other parts of the EML document.</doc:description>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:choice>
+      <xs:sequence>
+        <xs:element name="schemeName">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Scheme Name</doc:tooltip>
+              <doc:summary>The name of the scheme used to identify this
+              connection.</doc:summary>
+              <doc:description>The name of the scheme used to identify this
+              connection.  The scheme name is qualified by its system attribute.
+              The scheme name implies a particular protocol for
+              accessing information from the connection.  Applications must
+              have a knowledge of the scheme or be able to deduce the protocol
+              from the scheme description in order to effectively access data
+              over the connection.  Many schemes will be unknown to client
+              applications.  At some later point in time a registry for
+              connection schemes may be established in order to promote
+              application interoperability, and we may expand this portion of
+              EML to adopt a more comprehensive standard such as WSDL, but for
+              now this simpler description is provided.</doc:description>
+              <doc:example>metacat</doc:example>
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:simpleContent>
+              <xs:extension base="xs:string">
+                <xs:attribute name="system" type="SystemType" use="optional">
+                  <xs:annotation>
+                    <xs:appinfo>
+                      <doc:tooltip>Scheme System</doc:tooltip>
+                      <doc:summary>The system in which this scheme name is
+                      relevant</doc:summary>
+                      <doc:description>The computing system within which this
+                      scheme name has relevance. This attribute qualifies the
+                      scheme name in order to decrease the likelihood of scheme
+                      name collisions when more that one EML user defines a
+                      scheme name with the same name but different semantics.
+                      </doc:description>
+                      <doc:example>
+                      http://knb.ecoinformatics.org/knb/</doc:example>
+                    </xs:appinfo>
+                  </xs:annotation>
+                </xs:attribute>
+              </xs:extension>
+            </xs:simpleContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="description" type="txt:TextType">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Scheme Description</doc:tooltip>
+              <doc:summary>The description of the scheme used to identify this
+              connection.</doc:summary>
+              <doc:description>The description of the scheme used to identify
+              this connection. The scheme name implies a particular protocol for
+              accessing information from the connection.  Applications must
+              have a knowledge of the scheme or be able to deduce the protocol
+              from the scheme description in order to effectively access data
+              over the connection.</doc:description>
+              <doc:example>The metacat application protocol.  Applications
+              must first log into metacat by sending an HTTP POST request
+              in http-url-encoded format with the parameters action, username,
+              and password.  Action must be set to "login".
+              If authentication is successful, the metacat
+              server will respond with a session cookie.  All future requests
+              should include the session cookie in the HTTP header.  To
+              retrieve an object, the client then would send an HTTP POST
+              in http-url-encoded format, with an action parameter set to
+              "get" and the docid parameter set to the identifier for the
+              desired object.  The response will either be an XML document
+              or a multipart-form-encoded response containing data.
+              </doc:example>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="parameterDefinition" maxOccurs="unbounded">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Parameter Definition</doc:tooltip>
+              <doc:summary>The definition of a parameter that is needed to
+              properly use this connection scheme.</doc:summary>
+              <doc:description>The definition of a parameter that is needed to
+              properly use this connection scheme.  Each parameter has a name
+              and a definition that are used by applications to assess the type
+              of information needed for the request.  Parameters may also set
+              default values that are used if a connection does not provide a
+              value for a parameter.</doc:description>
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="name" type="NonEmptyStringType">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <doc:tooltip>Parameter Name</doc:tooltip>
+                    <doc:summary>The Name of a parameter that is needed to
+                    properly use this connection scheme.</doc:summary>
+                    <doc:description>The name of a parameter that is needed to
+                    properly use this connection scheme.</doc:description>
+                    <doc:example>hostname</doc:example>
+                  </xs:appinfo>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="definition" type="NonEmptyStringType">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <doc:tooltip>Parameter Definition</doc:tooltip>
+                    <doc:summary>The definition of a parameter that is needed
+                    to properly use this connection scheme.</doc:summary>
+                    <doc:description>The definition of a parameter that is
+                    needed to properly use this connection scheme.  The
+                    definition is used by applications to assess the type
+                    of information needed for the request.</doc:description>
+                    <doc:example>The fully qualified name of the internet host
+                    that is providing the metacat service, as would be returned
+                    by a Domain Name System (DNS) query.</doc:example>
+                  </xs:appinfo>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="defaultValue" type="NonEmptyStringType" minOccurs="0">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <doc:tooltip>Default Parameter Value</doc:tooltip>
+                    <doc:summary>The default value for a parameter that is
+                    needed to properly use this connection scheme.</doc:summary>
+                    <doc:description>The default value for a parameter that is
+                    needed to properly use this connection scheme.  If a default
+                    value is set, then it should be used for connections that
+                    do not override the default with a connection-specific
+                    value. This allows a definition to be established that
+                    declares common information that might be shared by several
+                    connections as default values.  Parameter values provided
+                    in the connection always override any default values
+                    provided in the connection definition.</doc:description>
+                    <doc:example>metacat.nceas.ucsb.edu</doc:example>
+                  </xs:appinfo>
+                </xs:annotation>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:group ref="ReferencesGroup"/>
+    </xs:choice>
+    <xs:attribute name="id" type="IDType" use="optional"/>
+    <xs:attribute name="system" type="SystemType" use="optional"/>
+    <xs:attribute name="scope" type="ScopeType" use="optional" default="document"/>
+  </xs:complexType>
+  <!--
+
+inline type -->
+  <xs:complexType name="InlineType" mixed="true">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Inline distribution</doc:tooltip>
+        <doc:summary>Object data distributed inline in the metadata.
+              </doc:summary>
+        <doc:description>Object data distributed inline in the metadata.
+              Users have the option of including the data right inline in the
+              metadata by providing it inside of the "inline" element.  For
+              many text formats, the data can be simply included directly in
+              the element.  However, certain character sequences are invalid in
+              an XML document (e.g., &lt;), so care will need to be taken to 
+              either 1) wrap the data in a CDATA section if needed, or 
+              2) encode the data using a text encoding algorithm such as
+              base64, and then include that in a CDATA section.  The latter
+              will be necessary for binary formats.
+              </doc:description>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:complexContent mixed="true">
+      <xs:restriction base="xs:anyType">
+        <xs:sequence>
+          <xs:any processContents="lax" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+      </xs:restriction>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="OfflineType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>medium of the resource</doc:tooltip>
+        <doc:summary>the medium on which this resource is distributed,
+              either digitally or as hardcopy</doc:summary>
+        <doc:description>the medium on which this resource is distributed
+              digitally, such as 3.5" floppy disk, or various tape media types,
+              or 'hardcopy'</doc:description>
+        <doc:example>CD-ROM, 3.5 in. floppy disk, Zip disk</doc:example>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="mediumName" type="NonEmptyStringType">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Medium name</doc:tooltip>
+            <doc:summary>Name of the medium that for this resource
+                    distribution</doc:summary>
+            <doc:description>Name of the medium on which this resource
+                    is distributed. Can be various digital media such as tapes
+                    and disks, or printed media which can collectively be
+                    termed 'hardcopy'.</doc:description>
+            <doc:example>Tape, 3.5 inch Floppy Disk,
+                    hardcopy</doc:example>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="mediumDensity" type="NonEmptyStringType" minOccurs="0">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>density of the digital medium</doc:tooltip>
+            <doc:summary>the density of the digital medium if this is
+                    relevant.</doc:summary>
+            <doc:description>the density of the digital medium if this
+                    is relevant. Used mainly for floppy disks or
+                    tape.</doc:description>
+            <doc:example>High Density (HD), Double Density
+                    (DD)</doc:example>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="mediumDensityUnits" type="NonEmptyStringType" minOccurs="0">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>units of a numerical density</doc:tooltip>
+            <doc:summary>a numerical density's units</doc:summary>
+            <doc:description>if a density is given numerically, the
+                    units should be given here.</doc:description>
+            <doc:example>B/cm</doc:example>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="mediumVolume" type="NonEmptyStringType" minOccurs="0">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>storage volume</doc:tooltip>
+            <doc:summary>total volume of the storage
+                    medium</doc:summary>
+            <doc:description>the total volume of the storage medium on
+                    which this resource is shipped.</doc:description>
+            <doc:example>650 MB</doc:example>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="mediumFormat" type="NonEmptyStringType" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>medium format</doc:tooltip>
+            <doc:summary>format of the medium on which the resource is
+                    shipped.</doc:summary>
+            <doc:description>the file system format of the medium on
+                    which the resource is shipped</doc:description>
+            <doc:example>NTFS, FAT32, EXT2, QIK80</doc:example>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="mediumNote" type="NonEmptyStringType" minOccurs="0">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>note about the media</doc:tooltip>
+            <doc:summary>note about the media</doc:summary>
+            <doc:description>any additional pertinent information about
+                    the media</doc:description>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="OnlineType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Online Distribution Type</doc:tooltip>
+        <doc:summary>Distribution information for accessing the
+              resource online.</doc:summary>
+        <doc:description>
+          <section xmlns="">
+            <para>Distribution information for accessing the
+              resource online, represented either as a URL or as the series of
+              named parameters needed to connect. The URL field can contain 
+              a simple web address or an entire query string. The connection
+               element allows the components of a complex protocol to 
+               be described individually. The connectionDefinition element 
+               can also be appear outside of the connection elements, 
+               so that it can be defined once and referenced by several connections. 
+               </para>
+            <para>
+               Also see the 
+               <ulink url="./eml-physical.html#PhysicalOnlineType">
+                <citetitle>phys:PhysicalOnlineType</citetitle></ulink>, 
+               which may be more
+               appropriate for describing the online connections to a specific entity
+               described by this metadata document.
+               </para>
+          </section>
+        </doc:description>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="onlineDescription" type="NonEmptyStringType" minOccurs="0">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Description of online information</doc:tooltip>
+            <doc:summary>Brief description of the the content of online</doc:summary>
+            <doc:description>This element can hold a brief description of the content 
+            of the online element's online|offline|inline child. This description element could 
+            supply content for an html anchor tag. 
+</doc:description>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:choice>
+        <xs:element name="url" type="UrlType">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>URL</doc:tooltip>
+              <doc:summary>A URL or this resource.</doc:summary>
+              <doc:description>A URL (Uniform Resource Locator) from which this additional 
+              information can be obtained, or from which the resource can be downloaded 
+              directly. In the resource module, the distribution URL is generally meant for 
+              informational purposes, and the "function" attribute should be set to "information". 
+              However, if the URL returns the data stream itself, then the "function" attribute 
+              should be set to "download".  See the Type Definition for more information.</doc:description>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="connection" type="ConnectionType">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Connection</doc:tooltip>
+              <doc:summary>A connection to a data service</doc:summary>
+              <doc:description>A description of the information needed to make an application 
+              connection to a data service. The connection contains a connectionDefinition 
+              and optional parameters for overriding defaults. See the Type Definition for 
+              more information.</doc:description>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="connectionDefinition" type="ConnectionDefinitionType">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Connection Definition</doc:tooltip>
+              <doc:summary>The definition of a connection
+        that will be used in another location in the EML
+        document                         
+                            </doc:summary>
+              <doc:description>
+The definition of a type of connection
+        that will be used in another location in the EML
+        document. The connectionDefinition element only provides the definition of the
+        protocol and its parameters, but not the actual values
+        to be used to make the connection (instead, see the
+        connection element).  This connectionDefinition may be
+        used by multiple connections (e.g., to download different files
+        from the same database), but each connection must provide or
+        reference a valid connection definition.              
+              
+     The definition has a "scheme" which identifies the
+                            protocol by name, with a detailed description 
+                            and its required parameters. A connectionDefinition 
+                    lists all of the parameters needed for the connection
+                    and possible default values for each. </doc:description>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+  <!-- 
+
+URL Type -->
+  <xs:complexType name="UrlType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Download site URL</doc:tooltip>
+        <doc:summary>A URL (Uniform Resource Locator) from which
+                    this resource can be downloaded or information can be
+                    obtained about downloading it.</doc:summary>
+        <doc:description>A URL (Uniform Resource Locator) from
+                    which this resource can be downloaded or additional
+                    information can be obtained. If the URL
+                    provides further information about downloading the
+                    object but does not directly return the data stream, then
+                    the "function" attribute should be set to "information".
+                    If accessing the URL would directly return the data stream, 
+                    then the "function" attribute should be set to "download".  
+                    If the "function" attribute is omitted, then "download"
+                    is implied for the URL function.
+                    In more complex cases where a non-standard connection
+                    must be established that complies with application
+                    specific procedures beyond what can be described in the
+                    simple URL, then the "connection" element should
+                    be used instead of the URL element.</doc:description>
+        <doc:example>
+                    http://data.org/getdata?id=98332</doc:example>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:simpleContent>
+      <xs:extension base="xs:anyURI">
+        <xs:attribute name="function" type="FunctionType" use="optional" default="download"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <!--
+
+connectionType -->
+  <xs:complexType name="ConnectionType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Connection</doc:tooltip>
+        <doc:summary>A description of the information needed
+                    to make an application connection to a data service.
+                    </doc:summary>
+        <doc:description>A description of the information needed
+                    to make an application connection to a data service.
+                    The connection starts with a connectionDefinition which
+                    lists all of the parameters needed for the connection
+                    and possible default values for each.  It may also include a
+                    list of parameter values (one for each), that
+                    override the defaults for this particular connection.
+                    One parameter element should exist for every
+                    parameterDefinition that is present in the
+                    connectionDefinition, although parameters that were
+                    defined with a defaultValue in their parameterDefinition
+                    can be omitted. All information about how to use the
+                    parameters to establish a session and extract data is
+                    present in the connectionDefinition, possibly implicitly
+                    by naming a connection schemeName that is well-known. 
+                    See descriptions
+                    of the child element types for further information.
+                    </doc:description>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:choice>
+      <xs:sequence>
+        <xs:element name="connectionDefinition" type="ConnectionDefinitionType">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Connection Definition</doc:tooltip>
+              <doc:summary>Connection Definition</doc:summary>
+              <doc:description>In a ConnectionType, the connectionDefinition element provides the definition of the protocol and its parameters. The definition has a "scheme" which identifies the protocol by name, with a detailed description and its required parameters. A connectionDefinition lists all of the parameters needed for the connection and possible default values for each.</doc:description>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="parameter" minOccurs="0" maxOccurs="unbounded">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Parameter</doc:tooltip>
+              <doc:summary>A parameter to be used to make this
+                            connection.</doc:summary>
+              <doc:description>A parameter to be used to make
+                            this connection. This value overrides any
+                            default value that may have been provided in the
+                            connection definition.
+                            </doc:description>
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="name" type="NonEmptyStringType">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <doc:tooltip>Parameter Name</doc:tooltip>
+                    <doc:summary>Name of the parameter to be
+                                  used to make this connection.</doc:summary>
+                    <doc:description>The name of the parameter
+                                  to be used to make this connection.
+                                  </doc:description>
+                    <doc:example>hostname</doc:example>
+                  </xs:appinfo>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="value" type="NonEmptyStringType">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <doc:tooltip>Parameter Value</doc:tooltip>
+                    <doc:summary>The value of the parameter to
+                                  be used to make this connection.
+                                  </doc:summary>
+                    <doc:description>The value of the parameter
+                                  to be used to make this connection. This
+                                  value overrides any default value that may
+                                  have been provided in the connection
+                                  definition.</doc:description>
+                    <doc:example>nceas.ucsb.edu</doc:example>
+                  </xs:appinfo>
+                </xs:annotation>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:group ref="ReferencesGroup"/>
+    </xs:choice>
+    <xs:attribute name="id" type="IDType" use="optional"/>
+    <xs:attribute name="system" type="SystemType" use="optional"/>
+    <xs:attribute name="scope" type="ScopeType" use="optional" default="document"/>
+  </xs:complexType>
+  <xs:simpleType name="NonEmptyStringType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Non Empty String Type</doc:tooltip>
+        <doc:summary>Non Empty String Type</doc:summary>
+        <doc:description>This type specifies a content pattern for all elements 
+          that are required by EML to ensure that there is actual content (i.e., 
+          not just whitespace). The pattern described can be interpreted as
+          "at least one non-whitespace character, followed
+          by any number of whitespace plus not-whitespace characters. "
+          Leading and/or trailing whitespace is allowed, and whitespace 
+          may include carriage returns and newlines.</doc:description>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:pattern value="[\s]*[\S][\s\S]*"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

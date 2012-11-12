@@ -1,0 +1,2558 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" blockDefault="#all"
+	xmlns:sch="http://www.ascc.net/xml/schematron">
+<xsd:annotation>
+	<xsd:documentation>
+		Section 4 : Spatial Reference Information
+	</xsd:documentation>
+</xsd:annotation>
+
+<xsd:element name="spref" type="sprefType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Spatial Reference Information
+		Section: 4
+		Description: the description of the reference frame for, and the means to encode, coordinates in the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Spatial Reference Information</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="sprefType">
+	<xsd:sequence>
+		<xsd:element ref="horizsys" minOccurs="0"/>
+		<xsd:element ref="vertdef" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="horizsys" type="horizsysType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Horizontal Coordinate System Definition
+		Section: 4.1
+		Description: the reference frame or system from which linear or angular quantities are measured and assigned to the position that a point occupies.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Horizontal Coordinate System Definition</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="horizsysType">
+	<xsd:sequence>
+		<xsd:choice>
+			<xsd:element ref="geograph"/>
+			<xsd:element ref="planar" maxOccurs="unbounded"/>
+			<xsd:element ref="local"/>
+		</xsd:choice>
+		<xsd:element ref="geodetic" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="geograph" type="geographType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Geographic
+		Section: 4.1.1
+		Description: the quantities of latitude and longitude which define the position of a point on the Earth's surface with respect to a reference spheroid.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Geographic</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="geographType">
+	<xsd:sequence>
+		<xsd:element ref="latres"/>
+		<xsd:element ref="longres"/>
+		<xsd:element ref="geogunit"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="latres" type="latresType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Latitude Resolution
+		Section: 4.1.1.1
+		Description: the minimum difference between two adjacent latitude values expressed in Geographic Coordinate Units of measure.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Latitude Resolution</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="latresType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: Latitude Resolution &gt; 0.0
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:double">
+		<xsd:minExclusive value="0.0"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="longres" type="longresType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Longitude Resolution
+		Section: 4.1.1.2
+		Description: the minimum difference between two adjacent longitude values expressed in Geographic Coordinate Units of measure.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Longitude Resolution</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="longresType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: Longitude Resolution &gt; 0.0
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:double">
+		<xsd:minExclusive value="0.0"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="geogunit" type="geogunitType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Geographic Coordinate Units
+		Section: 4.1.1.3
+		Description: units of measure used for the latitude and longitude values.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Geographic Coordinate Units</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="geogunitType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "Decimal degrees" "Decimal minutes" "Decimal seconds" "Degrees and decimal minutes" "Degrees, minutes, and decimal seconds" "Radians" "Grads"
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:token">
+		<xsd:enumeration value="Decimal degrees"/>
+		<xsd:enumeration value="Decimal minutes"/>
+		<xsd:enumeration value="Decimal seconds"/>
+		<xsd:enumeration value="Degrees and decimal minutes"/>
+		<xsd:enumeration value="Degrees, minutes, and decimal seconds"/>
+		<xsd:enumeration value="Radians"/>
+		<xsd:enumeration value="Grads"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="planar" type="planarType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Planar
+		Section: 4.1.2
+		Description: the quantities of distances, or distances and angles, which define the position of a point on a reference plane to which the surface of the Earth has been projected.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Planar</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="planarType">
+	<xsd:sequence>
+		<xsd:choice>
+			<xsd:element ref="mapproj"/>
+			<xsd:element ref="gridsys"/>
+			<xsd:element ref="localp"/>
+		</xsd:choice>
+		<xsd:element ref="planci"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="mapproj" type="mapprojType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Map Projection
+		Section: 4.1.2.1
+		Description: the systematic representation of all or part of the surface of the Earth on a plane or developable surface.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Map Projection</sch:title>
+		<sch:schema>
+			<sch:pattern name="Map Projection Restrictions">
+				<sch:rule context="mapprojn[normalize-space(.) = 'Albers Conical Equal Area']">
+					<sch:assert test="parent::mapproj/albers">Must use Albers_Conical_Equal_Area (<sch:emph>albers</sch:emph>) if Map_Projection_Name (<sch:emph>mapprojn</sch:emph>) is "Albers Conical Equal Area".</sch:assert>
+				</sch:rule>
+				<sch:rule context="mapprojn[normalize-space(.) = 'Azimuthal Equidistant']">
+					<sch:assert test="parent::mapproj/azimequi">Must use Azimuthal_Equidistant (<sch:emph>azimequi</sch:emph>) if Map_Projection_Name (<sch:emph>mapprojn</sch:emph>) is "Azimuthal Equidistant".</sch:assert>
+				</sch:rule>
+				<sch:rule context="mapprojn[normalize-space(.) = 'Equidistant Conic']">
+					<sch:assert test="parent::mapproj/equicon">Must use Equidistant_Conic (<sch:emph>equicon</sch:emph>) if Map_Projection_Name (<sch:emph>mapprojn</sch:emph>) is "Equidistant Conic".</sch:assert>
+				</sch:rule>
+				<sch:rule context="mapprojn[normalize-space(.) = 'Equirectangular']">
+					<sch:assert test="parent::mapproj/equirect">Must use Equirectangular (<sch:emph>equirect</sch:emph>) if Map_Projection_Name (<sch:emph>mapprojn</sch:emph>) is "Equirectangular".</sch:assert>
+				</sch:rule>
+				<sch:rule context="mapprojn[normalize-space(.) = 'General Vertical Near-sided Perspective']">
+					<sch:assert test="parent::mapproj/gvnsp">Must use General_Vertical_Near-sided_Perspective (<sch:emph>gvnsp</sch:emph>) if Map_Projection_Name (<sch:emph>mapprojn</sch:emph>) is "General Vertical Near-sided Perspective".</sch:assert>
+				</sch:rule>
+				<sch:rule context="mapprojn[normalize-space(.) = 'Gnomonic']">
+					<sch:assert test="parent::mapproj/gnomonic">Must use Gnomonic (<sch:emph>gnomonic</sch:emph>) if Map_Projection_Name (<sch:emph>mapprojn</sch:emph>) is "Gnomonic".</sch:assert>
+				</sch:rule>
+				<sch:rule context="mapprojn[normalize-space(.) = 'Lambert Azimuthal Equal Area']">
+					<sch:assert test="parent::mapproj/lamberta">Must use Lambert_Azimuthal_Equal_Area (<sch:emph>lamberta</sch:emph>) if Map_Projection_Name (<sch:emph>mapprojn</sch:emph>) is "Lambert Azimuthal Equal Area".</sch:assert>
+				</sch:rule>
+				<sch:rule context="mapprojn[normalize-space(.) = 'Lambert Conformal Conic']">
+					<sch:assert test="parent::mapproj/lambertc">Must use Lambert_Conformal_Conic (<sch:emph>lambertc</sch:emph>) if Map_Projection_Name (<sch:emph>mapprojn</sch:emph>) is "Lambert Conformal Conic".</sch:assert>
+				</sch:rule>
+				<sch:rule context="mapprojn[normalize-space(.) = 'Mercator']">
+					<sch:assert test="parent::mapproj/mercator">Must use Mercator (<sch:emph>mercator</sch:emph>) if Map_Projection_Name (<sch:emph>mapprojn</sch:emph>) is "Mercator".</sch:assert>
+				</sch:rule>
+				<sch:rule context="mapprojn[normalize-space(.) = 'Modified Stereographic for Alaska']">
+					<sch:assert test="parent::mapproj/modsak">Must use Modified_Stereographic_for_Alaska (<sch:emph>modsak</sch:emph>) if Map_Projection_Name (<sch:emph>mapprojn</sch:emph>) is "Modified Stereographic for Alaska".</sch:assert>
+				</sch:rule>
+				<sch:rule context="mapprojn[normalize-space(.) = 'Miller Cylindrical']">
+					<sch:assert test="parent::mapproj/miller">Must use Miller_Cylindrical (<sch:emph>miller</sch:emph>) if Map_Projection_Name (<sch:emph>mapprojn</sch:emph>) is "Miller Cylindrical".</sch:assert>
+				</sch:rule>
+				<sch:rule context="mapprojn[normalize-space(.) = 'Oblique Mercator']">
+					<sch:assert test="parent::mapproj/obqmerc">Must use Oblique_Mercator (<sch:emph>obqmerc</sch:emph>) if Map_Projection_Name (<sch:emph>mapprojn</sch:emph>) is "Oblique Mercator".</sch:assert>
+				</sch:rule>
+				<sch:rule context="mapprojn[normalize-space(.) = 'Orthographic']">
+					<sch:assert test="parent::mapproj/orthogr">Must use Orthographic (<sch:emph>orthogr</sch:emph>) if Map_Projection_Name (<sch:emph>mapprojn</sch:emph>) is "Orthographic".</sch:assert>
+				</sch:rule>
+				<sch:rule context="mapprojn[normalize-space(.) = 'Polar Stereographic']">
+					<sch:assert test="parent::mapproj/polarst">Must use Polar_Stereographic (<sch:emph>polarst</sch:emph>) if Map_Projection_Name (<sch:emph>mapprojn</sch:emph>) is "Polar Stereographic".</sch:assert>
+				</sch:rule>
+				<sch:rule context="mapprojn[normalize-space(.) = 'Polyconic']">
+					<sch:assert test="parent::mapproj/polycon">Must use Polyconic (<sch:emph>polycon</sch:emph>) if Map_Projection_Name (<sch:emph>mapprojn</sch:emph>) is "Polyconic".</sch:assert>
+				</sch:rule>
+				<sch:rule context="mapprojn[normalize-space(.) = 'Robinson']">
+					<sch:assert test="parent::mapproj/robinson">Must use Robinson (<sch:emph>robinson</sch:emph>) if Map_Projection_Name (<sch:emph>mapprojn</sch:emph>) is "Robinson".</sch:assert>
+				</sch:rule>
+				<sch:rule context="mapprojn[normalize-space(.) = 'Sinusoidal']">
+					<sch:assert test="parent::mapproj/sinusoid">Must use Sinusoidal (<sch:emph>sinusoid</sch:emph>) if Map_Projection_Name (<sch:emph>mapprojn</sch:emph>) is "Sinusoidal".</sch:assert>
+				</sch:rule>
+				<sch:rule context="mapprojn[normalize-space(.) = 'Space Oblique Mercator (Landsat)']">
+					<sch:assert test="parent::mapproj/spaceobq">Must use Space_Oblique_Mercator_(Landsat) (<sch:emph>spaceobq</sch:emph>) if Map_Projection_Name (<sch:emph>mapprojn</sch:emph>) is "Space Oblique Mercator (Landsat)".</sch:assert>
+				</sch:rule>
+				<sch:rule context="mapprojn[normalize-space(.) = 'Stereographic']">
+					<sch:assert test="parent::mapproj/stereo">Must use Stereographic (<sch:emph>stereo</sch:emph>) if Map_Projection_Name (<sch:emph>mapprojn</sch:emph>) is "Stereographic".</sch:assert>
+				</sch:rule>
+				<sch:rule context="mapprojn[normalize-space(.) = 'Transverse Mercator']">
+					<sch:assert test="parent::mapproj/transmer">Must use Transverse_Mercator (<sch:emph>transmer</sch:emph>) if Map_Projection_Name (<sch:emph>mapprojn</sch:emph>) is "Transverse Mercator".</sch:assert>
+				</sch:rule>
+				<sch:rule context="mapprojn[normalize-space(.) = 'van der Grinten']">
+					<sch:assert test="parent::mapproj/vdgrin">Must use van_der_Grinten (<sch:emph>vdgrin</sch:emph>) if Map_Projection_Name (<sch:emph>mapprojn</sch:emph>) is "van der Grinten".</sch:assert>
+				</sch:rule>
+				<sch:rule context="mapprojn">
+					<sch:assert test="parent::mapproj/mapprojp">Must use Map_Projection_Parameters (<sch:emph>mapprojp</sch:emph>) if Map_Projection_Name (<sch:emph>mapprojn</sch:emph>) is not one of the 21 enumerated projection names.</sch:assert>
+				</sch:rule>
+			</sch:pattern>
+		</sch:schema>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="mapprojType">
+	<xsd:sequence>
+		<xsd:element ref="mapprojn"/>
+		<xsd:choice>
+			<xsd:element ref="albers"/>
+			<xsd:element ref="azimequi"/>
+			<xsd:element ref="equicon"/>
+			<xsd:element ref="equirect"/>
+			<xsd:element ref="gvnsp"/>
+			<xsd:element ref="gnomonic"/>
+			<xsd:element ref="lamberta"/>
+			<xsd:element ref="lambertc"/>
+			<xsd:element ref="mercator"/>
+			<xsd:element ref="modsak"/>
+			<xsd:element ref="miller"/>
+			<xsd:element ref="obqmerc"/>
+			<xsd:element ref="orthogr"/>
+			<xsd:element ref="polarst"/>
+			<xsd:element ref="polycon"/>
+			<xsd:element ref="robinson"/>
+			<xsd:element ref="sinusoid"/>
+			<xsd:element ref="spaceobq"/>
+			<xsd:element ref="stereo"/>
+			<xsd:element ref="transmer"/>
+			<xsd:element ref="vdgrin"/>
+			<xsd:element ref="mapprojp"/>
+		</xsd:choice>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="mapprojn" type="mapprojnType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Map Projection Name
+		Section: 4.1.2.1.1
+		Description: name of the map projection.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Map Projection Name</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="mapprojnType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "Albers Conical Equal Area" "Azimuthal Equidistant" "Equidistant Conic" "Equirectangular" "General Vertical Near-sided Projection" "Gnomonic" "Lambert Azimuthal Equal Area" "Lambert Conformal Conic" "Mercator" "Modified Stereographic for Alaska" "Miller Cylindrical" "Oblique Mercator" "Orthographic" "Polar Stereographic" "Polyconic" "Robinson" "Sinusoidal" "Space Oblique Mercator" "Stereographic" "Transverse Mercator" "van der Grinten" free text
+		</xsd:documentation>
+		<xsd:documentation>
+			Enumerated values also match "free text"
+
+			<![CDATA[
+			<xsd:restriction base="xsd:token">
+				<xsd:enumeration value="Albers Conical Equal Area"/>
+				<xsd:enumeration value="Azimuthal Equidistant"/>
+				<xsd:enumeration value="Equidistant Conic"/>
+				<xsd:enumeration value="Equirectangular"/>
+				<xsd:enumeration value="General Vertical Near-sided Projection"/>
+				<xsd:enumeration value="Gnomonic"/>
+				<xsd:enumeration value="Lambert Azimuthal Equal Area"/>
+				<xsd:enumeration value="Lambert Conformal Conic"/>
+				<xsd:enumeration value="Mercator"/>
+				<xsd:enumeration value="Modified Stereographic for Alaska"/>
+				<xsd:enumeration value="Miller Cylindrical"/>
+				<xsd:enumeration value="Oblique Mercator"/>
+				<xsd:enumeration value="Orthographic"/>
+				<xsd:enumeration value="Polar Stereographic"/>
+				<xsd:enumeration value="Polyconic"/>
+				<xsd:enumeration value="Robinson"/>
+				<xsd:enumeration value="Sinusoidal"/>
+				<xsd:enumeration value="Space Oblique Mercator"/>
+				<xsd:enumeration value="Stereographic"/>
+				<xsd:enumeration value="Transverse Mercator"/>
+				<xsd:enumeration value="van der Grinten"/>
+			</xsd:restriction>
+			]]>
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="albers" type="albersType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Albers Conical Equal Area
+		Section: 4.1.2.1.2
+		Description: contains parameters for the Albers Conical Equal Area projection.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Albers Conical Equal Area</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="albersType">
+	<xsd:sequence>
+		<xsd:element ref="stdparll" maxOccurs="2"/>
+		<xsd:element ref="longcm"/>
+		<xsd:element ref="latprjo"/>
+		<xsd:element ref="feast"/>
+		<xsd:element ref="fnorth"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="azimequi" type="azimequiType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Azimuthal Equidistant
+		Section: 4.1.2.1.3
+		Description: contains parameters for the Azimuthal Equidistant projection.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Azimuthal Equidistant</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="azimequiType">
+	<xsd:sequence>
+		<xsd:element ref="longcm"/>
+		<xsd:element ref="latprjo"/>
+		<xsd:element ref="feast"/>
+		<xsd:element ref="fnorth"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="equicon" type="equiconType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Equidistant Conic
+		Section: 4.1.2.1.4
+		Description: contains parameters for the Equidistant Conic projection.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Equidistant Conic</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="equiconType">
+	<xsd:sequence>
+		<xsd:element ref="stdparll" maxOccurs="2"/>
+		<xsd:element ref="longcm"/>
+		<xsd:element ref="latprjo"/>
+		<xsd:element ref="feast"/>
+		<xsd:element ref="fnorth"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="equirect" type="equirectType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Equirectangular
+		Section: 4.1.2.1.5
+		Description: contains parameters for the Equirectangular projection.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Equirectangular</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="equirectType">
+	<xsd:sequence>
+		<xsd:element ref="stdparll"/>
+		<xsd:element ref="longcm"/>
+		<xsd:element ref="feast"/>
+		<xsd:element ref="fnorth"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="gvnsp" type="gvnspType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: General Vertical Near-sided Perspective
+		Section: 4.1.2.1.6
+		Description: contains parameters for the General Vertical Near-sided Perspective projection.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>General Vertical Near-sided Perspective</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="gvnspType">
+	<xsd:sequence>
+		<xsd:element ref="heightpt"/>
+		<xsd:element ref="longpc"/>
+		<xsd:element ref="latprjc"/>
+		<xsd:element ref="feast"/>
+		<xsd:element ref="fnorth"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="gnomonic" type="gnomonicType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Gnomonic
+		Section: 4.1.2.1.7
+		Description: contains parameters for the Gnomonic projection.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Gnomonic</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="gnomonicType">
+	<xsd:sequence>
+		<xsd:element ref="longpc"/>
+		<xsd:element ref="latprjc"/>
+		<xsd:element ref="feast"/>
+		<xsd:element ref="fnorth"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="lamberta" type="lambertaType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Lambert Azimuthal Equal Area
+		Section: 4.1.2.1.8
+		Description: contains parameters for the Lambert Azimuthal Equal Area projection.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Lambert Azimuthal Equal Area</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="lambertaType">
+	<xsd:sequence>
+		<xsd:element ref="longpc"/>
+		<xsd:element ref="latprjc"/>
+		<xsd:element ref="feast"/>
+		<xsd:element ref="fnorth"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="lambertc" type="lambertcType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Lambert Conformal Conic
+		Section: 4.1.2.1.9
+		Description: contains parameters for the Lambert Conformal Conic projection.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Lambert Conformal Conic</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="lambertcType">
+	<xsd:sequence>
+		<xsd:element ref="stdparll" maxOccurs="2"/>
+		<xsd:element ref="longcm"/>
+		<xsd:element ref="latprjo"/>
+		<xsd:element ref="feast"/>
+		<xsd:element ref="fnorth"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="mercator" type="mercatorType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Mercator
+		Section: 4.1.2.1.10
+		Description: contains parameters for the Mercator projection
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Mercator</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="mercatorType">
+	<xsd:sequence>
+		<xsd:choice>
+			<xsd:element ref="stdparll"/>
+			<xsd:element ref="sfequat"/>
+		</xsd:choice>
+		<xsd:element ref="longcm"/>
+		<xsd:element ref="feast"/>
+		<xsd:element ref="fnorth"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="modsak" type="modsakType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Modified Stereographic for Alaska
+		Section: 4.1.2.1.11
+		Description: contains parameters for the Modified Stereographic for Alaska projection.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Modified Stereographic for Alaska</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="modsakType">
+	<xsd:sequence>
+		<xsd:element ref="feast"/>
+		<xsd:element ref="fnorth"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="miller" type="millerType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Miller Cylindrical
+		Section: 4.1.2.1.12
+		Description: contains parameters for the Miller Cylindrical projection.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Miller Cylindrical</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="millerType">
+	<xsd:sequence>
+		<xsd:element ref="longcm"/>
+		<xsd:element ref="feast"/>
+		<xsd:element ref="fnorth"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="obqmerc" type="obqmercType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Oblique Mercator
+		Section: 4.1.2.1.13
+		Description: contains parameters for the Oblique Mercator projection.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Oblique Mercator</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="obqmercType">
+	<xsd:sequence>
+		<xsd:element ref="sfctrlin"/>
+		<xsd:choice>
+			<xsd:element ref="obqlazim"/>
+			<xsd:element ref="obqlpt"/>
+		</xsd:choice>
+		<xsd:element ref="latprjo"/>
+		<xsd:element ref="feast"/>
+		<xsd:element ref="fnorth"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="orthogr" type="orthogrType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Orthographic
+		Section: 4.1.2.1.14
+		Description: contains parameters for the Orthographic projection.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Orthographic</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="orthogrType">
+	<xsd:sequence>
+		<xsd:element ref="longpc"/>
+		<xsd:element ref="latprjc"/>
+		<xsd:element ref="feast"/>
+		<xsd:element ref="fnorth"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+
+<xsd:element name="polarst" type="polarstType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Polar Stereographic
+		Section: 4.1.2.1.15
+		Description: contains parameters for the Polar Stereographic projection.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Polar Stereographic</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="polarstType">
+	<xsd:sequence>
+		<xsd:element ref="svlong"/>
+		<xsd:choice>
+			<xsd:element ref="stdparll"/>
+			<xsd:element ref="sfprjorg"/>
+		</xsd:choice>
+		<xsd:element ref="feast"/>
+		<xsd:element ref="fnorth"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="polycon" type="polyconType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Polyconic
+		Section: 4.1.2.1.16
+		Description: contains parameters for the Polyconic projection.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Polyconic</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="polyconType">
+	<xsd:sequence>
+		<xsd:element ref="longcm"/>
+		<xsd:element ref="latprjo"/>
+		<xsd:element ref="feast"/>
+		<xsd:element ref="fnorth"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="robinson" type="robinsonType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Robinson
+		Section: 4.1.2.1.17
+		Description: contains parameters for the Robinson projection.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Robinson</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="robinsonType">
+	<xsd:sequence>
+		<xsd:element ref="longpc"/>
+		<xsd:element ref="feast"/>
+		<xsd:element ref="fnorth"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="sinusoid" type="sinusoidType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Sinusoidal
+		Section: 4.1.2.1.18
+		Description: contains parameters for the Sinusoidal projection.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Sinusoidal</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="sinusoidType">
+	<xsd:sequence>
+		<xsd:element ref="longcm"/>
+		<xsd:element ref="feast"/>
+		<xsd:element ref="fnorth"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="spaceobq" type="spaceobqType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Space Oblique Mercator (Landsat)
+		Section: 4.1.2.1.19
+		Description: contains parameters for the Space Oblique Mercator (Landsat) projection.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Space Oblique Mercator (Landsat)</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="spaceobqType">
+	<xsd:sequence>
+		<xsd:element ref="landsat"/>
+		<xsd:element ref="pathnum"/>
+		<xsd:element ref="feast"/>
+		<xsd:element ref="fnorth"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="stereo" type="stereoType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Stereographic
+		Section: 4.1.2.1.20
+		Description: contains parameters for the Stereographic projection.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Stereographic</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="stereoType">
+	<xsd:sequence>
+		<xsd:element ref="longpc"/>
+		<xsd:element ref="latprjc"/>
+		<xsd:element ref="feast"/>
+		<xsd:element ref="fnorth"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="transmer" type="transmerType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Transverse Mercator
+		Section: 4.1.2.1.21
+		Description: contains parameters for theTransverse mercator projection.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Transverse Mercator</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="transmerType">
+	<xsd:sequence>
+		<xsd:element ref="sfctrmer"/>
+		<xsd:element ref="longcm"/>
+		<xsd:element ref="latprjo"/>
+		<xsd:element ref="feast"/>
+		<xsd:element ref="fnorth"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="vdgrin" type="vdgrinType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: van der Grinten
+		Section: 4.1.2.1.22
+		Description: contains parameters for the van der Grinten projection.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>van der Grinten</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="vdgrinType">
+	<xsd:sequence>
+		<xsd:element ref="longcm"/>
+		<xsd:element ref="feast"/>
+		<xsd:element ref="fnorth"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="mapprojp" type="mapprojpType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Map Projection Parameters
+		Section: 4.1.2.1.23
+		Description: a complete parameter set of the projection that was used for the data set. The information provided shall include the names of the parameters and values used for the data set that describe the mathematical relationship between the Earth and the plane or developable surface for the projection.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Map Projection Parameters</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="mapprojpType">
+<!--
+	<xsd:sequence>
+		<xsd:element ref="azimptl" minOccurs="0"/>
+		<xsd:element ref="azimangl" minOccurs="0"/>
+		<xsd:element ref="feast" minOccurs="0"/>
+		<xsd:element ref="fnorth" minOccurs="0"/>
+		<xsd:element ref="heightpt" minOccurs="0"/>
+		<xsd:element ref="landsat" minOccurs="0"/>
+		<xsd:element ref="latprjc" minOccurs="0"/>
+		<xsd:element ref="latprjo" minOccurs="0"/>
+		<xsd:element ref="longcm" minOccurs="0"/>
+		<xsd:element ref="longpc" minOccurs="0"/>
+		<xsd:element ref="obqllat" minOccurs="0" maxOccurs="unbounded"/>
+		<xsd:element ref="obqllong" minOccurs="0" maxOccurs="unbounded"/>
+		<xsd:element ref="pathnum" minOccurs="0"/>
+		<xsd:element ref="sfctrlin" minOccurs="0"/>
+		<xsd:element ref="sfctrmer" minOccurs="0"/>
+		<xsd:element ref="sfequat" minOccurs="0"/>
+		<xsd:element ref="sfprjorg" minOccurs="0"/>
+		<xsd:element ref="stdparll" minOccurs="0" maxOccurs="unbounded"/>
+		<xsd:element ref="svlong" minOccurs="0"/>
+	</xsd:sequence>
+-->
+	<xsd:choice maxOccurs="6">
+		<xsd:element ref="stdparll"/>
+		<xsd:element ref="longcm"/>
+		<xsd:element ref="latprjo"/>
+		<xsd:element ref="feast"/>
+		<xsd:element ref="fnorth"/>
+		<xsd:element ref="sfequat"/>
+		<xsd:element ref="heightpt"/>
+		<xsd:element ref="longpc"/>
+		<xsd:element ref="latprjc"/>
+		<xsd:element ref="sfctrlin"/>
+		<xsd:element ref="obqlazim"/>
+		<xsd:element ref="obqlpt"/>
+		<xsd:element ref="svlong"/>
+		<xsd:element ref="sfprjorg"/>
+		<xsd:element ref="landsat"/>
+		<xsd:element ref="pathnum"/>
+		<xsd:element ref="sfctrmer"/>
+		<xsd:element ref="otherprj"/>
+	</xsd:choice>
+</xsd:complexType>
+
+<xsd:element name="stdparll" type="stdparllType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Standard Parallel
+		Section: 4.1.2.1.23.1
+		Description: line of constant latitude at which the surface of the Earth and the plane or developable surface intersect.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Standard Parallel</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="stdparllType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: -90.0 &lt;= Standard Parallel &lt;= 90.0
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDClatitude"/>
+</xsd:simpleType>
+
+<xsd:element name="longcm" type="longcmType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Longitude of Central Meridian
+		Section: 4.1.2.1.23.2
+		Description: the line of longitude at the center of a map projection generally used as the basis for constructing the projection.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Longitude of Central Meridian</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="longcmType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: -180.0 &lt;= Longitude of Central Meridian &lt; 180.0
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDClongitude">
+		<xsd:maxExclusive value="180.0"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="latprjo" type="latprjoType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Latitude of Projection Origin
+		Section: 4.1.2.1.23.3
+		Description: latitude chosen as the origin of rectangular coordinates for a map projection.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Latitude of Projection Origin</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="latprjoType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: -90.0 &lt;= Latitude of Projection Origin &lt;= 90.0
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDClatitude"/>
+</xsd:simpleType>
+
+<xsd:element name="feast" type="feastType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: False Easting
+		Section: 4.1.2.1.23.4
+		Description: the value added to all "x" values in the rectangular coordinates for a map projection. This value frequently is assigned to eliminate negative numbers. Expressed in the unit of measure identified in Planar Coordinate Units.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>False Easting</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="feastType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: free real
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:double"/>
+</xsd:simpleType>
+
+<xsd:element name="fnorth" type="fnorthType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: False Northing
+		Section: 4.1.2.1.23.5
+		Description: the value added to all "y" values in the rectangular coordinates for a map projection. This value frequently is assigned to eliminate negative numbers. Expressed in the unit of measure identified in Planar Coordinate Units.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>False Northing</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="fnorthType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: free real
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:double"/>
+</xsd:simpleType>
+
+<xsd:element name="sfequat" type="sfequatType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Scale Factor at Equator
+		Section: 4.1.2.1.23.6
+		Description: a multiplier for reducing a distance obtained from a map by computation or scaling to the actual distance along the equator.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Scale Factor at Equator</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="sfequatType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: Scale Factor at Equator &gt; 0.0
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:double">
+		<xsd:minExclusive value="0.0"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="heightpt" type="heightptType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Height of Perspective Point Above Surface
+		Section: 4.1.2.1.23.7
+		Description: height of viewpoint above the Earth, expressed in meters.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Height of Perspective Point Above Surface</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="heightptType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: Height of Perspective Point Above Surface &gt; 0.0
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:double">
+		<xsd:minExclusive value="0.0"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="longpc" type="longpcType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Longitude of Projection Center
+		Section: 4.1.2.1.23.8
+		Description: longitude of the point of projection for azimuthal projections.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Longitude of Projection Center</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="longpcType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: -180.0 &lt;= Longitude of Projection Center &lt; 180.0
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDClongitude">
+		<xsd:maxExclusive value="180.0"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="latprjc" type="latprjcType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Latitude of Projection Center
+		Section: 4.1.2.1.23.9
+		Description: latitude of the point of projection for azimuthal projections.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Latitude of Projection Center</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="latprjcType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: -90.0 &lt;= Latitude of Projection Center &lt;= 90.0
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDClatitude"/>
+</xsd:simpleType>
+
+<xsd:element name="sfctrlin" type="sfctrlinType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Scale Factor at Center Line
+		Section: 4.1.2.1.23.10
+		Description: a multiplier for reducing a distance obtained from a map by computation or scaling to the actual distance along the center line.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Scale Factor at Center Line</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="sfctrlinType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: Scale Factor at Center Line &gt; 0.0
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:double">
+		<xsd:minExclusive value="0.0"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="obqlazim" type="obqlazimType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Oblique Line Azimuth
+		Section: 4.1.2.1.23.11
+		Description: method used to describe the line along which an oblique mercator map projection is centered using the map projection origin and an azimuth.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Oblique Line Azimuth</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="obqlazimType">
+	<xsd:sequence>
+		<xsd:element ref="azimangl"/>
+		<xsd:element ref="azimptl"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="azimangl" type="azimanglType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Azimuthal Angle
+		Section: 4.1.2.1.23.11.1
+		Description: angle measured clockwise from north, and expressed in degrees.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Azimuthal Angle</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="azimanglType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: 0.0 &lt;= Azimuthal Angle &lt; 360.0
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:double">
+		<xsd:minInclusive value="0.0"/>
+		<xsd:maxExclusive value="360.0"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="azimptl" type="azimptlType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Azimuth Measure Point Longitude
+		Section: 4.1.2.1.23.11.2
+		Description: longitude of the map projection origin.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Azimuth Measure Point Longitude</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="azimptlType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: -180.0 &lt;= Azimuth Measure Point Longitude &lt; 180.0
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDClongitude">
+		<xsd:maxExclusive value="180.0"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="obqlpt" type="obqlptType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Oblique Line Point
+		Section: 4.1.2.1.23.12
+		Description: method used to describe the line along which an oblique mercator map projection is centered using two points near the limits of the mapped region that define the center line.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Oblique Line Point</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="obqlptType">
+	<xsd:sequence minOccurs="2" maxOccurs="2">
+		<xsd:element ref="obqllat"/>
+		<xsd:element ref="obqllong"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="obqllat" type="obqllatType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Oblique Line Latitude
+		Section: 4.1.2.1.23.12.1
+		Description: latitude of a point defining the oblique line.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Oblique Line Latitude</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="obqllatType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: -90.0 &lt;= Oblique Line Latitude &lt;= 90.0
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDClatitude"/>
+</xsd:simpleType>
+
+<xsd:element name="obqllong" type="obqllongType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Oblique Line Longitude
+		Section: 4.1.2.1.23.12.2
+		Description: longitude of a point defining the oblique line.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Oblique Line Longitude</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="obqllongType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: -180.0 &lt;= Oblique Line Longitude &lt; 180.0
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDClongitude">
+		<xsd:maxExclusive value="180.0"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="svlong" type="svlongType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Straight Vertical Longitude from Pole
+		Section: 4.1.2.1.23.13
+		Description: longitude to be oriented straight up from the North or South Pole.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Straight Vertical Longitude from Pole</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="svlongType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: -180.0 &lt;= Straight Vertical Longitude from Pole &lt; 180.0
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDClongitude">
+		<xsd:maxExclusive value="180.0"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="sfprjorg" type="sfprjorgType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Scale Factor at Projection Origin
+		Section: 4.1.2.1.23.14
+		Description: a multiplier for reducing a distance obtained from a map by computation or scaling to the actual distance at the projection origin.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Scale Factor at Projection Origin</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="sfprjorgType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: Scale Factor at Projection Origin &gt; 0.0
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:double">
+		<xsd:minExclusive value="0.0"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="landsat" type="landsatType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Landsat Number
+		Section: 4.1.2.1.23.15
+		Description: number of the Landsat satellite. (Note: This data element exists solely to provide a parameter needed to define the space oblique mercator projection. It is not used to identify data originating from a remote sensing vehicle.)
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Landsat Number</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="landsatType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: Integer
+			Domain: free integer
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:positiveInteger"/>
+</xsd:simpleType>
+
+<xsd:element name="pathnum" type="pathnumType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Path Number
+		Section: 4.1.2.1.23.16
+		Description: number of the orbit of the Landsat satellite. (Note: This data element exists solely to provide a parameter needed to define the space oblique mercator projection. It is not used to identify data originating from a remote sensing vehicle.)
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Path Number</sch:title>
+		<sch:schema>
+			<sch:pattern name="Landsat Number/Path Number Restrictions">
+				<sch:rule context="pathnum[(parent::*/landsat &gt;= 1) and (parent::*/landsat &lt;= 3)]">
+					<sch:assert test=". &lt; 251">Path_Number (<sch:emph>pathnum</sch:emph>) must be less than 251 for Landsats (<sch:emph>landsat</sch:emph>) 1, 2, or 3.</sch:assert>
+				</sch:rule>
+				<sch:rule context="pathnum[(parent::*/landsat = 4) or (parent::*/landsat = 5)]">
+					<sch:assert test=". &lt; 233">Path_Number (<sch:emph>pathnum</sch:emph>) must be less than 233 for Landsats (<sch:emph>landsat</sch:emph>) 4 or 5.</sch:assert>
+				</sch:rule>
+			</sch:pattern>
+		</sch:schema>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="pathnumType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: integer
+			Domain: 0 &lt; Path Number &lt; 251 for Landsats 1, 2, or 3; 0 &lt; Path Number &lt; 233 for Landsats 4 or 5; free integer
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:positiveInteger"/>
+</xsd:simpleType>
+
+<xsd:element name="sfctrmer" type="sfctrmerType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Scale Factor at Central Meridian
+		Section: 4.1.2.1.23.17
+		Description: a multiplier for reducing a distance obtained from a map by computation or scaling to the actual distance along the central meridian.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Scale Factor at Central Meridian</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="sfctrmerType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: Scale Factor at Central Meridian &gt; 0.0
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:double">
+		<xsd:minExclusive value="0.0"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="otherprj" type="otherprjType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Other Projection's Definition
+		Section: 4.1.2.1.23.18
+		Description: a description of a projection, not defined elsewhere in the standard, that was used for the data set. The information provided shall include the name of the projection, names of parameters and values used for the data set, and the citation of the specification for the algorithms that describe the mathematical relationship between Earth and plane or developable surface for the projection.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Other Projection's Definition</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="otherprjType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="gridsys" type="gridsysType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Grid Coordinate System
+		Section: 4.1.2.2
+		Description: a plane-rectangular coordinate system usually based on, and mathematically adjusted to, a map projection so that geographic positions can be readily transformed to and from plane coordinates.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Grid Coordinate System</sch:title>
+		<sch:schema>
+			<sch:pattern name="Grid Coordinate System Restrictions">
+				<sch:rule context="gridsysn[normalize-space(.) = 'Universal Transverse Mercator']">
+					<sch:assert test="parent::gridsys/utm">Must use Universal_Transverse_Mercator_(UTM) (<sch:emph>utm</sch:emph>) if Grid_Coordinate_System_Name (<sch:emph>gridsysn</sch:emph>) is "Universal Transverse Mercator".</sch:assert>
+				</sch:rule>
+				<sch:rule context="gridsysn[normalize-space(.) = 'Universal Polar Stereographic']">
+					<sch:assert test="parent::gridsys/ups">Must use Universal_Polar_Stereographic_(UPS) (<sch:emph>ups</sch:emph>) if Grid_Coordinate_System_Name (<sch:emph>gridsysn</sch:emph>) is "Universal Polar Stereographic".</sch:assert>
+				</sch:rule>
+				<sch:rule context="gridsysn[normalize-space(.) = 'State Plane Coordinate System 1927']">
+					<sch:assert test="parent::gridsys/spcs">Must use State_Plane_Coordinate_System_(SPCS) (<sch:emph>spcs</sch:emph>) if Grid_Coordinate_System_Name (<sch:emph>gridsysn</sch:emph>) is "State Plane Coordinate System 1927".</sch:assert>
+				</sch:rule>
+				<sch:rule context="gridsysn[normalize-space(.) = 'State Plane Coordinate System 1983']">
+					<sch:assert test="parent::gridsys/spcs">Must use State_Plane_Coordinate_System_(SPCS) (<sch:emph>spcs</sch:emph>) if Grid_Coordinate_System_Name (<sch:emph>gridsysn</sch:emph>) is "State Plane Coordinate System 1983".</sch:assert>
+				</sch:rule>
+				<sch:rule context="gridsysn[normalize-space(.) = 'ARC Coordinate System']">
+					<sch:assert test="parent::gridsys/arcsys">Must use ARC_Coordinate_System (<sch:emph>arcsys</sch:emph>) if Grid_Coordinate_System_Name (<sch:emph>gridsysn</sch:emph>) is "ARC Coordinate System".</sch:assert>
+				</sch:rule>
+				<sch:rule context="gridsysn[normalize-space(.) = 'other grid system']">
+					<sch:assert test="parent::gridsys/othergrd">Must use Other_Grid_System's_Definition (<sch:emph>othergrd</sch:emph>) if Grid_Coordinate_System_Name (<sch:emph>gridsysn</sch:emph>) is "other grid system".</sch:assert>
+				</sch:rule>
+			</sch:pattern>
+		</sch:schema>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="gridsysType">
+	<xsd:sequence>
+		<xsd:element ref="gridsysn"/>
+		<xsd:choice>
+			<xsd:element ref="utm"/>
+			<xsd:element ref="ups"/>
+			<xsd:element ref="spcs"/>
+			<xsd:element ref="arcsys"/>
+			<xsd:element ref="othergrd"/>
+		</xsd:choice>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="gridsysn" type="gridsysnType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Grid Coordinate System Name
+		Section: 4.1.2.2.1
+		Description: name of the grid coordinate system.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Grid Coordinate System Name</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="gridsysnType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "Universal Transverse Mercator" "Universal Polar Stereographic" "State Plane Coordinate System 1927" "State Plane Coordinate System 1983" "ARC Coordinate System" "other grid system"
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:token">
+		<xsd:enumeration value="Universal Transverse Mercator"/>
+		<xsd:enumeration value="Universal Polar Stereographic"/>
+		<xsd:enumeration value="State Plane Coordinate System 1927"/>
+		<xsd:enumeration value="State Plane Coordinate System 1983"/>
+		<xsd:enumeration value="ARC Coordinate System"/>
+		<xsd:enumeration value="other grid system"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="utm" type="utmType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Universal Transverse Mercator (UTM)
+		Section: 4.1.2.2.2
+		Description: a grid system based on the transverse mercator projection, applied between latitudes 84 degrees north and 80 degrees south on the Earth's surface.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Universal Transverse Mercator (UTM)</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="utmType">
+	<xsd:sequence>
+		<xsd:element ref="utmzone"/>
+		<xsd:element ref="transmer"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="utmzone" type="utmzoneType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: UTM Zone Number
+		Section: 4.1.2.2.2.1
+		Description: identifier for the UTM zone.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>UTM Zone Number</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="utmzoneType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: integer
+			Domain: 1 &lt;= UTM Zone Number &lt;= 60 for the northern hemisphere; -60 &lt;= UTM Zone Number &lt;= -1 for the southern hemisphere
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:union>
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:integer">
+				<xsd:minInclusive value="-60"/>
+				<xsd:maxInclusive value="-1"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+		<xsd:simpleType>
+			<xsd:restriction base="xsd:integer">
+				<xsd:minInclusive value="1"/>
+				<xsd:maxInclusive value="60"/>
+			</xsd:restriction>
+		</xsd:simpleType>
+	</xsd:union>
+</xsd:simpleType>
+
+<xsd:element name="ups" type="upsType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Universal Polar Stereographic (UPS)
+		Section: 4.1.2.2.3
+		Description: a grid system based on the polar stereographic projection, applied to the Earth's polar regions north of 84 degrees north and south of 80 degrees south.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Universal Polar Stereographic (UPS)</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="upsType">
+	<xsd:sequence>
+		<xsd:element ref="upszone"/>
+		<xsd:element ref="polarst"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="upszone" type="upszoneType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: UPS Zone Identifier
+		Section: 4.1.2.2.3.1
+		Description: identifier for the UPS zone.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>UPS Zone Identifier</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="upszoneType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "A" "B" "Y" "Z"
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:token">
+		<xsd:enumeration value="A"/>
+		<xsd:enumeration value="B"/>
+		<xsd:enumeration value="Y"/>
+		<xsd:enumeration value="Z"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="spcs" type="spcsType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: State Plane Coordinate System (SPCS)
+		Section: 4.1.2.2.4
+		Description: a plane-rectangular coordinate system established for each state in the United States by the National Geodetic Survey.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>State Plane Coordinate System (SPCS)</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="spcsType">
+	<xsd:sequence>
+		<xsd:element ref="spcszone"/>
+		<xsd:choice>
+			<xsd:element ref="lambertc"/>
+			<xsd:element ref="transmer"/>
+			<xsd:element ref="obqmerc"/>
+			<xsd:element ref="polycon"/>
+		</xsd:choice>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="spcszone" type="spcszoneType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: SPCS Zone Identifier
+		Section: 4.1.2.2.4.1
+		Description: identifier for the SPCS zone.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>SPCS Zone Identifier</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="spcszoneType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: Four-digit numeric codes for the State Plane Coordinate Systems based on the North American Datum of 1927 are found in Department of Commerce, 1986, Representation of geographic point locations for information interchange (Federal Information Processing Standard 70-1): Washington: Department of Commerce, National Institute of Standards and Technology. Codes for the State Plane Coordinate Systems based on the North American Datum of 1983 are found in Department of Commerce, 1989 (January), State Plane Coordinate System of 1983 (National Oceanic and Atmospheric Administration Manual NOS NGS 5): Silver Spring, Maryland, National Oceanic and Atmospheric Administration, National Ocean Service, Coast and Geodetic Survey.
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring">
+		<xsd:pattern value="\d{4}"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="arcsys" type="arcsysType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: ARC Coordinate System
+		Section: 4.1.2.2.5
+		Description: the Equal Arc-second Coordinate System, a plane- rectangular coordinate system established in Department of Defense, 1990, Military specification ARC Digitized Raster Graphics (ADRG) (MIL-A-89007): Philadelphia, Department of Defense, Defense Printing Service Detachment Office.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>ARC Coordinate System</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="arcsysType">
+	<xsd:sequence>
+		<xsd:element ref="arczone"/>
+		<xsd:choice>
+			<xsd:element ref="equirect"/>
+			<xsd:element ref="azimequi"/>
+		</xsd:choice>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="arczone" type="arczoneType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: ARC System Zone Identifier
+		Section: 4.1.2.2.5.1
+		Description: identifier for the ARC Coordinate System Zone.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>ARC System Zone Identifier</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="arczoneType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: integer
+			Domain: 1 &lt;= ARC System Zone Identifier &lt;= 18
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:integer">
+		<xsd:minInclusive value="1"/>
+		<xsd:maxInclusive value="18"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="othergrd" type="othergrdType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Other Grid System's Definition
+		Section: 4.1.2.2.6
+		Description: a complete description of a grid system, not defined elsewhere in this standard, that was used for the data set. The information provided shall include the name of the grid system, the names of the parameters and values used for the data set, and the citation of the specification for the algorithms that describe the mathematical relationship between the Earth and the coordinates of the grid system.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Other Grid System's Definition</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="othergrdType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="localp" type="localpType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Local Planar
+		Section: 4.1.2.3
+		Description: any right-handed planar coordinate system of which the z-axis coincides with a plumb line through the origin that locally is aligned with the surface of the Earth.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Local Planar</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="localpType">
+	<xsd:sequence>
+		<xsd:element ref="localpd"/>
+		<xsd:element ref="localpgi"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="localpd" type="localpdType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Local Planar Description
+		Section: 4.1.2.3.1
+		Description: a description of the local planar system.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Local Planar Description</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="localpdType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="localpgi" type="localpgiType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Local Planar Georeference Information
+		Section: 4.1.2.3.2
+		Description: a description of the information provided to register the local planar system to the Earth (e.g. control points, satellite ephemeral data, inertial navigation data).
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Local Planar Georeference Information</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="localpgiType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="planci" type="planciType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Planar Coordinate Information
+		Section: 4.1.2.4
+		Description: information about the coordinate system developed on the planar surface.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Planar Coordinate Information</sch:title>
+		<sch:schema>
+			<sch:pattern name="Planar Coordinate Information Restrictions">
+				<sch:rule context="plance[normalize-space(.) = 'coordinate pair']">
+					<sch:assert test="parent::planci/coordrep">Must use Coordinate_Representation (<sch:emph>coordrep</sch:emph>) if Planar_Coordinate_Encoding_Method (<sch:emph>plance</sch:emph>) is "coordinate pair".</sch:assert>
+				</sch:rule>
+				<sch:rule context="plance[normalize-space(.) = 'distance and bearing']">
+					<sch:assert test="parent::planci/distbrep">Must use Distance_and_Bearing_Representation (<sch:emph>distbrep</sch:emph>) if Planar_Coordinate_Encoding_Method (<sch:emph>plance</sch:emph>) is "distance and bearing".</sch:assert>
+				</sch:rule>
+				<sch:rule context="plance[normalize-space(.) = 'row and column']">
+					<sch:assert test="parent::planci/coordrep">Must use Coordinate_Representation (<sch:emph>coordrep</sch:emph>) if Planar_Coordinate_Encoding_Method (<sch:emph>plance</sch:emph>) is "row and column".</sch:assert>
+				</sch:rule>
+			</sch:pattern>
+		</sch:schema>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="planciType">
+	<xsd:sequence>
+		<xsd:element ref="plance"/>
+		<xsd:choice>
+			<xsd:element ref="coordrep"/>
+			<xsd:element ref="distbrep"/>
+		</xsd:choice>
+		<xsd:element ref="plandu"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="plance" type="planceType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Planar Coordinate Encoding Method
+		Section: 4.1.2.4.1
+		Description: the means used to represent horizontal positions.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Planar Coordinate Encoding Method</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="planceType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "coordinate pair" "distance and bearing" "row and column"
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:token">
+		<xsd:enumeration value="coordinate pair"/>
+		<xsd:enumeration value="distance and bearing"/>
+		<xsd:enumeration value="row and column"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="coordrep" type="coordrepType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Coordinate Representation
+		Section: 4.1.2.4.2
+		Description: the method of encoding the position of a point by measuring its distance from perpendicular reference axes (the "coordinate pair" and "row and column" methods).
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Coordinate Representation</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="coordrepType">
+	<xsd:sequence>
+		<xsd:element ref="absres"/>
+		<xsd:element ref="ordres"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="absres" type="absresType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Abscissa Resolution
+		Section: 4.1.2.4.2.1
+		Description: the (nominal) minimum distance between the "x" or column values of two adjacent points, expressed in Planar Distance Units of measure.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Abscissa Resolution</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="absresType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: Abscissa Resolution &gt; 0.0
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:double">
+		<xsd:minExclusive value="0.0"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="ordres" type="ordresType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Ordinate Resolution
+		Section: 4.1.2.4.2.2
+		Description: the (nominal) minimum distance between the "y" or row values of two adjacent points, expressed in Planar Distance Units of measure.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Ordinate Resolution</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="ordresType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: Ordinate Resolution &gt; 0.0
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:double">
+		<xsd:minExclusive value="0.0"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="distbrep" type="distbrepType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Distance and Bearing Representation
+		Section: 4.1.2.4.3
+		Description: a method of encoding the position of a point by measuring its distance and direction (azimuth angle) from another point.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Distance and Bearing Representation</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="distbrepType">
+	<xsd:sequence>
+		<xsd:element ref="distres"/>
+		<xsd:element ref="bearres"/>
+		<xsd:element ref="bearunit"/>
+		<xsd:element ref="bearrefd"/>
+		<xsd:element ref="bearrefm"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="distres" type="distresType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Distance Resolution
+		Section: 4.1.2.4.3.1
+		Description: the minimum distance measurable between two points, expressed Planar Distance Units of measure.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Distance Resolution</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="distresType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: Distance Resolution &gt; 0.0
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:double">
+		<xsd:minExclusive value="0.0"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="bearres" type="bearresType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Bearing Resolution
+		Section: 4.1.2.4.3.2
+		Description: the minimum angle measurable between two points, expressed in Bearing Units of measure.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Bearing Resolution</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="bearresType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: Bearing Resolution &gt; 0.0
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:double">
+		<xsd:minExclusive value="0.0"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="bearunit" type="bearunitType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Bearing Units
+		Section: 4.1.2.4.3.3
+		Description: units of measure used for angles.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Bearing Units</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="bearunitType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "Decimal degrees" "Decimal minutes" "Decimal seconds" "Degrees and decimal minutes" "Degrees, minutes, and decimal seconds" "Radians" "Grads"
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:token">
+		<xsd:enumeration value="Decimal degrees"/>
+		<xsd:enumeration value="Decimal minutes"/>
+		<xsd:enumeration value="Decimal seconds"/>
+		<xsd:enumeration value="Degrees and decimal minutes"/>
+		<xsd:enumeration value="Degrees, minutes, and decimal seconds"/>
+		<xsd:enumeration value="Radians"/>
+		<xsd:enumeration value="Grads"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="bearrefd" type="bearrefdType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Bearing Reference Direction
+		Section: 4.1.2.4.3.4
+		Description: direction from which the bearing is measured.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Bearing Reference Direction</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="bearrefdType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "North" "South"
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:token">
+		<xsd:enumeration value="North"/>
+		<xsd:enumeration value="South"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="bearrefm" type="bearrefmType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Bearing Reference Meridian
+		Section: 4.1.2.4.3.5
+		Description: axis from which the bearing is measured.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Bearing Reference Meridian</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="bearrefmType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "Assumed" "Grid" "Magnetic" "Astronomic" "Geodetic"
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:token">
+		<xsd:enumeration value="Assumed"/>
+		<xsd:enumeration value="Grid"/>
+		<xsd:enumeration value="Magnetic"/>
+		<xsd:enumeration value="Astronomic"/>
+		<xsd:enumeration value="Geodetic"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="plandu" type="planduType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Planar Distance Units
+		Section: 4.1.2.4.4
+		Description: units of measure used for distances.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Planar Distance Units</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="planduType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "meters" "international feet" "survey feet" free text
+		</xsd:documentation>
+		<xsd:documentation>
+			Enumerated values also match "free text"
+
+			<![CDATA[
+				<xsd:restriction base="xsd:token">
+					<xsd:enumeration value="meters"/>
+					<xsd:enumeration value="international feet"/>
+					<xsd:enumeration value="survey feet"/>
+				</xsd:restriction>
+			]]>
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="local" type="localType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Local
+		Section: 4.1.3
+		Description: a description of any coordinate system that is not aligned with the surface of the Earth.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Local</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="localType">
+	<xsd:sequence>
+		<xsd:element ref="localdes"/>
+		<xsd:element ref="localgeo"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="localdes" type="localdesType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Local Description
+		Section: 4.1.3.1
+		Description: a description of the coordinate system and its orientation to the surface of the Earth.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Local Description</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="localdesType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="localgeo" type="localgeoType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Local Georeference Information
+		Section: 4.1.3.2
+		Description: a description of the information provided to register the local system to the Earth (e.g. control points, satellite ephemeral data, inertial navigation data).
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Local Georeference Information</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="localgeoType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="geodetic" type="geodeticType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Geodetic Model
+		Section: 4.1.4
+		Description: parameters for the shape of the earth.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Geodetic Model</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="geodeticType">
+	<xsd:sequence>
+		<xsd:element ref="horizdn" minOccurs="0"/>
+		<xsd:element ref="ellips"/>
+		<xsd:element ref="semiaxis"/>
+		<xsd:element ref="denflat"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="horizdn" type="horizdnType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Horizontal Datum Name
+		Section: 4.1.4.1
+		Description: the identification given to the reference system used for defining the coordinates of points.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Horizontal Datum Name</sch:title>
+	</xsd:appinfo>
+	<xsd:appinfo>
+		<sch:schema>
+			<sch:pattern name="Horizontal Datum Name/Ellipsoid Name Restrictions">
+				<sch:rule context="horizdn[normalize-space(.) = 'North American Datum of 1927']">
+					<sch:assert test="normalize-space(parent::geodetic/ellips) = 'Clarke 1866'">Ellipsoid_Name (<sch:emph>ellips</sch:emph>) must be "Clarke 1866" if Horizontal_Datum_Name (<sch:emph>horizdn</sch:emph>) is "North American Datum of 1927".</sch:assert>
+				</sch:rule>
+				<sch:rule context="horizdn[normalize-space(.) = 'North American Datum of 1983']">
+					<sch:assert test="normalize-space(parent::geodetic/ellips) = 'Geodetic Reference System 80'">Ellipsoid_Name (<sch:emph>ellips</sch:emph>) must be "Geodetic Reference System 80" if Horizontal_Datum_Name (<sch:emph>horizdn</sch:emph>) is "North American Datum of 1983".</sch:assert>
+				</sch:rule>
+			</sch:pattern>
+		</sch:schema>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="horizdnType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "North American Datum of 1927" "North American Datum of 1983" free text
+		</xsd:documentation>
+		<xsd:documentation>
+			Enumerated values also match "free text"
+
+			<![CDATA[
+				<xsd:restriction base="xsd:token">
+					<xsd:enumeration value="North American Datum of 1927"/>
+					<xsd:enumeration value="North American Datum of 1983"/>
+				</xsd:restriction>
+			]]>
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="ellips" type="ellipsType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Ellipsoid Name
+		Section: 4.1.4.2
+		Description: identification given to established representations of the Earth's shape.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Ellipsoid Name</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="ellipsType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "Clarke 1866" "Geodetic Reference System 80" free text
+		</xsd:documentation>
+		<xsd:documentation>
+			Enumerated values also match "free text"
+
+			<![CDATA[
+				<xsd:restriction base="xsd:token">
+					<xsd:enumeration value="Clarke 1866"/>
+					<xsd:enumeration value="Geodetic Reference System 80"/>
+				</xsd:restriction>
+			]]>
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="semiaxis" type="semiaxisType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Semi-major Axis
+		Section: 4.1.4.3
+		Description: radius of the equatorial axis of the ellipsoid.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Semi-major Axis</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="semiaxisType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: Semi-major Axis &gt; 0.0
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:double">
+		<xsd:minExclusive value="0.0"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="denflat" type="denflatType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Denominator of Flattening Ratio
+		Section: 4.1.4.4
+		Description: the denominator of the ratio of the difference between the equatorial and polar radii of the ellipsoid when the numerator is set to 1.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Denominator of Flattening Ratio</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="denflatType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: Denominator of Flattening &gt; 0.0
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:double">
+		<xsd:minExclusive value="0.0"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="vertdef" type="vertdefType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Vertical Coordinate System Definition
+		Section: 4.2
+		Description: the reference frame or system from which vertical distances (altitudes or depths) are measured.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Vertical Coordinate System Definition</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="vertdefType">
+	<xsd:sequence>
+		<xsd:element ref="altsys" minOccurs="0"/>
+		<xsd:element ref="depthsys" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="altsys" type="altsysType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Altitude System Definition
+		Section: 4.2.1
+		Description: the reference frame or system from which altitudes (elevations) are measured. The term "altitude"' is used instead of the common term "elevation" to conform to the terminology in Federal Information Processing Standards 70-1 and 173.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Altitude System Definition</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="altsysType">
+	<xsd:sequence>
+		<xsd:element ref="altdatum"/>
+		<xsd:element ref="altres" maxOccurs="unbounded"/>
+		<xsd:element ref="altunits"/>
+		<xsd:element ref="altenc"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="altdatum" type="altdatumType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Altitude Datum Name
+		Section: 4.2.1.1
+		Description: the identification given to the surface taken as the surface of reference from which altitudes are measured.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Altitude Datum Name</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="altdatumType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "National Geodetic Vertical Datum of 1929" "North American Vertical Datum of 1988" free text
+		</xsd:documentation>
+		<xsd:documentation>
+			Enumerated values also match "free text"
+
+			<![CDATA[
+				<xsd:restriction base="xsd:token">
+					<xsd:enumeration value="National Geodetic Vertical Datum of 1929"/>
+					<xsd:enumeration value="North American Vertical Datum of 1988"/>
+				</xsd:restriction>
+			]]>
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="altres" type="altresType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Altitude Resolution
+		Section: 4.2.1.2
+		Description: the minimum distance possible between two adjacent altitude values, expressed in Altitude Distance Units of measure.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Altitude Resolution</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="altresType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: Altitude Resolution &gt; 0.0
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:double">
+		<xsd:minExclusive value="0.0"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="altunits" type="altunitsType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Altitude Distance Units
+		Section: 4.2.1.3
+		Description: units in which altitudes are recorded.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Altitude Distance Units</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="altunitsType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "meters" "feet" free text
+		</xsd:documentation>
+		<xsd:documentation>
+			Enumerated values also match "free text"
+
+			<![CDATA[
+				<xsd:restriction base="xsd:token">
+					<xsd:enumeration value="meters"/>
+					<xsd:enumeration value="feet"/>
+				</xsd:restriction>
+			]]>
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="altenc" type="altencType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Altitude Encoding Method
+		Section: 4.2.1.4
+		Description: the means used to encode the altitudes.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Altitude Encoding Method</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="altencType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "Explicit elevation coordinate included with horizontal coordinates" "Implicit coordinate" "Attribute values"
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:token">
+		<xsd:enumeration value="Explicit elevation coordinate included with horizontal coordinates"/>
+		<xsd:enumeration value="Implicit coordinate"/>
+		<xsd:enumeration value="Attribute values"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="depthsys" type="depthsysType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Depth System Definition
+		Section: 4.2.2
+		Description: the reference frame or system from which depths are measured.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Depth System Definition</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="depthsysType">
+	<xsd:sequence>
+		<xsd:element ref="depthdn"/>
+		<xsd:element ref="depthres" maxOccurs="unbounded"/>
+		<xsd:element ref="depthdu"/>
+		<xsd:element ref="depthem"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="depthdn" type="depthdnType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Depth Datum Name
+		Section: 4.2.2.1
+		Description: the identification given to surface of reference from which depths are measured.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Depth Datum Name</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="depthdnType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "Local surface" "Chart datum; datum for sounding reduction" "Lowest astronomical tide" "Highest astronomical tide" "Mean low water" "Mean high water" "Mean sea level" "Land survey datum" "Mean low water springs" "Mean high water springs" "Mean low water neap" "Mean high water neap" "Mean lower low water" "Mean lower low water springs" "Mean higher high water" "Mean higher low water" "Mean lower high water" "Spring tide" "Tropic lower low water" "Neap tide" "High water" "Higher high water" "Low water" "Low-water datum" "Lowest low water" "Lower low water" "Lowest normal low water" "Mean tide level" "Indian spring low water" "High-water full and charge" "Low-water full and charge" "Columbia River datum" "Gulf Coast low water datum" "Equatorial springs low water" "Approximate lowest astronomical tide" "No correction" free text
+		</xsd:documentation>
+		<xsd:documentation>
+			Enumerated values also match "free text"
+
+			<![CDATA[
+				<xsd:restriction base="xsd:token">
+					<xsd:enumeration value="Local surface"/>
+					<xsd:enumeration value="Chart datum; datum for sounding reduction"/>
+					<xsd:enumeration value="Lowest astronomical tide"/>
+					<xsd:enumeration value="Highest astronomical tide"/>
+					<xsd:enumeration value="Mean low water"/>
+					<xsd:enumeration value="Mean high water"/>
+					<xsd:enumeration value="Mean sea level"/>
+					<xsd:enumeration value="Land survey datum"/>
+					<xsd:enumeration value="Mean low water springs"/>
+					<xsd:enumeration value="Mean high water springs"/>
+					<xsd:enumeration value="Mean low water neap"/>
+					<xsd:enumeration value="Mean high water neap"/>
+					<xsd:enumeration value="Mean lower low water"/>
+					<xsd:enumeration value="Mean lower low water springs"/>
+					<xsd:enumeration value="Mean higher high water"/>
+					<xsd:enumeration value="Mean higher low water"/>
+					<xsd:enumeration value="Mean lower high water"/>
+					<xsd:enumeration value="Spring tide"/>
+					<xsd:enumeration value="Tropic lower low water"/>
+					<xsd:enumeration value="Neap tide"/>
+					<xsd:enumeration value="High water"/>
+					<xsd:enumeration value="Higher high water"/>
+					<xsd:enumeration value="Low water"/>
+					<xsd:enumeration value="Low-water datum"/>
+					<xsd:enumeration value="Lowest low water"/>
+					<xsd:enumeration value="Lower low water"/>
+					<xsd:enumeration value="Lowest normal low water"/>
+					<xsd:enumeration value="Mean tide level"/>
+					<xsd:enumeration value="Indian spring low water"/>
+					<xsd:enumeration value="High-water full and charge"/>
+					<xsd:enumeration value="Low-water full and charge"/>
+					<xsd:enumeration value="Columbia River datum"/>
+					<xsd:enumeration value="Gulf Coast low water datum"/>
+					<xsd:enumeration value="Equatorial springs low water"/>
+					<xsd:enumeration value="Approximate lowest astronomical tide"/>
+					<xsd:enumeration value="No correction"/>
+				</xsd:restriction>
+			]]>
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="depthres" type="depthresType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Depth Resolution
+		Section: 4.2.2.2
+		Description: the minimum distance possible between two adjacent depth values, expressed in Depth Distance Units of measure.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Depth Resolution</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="depthresType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: Depth Resolution &gt; 0.0
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:double">
+		<xsd:minExclusive value="0.0"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="depthdu" type="depthduType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Depth Distance Units
+		Section: 4.2.2.3
+		Description: units in which depths are recorded.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Depth Distance Units</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="depthduType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "meters" "feet" free text
+		</xsd:documentation>
+		<xsd:documentation>
+			Enumerated values also match "free text"
+
+			<![CDATA[
+				<xsd:restriction base="xsd:token">
+					<xsd:enumeration value="meters"/>
+					<xsd:enumeration value="feet"/>
+				</xsd:restriction>
+			]]>
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="depthem" type="depthemType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Depth Encoding Method
+		Section: 4.2.2.4
+		Description: the means used to encode depths.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Depth Encoding Method</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="depthemType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "Explicit depth coordinate included with horizontal coordinates" "Implicit coordinate" "Attribute values"
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:token">
+		<xsd:enumeration value="Explicit depth coordinate included with horizontal coordinates"/>
+		<xsd:enumeration value="Implicit coordinate"/>
+		<xsd:enumeration value="Attribute values"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+</xsd:schema>

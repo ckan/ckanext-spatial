@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" blockDefault="#all"
+        xmlns:sch="http://www.ascc.net/xml/schematron">
+    <xsd:include schemaLocation="../fgdc-std-001-1998/fgdc-std-001-1998-sect05-ann.xsd"/>
+    <xsd:complexType name="rseEainfo">
+        <xsd:choice>
+            <xsd:sequence>
+                <xsd:element name="detailed" type="rseDetailedType" maxOccurs="unbounded">
+                    <xsd:annotation>
+                        <xsd:documentation>
+                            Element: Detailed Description
+                            Section: 5.1
+                            Description: description of the entities, attributes, attribute values, and related characteristics encoded in the data set.
+                        </xsd:documentation>
+                        <xsd:appinfo>
+                            <sch:title>Detailed Description</sch:title>
+                        </xsd:appinfo>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element ref="overview" minOccurs="0" maxOccurs="unbounded"/>
+            </xsd:sequence>
+            <xsd:element ref="overview" maxOccurs="unbounded"/>
+        </xsd:choice>
+    </xsd:complexType>
+    <xsd:complexType name="rseDetailedType">
+        <xsd:sequence>
+            <xsd:element ref="enttyp"/>
+            <xsd:element name="attr" type="rseAttrType" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Element: Attribute
+                        Section: 5.1.2
+                        Description: a defined characteristic of an entity.
+                    </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Attribute</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="rseAttrType">
+        <xsd:sequence>
+            <xsd:element ref="attrlabl"/>
+            <xsd:element ref="attrdef"/>
+            <xsd:element ref="attrdefs"/>
+            <xsd:element name="attrdomv" type="rseAttrdomvType" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <sch:title>Attribute Domain Value</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:sequence minOccurs="0" maxOccurs="unbounded">
+                <xsd:element ref="begdatea"/>
+                <xsd:element ref="enddatea" minOccurs="0"/>
+            </xsd:sequence>
+            <xsd:element ref="attrvai" minOccurs="0"/>
+            <xsd:element ref="attrmfrq" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="rseAttrdomvType">
+        <xsd:choice maxOccurs="unbounded">
+            <xsd:element ref="edom" maxOccurs="unbounded"/>
+            <xsd:element ref="rdom"/>
+            <xsd:element ref="codesetd"/>
+            <xsd:element ref="udom"/>
+            <xsd:element ref="datascal"/>
+        </xsd:choice>
+    </xsd:complexType>
+    <xsd:element name="datascal" type="datascalType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Data Scaling Information Description: Function converting
+                set of values on one scale to another. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Data Scaling Information</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType mixed="true" name="datascalType">
+        <xsd:choice>
+            <xsd:element ref="polyfunc" />
+            <xsd:element ref="npolscal"/>
+        </xsd:choice>
+    </xsd:complexType>
+    <xsd:element name="polyfunc" type="polyfuncType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Polynomial Function Description: A function in
+                successive powers of the independent variable, or the ratio of such
+                functions, used in a transformation, one example of which is scaling,
+                derivation of a set of values on one scale or coordinate system from the
+                value in another, in the sense derived value = polynomial (initial value). </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Polynomial Function</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="polyfuncType">
+        <xsd:sequence>
+            <xsd:element ref="polynume"/>
+            <xsd:element name="polydeno" type="polydenoType" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Polynomial Denominator Description: The divisor of
+                        a polynomial function that is a ratio. (Note: If absent, assumed equal to
+                        1.) </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Polynomial Denominator</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="polynume" type="polynumeType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Polynomial Numerator Description: The polynomial function
+                when not a ratio, and the dividend of the ratio when it is. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Polynomial Numerator</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="polynumeType">
+        <xsd:sequence>
+            <xsd:element ref="nnumterm" maxOccurs="unbounded"/>
+            <!-- TODO: actual maxOccurs is: =Number of Numerator Terms, if Polynomial Numerator is parent,
+            or =Number of Denominator Terms, if Polynomial Denominator is parent -->
+            <xsd:element ref="polycoef" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="nnumterm" type="positiveIntegerType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Number of Numerator Terms Description: The number of
+                nonzero terms in the numerator of the polynomial. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Number of Numerator Terms</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="polydenoType">
+        <xsd:sequence>
+            <xsd:element ref="ndenterm" maxOccurs="unbounded"/>
+            <xsd:element ref="polycoef" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="ndenterm" type="positiveIntegerType">
+        <xsd:annotation>
+            <xsd:documentation> 
+                Element: Number of Denominator Terms 
+                Description: The number of nonzero terms in the denominator of the polynomial.</xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Number of Denominator Terms </sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="polycoef" type="polycoefType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Polynomial Coefficient Description: The coefficient of one
+                term in the numerator or denominator of a polynomial function. (Note: For a
+                polynomial numerator or denominator of order m, there will be m+1 coefficients. Any
+                of these coefficients, except that of the m power term, may be zero. When the
+                function is linear, the coefficient of the zero-power term is the offset and the
+                coefficient of the first power term is the scale factor.) </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Polynomial Coefficient</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="polycoefType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    
+    <xsd:element name="npolscal" type="npolscalType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Non Polynomial Scaling Description: Text description of the
+                function used to derive a set of values on one scale from their value in another,
+                using a function that is not a polynomial. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Non Polynomial Scaling</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="npolscalType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+</xsd:schema>
