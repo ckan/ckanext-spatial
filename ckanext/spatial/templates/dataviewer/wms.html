@@ -1,0 +1,22 @@
+{% extends "dataviewer/base.html" %}
+
+{% block page %}
+    <div id="datapreview">
+	  	<div class="loading">
+	  		{{ _('Loading...') }}
+	  	</div>
+
+	</div>
+{% endblock %}
+{% block styles %}
+{{ super() }}
+
+    {% snippet "spatial/snippets/wms_preview_styles.html" %}
+
+{% endblock %}
+{% block scripts %}
+{{ super() }}
+
+    {% snippet "spatial/snippets/wms_preview_scripts.html" %}
+
+{% endblock %}

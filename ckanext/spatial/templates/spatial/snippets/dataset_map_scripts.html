@@ -1,0 +1,9 @@
+<script src="{% url_for_static '/base/vendor/jquery.js' %}"></script>
+<script src="{% url_for_static '/ckanext/spatial/js/openlayers/OpenLayers_dataset_map.js' %}"></script>
+<script src="{% url_for_static '/ckanext/spatial/js/dataset_map.js' %}"></script>
+<script>
+  $(document).ready(function(){
+    CKAN.DatasetMap.extent = '{{ h.escape_js(dataset_extent) | safe}}'; 
+    CKAN.DatasetMap.setup();
+  })
+</script>

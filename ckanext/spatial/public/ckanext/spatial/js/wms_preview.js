@@ -4,19 +4,47 @@ CKAN.WMSPreview = function($){
 
     // Private
     var defaultVersion = "1.3.0";
-    
+
     var preferredFormat = "image/png";
 
     var proxy = "/proxy?url=";
 
-    var getURL = function(server,version){
+    var getParameterByName = function(name,query_string) {
+      query_string = query_string || window.location.search;
+      var match = RegExp('[?&]' + name + '=([^&]*)')
+                    .exec(query_string);
+      return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
+    }
+
+    var cleanUrl = function(server){
+      var qs;
+      if (server.indexOf("?") !== -1){
+        parts = server.split("?");
+        server = parts[0];
+        qs = parts[1];
+      }
+
+      var mapParam = getParameterByName("map", "?" + qs);
+      if (mapParam)
+        server = server + "?map=" + mapParam;
+
+      return server;
+    }
+
+    var getCapabilitiesUrl = function(server,version){
+
+        version = version || defaultVersion;
+
         if (server.indexOf("?") === -1)
             server += "?"
+        if (server.indexOf("=") !== -1)
+            server += "&"
 
-        var url  = server + 
-                   "SERVICE=WMS" + 
+        var url  = server +
+                   "SERVICE=WMS" +
                    "&REQUEST=GetCapabilities" +
-                   "&VERSION=" + defaultVersion
+                   "&VERSION=" + version;
+
         return (proxy) ? proxy + escape(url) : url;
     }
 
@@ -30,16 +58,18 @@ CKAN.WMSPreview = function($){
     }
 
 
-    
+
     // Public
     return {
         map: null,
         setup: function(server){
 
-            var url = getURL(server);
-            
+            var wmsUrl = cleanUrl(server);
+
+            var capabilitiesUrl = getCapabilitiesUrl(wmsUrl);
+
             var self = this;
-            $.get(url,function(data){
+            $.get(capabilitiesUrl,function(data){
                 // Most WMS Servers will return the version they prefer,
                 // regardless of which one you requested, so better check
                 // for the actual version returned.
@@ -52,7 +82,7 @@ CKAN.WMSPreview = function($){
                 var capabilities = format.read(data);
                 if (capabilities.capability){
                     var layers = capabilities.capability.layers;
-                    
+
                     var olLayers = [];
                     var maxExtent = false;
                     var maxScale = false;
@@ -71,7 +101,7 @@ CKAN.WMSPreview = function($){
                         if (layer.minScale && (layer.minScale < minScale || minScale === false)) minScale = layer.minScale;
                         olLayers.push(new OpenLayers.Layer.WMS(
                             layer.title,
-                            server,
+                            wmsUrl,
                             {"layers": layer.name,
                             "format": getFormat(layer.formats),
                             "transparent":true
@@ -84,7 +114,7 @@ CKAN.WMSPreview = function($){
                             "visibility": (count == 0)
                             })  //Tiled?
                       );
-                       
+
                     }
 
                     var dummyLayer = new OpenLayers.Layer("Dummy",{
@@ -93,15 +123,12 @@ CKAN.WMSPreview = function($){
                             "isBaseLayer":true,
                             "visibility":false,
                             "minScale": (minScale) ? minScale : null,
-                            "maxScale": (maxScale) ? maxScale : null                           
+                            "maxScale": (maxScale) ? maxScale : null
                     });
                     olLayers.push(dummyLayer);
 
-                    // Setup some sizes
-                    w = $("#content").width();
-                    if (w > 1024) w = 1024;
-                    $("#map").width(w);
-                    $("#map").height(500);
+                    $("#datapreview").empty();
+                    $("#datapreview").append($("<div></div>").attr("id","map"));
 
                     // Create a new map
                     self.map = new OpenLayers.Map("map" ,
@@ -122,11 +149,11 @@ CKAN.WMSPreview = function($){
                             ],
                             "theme":"/ckanext/spatial/js/openlayers/theme/default/style.css"
                         });
- 
+
                     self.map.maxExtent = maxExtent;
                     self.map.addLayers(olLayers);
 
-                    self.map.zoomTo(1); 
+                    self.map.zoomTo(1);
                 } else {
                   $("#main").prepend(
                         $("<div></div>").attr("class","flash-banner-box").append(
