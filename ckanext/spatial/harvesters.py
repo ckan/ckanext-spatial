@@ -199,11 +199,10 @@ class GeminiHarvester(SpatialHarvester):
     def import_gemini_object(self, gemini_string):
         log = logging.getLogger(__name__ + '.import')
         xml = etree.fromstring(gemini_string)
-
-        valid, messages = self._get_validator().is_valid(xml)
+        valid, profile, errors = self._get_validator().is_valid(xml)
         if not valid:
+            out = errors[0][0] + ':\n' + '\n'.join(e[0] for e in errors[1:])
             log.error('Errors found for object with GUID %s:' % self.obj.guid)
-            out = messages[0] + ':\n' + '\n'.join(messages[1:])
             self._save_object_error(out,self.obj,'Import')
 
         unicode_gemini_string = etree.tostring(xml, encoding=unicode, pretty_print=True)
@@ -570,9 +569,9 @@ class GeminiHarvester(SpatialHarvester):
         if gemini_xml is None:
             self._save_gather_error('Content is not a valid Gemini document',self.harvest_job)
 
-        valid, messages = self._get_validator().is_valid(gemini_xml)
+        valid, profile, errors = self._get_validator().is_valid(gemini_xml)
         if not valid:
-            out = messages[0] + ':\n' + '\n'.join(messages[1:])
+            out = errors[0][0] + ':\n' + '\n'.join(e[0] for e in errors[1:])
             if url:
                 self._save_gather_error('Validation error for %s - %s'% (url,out),self.harvest_job)
             else:
@@ -780,7 +779,6 @@ class GeminiWafHarvester(GeminiHarvester, SingletonPlugin):
             self._save_gather_error('Unable to get content for URL: %s: %r' % \
                                         (url, e),harvest_job)
             return None
-
         ids = []
         try:
             for url in self._extract_urls(content,url):
@@ -815,7 +813,6 @@ class GeminiWafHarvester(GeminiHarvester, SingletonPlugin):
             msg = 'Error extracting URLs from %s' % url
             self._save_gather_error(msg,harvest_job)
             return None
-
 
         if len(ids) > 0:
             return ids
