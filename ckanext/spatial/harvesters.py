@@ -111,15 +111,19 @@ class SpatialHarvester(object):
         finally:
             log.error(message)
 
-    def _save_object_error(self,message,obj,stage=u'Fetch'):
-        err = HarvestObjectError(message=message,object=obj,stage=stage)
+    def _save_object_error(self,message,obj,stage=u'Fetch',line=None):
+        err = HarvestObjectError(message=message,
+                                 object=obj,
+                                 stage=stage,
+                                 line=line)
         try:
             err.save()
         except InvalidRequestError,e:
             Session.rollback()
             err.save()
         finally:
-            log.error(message)
+            log_message = '{0}, line {1}'.format(message,line) if line else message
+            log.error(log_message)
 
     def _get_content(self, url):
         url = url.replace(' ','%20')
