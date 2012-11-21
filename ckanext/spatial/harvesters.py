@@ -123,7 +123,7 @@ class SpatialHarvester(object):
             err.save()
         finally:
             log_message = '{0}, line {1}'.format(message,line) if line else message
-            log.error(log_message)
+            log.debug(log_message)
 
     def _get_content(self, url):
         url = url.replace(' ','%20')
