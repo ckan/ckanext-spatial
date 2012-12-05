@@ -179,6 +179,16 @@ class ConstraintsSchematron(SchematronValidator):
                              "validation/xml/medin/ISOTS19139A1Constraints_v1.3.sch") as schema:
             return [cls.schematron(schema)]
 
+class ConstraintsSchematron14(SchematronValidator):
+    name = 'constraints-1.4'
+    title = 'ISO19139 Table A.1 Constraints Schematron (Medin/Parslow 1.4)'
+
+    @classmethod
+    def get_schematrons(cls):
+        with resource_stream("ckanext.spatial",
+                             "validation/xml/medin/ISOTS19139A1Constraints_v1.4.sch") as schema:
+            return [cls.schematron(schema)]
+
 
 class Gemini2Schematron(SchematronValidator):
     name = 'gemini2'
@@ -193,6 +203,7 @@ class Gemini2Schematron(SchematronValidator):
 all_validators = (ISO19139Schema,
                   ISO19139EdenSchema,
                   ConstraintsSchematron,
+                  ConstraintsSchematron14,
                   Gemini2Schematron)
 
 
