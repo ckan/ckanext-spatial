@@ -55,7 +55,6 @@ class SpatialMetadata(SingletonPlugin):
     implements(IConfigurable, inherit=True)
 
     def configure(self, config):
-
         if not config.get('ckan.spatial.testing',False):
             setup_model()
 
@@ -67,6 +66,10 @@ class SpatialMetadata(SingletonPlugin):
         self.check_spatial_extra(package)
 
     def check_spatial_extra(self,package):
+        '''
+        For a given package, looks at the spatial extent (as given in the
+        extra "spatial" in GeoJSON format) and records it in PostGIS.
+        '''
         if not package.id:
             log.warning('Couldn\'t store spatial extent because no id was provided for the package')
             return
