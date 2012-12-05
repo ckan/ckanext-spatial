@@ -1,5 +1,5 @@
 -------------------------------------------------------------------
---  WARNING: This is probably the file you are looking for.
+--  WARNING: This is probably NOT the file you are looking for.
 --  This file is intended to be used only during tests, you won't
 --  get a functional PostGIS database executing it. Please install
 --  PostGIS as described in the README.
