@@ -104,26 +104,40 @@ class MappedXmlElement(MappedXmlObject):
         return etree.tostring(element, pretty_print=False)
 
     def fix_multiplicity(self, values):
+        '''
+        When a field contains multiple values, yet the spec says
+        it should contain only one, then return just the first value,
+        rather than a list.
+
+        In the ISO19115 specification, multiplicity relates to:
+        * 'Association Cardinality'
+        * 'Obligation/Condition' & 'Maximum Occurence'
+        '''
         if self.multiplicity == "0":
+            # 0 = None
             if values:
                 raise Exception(
                     "Values found for element '%s': %s" % (self.name, values))
             else:
                 return ""
         elif self.multiplicity == "1":
+            # 1 = Mandatory, maximum 1 = Exactly one
             if values:
                 return values[0]
             else:
                 raise Exception(
                     "Value not found for element '%s'" % self.name)
         elif self.multiplicity == "*":
+            # * = 0..* = zero or more
             return values
         elif self.multiplicity == "0..1":
+            # 0..1 = Mandatory, maximum 1 = optional (zero or one)
             if values:
                 return values[0]
             else:
                 return ""
         elif self.multiplicity == "1..*":
+            # 1..* = one or more
             return values
         else:
             raise Exception(
