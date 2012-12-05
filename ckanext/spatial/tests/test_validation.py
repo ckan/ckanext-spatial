@@ -44,7 +44,7 @@ class TestValidation:
         assert_in('\'{http://www.isotc211.org/2005/gmd}nosuchelement\': This element is not expected.', errors)
 
     def test_02_dataset_fail_constraints_schematron(self):
-        errors = self.get_validation_errors(validation.ConstraintsSchematron,
+        errors = self.get_validation_errors(validation.ConstraintsSchematron14,
            'gemini2.1/validation/02_Dataset_Invalid_19139_Missing_Data_Format.xml')
         assert len(errors) > 0
         assert_in('MD_Distribution / MD_Format: count(distributionFormat + distributorFormat) > 0', errors)
@@ -59,9 +59,9 @@ class TestValidation:
         errs = self.get_validation_errors(validation.ISO19139EdenSchema,
                                           xml_filepath)
         assert not errs, 'ISO19139EdenSchema: ' + errs
-        errs = self.get_validation_errors(validation.ConstraintsSchematron,
+        errs = self.get_validation_errors(validation.ConstraintsSchematron14,
                                           xml_filepath)
-        assert not errs, 'ConstraintsSchematron: ' + errs
+        assert not errs, 'ConstraintsSchematron14: ' + errs
         errs = self.get_validation_errors(validation.Gemini2Schematron,
                                           xml_filepath)
         assert not errs, 'Gemini2Schematron: ' + errs
@@ -77,7 +77,7 @@ class TestValidation:
         assert_in('\'{http://www.isotc211.org/2005/gmd}nosuchelement\': This element is not expected.', errors)
 
     def test_06_series_fail_constraints_schematron(self):
-        errors = self.get_validation_errors(validation.ConstraintsSchematron,
+        errors = self.get_validation_errors(validation.ConstraintsSchematron14,
           'gemini2.1/validation/06_Series_Invalid_19139_Missing_Data_Format.xml')
         assert len(errors) > 0
         assert_in('MD_Distribution / MD_Format: count(distributionFormat + distributorFormat) > 0', errors)
@@ -99,7 +99,7 @@ class TestValidation:
         assert_in('\'{http://www.isotc211.org/2005/gmd}nosuchelement\': This element is not expected.', errors)
 
     def test_10_service_fail_constraints_schematron(self):
-        errors = self.get_validation_errors(validation.ConstraintsSchematron,
+        errors = self.get_validation_errors(validation.ConstraintsSchematron14,
            'gemini2.1/validation/10_Service_Invalid_19139_Level_Description.xml')
         assert len(errors) > 0
         assert_in("DQ_Scope: 'levelDescription' is mandatory if 'level' notEqual 'dataset' or 'series'.", errors)

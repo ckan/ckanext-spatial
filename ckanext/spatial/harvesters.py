@@ -314,11 +314,16 @@ class GeminiHarvester(SpatialHarvester):
         ]:
             extras[name] = gemini_values[name]
 
+        # Use-constraints can contain values which are:
+        #  * free text
+        #  * licence URL
+        # Store all values in extra['licence'] and if there is a
+        # URL in there, store that in extra['licence-url']
         extras['licence'] = gemini_values.get('use-constraints', '')
         if len(extras['licence']):
-            license_url_extracted = self._extract_first_license_url(extras['licence'])
-            if license_url_extracted:
-                extras['licence_url'] = license_url_extracted
+            licence_url_extracted = self._extract_first_licence_url(extras['licence'])
+            if licence_url_extracted:
+                extras['licence_url'] = licence_url_extracted
 
         extras['access_constraints'] = gemini_values.get('limitations-on-public-access','')
         if gemini_values.has_key('temporal-extent-begin'):
@@ -497,7 +502,9 @@ class GeminiHarvester(SpatialHarvester):
                 counter = counter + 1
             return None
 
-    def _extract_first_license_url(self,licences):
+    def _extract_first_licence_url(self, licences):
+        '''Given a list of pieces of licence info, hunt for the first one
+        which looks like a URL and return it. Otherwise returns None.'''
         for licence in licences:
             o = urlparse(licence)
             if o.scheme and o.netloc:
