@@ -109,15 +109,13 @@ def validate_bbox(bbox_values):
 
     return bbox
 
-def bbox_query(bbox,srid=None):
+def _bbox_2_wkt(bbox, srid):
     '''
-    Performs a spatial query of a bounding box.
+    Given a bbox dictionary, return a WKTSpatialElement, transformed
+    into the database\'s CRS if necessary.
 
-    bbox - bounding box dict
-    
-    Returns a list of package IDs.
+    returns e.g. WKTSpatialElement("POLYGON ((2 0, 2 1, 7 1, 7 0, 2 0))", 4326)
     '''
-
     db_srid = int(config.get('ckan.spatial.srid', '4326'))
 
     bbox_template = Template('POLYGON (($minx $miny, $minx $maxy, $maxx $maxy, $maxx $miny, $minx $miny))')
@@ -132,11 +130,56 @@ def bbox_query(bbox,srid=None):
         input_geometry = functions.transform(WKTSpatialElement(wkt,srid),db_srid)
     else:
         input_geometry = WKTSpatialElement(wkt,db_srid)
+    return input_geometry
+
+def bbox_query(bbox,srid=None):
+    '''
+    Performs a spatial query of a bounding box.
+
+    bbox - bounding box dict
+
+    Returns a query object of PackageExtents, which each reference a package
+    by ID.
+    '''
+
+    input_geometry = _bbox_2_wkt(bbox, srid)
 
     extents = Session.query(PackageExtent) \
               .filter(PackageExtent.package_id==Package.id) \
               .filter(PackageExtent.the_geom.intersects(input_geometry)) \
               .filter(Package.state==u'active')
-
     return extents
 
+def bbox_query_ordered(bbox, srid=None):
+    '''
+    Performs a spatial query of a bounding box. Returns packages in order
+    of how similar the data\'s bounding box is to the search box (best first).
+
+    bbox - bounding box dict
+
+    Returns a query object of PackageExtents, which each reference a package
+    by ID.
+    '''
+
+    input_geometry = _bbox_2_wkt(bbox, srid)
+
+    params = {'query_bbox': str(input_geometry),
+              'query_srid': input_geometry.srid}
+
+    # First get the area of the query box
+    sql = "SELECT ST_Area(GeomFromText(:query_bbox, :query_srid));"
+    params['search_area'] = Session.execute(sql, params).fetchone()[0]
+
+    # Uses spatial ranking method from "USGS - 2006-1279" (Lanfear)
+    sql = """SELECT ST_AsBinary(package_extent.the_geom) AS package_extent_the_geom,
+                    POWER(ST_Area(ST_Intersection(package_extent.the_geom, GeomFromText(:query_bbox, :query_srid))),2)/ST_Area(package_extent.the_geom)/:search_area as spatial_ranking,
+                    package_extent.package_id AS package_id
+             FROM package_extent, package
+             WHERE package_extent.package_id = package.id
+                AND ST_Intersects(package_extent.the_geom, GeomFromText(:query_bbox, :query_srid))
+                AND package.state = 'active'
+             ORDER BY spatial_ranking desc"""
+    extents = Session.execute(sql, params).fetchall()
+    log.debug('Spatial results: %r',
+              [('%.2f' % extent.spatial_ranking, extent.package_id) for extent in extents[:20]])
+    return extents
