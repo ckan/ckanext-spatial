@@ -8,7 +8,7 @@ from genshi.filters import Transformer
 
 import ckan.lib.helpers as h
 
-from ckan.lib.search import SearchError
+from ckan.lib.search import SearchError, PackageSearchQuery
 from ckan.lib.helpers import json
 
 from ckan import model
@@ -23,9 +23,8 @@ from ckan.logic import ValidationError
 
 import html
 
-from ckanext.spatial.lib import save_package_extent,validate_bbox, bbox_query
+from ckanext.spatial.lib import save_package_extent,validate_bbox, bbox_query, bbox_query_ordered
 from ckanext.spatial.model.package_extent import setup as setup_model
-
 
 log = getLogger(__name__)
 
@@ -130,9 +129,33 @@ class SpatialQuery(SingletonPlugin):
             if not bbox:
                 raise SearchError('Wrong bounding box provided')
 
-            extents = bbox_query(bbox)
+            if search_params['sort'] == 'spatial desc':
+                if search_params['q'] or search_params['fq']:
+                    raise SearchError('Spatial ranking cannot be mixed with other search parameters')
+                    # ...because it is too inefficient to use SOLR to filter
+                    # results and return the entire set to this class and
+                    # after_search do the sorting and paging.
+                extents = bbox_query_ordered(bbox)
+                are_no_results = not extents
+                search_params['extras']['ext_rows'] = search_params['rows']
+                search_params['extras']['ext_start'] = search_params['start']
+                # this SOLR query needs to return no actual results since
+                # they are in the wrong order anyway. We just need this SOLR
+                # query to get the count and facet counts.
+                rows = 0
+                search_params['sort'] = None # SOLR should not sort.
+                # Store the rankings of the results for this page, so for
+                # after_search to construct the correctly sorted results
+                rows = search_params['extras']['ext_rows'] = search_params['rows']
+                start = search_params['extras']['ext_start'] = search_params['start']
+                search_params['extras']['ext_spatial'] = [
+                    (extent.package_id, extent.spatial_ranking) \
+                    for extent in extents[start:start+rows]]
+            else:
+                extents = bbox_query(bbox)
+                are_no_results = extents.count() == 0
 
-            if extents.count() == 0:
+            if are_no_results:
                 # We don't need to perform the search
                 search_params['abort_search'] = True
             else:
@@ -140,13 +163,25 @@ class SpatialQuery(SingletonPlugin):
                 # of datasets within the bbox
                 bbox_query_ids = [extent.package_id for extent in extents]
 
-                q = search_params.get('q','')
+                q = search_params.get('q','').strip() or '""'
                 new_q = '%s AND ' % q if q else ''
                 new_q += '(%s)' % ' OR '.join(['id:%s' % id for id in bbox_query_ids])
 
                 search_params['q'] = new_q
 
         return search_params
+
+    def after_search(self, search_results, search_params):
+        if search_params.get('extras', {}).get('ext_spatial'):
+            # Apply the spatial sort
+            querier = PackageSearchQuery()
+            pkgs = []
+            for package_id, spatial_ranking in search_params['extras']['ext_spatial']:
+                # get package from SOLR
+                pkg = querier.get_index(package_id)['data_dict']
+                pkgs.append(json.loads(pkg))
+            search_results['results'] = pkgs
+        return search_results
 
 class SpatialQueryWidget(SingletonPlugin):
 
