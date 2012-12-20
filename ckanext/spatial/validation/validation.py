@@ -285,6 +285,9 @@ class Validators(object):
         for validator_class in all_validators:
             self.validators[validator_class.name] = validator_class
 
+    def add_validator(self, validator_class):
+            self.validators[validator_class.name] = validator_class
+
     def isvalid(self, xml):
         '''For backward compatibility'''
         return self.is_valid(xml)
