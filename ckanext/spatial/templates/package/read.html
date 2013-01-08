@@ -1,0 +1,46 @@
+{% ckan_extends %}
+
+{% block scripts %}
+  {{ super() }}
+  {% if h.get_spatial(c.pkg) %}
+    {% resource 'ckanext-spatial/ckanext/spatial/js/dataset_map.js' %}
+    {% resource 'ckanext-spatial/ckanext/spatial/js/openlayers/OpenLayers_dataset_map.js' %}
+  {% endif %}
+{% endblock %}
+
+{% block body_extras %}
+  {% set spatial = h.get_spatial(c.pkg) %}
+  {% if spatial %}
+    <script type="text/javascript">
+        //<![CDATA[
+        var CKAN = CKAN || {};
+        CKAN.DatasetMap = CKAN.DatasetMap || {};
+        CKAN.DatasetMap.map_type = 'osm';
+        CKAN.DatasetMap.extent = {{ spatial.extent|safe }};
+        CKAN.DatasetMap.element = '#dataset-map-container';
+        CKAN.DatasetMap.openLayersImagePath = '{{ h.urls_for_resource('ckanext-spatial/ckanext/spatial/js/openlayers/OpenLayers_dataset_map.js')[-1] }}'.replace(/\/[^/]+$/, '/img/');
+        //]]>
+    </script>
+  {% endif %}
+{% endblock %}
+
+{% block styles %}
+  {{ super() }}
+  {% if h.get_spatial(c.pkg) %}
+    {% resource 'ckanext-spatial/ckanext/spatial/css/spatial_search_form.css' %}
+  {% endif %}
+{% endblock %}
+
+{% block package_additional_info %}
+  {{ super() }}
+  {% set spatial = h.get_spatial(c.pkg) %}
+  {% if spatial %}
+    <section class="module-content dataset-map">
+      {% if spatial.title %}
+        <h3>{{ spatial.title }}</h3>
+      {% endif %}
+      <div id="dataset-map-container"></div>
+      <div id="spatial-search-map-attribution">Map data CC-BY-SA by <a href="http://openstreetmap.org">OpenStreetMap</a> | Tiles by <a href="http://www.mapquest.com">MapQuest</a></div>
+    </section>
+  {% endif %}
+{% endblock %}

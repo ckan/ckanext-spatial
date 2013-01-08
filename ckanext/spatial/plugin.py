@@ -1,32 +1,27 @@
 import os
 import re
 from logging import getLogger
+
 from pylons import config
 from pylons.i18n import _
-from genshi.input import HTML
-from genshi.filters import Transformer
 
-import ckan.lib.helpers as h
-
+import ckan.plugins.toolkit as toolkit
 from ckan.lib.search import SearchError, PackageSearchQuery
 from ckan.lib.helpers import json
-
-from ckan import model
 
 from ckan.plugins import implements, SingletonPlugin
 from ckan.plugins import IRoutes
 from ckan.plugins import IConfigurable, IConfigurer
-from ckan.plugins import IGenshiStreamFilter
+from ckan.plugins import ITemplateHelpers
 from ckan.plugins import IPackageController
 
 from ckan.logic import ValidationError
 
-import html
-
-from ckanext.spatial.lib import save_package_extent,validate_bbox, bbox_query, bbox_query_ordered
+from ckanext.spatial.lib import save_package_extent, validate_bbox, bbox_query, bbox_query_ordered
 from ckanext.spatial.model.package_extent import setup as setup_model
 
 log = getLogger(__name__)
+
 
 def package_error_summary(error_dict):
     ''' Do some i18n stuff on the error_dict keys '''
@@ -48,15 +43,15 @@ def package_error_summary(error_dict):
             summary[_(prettify(key))] = error[0]
     return summary
 
+
 class SpatialMetadata(SingletonPlugin):
 
     implements(IPackageController, inherit=True)
     implements(IConfigurable, inherit=True)
 
     def configure(self, config):
-        if not config.get('ckan.spatial.testing',False):
+        if not config.get('ckan.spatial.testing', False):
             setup_model()
-
 
     def create(self, package):
         self.check_spatial_extra(package)
@@ -64,7 +59,7 @@ class SpatialMetadata(SingletonPlugin):
     def edit(self, package):
         self.check_spatial_extra(package)
 
-    def check_spatial_extra(self,package):
+    def check_spatial_extra(self, package):
         '''
         For a given package, looks at the spatial extent (as given in the
         extra "spatial" in GeoJSON format) and records it in PostGIS.
@@ -80,34 +75,34 @@ class SpatialMetadata(SingletonPlugin):
                     try:
                         log.debug('Received: %r' % extra.value)
                         geometry = json.loads(extra.value)
-                    except ValueError,e:
-                        error_dict = {'spatial':[u'Error decoding JSON object: %s' % str(e)]}
+                    except ValueError as e:
+                        error_dict = {'spatial': [u'Error decoding JSON object: %s' % str(e)]}
                         raise ValidationError(error_dict, error_summary=package_error_summary(error_dict))
-                    except TypeError,e:
-                        error_dict = {'spatial':[u'Error decoding JSON object: %s' % str(e)]}
+                    except TypeError as e:
+                        error_dict = {'spatial': [u'Error decoding JSON object: %s' % str(e)]}
                         raise ValidationError(error_dict, error_summary=package_error_summary(error_dict))
 
                     try:
-                        save_package_extent(package.id,geometry)
+                        save_package_extent(package.id, geometry)
 
-                    except ValueError,e:
-                        error_dict = {'spatial':[u'Error creating geometry: %s' % str(e)]}
+                    except ValueError as e:
+                        error_dict = {'spatial': [u'Error creating geometry: %s' % str(e)]}
                         raise ValidationError(error_dict, error_summary=package_error_summary(error_dict))
-                    except Exception, e:
+                    except Exception as e:
                         if bool(os.getenv('DEBUG')):
                             raise
-                        error_dict = {'spatial':[u'Error: %s' % str(e)]}
+                        error_dict = {'spatial': [u'Error: %s' % str(e)]}
                         raise ValidationError(error_dict, error_summary=package_error_summary(error_dict))
 
                 elif extra.state == 'deleted':
                     # Delete extent from table
-                    save_package_extent(package.id,None)
+                    save_package_extent(package.id, None)
 
                 break
 
-
     def delete(self, package):
-        save_package_extent(package.id,None)
+        save_package_extent(package.id, None)
+
 
 class SpatialQuery(SingletonPlugin):
 
@@ -121,9 +116,9 @@ class SpatialQuery(SingletonPlugin):
             action='spatial_query')
         return map
 
-    def before_search(self,search_params):
-        if 'extras' in search_params and 'ext_bbox' in search_params['extras'] \
-            and search_params['extras']['ext_bbox']:
+    def before_search(self, search_params):
+        if ('extras' in search_params and 'ext_bbox' in search_params['extras'] and
+                search_params['extras']['ext_bbox']):
 
             bbox = validate_bbox(search_params['extras']['ext_bbox'])
             if not bbox:
@@ -143,14 +138,14 @@ class SpatialQuery(SingletonPlugin):
                 # they are in the wrong order anyway. We just need this SOLR
                 # query to get the count and facet counts.
                 rows = 0
-                search_params['sort'] = None # SOLR should not sort.
+                search_params['sort'] = None  # SOLR should not sort.
                 # Store the rankings of the results for this page, so for
                 # after_search to construct the correctly sorted results
                 rows = search_params['extras']['ext_rows'] = search_params['rows']
                 start = search_params['extras']['ext_start'] = search_params['start']
                 search_params['extras']['ext_spatial'] = [
-                    (extent.package_id, extent.spatial_ranking) \
-                    for extent in extents[start:start+rows]]
+                    ((extent.package_id, extent.spatial_ranking)
+                        for extent in extents[start:start + rows])]
             else:
                 extents = bbox_query(bbox)
                 are_no_results = extents.count() == 0
@@ -163,7 +158,7 @@ class SpatialQuery(SingletonPlugin):
                 # of datasets within the bbox
                 bbox_query_ids = [extent.package_id for extent in extents]
 
-                q = search_params.get('q','').strip() or '""'
+                q = search_params.get('q', '').strip() or '""'
                 new_q = '%s AND ' % q if q else ''
                 new_q += '(%s)' % ' OR '.join(['id:%s' % id for id in bbox_query_ids])
 
@@ -183,87 +178,55 @@ class SpatialQuery(SingletonPlugin):
             search_results['results'] = pkgs
         return search_results
 
+
 class SpatialQueryWidget(SingletonPlugin):
+    """
+    Requires DatasetExtentMap to be present
+    because its update_config needs to be called
+    """
+    implements(ITemplateHelpers)
 
-    implements(IGenshiStreamFilter)
+    @classmethod
+    def spatial_config(cls, data):
+        return config.get('ckan.spatial.%s' % data)
 
-    def filter(self, stream):
-        from pylons import request, tmpl_context as c
-        routes = request.environ.get('pylons.routes_dict')
-        if routes.get('controller') == 'package' and \
-            routes.get('action') == 'search':
-
-            data = {
-                'bbox': request.params.get('ext_bbox',''),
-                'default_extent': config.get('ckan.spatial.default_map_extent','')
-            }
-            stream = stream | Transformer('body//div[@id="dataset-search-ext"]')\
-                .append(HTML(html.SPATIAL_SEARCH_FORM % data))
-            stream = stream | Transformer('head')\
-                .append(HTML(html.SPATIAL_SEARCH_FORM_EXTRA_HEADER % data))
-            stream = stream | Transformer('body')\
-                .append(HTML(html.SPATIAL_SEARCH_FORM_EXTRA_FOOTER % data))
-
-        return stream
+    def get_helpers(self):
+        return {'spatial_config': self.spatial_config}
 
 
 class DatasetExtentMap(SingletonPlugin):
 
-    implements(IGenshiStreamFilter)
+    implements(ITemplateHelpers)
     implements(IConfigurer, inherit=True)
-
-    def filter(self, stream):
-        from pylons import request, tmpl_context as c
-
-        route_dict = request.environ.get('pylons.routes_dict')
-        route = '%s/%s' % (route_dict.get('controller'), route_dict.get('action'))
-        routes_to_filter = config.get('ckan.spatial.dataset_extent_map.routes', 'package/read').split(' ')
-        if route in routes_to_filter and c.pkg.id:
-
-            extent = c.pkg.extras.get('spatial',None)
-            if extent:
-                map_element_id = config.get('ckan.spatial.dataset_extent_map.element_id', 'dataset')
-                title = config.get('ckan.spatial.dataset_extent_map.title', 'Geographic extent')
-                body_html = html.PACKAGE_MAP_EXTENDED if title else html.PACKAGE_MAP_BASIC
-                map_type = config.get('ckan.spatial.dataset_extent_map.map_type', 'osm')
-                if map_type == 'osm':
-                    js_library_links = '<script type="text/javascript" src="/ckanext/spatial/js/openlayers/OpenLayers_dataset_map.js"></script>'
-                    map_attribution = html.MAP_ATTRIBUTION_OSM
-                elif map_type == 'os':
-                    js_library_links = '<script src="http://osinspiremappingprod.ordnancesurvey.co.uk/libraries/openlayers-openlayers-56e25fc/lib/OpenLayers.js" type="text/javascript"></script>'
-                    map_attribution = '' # done in the js instead
-                
-                data = {'extent': extent,
-                        'title': _(title),
-                        'map_type': map_type,
-                        'js_library_links': js_library_links,
-                        'map_attribution': map_attribution,
-                        'element_id': map_element_id}
-                stream = stream | Transformer('body//div[@id="%s"]' % map_element_id)\
-                         .append(HTML(body_html % data))
-                stream = stream | Transformer('head')\
-                    .append(HTML(html.PACKAGE_MAP_EXTRA_HEADER % data))
-                stream = stream | Transformer('body')\
-                    .append(HTML(html.PACKAGE_MAP_EXTRA_FOOTER % data))
-
-
-
-        return stream
 
     def update_config(self, config):
         here = os.path.dirname(__file__)
+        rootdir = os.path.dirname(os.path.dirname(here))
 
-        template_dir = os.path.join(here, 'templates')
-        public_dir = os.path.join(here, 'public')
+        our_public_dir = os.path.join(rootdir, 'ckanext', 'spatial',
+                'public')
+        template_dir = os.path.join(rootdir, 'ckanext', 'spatial',
+                'templates')
+        config['extra_public_paths'] = ','.join([our_public_dir,
+                config.get('extra_public_paths', '')])
+        config['extra_template_paths'] = ','.join([template_dir,
+                config.get('extra_template_paths', '')])
 
-        if config.get('extra_template_paths'):
-            config['extra_template_paths'] += ','+template_dir
-        else:
-            config['extra_template_paths'] = template_dir
-        if config.get('extra_public_paths'):
-            config['extra_public_paths'] += ','+public_dir
-        else:
-            config['extra_public_paths'] = public_dir
+        toolkit.add_resource('public', 'ckanext-spatial')
+
+    @classmethod
+    def get_spatial(cls, pkg):
+        spatial = pkg.extras.get('spatial', None)
+        if spatial:
+            return {
+                'extent': json.dumps(str(spatial)),
+                'title': config.get('ckan.spatial.dataset_extent_map.title', 'Geographic extent')
+            }
+        return None
+
+    def get_helpers(self):
+        return {'get_spatial': self.get_spatial}
+
 
 class CatalogueServiceWeb(SingletonPlugin):
     implements(IConfigurable)
@@ -303,16 +266,17 @@ class CatalogueServiceWeb(SingletonPlugin):
     def after_map(self, route_map):
         return route_map
 
+
 class HarvestMetadataApi(SingletonPlugin):
     '''
     Harvest Metadata API
     (previously called "InspireApi")
-    
+
     A way for a user to view the harvested metadata XML, either as a raw file or
     styled to view in a web browser.
     '''
     implements(IRoutes)
-        
+
     def before_map(self, route_map):
         controller = "ckanext.spatial.controllers.api:HarvestMetadataApiController"
 

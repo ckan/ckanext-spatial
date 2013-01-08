@@ -1,0 +1,45 @@
+{% ckan_extends %}
+
+{% block scripts %}
+  {{ super() }}
+  {% resource 'ckanext-spatial/ckanext/spatial/js/spatial_search_form.js' %}
+  {% resource 'ckanext-spatial/ckanext/spatial/js/openlayers/OpenLayers_dataset_map.js' %}
+{% endblock %}
+
+{% block body_extras %}
+  {{ super() }}
+  <script type="text/javascript">
+      //<![CDATA[
+      var CKAN = CKAN || {};
+      CKAN.SpatialSearchForm = CKAN.SpatialSearchForm || {};
+      CKAN.SpatialSearchForm.bbox = '{{ request.GET.get('ext_bbox', '') }}';
+      CKAN.SpatialSearchForm.defaultExtent = '{{ h.spatial_config('default_extent') }}';
+      CKAN.SpatialSearchForm.openLayersImagePath = '{{ h.urls_for_resource('ckanext-spatial/ckanext/spatial/js/openlayers/OpenLayers_dataset_map.js')[-1] }}'.replace(/\/[^/]+$/, '/img/');
+      //]]>
+  </script>
+{% endblock %}
+
+{% block styles %}
+  {{ super() }}
+  {% resource 'ckanext-spatial/ckanext/spatial/css/spatial_search_form.css' %}
+{% endblock %}
+
+{% block dataset_search_ext %}
+  {{ super() }}
+  <input type="hidden" id="ext_bbox" name="ext_bbox" value="{{ request.GET.get('ext_bbox', '') }}" />
+  <input type="hidden" id="ext_prev_extent" name="ext_prev_extent" value="" />
+
+  <div id="spatial-search-show"><a href="#" class="more">Filter by location</a></div>
+  <div id="spatial-search-container">
+    <div id="spatial-search-map-container">
+        <div id="spatial-search-map" class="span3"></div>
+        <div id="spatial-search-toolbar" class="span3">
+            <input type="button" id="draw-box" value="Select an area" class="btn"/>
+            <input type="button" id="clear-box" value="Clear" class="btn"/>
+            <div class="helper">Click on the 'Select' button to draw an area of interest. Use the map controls or the mouse wheel to zoom. Drag to pan the map.</div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div id="spatial-search-map-attribution">Map data CC-BY-SA by <a href="http://openstreetmap.org">OpenStreetMap</a> | Tiles by <a href="http://www.mapquest.com">MapQuest</a></div>
+  </div>
+{% endblock %}
