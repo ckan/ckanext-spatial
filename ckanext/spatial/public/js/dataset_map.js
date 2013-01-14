@@ -24,7 +24,7 @@ CKAN.DatasetMap = function($){
 
         styles: {
             "point":{
-                "externalGraphic": "/ckanext/spatial/marker.png",
+                "externalGraphic": "/img/marker.png",
                 "graphicWidth":14,
                 "graphicHeight":25,
                 "fillOpacity":1

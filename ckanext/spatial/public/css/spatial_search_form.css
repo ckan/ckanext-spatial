@@ -1,0 +1,68 @@
+#spatial-search-show{
+    margin-top: 40px;
+}
+
+#spatial-search-show a.more:after {
+  content: '  »';
+  font-size: 150%;
+  position: relative;
+  bottom: -1px;
+}
+
+#spatial-search-show a.less:before {
+  content: '« ';
+  font-size: 150%;
+  position: relative;
+  bottom: -1px;
+}
+
+
+#spatial-search-container {
+    display: none;
+}
+
+
+#spatial-search-map-container {
+    margin-top: 10px;
+    margin-bottom: 0px;
+    width: 100%;
+}
+
+#spatial-search-map {
+    width: 300px;
+    height: 200px;
+}
+
+#spatial-search-toolbar{
+    margin-left: 20px;
+    width: 250px;
+}
+
+#clear-box {
+    margin-left: 5px;
+}
+
+#spatial-search-toolbar div{
+    margin: 5px 0;
+}
+
+#spatial-search-toolbar .helper{
+    font-style: italic;
+    font-size: small;
+}
+
+
+
+#spatial-search-map-attribution{
+    font-size: x-small;
+}
+
+/* OpenLayers overrides */
+.olControlZoomPanel {
+    top: 10px !important;
+}
+
+.olControlZoomPanel div {
+    background-image: url(/ckanext/spatial/js/openlayers/img/zoom-panel.png) !important;
+}
+
