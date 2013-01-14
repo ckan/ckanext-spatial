@@ -1,72 +1,42 @@
-import os
 from logging import getLogger
-from pylons.i18n import _
-from genshi.input import HTML
-from genshi.filters import Transformer
 
-import ckan.lib.helpers as h
-
-from ckan.lib.helpers import json
-
-from ckan.plugins import implements, SingletonPlugin
-from ckan.plugins import IRoutes, IConfigurer
-from ckan.plugins import IGenshiStreamFilter
-
-import html
+from ckan import plugins as p
 
 
 log = getLogger(__name__)
 
-class WMSPreview(SingletonPlugin):
 
-    implements(IGenshiStreamFilter)
-    implements(IRoutes, inherit=True)
-    implements(IConfigurer, inherit=True)
+class WMSPreview(p.SingletonPlugin):
 
-    def filter(self, stream):
-        from pylons import request, tmpl_context as c
-        routes = request.environ.get('pylons.routes_dict')
-
-        if routes.get('controller') == 'package' and \
-            routes.get('action') == 'read' and c.pkg.id:
-
-            for res in c.pkg.resources:
-                if res.format == "WMS":
-                    data = {'name': c.pkg.name}
-                    stream = stream | Transformer('body//div[@class="resources subsection"]')\
-                        .append(HTML(html.MAP_VIEW % data))
-
-                    break
-
-
-
-        return stream
-
-    def before_map(self, map):
-
-        map.redirect('/package/{id}/map','/dataset/{id}/map')
-        map.connect('map_view', '/dataset/:id/map',
-            controller='ckanext.spatial.controllers.view:ViewController',
-            action='wms_preview')
-
-        map.connect('proxy', '/proxy',
-            controller='ckanext.spatial.controllers.view:ViewController',
-            action='proxy')
-
-        return map
+    p.implements(p.IConfigurer, inherit=True)
+    p.implements(p.IResourcePreview, inherit=True)
 
     def update_config(self, config):
-        here = os.path.dirname(__file__)
+        ''' Set up the resource library, public directory and
+        template directory for the preview
+        '''
+        p.toolkit.add_public_directory(config, 'public')
+        p.toolkit.add_template_directory(config, 'templates/dataviewer')
+        p.toolkit.add_resource('public', 'ckanext-wmspreview')
 
-        template_dir = os.path.join(here, 'templates')
-        public_dir = os.path.join(here, 'public')
+        self.proxy_enabled = config.get('ckan.resource_proxy_enabled', False)
 
-        if config.get('extra_template_paths'):
-            config['extra_template_paths'] += ','+template_dir
+
+    def setup_template_variables(self, context, data_dict):
+        import ckanext.resourceproxy.plugin as proxy
+        if self.proxy_enabled and not data_dict['resource']['on_same_domain']:
+            p.toolkit.c.resource['proxy_url'] = proxy.get_proxified_resource_url(data_dict)
         else:
-            config['extra_template_paths'] = template_dir
-        if config.get('extra_public_paths'):
-            config['extra_public_paths'] += ','+public_dir
-        else:
-            config['extra_public_paths'] = public_dir
+            p.toolkit.c.resource['proxy_url'] = data_dict['resource']['url']
 
+    def can_preview(self, data_dict):
+        format_lower = data_dict['resource']['format'].lower()
+
+        check = format_lower in ['wms']
+        if not self.proxy_enabled and check:
+            check = data_dict['resource']['on_same_domain']
+
+        return check
+
+    def preview_template(self, context, data_dict):
+        return 'wms.html'
