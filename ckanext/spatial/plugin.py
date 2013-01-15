@@ -43,11 +43,21 @@ class SpatialMetadata(p.SingletonPlugin):
 
     p.implements(p.IPackageController, inherit=True)
     p.implements(p.IConfigurable, inherit=True)
+    p.implements(p.IConfigurer, inherit=True)
 
 
     def configure(self, config):
-        if not config.get('ckan.spatial.testing',False):
+
+        if not p.toolkit.asbool(config.get('ckan.spatial.testing', 'False')):
             setup_model()
+
+    def update_config(self, config):
+        ''' Set up the resource library, public directory and
+        template directory for all the spatial extensions
+        '''
+        p.toolkit.add_public_directory(config, 'public')
+        p.toolkit.add_template_directory(config, 'templates')
+        p.toolkit.add_resource('public', 'ckanext-spatial')
 
     def create(self, package):
         self.check_spatial_extra(package)

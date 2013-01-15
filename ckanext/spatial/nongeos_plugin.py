@@ -12,14 +12,8 @@ class WMSPreview(p.SingletonPlugin):
     p.implements(p.IResourcePreview, inherit=True)
 
     def update_config(self, config):
-        ''' Set up the resource library, public directory and
-        template directory for the preview
-        '''
-        p.toolkit.add_public_directory(config, 'public')
-        p.toolkit.add_template_directory(config, 'templates/dataviewer')
-        p.toolkit.add_resource('public', 'ckanext-wmspreview')
 
-        self.proxy_enabled = config.get('ckan.resource_proxy_enabled', False)
+        self.proxy_enabled = p.toolkit.asbool(config.get('ckan.resource_proxy_enabled', 'False'))
 
 
     def setup_template_variables(self, context, data_dict):
@@ -39,4 +33,4 @@ class WMSPreview(p.SingletonPlugin):
         return check
 
     def preview_template(self, context, data_dict):
-        return 'wms.html'
+        return 'dataviewer/wms.html'

@@ -1,4 +1,4 @@
-// recline preview module
+// WMS preview module
 this.ckan.module('wmspreview', function (jQuery, _) {
 
     // Private
