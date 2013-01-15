@@ -1,25 +1,15 @@
 import os
 import re
 from logging import getLogger
+
 from pylons import config
-from pylons.i18n import _
 from genshi.input import HTML
 from genshi.filters import Transformer
 
-import ckan.lib.helpers as h
+from ckan import plugins as p
 
 from ckan.lib.search import SearchError
 from ckan.lib.helpers import json
-
-from ckan import model
-
-from ckan.plugins import implements, SingletonPlugin
-from ckan.plugins import IRoutes
-from ckan.plugins import IConfigurable, IConfigurer
-from ckan.plugins import IGenshiStreamFilter
-from ckan.plugins import IPackageController
-
-from ckan.logic import ValidationError
 
 import html
 
@@ -35,30 +25,29 @@ def package_error_summary(error_dict):
     def prettify(field_name):
         field_name = re.sub('(?<!\w)[Uu]rl(?!\w)', 'URL',
                             field_name.replace('_', ' ').capitalize())
-        return _(field_name.replace('_', ' '))
+        return p.toolkit._(field_name.replace('_', ' '))
 
     summary = {}
     for key, error in error_dict.iteritems():
         if key == 'resources':
-            summary[_('Resources')] = _('Package resource(s) invalid')
+            summary[p.toolkit._('Resources')] = p.toolkit._('Package resource(s) invalid')
         elif key == 'extras':
-            summary[_('Extras')] = _('Missing Value')
+            summary[p.toolkit._('Extras')] = p.toolkit._('Missing Value')
         elif key == 'extras_validation':
-            summary[_('Extras')] = error[0]
+            summary[p.toolkit._('Extras')] = error[0]
         else:
-            summary[_(prettify(key))] = error[0]
+            summary[p.toolkit._(prettify(key))] = error[0]
     return summary
 
-class SpatialMetadata(SingletonPlugin):
+class SpatialMetadata(p.SingletonPlugin):
 
-    implements(IPackageController, inherit=True)
-    implements(IConfigurable, inherit=True)
+    p.implements(p.IPackageController, inherit=True)
+    p.implements(p.IConfigurable, inherit=True)
+
 
     def configure(self, config):
-
         if not config.get('ckan.spatial.testing',False):
             setup_model()
-
 
     def create(self, package):
         self.check_spatial_extra(package)
@@ -80,22 +69,22 @@ class SpatialMetadata(SingletonPlugin):
                         geometry = json.loads(extra.value)
                     except ValueError,e:
                         error_dict = {'spatial':[u'Error decoding JSON object: %s' % str(e)]}
-                        raise ValidationError(error_dict, error_summary=package_error_summary(error_dict))
+                        raise p.toolkit.ValidationError(error_dict, error_summary=package_error_summary(error_dict))
                     except TypeError,e:
                         error_dict = {'spatial':[u'Error decoding JSON object: %s' % str(e)]}
-                        raise ValidationError(error_dict, error_summary=package_error_summary(error_dict))
+                        raise p.toolkit.ValidationError(error_dict, error_summary=package_error_summary(error_dict))
 
                     try:
                         save_package_extent(package.id,geometry)
 
                     except ValueError,e:
                         error_dict = {'spatial':[u'Error creating geometry: %s' % str(e)]}
-                        raise ValidationError(error_dict, error_summary=package_error_summary(error_dict))
+                        raise p.toolkit.ValidationError(error_dict, error_summary=package_error_summary(error_dict))
                     except Exception, e:
                         if bool(os.getenv('DEBUG')):
                             raise
                         error_dict = {'spatial':[u'Error: %s' % str(e)]}
-                        raise ValidationError(error_dict, error_summary=package_error_summary(error_dict))
+                        raise p.toolkit.ValidationError(error_dict, error_summary=package_error_summary(error_dict))
 
                 elif extra.state == 'deleted':
                     # Delete extent from table
@@ -107,10 +96,10 @@ class SpatialMetadata(SingletonPlugin):
     def delete(self, package):
         save_package_extent(package.id,None)
 
-class SpatialQuery(SingletonPlugin):
+class SpatialQuery(p.SingletonPlugin):
 
-    implements(IRoutes, inherit=True)
-    implements(IPackageController, inherit=True)
+    p.implements(p.IRoutes, inherit=True)
+    p.implements(p.IPackageController, inherit=True)
 
     def before_map(self, map):
 
@@ -145,9 +134,9 @@ class SpatialQuery(SingletonPlugin):
 
         return search_params
 
-class SpatialQueryWidget(SingletonPlugin):
+class SpatialQueryWidget(p.SingletonPlugin):
 
-    implements(IGenshiStreamFilter)
+    p.implements(p.IGenshiStreamFilter)
 
     def filter(self, stream):
         from pylons import request, tmpl_context as c
@@ -169,10 +158,10 @@ class SpatialQueryWidget(SingletonPlugin):
         return stream
 
 
-class DatasetExtentMap(SingletonPlugin):
+class DatasetExtentMap(p.SingletonPlugin):
 
-    implements(IGenshiStreamFilter)
-    implements(IConfigurer, inherit=True)
+    p.implements(p.IGenshiStreamFilter)
+    p.implements(p.IConfigurer, inherit=True)
 
     def filter(self, stream):
         from pylons import request, tmpl_context as c
@@ -196,7 +185,7 @@ class DatasetExtentMap(SingletonPlugin):
                     map_attribution = '' # done in the js instead
                 
                 data = {'extent': extent,
-                        'title': _(title),
+                        'title': p.toolkit._(title),
                         'map_type': map_type,
                         'js_library_links': js_library_links,
                         'map_attribution': map_attribution,
@@ -213,6 +202,8 @@ class DatasetExtentMap(SingletonPlugin):
         return stream
 
     def update_config(self, config):
+
+
         here = os.path.dirname(__file__)
 
         template_dir = os.path.join(here, 'templates')
@@ -227,9 +218,9 @@ class DatasetExtentMap(SingletonPlugin):
         else:
             config['extra_public_paths'] = public_dir
 
-class CatalogueServiceWeb(SingletonPlugin):
-    implements(IConfigurable)
-    implements(IRoutes)
+class CatalogueServiceWeb(p.SingletonPlugin):
+    p.implements(p.IConfigurable)
+    p.implements(p.IRoutes)
 
     def configure(self, config):
         config.setdefault("cswservice.title", "Untitled Service - set cswservice.title in config")
@@ -265,7 +256,7 @@ class CatalogueServiceWeb(SingletonPlugin):
     def after_map(self, route_map):
         return route_map
 
-class HarvestMetadataApi(SingletonPlugin):
+class HarvestMetadataApi(p.SingletonPlugin):
     '''
     Harvest Metadata API
     (previously called "InspireApi")
@@ -273,7 +264,7 @@ class HarvestMetadataApi(SingletonPlugin):
     A way for a user to view the harvested metadata XML, either as a raw file or
     styled to view in a web browser.
     '''
-    implements(IRoutes)
+    p.implements(p.IRoutes)
         
     def before_map(self, route_map):
         controller = "ckanext.spatial.controllers.api:HarvestMetadataApiController"
