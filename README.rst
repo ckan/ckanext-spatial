@@ -11,7 +11,7 @@ The following plugins are currently available:
 * WMS Preview - a Web Map Service (WMS) previewer (`wms_preview`).
 * CSW Server - a basic CSW server - to server metadata from the CKAN instance (`cswserver`)
 * GEMINI Harvesters - for importing INSPIRE-style metadata into CKAN (`gemini_csw_harvester`, `gemini_doc_harvester`, `gemini_waf_harvester`)
-* Harvest Metadata API - a way for a user to view the harvested metadata XML, either as a raw file or styled to view in a web browser. (`inspire_api`)
+* Harvest Metadata API - a way for a user to view the harvested metadata XML, either as a raw file or styled to view in a web browser. (`spatial_harvest_metadata_api`)
 
 These snippets (to be used with CKAN>=2.0):
 * Dataset Extent Map - Map widget showing a dataset extent.
