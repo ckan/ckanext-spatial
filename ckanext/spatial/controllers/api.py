@@ -68,8 +68,8 @@ class HarvestMetadataApiController(BaseApiController):
             abort(404)
         ## optimise -- read transform only once and compile rather
         ## than at each request
-        with resource_stream("ckanext.inspire",
-                             "xml/gemini2-html-stylesheet.xsl") as style:
+        with resource_stream("ckanext.spatial",
+                             "templates/ckanext/spatial/gemini2-html-stylesheet.xsl") as style:
             style_xml = etree.parse(style)
             transformer = etree.XSLT(style_xml)
         xml = etree.parse(StringIO(obj.content.encode("utf-8")))
