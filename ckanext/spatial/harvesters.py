@@ -21,6 +21,7 @@ import sys
 import uuid
 import os
 import logging
+import difflib
 
 from lxml import etree
 from pylons import config
@@ -232,7 +233,11 @@ class GeminiHarvester(SpatialHarvester):
             else:
                 if last_harvested_object.content != self.obj.content and \
                  last_harvested_object.metadata_modified_date == self.obj.metadata_modified_date:
-                    raise Exception('The contents of document with GUID %s changed, but the metadata date has not been updated' % gemini_guid)
+                    diff_generator = difflib.HtmlDiff().make_table(
+                        last_harvested_object.content.split('\n'),
+                        self.obj.content.split('\n'))
+                    diff = '\n'.join([line for line in diff_generator])
+                    raise Exception('The contents of document with GUID %s changed, but the metadata date has not been updated.\nDiff:\n%s' % (gemini_guid, diff))
                 else:
                     # The content hasn't changed, no need to update the package
                     log.info('Document with GUID %s unchanged, skipping...' % (gemini_guid))
@@ -241,7 +246,6 @@ class GeminiHarvester(SpatialHarvester):
             log.info('No package with GEMINI guid %s found, let''s create one' % gemini_guid)
 
         extras = {
-            'published_by': self.obj.source.publisher_id or '',
             'UKLP': 'True',
             'harvest_object_id': self.obj.id
         }
@@ -783,7 +787,7 @@ class GeminiWafHarvester(GeminiHarvester, SingletonPlugin):
         if len(ids) > 0:
             return ids
         else:
-            self._save_gather_error('Couldn''t find any links to metadata files',
+            self._save_gather_error('Couldn\'t find any links to metadata files',
                                      harvest_job)
             return None
 
@@ -809,19 +813,25 @@ class GeminiWafHarvester(GeminiHarvester, SingletonPlugin):
             if not url:
                 continue
             if '?' in url:
+                log.debug('Ignoring link in WAF because it has "?": %s', url)
                 continue
             if '/' in url:
+                log.debug('Ignoring link in WAF because it has "/": %s', url)
                 continue
             if '#' in url:
+                log.debug('Ignoring link in WAF because it has "#": %s', url)
                 continue
             if 'mailto:' in url:
+                log.debug('Ignoring link in WAF because it has "mailto:": %s', url)
                 continue
+            log.debug('WAF contains file: %s', url)
             urls.append(url)
         base_url = base_url.rstrip('/').split('/')
         if 'index' in base_url[-1]:
             base_url.pop()
         base_url = '/'.join(base_url)
         base_url += '/'
+        log.debug('WAF base URL: %s', base_url)
         return [base_url + i for i in urls]
 
 

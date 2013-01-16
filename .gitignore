@@ -3,3 +3,4 @@ syntax: glob
 *.egg-info
 *.swp
 *~
+dist
