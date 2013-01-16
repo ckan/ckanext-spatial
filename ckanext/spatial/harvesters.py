@@ -243,7 +243,7 @@ class GeminiHarvester(SpatialHarvester):
                     log.info('Document with GUID %s unchanged, skipping...' % (gemini_guid))
                 return None
         else:
-            log.info('No package with GEMINI guid %s found, let''s create one' % gemini_guid)
+            log.info('No package with GEMINI guid %s found, let\'s create one' % gemini_guid)
 
         extras = {
             'UKLP': 'True',
@@ -525,9 +525,21 @@ class GeminiHarvester(SpatialHarvester):
         return package_dict
 
     def get_gemini_string_and_guid(self,content,url=None):
+        '''From a string buffer containing Gemini XML, return the tree
+        under gmd:MD_Metadata and the GUID for it. 
+
+        During the process it does validation:
+          * XML validation which may cause it to store gather_errors
+          * GeminiDocument multiplicity checks which may raise Exception.
+
+        :param content: string containing Gemini XML
+        :param url: string giving info about the location of the XML to be
+                    used only in validation errors
+        :returns: (gemini_string, gemini_guid)
+        '''
         xml = etree.fromstring(content)
 
-        # The validator and GeminiDocument don't like the container
+        # The validator and GeminiDocument don\'t like the container
         metadata_tag = '{http://www.isotc211.org/2005/gmd}MD_Metadata'
         if xml.tag == metadata_tag:
             gemini_xml = xml
@@ -804,7 +816,7 @@ class GeminiWafHarvester(GeminiHarvester, SingletonPlugin):
             parser = etree.HTMLParser()
             tree = etree.fromstring(content, parser=parser)
         except Exception, inst:
-            msg = 'Couldn''t parse content into a tree: %s: %s' \
+            msg = 'Couldn\'t parse content into a tree: %s: %s' \
                   % (inst, content)
             raise Exception(msg)
         urls = []
