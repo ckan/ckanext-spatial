@@ -31,7 +31,6 @@ setup(
     spatial_metadata=ckanext.spatial.plugin:SpatialMetadata
     spatial_query=ckanext.spatial.plugin:SpatialQuery
     spatial_query_widget=ckanext.spatial.plugin:SpatialQueryWidget
-    dataset_extent_map=ckanext.spatial.plugin:DatasetExtentMap
     wms_preview=ckanext.spatial.nongeos_plugin:WMSPreview
     cswserver=ckanext.spatial.plugin:CatalogueServiceWeb
     spatial_harvest_metadata_api=ckanext.spatial.plugin:HarvestMetadataApi
