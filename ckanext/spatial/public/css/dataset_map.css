@@ -2,6 +2,10 @@
   height: 200px;
 }
 
+.module-content #dataset-map-container{
+  height: 250px;
+}
+
 #dataset-map-attribution{
     font-size: x-small;
 }

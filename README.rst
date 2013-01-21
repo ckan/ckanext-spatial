@@ -8,11 +8,13 @@ The following plugins are currently available:
 * Spatial model for CKAN datasets and automatic geo-indexing (`spatial_metadata`)
 * Spatial Search - Spatial search integration and API call (`spatial_query`).
 * Spatial Search Widget - Map widget integrated on the search form (`spatial_query_widget`).
-* Dataset Extent Map - Map widget showing a dataset extent (`dataset_extent_map`).
 * WMS Preview - a Web Map Service (WMS) previewer (`wms_preview`).
 * CSW Server - a basic CSW server - to server metadata from the CKAN instance (`cswserver`)
 * GEMINI Harvesters - for importing INSPIRE-style metadata into CKAN (`gemini_csw_harvester`, `gemini_doc_harvester`, `gemini_waf_harvester`)
 * Harvest Metadata API - a way for a user to view the harvested metadata XML, either as a raw file or styled to view in a web browser. (`inspire_api`)
+
+These snippets (to be used with CKAN>=2.0):
+* Dataset Extent Map - Map widget showing a dataset extent.
 
 These libraries:
 * CSW Client - a basic client for accessing a CSW server
@@ -48,7 +50,7 @@ forms:
 - 4326
 
 As of CKAN 1.6, you can integrate your spatial query in the full CKAN
-search, via the web interface (see the `Spatial Query Widget`_) or
+search, via the web interface (see the `Spatial Search Widget`_) or
 via the `action API`__, e.g.::
 
     POST http://localhost:5000/api/action/package_search
@@ -96,25 +98,61 @@ where users can refine their searchs drawing an area of interest.
 Dataset Extent Map
 ------------------
 
-To enable the dataset map you need to add the `dataset_extent_map` plugin to your
-ini file (See `Configuration`_). You need to load the `spatial_metadata` plugin also.
-
-When the plugin is enabled, if datasets contain a 'spatial' extra like the one
+Using the snippets provided, if datasets contain a 'spatial' extra like the one
 described in the previous section, a map will be shown on the dataset details page.
 
+There are snippets already created to laod the map on the left sidebar or in the main
+bdoy of the dataset details page, but these can easily modified to suit your project
+needs
+
+To add a map to the sidebar, add this to the dataset details page template
+(eg `myproj/ckanext/myproj/templates/package/read.html`)::
+
+    {% block secondary_content %}
+      {{ super() }}
+
+      {% set dataset_extent = h.get_pkg_dict_extra(c.pkg_dict, 'spatial', '') %}
+      {% if dataset_extent %}
+        {% snippet "spatial/snippets/dataset_map_sidebar.html", extent=dataset_extent %}
+      {% endif %}
+
+    {% endblock %}
+
+For adding the map to the main body, add this::
+
+    {% block primary_content %}
+
+      <!-- ... -->
+
+      <article class="module prose">
+
+        <!-- ... -->
+
+        {% set dataset_extent = h.get_pkg_dict_extra(c.pkg_dict, 'spatial', '') %}
+        {% if dataset_extent %}
+          {% snippet "spatial/snippets/dataset_map.html", extent=dataset_extent %}
+        {% endif %}
+
+      </article>
+    {% endblock %}
+
+
+You need to load the `spatial_metadata` plugin to use these snippets.
 
 WMS Preview
 -----------
 
 To enable the WMS previewer you need to add the `wms_preview` plugin to your
-ini file (See `Configuration`_).
+ini file (See `Configuration`_). This plugin also requires the `resource_proxy`
+plugin and the following option in your ini file::
+
+    ckan.resource_proxy_enabled=1
 
 Please note that this is an experimental plugin and may be unstable.
 
 When the plugin is enabled, if datasets contain a resource that has 'WMS' format,
-a 'View available WMS layers' link will be displayed on the dataset details page.
-It forwards to a simple map viewer that will attempt to load the remote service
-layers, based on the GetCapabilities response.
+the resource page will load simple map viewer that will attempt to load the
+remote service layers, based on the GetCapabilities response.
 
 
 CSW Server
@@ -210,14 +248,14 @@ Validator
 
 This python library uses Schematron and other schemas to validate the XML.
 
-Here is a simple example of using the Validator library:
+Here is a simple example of using the Validator library::
 
- from ckanext.csw.validation import Validator
- xml = etree.fromstring(gemini_string)
- validator = Validator(profiles=('iso19139', 'gemini2', 'constraints'))
- valid, messages = validator.isvalid(xml)
- if not valid:
-     print "Validation error: " + messages[0] + ':\n' + '\n'.join(messages[1:])
+    from ckanext.csw.validation import Validator
+    xml = etree.fromstring(gemini_string)
+    validator = Validator(profiles=('iso19139', 'gemini2', 'constraints'))
+    valid, messages = validator.isvalid(xml)
+    if not valid:
+        print "Validation error: " + messages[0] + ':\n' + '\n'.join(messages[1:])
 
 In DGU, the Validator is integrated here:
 https://github.com/okfn/ckanext-inspire/blob/master/ckanext/inspire/harvesters.py#L88
@@ -341,7 +379,7 @@ SOLR Configuration
 
 If using Spatial Query functionality then there is an additional SOLR/Lucene setting that should be used to set the limit on number of datasets searchable with a spatial value.
 
-The setting is ``maxBooleanClauses`` in the solrconfig.xml and the value is the number of datasets spatially searchable. The default is ``1024`` and this could be increased to say ``16384``. For a SOLR single core this will probably be at `/etc/solr/conf/solrconfig.xml`. For a multiple core set-up, there will me several solrconfig.xml files a couple of levels below `/etc/solr`. For that case, *ALL* of the cores' `solrconfig.xml` should have this setting at the new value. 
+The setting is ``maxBooleanClauses`` in the solrconfig.xml and the value is the number of datasets spatially searchable. The default is ``1024`` and this could be increased to say ``16384``. For a SOLR single core this will probably be at `/etc/solr/conf/solrconfig.xml`. For a multiple core set-up, there will me several solrconfig.xml files a couple of levels below `/etc/solr`. For that case, *ALL* of the cores' `solrconfig.xml` should have this setting at the new value.
 
 Example::
 
@@ -350,9 +388,9 @@ Example::
 This setting is needed because PostGIS spatial query results are fed into SOLR using a Boolean expression, and the parser for that has a limit. So if your spatial area contains more than the limit (of which the default is 1024) then you will get this error::
 
  Dataset search error: ('SOLR returned an error running query...
- 
+
 and in the SOLR logs you see::
- 
+
  too many boolean clauses
  ...
  Caused by: org.apache.lucene.search.BooleanQuery$TooManyClauses:
@@ -586,7 +624,7 @@ Now check the install by running xmllint::
 
   $ xmllint --version
   xmllint: using libxml version 20900
-     compiled with: Threads Tree Output Push Reader Patterns Writer SAXv1 FTP HTTP DTDValid HTML Legacy C14N Catalog XPath XPointer XInclude Iconv ISO8859X Unicode Regexps Automata Expr Schemas Schematron Modules Debug Zlib 
+     compiled with: Threads Tree Output Push Reader Patterns Writer SAXv1 FTP HTTP DTDValid HTML Legacy C14N Catalog XPath XPointer XInclude Iconv ISO8859X Unicode Regexps Automata Expr Schemas Schematron Modules Debug Zlib
 
 Licence
 =======
@@ -596,5 +634,5 @@ This code falls under different copyrights, depending on when it was contributed
 * Crown Copyright
 * XML/XSD files: copyright of their respective owners, held in the files themselves
 
-All of this code is licensed for reuse under the Open Government Licence 
+All of this code is licensed for reuse under the Open Government Licence
 http://www.nationalarchives.gov.uk/doc/open-government-licence/

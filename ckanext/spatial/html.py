@@ -1,53 +1,10 @@
-MAP_VIEW="""
-<div class="mapview">
-    <a href="/dataset/%(name)s/map">View available WMS layers &raquo;</a>
-</div>
-"""
-
-PACKAGE_MAP_BASIC="""
-<div class="dataset-map subsection">
-<div id="dataset-map-container"></div>
-%(map_attribution)s
-</div>
-"""
-
-PACKAGE_MAP_EXTENDED="""
-<hr class="cleared" />
-<div class="dataset-map subsection">
-<h3>%(title)s</h3>
-<div id="dataset-map-container"></div>
-%(map_attribution)s
-</div>
-"""
-
-PACKAGE_MAP_EXTRA_HEADER="""
-    <link type="text/css" rel="stylesheet" media="all" href="/ckanext/spatial/css/dataset_map.css" />
-"""
-
-PACKAGE_MAP_EXTRA_FOOTER="""
-    %(js_library_links)s
-    <script type="text/javascript" src="/ckanext/spatial/js/dataset_map.js"></script>
-    <script type="text/javascript">
-        //<![CDATA[
-        $(document).ready(function(){
-            CKAN.DatasetMap.map_type = '%(map_type)s';
-            CKAN.DatasetMap.extent = '%(extent)s';
-            CKAN.DatasetMap.element = '#%(element_id)s';
-            CKAN.DatasetMap.setup();
-        })
-        //]]>
-    </script>
-
-
-"""
-
 SPATIAL_SEARCH_FORM_EXTRA_HEADER="""
-    <link type="text/css" rel="stylesheet" media="all" href="/ckanext/spatial/css/spatial_search_form.css" />
+    <link type="text/css" rel="stylesheet" media="all" href="/css/spatial_search_form.css" />
 """
 
 SPATIAL_SEARCH_FORM_EXTRA_FOOTER="""
-    <script type="text/javascript" src="/ckanext/spatial/js/openlayers/OpenLayers_dataset_map.js"></script>
-    <script type="text/javascript" src="/ckanext/spatial/js/spatial_search_form.js"></script>
+    <script type="text/javascript" src="js/openlayers/OpenLayers_dataset_map.js"></script>
+    <script type="text/javascript" src="js/spatial_search_form.js"></script>
     <script type="text/javascript">
         //<![CDATA[
         $(document).ready(function(){
