@@ -69,6 +69,7 @@ class Validation(CkanCommand):
 
     def validate_file(self):
         from ckanext.spatial.harvesters import SpatialHarvester
+        from ckanext.spatial.model import GeminiDocument
 
         if len(self.args) > 2:
             print 'Too many parameters %i' % len(self.args)
@@ -85,12 +86,36 @@ class Validation(CkanCommand):
 
         validators = SpatialHarvester()._get_validator()
         print 'Validators: %r' % validators.profiles
-        xml = etree.fromstring(metadata_xml.encode("utf-8"))
+        try:
+            xml_string = metadata_xml.encode("utf-8")
+        except UnicodeDecodeError, e:
+            print 'ERROR: Unicode Error reading file \'%s\': %s' % \
+                  (metadata_filepath, e)
+            sys.exit(1)
+            #import pdb; pdb.set_trace()
+        xml = etree.fromstring(xml_string)
+
+        # XML validation
         valid, errors = validators.is_valid(xml)
+
+        # CKAN read of values
+        if valid:
+            try:
+                gemini_document = GeminiDocument(xml_string)
+                gemini_values = gemini_document.read_values()
+            except Exception, e:
+                valid = False
+                errors.append('CKAN exception reading values from GeminiDocument: %s' % e)
+        
+        print '***************'
+        print 'Summary'
+        print '***************'
+        print 'File: \'%s\'' % metadata_filepath
         print 'Valid: %s' % valid
         if not valid:
             print 'Errors:'
             print pprint(errors)
+        print '***************'
 
     def report_csv(self):
         from ckanext.spatial.lib.reports import validation_report
