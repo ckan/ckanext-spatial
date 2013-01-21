@@ -116,17 +116,14 @@ class MappedXmlElement(MappedXmlObject):
         if self.multiplicity == "0":
             # 0 = None
             if values:
-                raise Exception(
-                    "Values found for element '%s': %s" % (self.name, values))
-            else:
-                return ""
+                log.warn("Values found for element '%s' when multiplicity should be 0: %s",  self.name, values)
+            return ""
         elif self.multiplicity == "1":
             # 1 = Mandatory, maximum 1 = Exactly one
-            if values:
-                return values[0]
-            else:
-                raise Exception(
-                    "Value not found for element '%s'" % self.name)
+            if not values:
+                log.warn("Value not found for element '%s'" % self.name)
+                return ''
+            return values[0]
         elif self.multiplicity == "*":
             # * = 0..* = zero or more
             return values
@@ -140,9 +137,9 @@ class MappedXmlElement(MappedXmlObject):
             # 1..* = one or more
             return values
         else:
-            raise Exception(
-                "Can't fix element values for multiplicity '%s'." % \
-                                self.multiplicity)
+            log.warning('Multiplicity not specified for element: %s',
+                        self.name)
+            return values
 
 
 class GeminiElement(MappedXmlElement):
