@@ -276,13 +276,24 @@ class Gemini2Schematron(SchematronValidator):
                              "validation/xml/gemini2/gemini2-schematron-20110906-v1.2.sch") as schema:
             return [cls.schematron(schema)]
 
+class Gemini2Schematron13(SchematronValidator):
+    name = 'gemini2-1.3'
+    title = 'GEMINI 2.1 Schematron 1.3a'
+
+    @classmethod
+    def get_schematrons(cls):
+        with resource_stream("ckanext.spatial",
+                             "validation/xml/gemini2/Gemini2_R1r3a.sch") as schema:
+            return [cls.schematron(schema)]
+
 all_validators = (ISO19139Schema,
                   ISO19139EdenSchema,
                   ISO19139NGDCSchema,
                   FGDCSchema,
                   ConstraintsSchematron,
                   ConstraintsSchematron14,
-                  Gemini2Schematron)
+                  Gemini2Schematron,
+                  Gemini2Schematron13)
 
 
 class Validators(object):
