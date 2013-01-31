@@ -13,7 +13,8 @@ from ckanext.harvest.model import (setup as harvest_model_setup,
                                    HarvestSource, HarvestJob, HarvestObject)
 from ckanext.spatial.validation import Validators, SchematronValidator
 from ckanext.spatial.harvesters import (GeminiCswHarvester, GeminiDocHarvester,
-                                        GeminiWafHarvester, SpatialHarvester)
+                                        GeminiWafHarvester, SpatialHarvester,
+                                        GeminiHarvester)
 from ckanext.spatial.model.package_extent import setup as spatial_db_setup
 from ckanext.spatial.tests.base import SpatialTestBase
 
@@ -165,7 +166,7 @@ class TestHarvest(HarvestFixtureBase):
 
         pkgs = Session.query(Package).all()
 
-        assert len(pkgs) == 2
+        assert_equal(len(pkgs), 2)
 
         pkg_ids = [pkg.id for pkg in pkgs]
 
@@ -801,6 +802,34 @@ class TestHarvest(HarvestFixtureBase):
 
         source_dict = get_action('harvest_source_show')(self.context,{'id':source.id})
         assert len(source_dict['status']['packages']) == 1
+
+class TestImportStageTools:
+    def test_licence_url_normal(self):
+        assert_equal(GeminiHarvester._extract_first_licence_url(
+            ['Reference and PSMA Only',
+             'http://www.test.gov.uk/licenseurl']),
+                     'http://www.test.gov.uk/licenseurl')
+
+    def test_licence_url_multiple_urls(self):
+        # only the first URL is extracted
+        assert_equal(GeminiHarvester._extract_first_licence_url(
+            ['Reference and PSMA Only',
+             'http://www.test.gov.uk/licenseurl',
+             'http://www.test.gov.uk/2nd_licenseurl']),
+                     'http://www.test.gov.uk/licenseurl')
+
+    def test_licence_url_embedded(self):
+        # URL is embedded within the text field and not extracted
+        assert_equal(GeminiHarvester._extract_first_licence_url(
+            ['Reference and PSMA Only http://www.test.gov.uk/licenseurl']),
+                     None)
+
+    def test_licence_url_embedded_at_start(self):
+        # URL is embedded at the start of the text field and the
+        # whole field is returned. Noting this unusual behaviour
+        assert_equal(GeminiHarvester._extract_first_licence_url(
+            ['http://www.test.gov.uk/licenseurl Reference and PSMA Only']),
+                     'http://www.test.gov.uk/licenseurl Reference and PSMA Only')
 
 
 class TestValidation(HarvestFixtureBase):
