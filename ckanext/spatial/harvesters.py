@@ -161,6 +161,8 @@ class GeminiHarvester(SpatialHarvester):
         The harvest_source_reference is an ID that the harvest_source uses
         for the metadata document. It is the same ID the Coupled Resources
         use to link dataset and service records.
+
+        Some errors raise Exceptions.
         '''
         log = logging.getLogger(__name__ + '.import')
         xml = etree.fromstring(gemini_string)
@@ -173,6 +175,7 @@ class GeminiHarvester(SpatialHarvester):
 
         unicode_gemini_string = etree.tostring(xml, encoding=unicode, pretty_print=True)
 
+        # may raise Exception for errors
         package_dict = self.write_package_from_gemini_string(unicode_gemini_string)
 
         if package_dict:
@@ -184,7 +187,8 @@ class GeminiHarvester(SpatialHarvester):
         '''Create or update a Package based on some content that has
         come from a URL.
 
-        Returns the package_dict of the result, or None if there is an error.
+        Returns the package_dict of the result.
+        If there is an error, it returns None or raises Exception.
         '''
         log = logging.getLogger(__name__ + '.import')
         package = None
@@ -247,7 +251,7 @@ class GeminiHarvester(SpatialHarvester):
             else:
                 if last_harvested_object.content != self.obj.content and \
                  last_harvested_object.metadata_modified_date == self.obj.metadata_modified_date:
-                    diff_generator = difflib.HtmlDiff().make_table(
+                    diff_generator = difflib.unified_diff(
                         last_harvested_object.content.split('\n'),
                         self.obj.content.split('\n'))
                     diff = '\n'.join([line for line in diff_generator])
