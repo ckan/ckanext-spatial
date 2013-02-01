@@ -338,36 +338,10 @@ class GeminiHarvester(SpatialHarvester):
             extras['temporal_coverage-to'] = gemini_values['temporal-extent-end']
 
         # Save responsible organization roles
-        parties = {}
-        owners = []
-        publishers = []
-        for responsible_party in gemini_values['responsible-organisation']:
-
-            if responsible_party['role'] == 'owner':
-                owners.append(responsible_party['organisation-name'])
-            elif responsible_party['role'] == 'publisher':
-                publishers.append(responsible_party['organisation-name'])
-
-            if responsible_party['organisation-name'] in parties:
-                if not responsible_party['role'] in parties[responsible_party['organisation-name']]:
-                    parties[responsible_party['organisation-name']].append(responsible_party['role'])
-            else:
-                parties[responsible_party['organisation-name']] = [responsible_party['role']]
-
-        parties_extra = []
-        for party_name in parties:
-            parties_extra.append('%s (%s)' % (party_name, ', '.join(parties[party_name])))
-        extras['responsible-party'] = '; '.join(parties_extra)
-
-        # Save provider in a separate extra:
-        # first organization to have a role of 'owner', and if there is none, first one with
-        # a role of 'publisher'
-        if len(owners):
-            extras['provider'] = owners[0]
-        elif len(publishers):
-            extras['provider'] = publishers[0]
-        else:
-            extras['provider'] = u''
+        provider, responsible_parties = self._process_responsible_organisation(
+            gemini_values['responsible-organisation'])
+        extras['provider'] = provider
+        extras['responsible-party'] = '; '.join(responsible_parties)
 
         # Construct a GeoJSON extent so ckanext-spatial can register the extent geometry
         extent_string = self.extent_template.substitute(
@@ -488,6 +462,48 @@ class GeminiHarvester(SpatialHarvester):
         assert self.obj.id == [e['value'] for e in package['extras'] if e['key'] ==  'harvest_object_id'][0]
 
         return package
+
+    @classmethod
+    def _process_responsible_organisation(cls, responsible_organisations):
+        '''Given the list of responsible_organisations and their roles,
+        (extracted from the GeminiDocument) determines who the provider is
+        and the list of all responsible organisations and their roles.
+
+        :param responsible_organisations: list of dicts, each with keys
+                      includeing 'organisation-name' and 'role'
+        :returns: tuple of: 'provider' (string, may be empty) and
+                  'responsible-parties' (list of strings)
+        '''
+        parties = {}
+        owners = []
+        publishers = []
+        for responsible_party in responsible_organisations:
+            if responsible_party['role'] == 'owner':
+                owners.append(responsible_party['organisation-name'])
+            elif responsible_party['role'] == 'publisher':
+                publishers.append(responsible_party['organisation-name'])
+
+            if responsible_party['organisation-name'] in parties:
+                if not responsible_party['role'] in parties[responsible_party['organisation-name']]:
+                    parties[responsible_party['organisation-name']].append(responsible_party['role'])
+            else:
+                parties[responsible_party['organisation-name']] = [responsible_party['role']]
+
+        responsible_parties = []
+        for party_name in parties:
+            responsible_parties.append('%s (%s)' % (party_name, ', '.join(parties[party_name])))
+
+        # Save provider in a separate extra:
+        # first organization to have a role of 'owner', and if there is none, first one with
+        # a role of 'publisher'
+        if len(owners):
+            provider = owners[0]
+        elif len(publishers):
+            provider = publishers[0]
+        else:
+            provider = u''
+
+        return provider, responsible_parties
 
     def gen_new_name(self, title):
         name = munge_title_to_name(title).replace('_', '-')
