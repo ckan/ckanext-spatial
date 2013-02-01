@@ -68,7 +68,7 @@
      - Vertical extent (Metadata item 16) - remove rule restricting number of vertical extent elements
      to 0 or 1.
 	 
-	 2012-12-20 - Version 1.3a
+	 2012-12-20 - Version 1.3
 	 - Metadata language - ensure that metadata contains one metadata language element. Gemini2-mi33 edited and rule added.
 -->
 
