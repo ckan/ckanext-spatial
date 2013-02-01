@@ -218,6 +218,9 @@ class GeminiHarvester(SpatialHarvester):
     def write_package_from_gemini_string(self, content):
         '''Create or update a Package based on some content that has
         come from a URL.
+
+        Returns the package_dict of the result.
+        If there is an error, it returns None or raises Exception.
         '''
         log = logging.getLogger(__name__ + '.import')
         package = None
@@ -280,7 +283,7 @@ class GeminiHarvester(SpatialHarvester):
             else:
                 if last_harvested_object.content != self.obj.content and \
                  last_harvested_object.metadata_modified_date == self.obj.metadata_modified_date:
-                    diff_generator = difflib.HtmlDiff().make_table(
+                    diff_generator = difflib.unified_diff(
                         last_harvested_object.content.split('\n'),
                         self.obj.content.split('\n'))
                     diff = '\n'.join([line for line in diff_generator])
