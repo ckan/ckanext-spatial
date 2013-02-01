@@ -64,6 +64,8 @@ debug_exception_mode = bool(os.getenv('DEBUG'))
 
 class SpatialHarvester(object):
     # Q: Why does this not inherit from HarvesterBase in ckanext-harvest?
+    # A: HarvesterBase just provides some useful util methods. The key thing
+    #    a harvester does is it implements(IHarvester).
 
     def _is_wms(self,url):
         try:
