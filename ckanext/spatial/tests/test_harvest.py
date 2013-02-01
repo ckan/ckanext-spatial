@@ -844,6 +844,67 @@ class TestImportStageTools:
             ['http://www.test.gov.uk/licenseurl Reference and PSMA Only']),
                      'http://www.test.gov.uk/licenseurl Reference and PSMA Only')
 
+    def test_responsible_organisation_basic(self):
+        responsible_organisation = [{'organisation-name': 'Ordnance Survey',
+                                     'role': 'owner'},
+                                    {'organisation-name': 'Maps Ltd',
+                                     'role': 'distributor'}]
+        assert_equal(GeminiHarvester._process_responsible_organisation(responsible_organisation),
+                     ('Ordnance Survey', ['Maps Ltd (distributor)',
+                                          'Ordnance Survey (owner)']))
+
+    def test_responsible_organisation_publisher(self):
+        # no owner, so falls back to publisher
+        responsible_organisation = [{'organisation-name': 'Ordnance Survey',
+                                     'role': 'publisher'},
+                                    {'organisation-name': 'Maps Ltd',
+                                     'role': 'distributor'}]
+        assert_equal(GeminiHarvester._process_responsible_organisation(responsible_organisation),
+                     ('Ordnance Survey', ['Maps Ltd (distributor)',
+                                          'Ordnance Survey (publisher)']))
+
+    def test_responsible_organisation_owner(self):
+        # provider is the owner (ignores publisher)
+        responsible_organisation = [{'organisation-name': 'Ordnance Survey',
+                                     'role': 'publisher'},
+                                    {'organisation-name': 'Owner',
+                                     'role': 'owner'},
+                                    {'organisation-name': 'Maps Ltd',
+                                     'role': 'distributor'}]
+        assert_equal(GeminiHarvester._process_responsible_organisation(responsible_organisation),
+                     ('Owner', ['Owner (owner)',
+                                'Maps Ltd (distributor)',
+                                'Ordnance Survey (publisher)',
+                                ]))
+
+    def test_responsible_organisation_multiple_roles(self):
+        # provider is the owner (ignores publisher)
+        responsible_organisation = [{'organisation-name': 'Ordnance Survey',
+                                     'role': 'publisher'},
+                                    {'organisation-name': 'Ordnance Survey',
+                                     'role': 'custodian'},
+                                    {'organisation-name': 'Distributor',
+                                     'role': 'distributor'}]
+        assert_equal(GeminiHarvester._process_responsible_organisation(responsible_organisation),
+                     ('Ordnance Survey', ['Distributor (distributor)',
+                                          'Ordnance Survey (publisher, custodian)',
+                                ]))
+
+    def test_responsible_organisation_blank_provider(self):
+        # no owner or publisher, so blank provider
+        responsible_organisation = [{'organisation-name': 'Ordnance Survey',
+                                     'role': 'resourceProvider'},
+                                    {'organisation-name': 'Maps Ltd',
+                                     'role': 'distributor'}]
+        assert_equal(GeminiHarvester._process_responsible_organisation(responsible_organisation),
+                     ('', ['Maps Ltd (distributor)',
+                           'Ordnance Survey (resourceProvider)']))
+
+    def test_responsible_organisation_blank(self):
+        # no owner or publisher, so blank provider
+        responsible_organisation = []
+        assert_equal(GeminiHarvester._process_responsible_organisation(responsible_organisation),
+                     ('', []))
 
 class TestValidation(HarvestFixtureBase):
 
