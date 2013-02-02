@@ -102,8 +102,8 @@ class SpatialHarvester(object):
             self._validator = Validators(profiles=profiles)
         return self._validator
 
-    def _save_gather_error(self,message,job):
-        err = HarvestGatherError(message=message,job=job)
+    def _save_gather_error(self, message, job):
+        err = HarvestGatherError(message=message, job=job)
         try:
             err.save()
         except InvalidRequestError:
@@ -594,9 +594,8 @@ class GeminiHarvester(SpatialHarvester):
         '''From a string buffer containing Gemini XML, return the tree
         under gmd:MD_Metadata and the GUID for it. 
 
-        During the process it does validation:
-          * XML validation which may cause it to store gather_errors
-          * GeminiDocument multiplicity checks which may raise Exception.
+        If it cannot parse the XML it will raise lxml.etree.XMLSyntaxError.
+        If it cannot find the GUID element, then gemini_guid will be ''.
 
         :param content: string containing Gemini XML
         :param url: string giving info about the location of the XML to be
@@ -613,20 +612,14 @@ class GeminiHarvester(SpatialHarvester):
             gemini_xml = xml.find(metadata_tag)
 
         if gemini_xml is None:
-            self._save_gather_error('Content is not a valid Gemini document',self.harvest_job)
-
-        valid, profile, errors = self._get_validator().is_valid(gemini_xml)
-        if not valid:
-            out = errors[0][0] + ':\n' + '\n'.join(e[0] for e in errors[1:])
-            if url:
-                self._save_gather_error('Validation error for %s - %s'% (url,out),self.harvest_job)
-            else:
-                self._save_gather_error('Validation error - %s'%out,self.harvest_job)
+            self._save_gather_error('Content is not a valid Gemini document without the gmd:MD_Metadata element', self.harvest_job)
 
         gemini_string = etree.tostring(gemini_xml)
         gemini_document = GeminiDocument(gemini_string)
-        gemini_values = gemini_document.read_values()
-        gemini_guid = gemini_values['guid']
+        try:
+            gemini_guid = gemini_document.read_value('guid')
+        except KeyError:
+            gemini_guid = None
 
         return gemini_string, gemini_guid
 

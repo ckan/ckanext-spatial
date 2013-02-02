@@ -1,7 +1,7 @@
 from datetime import datetime, date
 import lxml
 
-from nose.tools import assert_equal, assert_in
+from nose.tools import assert_equal, assert_in, assert_raises
 
 from ckan import plugins
 from ckan.lib.base import config
@@ -82,7 +82,7 @@ class HarvestFixtureBase(SpatialTestBase):
 
         return job
 
-    def _create_source_and_job(self,source_fixture):
+    def _create_source_and_job(self, source_fixture):
         context ={'model':model,
                  'session':Session,
                  'user':u'harvest'}
@@ -444,16 +444,7 @@ class TestHarvest(HarvestFixtureBase):
         assert object_ids, len(object_ids) == 1
 
         # No gather errors
-        assert len(job.gather_errors) == 1
-        assert job.gather_errors[0].harvest_job_id == job.id
-
-        message = job.gather_errors[0].message
-
-        assert_in('Validation error', message)
-        assert_in('One email address shall be provided', message)
-        assert_in('Service type shall be one of \'discovery\', \'view\', \'download\', \'transformation\', \'invoke\' or \'other\' following INSPIRE generic names', message)
-        assert_in('Limitations on public access code list value shall be \'otherRestrictions\'', message)
-        assert_in('One organisation name shall be provided', message)
+        assert len(job.gather_errors) == 0
 
         # Fetch stage always returns True for Single Doc harvesters
         assert harvester.fetch_stage(object_ids) == True
@@ -466,6 +457,15 @@ class TestHarvest(HarvestFixtureBase):
 
         # Check errors
         assert len(obj.errors) == 1
+        assert obj.errors[0].harvest_object_id == obj.id
+
+        message = obj.errors[0].message
+
+        assert_in('Validating against "GEMINI 2.1 Schematron 1.2" profile failed', message)
+        assert_in('One email address shall be provided', message)
+        assert_in('Service type shall be one of \'discovery\', \'view\', \'download\', \'transformation\', \'invoke\' or \'other\' following INSPIRE generic names', message)
+        assert_in('Limitations on public access code list value shall be \'otherRestrictions\'', message)
+        assert_in('One organisation name shall be provided', message)
 
 
     def test_harvest_update_records(self):
@@ -801,6 +801,48 @@ class TestHarvest(HarvestFixtureBase):
 
         source_dict = get_action('harvest_source_show')(self.context,{'id':source.id})
         assert len(source_dict['status']['packages']) == 1
+
+BASIC_GEMINI = '''<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco">
+  <gmd:fileIdentifier xmlns:gml="http://www.opengis.net/gml">
+    <gco:CharacterString>e269743a-cfda-4632-a939-0c8416ae801e</gco:CharacterString>
+  </gmd:fileIdentifier>
+  <gmd:hierarchyLevel>
+    <gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="service">service</gmd:MD_ScopeCode>
+  </gmd:hierarchyLevel>
+</gmd:MD_Metadata>'''
+GUID = 'e269743a-cfda-4632-a939-0c8416ae801e'
+GEMINI_MISSING_GUID = '''<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"/>'''
+
+class TestGatherMethods(HarvestFixtureBase):
+    def setup(self):
+        HarvestFixtureBase.setup(self)
+        # Create source
+        source_fixture = {
+            'url': u'http://127.0.0.1:8999/gemini2.1/dataset1.xml',
+            'type': u'gemini-single'
+        }
+        source, job = self._create_source_and_job(source_fixture)
+        self.harvester = GeminiHarvester()
+        self.harvester.harvest_job = job
+
+    def teardown(self):
+        model.repo.rebuild_db()
+
+    def test_get_gemini_string_and_guid(self):
+        res = self.harvester.get_gemini_string_and_guid(BASIC_GEMINI, url=None)
+        assert_equal(res, (BASIC_GEMINI, GUID))
+
+    def test_get_gemini_string_and_guid__no_guid(self):
+        res = self.harvester.get_gemini_string_and_guid(GEMINI_MISSING_GUID, url=None)
+        assert_equal(res, (GEMINI_MISSING_GUID, ''))
+
+    def test_get_gemini_string_and_guid__non_parsing(self):
+        content = '<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco">' # no closing tag
+        assert_raises(lxml.etree.XMLSyntaxError, self.harvester.get_gemini_string_and_guid, content)
+
+    def test_get_gemini_string_and_guid__empty(self):
+        content = ''
+        assert_raises(lxml.etree.XMLSyntaxError, self.harvester.get_gemini_string_and_guid, content)
 
 class TestImportStageTools:
     def test_licence_url_normal(self):
