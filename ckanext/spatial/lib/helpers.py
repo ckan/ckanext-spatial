@@ -12,9 +12,7 @@ def get_coupled_packages(pkg):
         coupled_packages = \
                   [(couple.service_record.name, couple.service_record.title) \
                    for couple in coupled_resources \
-                   if couple.service_record_package_id and \
-                   couple.service_record and \
-                   couple.service_record.state == 'active']
+                   if couple.service_record_package_id]
         return coupled_packages
     
     elif res_type == 'service':
@@ -23,8 +21,6 @@ def get_coupled_packages(pkg):
         coupled_packages = \
                   [(couple.dataset_record.name, couple.dataset_record.title) \
                    for couple in coupled_resources \
-                   if couple.dataset_record_package_id and \
-                   couple.dataset_record and \
-                   couple.dataset_record.state == 'active']
+                   if couple.dataset_record_package_id]
         return coupled_packages
 
