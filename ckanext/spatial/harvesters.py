@@ -141,8 +141,7 @@ class GeminiHarvester(SpatialHarvester):
             self._save_object_error('Empty content for object %s' % harvest_object.id,harvest_object,'Import')
             return False
         try:
-            self.import_gemini_object(harvest_object.content,
-                                      harvest_object.harvest_source_reference)
+            self.import_gemini_object(harvest_object.content)
             return True
         except Exception, e:
             log.error('Exception during import: %s' % text_traceback())
@@ -260,8 +259,7 @@ class GeminiHarvester(SpatialHarvester):
 
         extras = {
             'UKLP': 'True',
-            'harvest_object_id': self.obj.id,
-            'harvest_source_reference': self.obj.harvest_source_reference,
+            'harvest_object_id': self.obj.id
         }
 
         # Just add some of the metadata as extras, not the whole lot
@@ -631,8 +629,7 @@ class GeminiCswHarvester(GeminiHarvester, SingletonPlugin):
                         continue
 
                     # Create a new HarvestObject for this identifier
-                    obj = HarvestObject(guid=identifier, job=harvest_job,
-                                        harvest_source_reference=guid)
+                    obj = HarvestObject(guid=identifier, job=harvest_job)
                     obj.save()
 
                     ids.append(obj.id)
@@ -732,8 +729,7 @@ class GeminiDocHarvester(GeminiHarvester, SingletonPlugin):
                 # have it, we might as well save a request
                 obj = HarvestObject(guid=gemini_guid,
                                     job=harvest_job,
-                                    content=gemini_string,
-                                    harvest_source_reference=gemini_string)
+                                    content=gemini_string)
                 obj.save()
 
                 log.info('Got GUID %s' % gemini_guid)
@@ -805,8 +801,7 @@ class GeminiWafHarvester(GeminiHarvester, SingletonPlugin):
                             # have it, we might as well save a request
                             obj = HarvestObject(guid=gemini_guid,
                                                 job=harvest_job,
-                                                content=gemini_string,
-                                                harvest_source_reference=url)
+                                                content=gemini_string)
                             obj.save()
 
                             ids.append(obj.id)
