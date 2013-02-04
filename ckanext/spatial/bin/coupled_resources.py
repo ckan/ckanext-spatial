@@ -12,12 +12,15 @@ from pylons import config
 from nose.tools import assert_equal
 from lxml import etree
 
+from ckan.lib.base import json
+from ckanext.spatial.model import GeminiDocument
+from ckanext.spatial.lib.coupled_resource import extract_guid
+
 from ckanext.dgu.bin import common
 from ckanext.dgu.bin.running_stats import StatsList
 
 service_stats = StatsList()
 couple_stats = StatsList()
-additional_couple_stats = StatsList()
 
 class FindError(Exception):
     pass
@@ -28,12 +31,9 @@ class CoupledResources(object):
         '''Finds datasets that are coupled and adds their
         harvest_source_reference to the HarvestObject and package extras.
         '''
-        from ckan.lib.base import json
         from ckan import model
         from ckanext.harvest.model import HarvestObject
-        from ckanext.spatial.model import GeminiDocument
-        from ckanext.spatial.lib.coupled_resource import extract_guid
-
+        
         # Find service records
         for service_record in model.Session.query(model.Package).\
             filter_by(state='active').\
@@ -41,6 +41,16 @@ class CoupledResources(object):
             filter_by(state='active').\
             filter_by(key='resource-type').\
             filter_by(value='service'):
+
+            ## # Get HarvestObject
+            ## harvest_object_id = service_record.extras.get('harvest_object_id')
+            ## if not harvest_object_id:
+            ##     service_stats.add('No harvest_object_id', service_record.name)
+            ##     continue
+            ## harvest_object = HarvestObject.get(harvest_object_id)
+            ## if not harvest_object:
+            ##     service_stats.add('No harvest_object found for id', service_record.name)
+            ##     continue
 
             # Find coupled dataset records
             service_type = service_record.extras['resource-type']
@@ -101,7 +111,7 @@ class CoupledResources(object):
                     log.info('Couple completed %s <-> %s',
                              service_record.name, dataset_record.name)
                     
-                    cls.add_coupling(service_record, dataset_record, harvest_object, guid)
+                    cls.add_coupling(harvest_object, guid)
                     couples_detected = True
                     continue
 
@@ -173,7 +183,7 @@ class CoupledResources(object):
                 log.info('Couple completed %s <-> %s',
                          service_record.name, dataset_record.name)
 
-                cls.add_coupling(service_record, dataset_record, harvest_object, href)
+                cls.add_coupling(harvest_object, href)
                 couples_detected = True
 
             if coupled_resources:
@@ -191,24 +201,11 @@ class CoupledResources(object):
                 continue                
 
         model.Session.remove()
-
-        # Ensure all dataset records are in the harvest_coupled_resource table
-        # for future reference
-        for dataset_record in model.Session.query(model.Package).\
-            filter_by(state='active').\
-            join(model.PackageExtra).\
-            filter_by(state='active').\
-            filter_by(key='resource-type').\
-            filter(model.PackageExtra.value.in_(('dataset', 'series'))):
-            cls.ensure_dataset_is_in_couple_table(dataset_record)
-        model.Session.remove()
-        
+                
         print "\nServices:"
         print service_stats.report()
         print "\nCouples:"
         print couple_stats.report()
-        print "\nAdditional datasets added to couple table:"
-        print additional_couple_stats.report()
     
     @classmethod
     def find_harvest_object_by_guid(cls, guid):
@@ -228,64 +225,13 @@ class CoupledResources(object):
 
         
     @classmethod
-    def add_coupling(cls, service_record, dataset_record,
-                     dataset_harvest_object, harvest_source_reference):
+    def add_coupling(cls, dataset_harvest_object, harvest_source_reference):
         from ckan import model
-        from ckanext.harvest.model import HarvestCoupledResource
-        
         if dataset_harvest_object.harvest_source_reference != harvest_source_reference:
             rev = model.repo.new_revision()
             rev.author = 'Couple migration'
             dataset_harvest_object.harvest_source_reference = harvest_source_reference
             model.Session.commit()
-        q = model.Session.query(HarvestCoupledResource) \
-            .filter_by(service_record_package_id=service_record.id) \
-            .filter_by(dataset_record_package_id=dataset_record.id) \
-            .filter_by(harvest_source_reference=harvest_source_reference)
-        if q.count() == 0:
-            rev = model.repo.new_revision()
-            rev.author = 'Couple migration'
-            obj = HarvestCoupledResource(
-                service_record_package_id=service_record.id,
-                dataset_record_package_id=dataset_record.id,
-                harvest_source_reference=harvest_source_reference)
-            model.Session.add(obj)
-            model.Session.commit()
-
-    @classmethod
-    def ensure_dataset_is_in_couple_table(cls, dataset_record):
-        from ckan import model
-        from ckanext.harvest.model import HarvestCoupledResource
-        
-        q = model.Session.query(HarvestCoupledResource) \
-            .filter_by(dataset_record_package_id=dataset_record.id)
-        if q.count() == 0:
-            harvest_objects = [ho for ho in dataset_record.harvest_objects \
-                               if ho.current]
-            if len(harvest_objects) != 1:
-                log.warning('Wrong num of current harvest_objects (%i)',
-                            len(harvest_objects))
-                additional_couple_stats.add('Wrong num of harvest_objects (%i)' % len(harvest_objects),
-                                            dataset_record.name)
-                return
-            harvest_object = harvest_objects[0]
-            harvest_source_reference = harvest_object.harvest_source_reference
-            
-            rev = model.repo.new_revision()
-            rev.author = 'Couple migration'
-            obj = HarvestCoupledResource(
-                dataset_record_package_id=dataset_record.id,
-                harvest_source_reference=harvest_source_reference)
-            model.Session.add(obj)
-            model.Session.commit()
-            additional_couple_stats.add('Added to couple table',
-                                        dataset_record.name)
-            log.info('Added to couple table: %s', dataset_record.name)
-        else:
-            additional_couple_stats.add('Already in couple table',
-                                        dataset_record.name)
-            log.info('Already in couple table: %s', dataset_record.name)
-        
 
     @classmethod
     def setup_logging(cls, config_ini_filepath):
