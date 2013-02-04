@@ -234,6 +234,8 @@ class CoupledResources(object):
         from ckanext.harvest.model import HarvestCoupledResource
         
         if dataset_harvest_object.harvest_source_reference != harvest_source_reference:
+            rev = model.repo.new_revision()
+            rev.author = 'Couple migration'
             dataset_harvest_object.harvest_source_reference = harvest_source_reference
             model.Session.commit()
         q = model.Session.query(HarvestCoupledResource) \
@@ -241,6 +243,8 @@ class CoupledResources(object):
             .filter_by(dataset_record_package_id=dataset_record.id) \
             .filter_by(harvest_source_reference=harvest_source_reference)
         if q.count() == 0:
+            rev = model.repo.new_revision()
+            rev.author = 'Couple migration'
             obj = HarvestCoupledResource(
                 service_record_package_id=service_record.id,
                 dataset_record_package_id=dataset_record.id,
@@ -267,6 +271,8 @@ class CoupledResources(object):
             harvest_object = harvest_objects[0]
             harvest_source_reference = harvest_object.harvest_source_reference
             
+            rev = model.repo.new_revision()
+            rev.author = 'Couple migration'
             obj = HarvestCoupledResource(
                 dataset_record_package_id=dataset_record.id,
                 harvest_source_reference=harvest_source_reference)

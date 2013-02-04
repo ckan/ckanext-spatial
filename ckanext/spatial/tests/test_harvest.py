@@ -10,8 +10,7 @@ from ckan.model import Session,Package
 from ckan.logic.schema import default_update_package_schema
 from ckan.logic import get_action
 from ckanext.harvest.model import (setup as harvest_model_setup,
-                                   HarvestSource, HarvestJob, HarvestObject,
-                                   HarvestCoupledResource)
+                                   HarvestSource, HarvestJob, HarvestObject)
 from ckanext.spatial.validation import Validators, SchematronValidator
 from ckanext.spatial.harvesters import (GeminiCswHarvester, GeminiDocHarvester,
                                         GeminiWafHarvester, SpatialHarvester,
@@ -262,18 +261,17 @@ class TestHarvest(HarvestFixtureBase):
                 raise AssertionError('Unexpected value for extra %s: %s (was expecting %s)' % \
                     (key, package_dict['extras'][key], value))
 
-        # Much of this depends on the particular WMS server working...
         expected_resource = {
-            #'ckan_recommended_wms_preview': 'True',
+            'ckan_recommended_wms_preview': 'True',
             'description': 'Link to the GetCapabilities request for this service',
-            #'format': 'WMS',
+            'format': 'WMS',
             'name': 'Web Map Service (WMS)',
             'resource_locator_function': 'download',
             'resource_locator_protocol': 'OGC:WMS-1.3.0-http-get-capabilities',
             'resource_type': None,
             'size': None,
             'url': u'http://sedsh13.sedsh.gov.uk/ArcGIS/services/OSG/OSG/MapServer/WMSServer?request=GetCapabilities&service=WMS',
-            #'verified': 'True',
+            'verified': 'True',
         }
 
         resource = package_dict['resources'][0]
@@ -281,18 +279,7 @@ class TestHarvest(HarvestFixtureBase):
             if not resource[key] == value:
                 raise AssertionError('Unexpected value in resource for %s: %s (was expecting %s)' % \
                     (key, resource[key], value))
-        #assert datetime.strptime(resource['verified_date'],'%Y-%m-%dT%H:%M:%S.%f').date() == date.today()
-
-        # See that the coupled resources are created (half of the link)
-        coupled_resources = self._get_coupled_resources()
-        assert_equal(coupled_resources,
-                     set([(u'one-scotland-address-gazetteer-web-map-service-wms', '250ea276-48e2-4189-8a89-fcc4ca92d652', None)]))
-
-    def _get_coupled_resources(self):
-        return set([(couple.service_record.name if couple.service_record else None,
-                     couple.harvest_source_reference,
-                     couple.dataset_record.name if couple.dataset_record else None)\
-                    for couple in model.Session.query(HarvestCoupledResource)])
+        assert datetime.strptime(resource['verified_date'],'%Y-%m-%dT%H:%M:%S.%f').date() == date.today()
 
     def test_harvest_fields_dataset(self):
 

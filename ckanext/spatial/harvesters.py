@@ -46,7 +46,6 @@ from ckanext.harvest.model import HarvestObject, HarvestGatherError, \
 from ckanext.spatial.model import GeminiDocument
 from ckanext.spatial.lib.csw_client import CswService
 from ckanext.spatial.validation import Validators
-from ckanext.spatial.lib.coupled_resource import extract_guid, update_coupled_resources
 
 log = logging.getLogger(__name__)
 
@@ -155,7 +154,7 @@ class GeminiHarvester(SpatialHarvester):
             if debug_exception_mode:
                 raise
 
-    def import_gemini_object(self, gemini_string, harvest_source_reference):
+    def import_gemini_object(self, gemini_string):
         '''Imports the Gemini metadata into CKAN.
 
         The harvest_source_reference is an ID that the harvest_source uses
@@ -177,10 +176,6 @@ class GeminiHarvester(SpatialHarvester):
 
         # may raise Exception for errors
         package_dict = self.write_package_from_gemini_string(unicode_gemini_string)
-
-        if package_dict:
-            package = Session.query(Package).get(package_dict['id'])
-            update_coupled_resources(package, harvest_source_reference)
 
 
     def write_package_from_gemini_string(self, content):
@@ -429,10 +424,11 @@ class GeminiHarvester(SpatialHarvester):
         self.obj.current = True
         self.obj.save()
 
+
         assert gemini_guid == [e['value'] for e in package['extras'] if e['key'] == 'guid'][0]
         assert self.obj.id == [e['value'] for e in package['extras'] if e['key'] ==  'harvest_object_id'][0]
 
-        return package # i.e. a package_dict
+        return package
 
     @classmethod
     def _process_responsible_organisation(cls, responsible_organisations):
@@ -493,8 +489,7 @@ class GeminiHarvester(SpatialHarvester):
                 counter = counter + 1
             return None
 
-    @classmethod
-    def _extract_first_licence_url(cls, licences):
+    def _extract_first_licence_url(self, licences):
         '''Given a list of pieces of licence info, hunt for the first one
         which looks like a URL and return it. Otherwise returns None.'''
         for licence in licences:
@@ -505,14 +500,6 @@ class GeminiHarvester(SpatialHarvester):
 
     def _create_package_from_data(self, package_dict, package = None):
         '''
-        Given a package_dict describing a package, creates or updates
-        a package object. If you supply package then it will update it,
-        otherwise it will create a new one.
-
-        Uses the logic layer to create it.
-
-        Returns a package_dict of the resulting package.
-
         {'name': 'council-owned-litter-bins',
          'notes': 'Location of Council owned litter bins within Borough.',
          'resources': [{'description': 'Resource locator',
@@ -600,7 +587,6 @@ class GeminiHarvester(SpatialHarvester):
 
         return gemini_string, gemini_guid
 
-
 class GeminiCswHarvester(GeminiHarvester, SingletonPlugin):
     '''
     A Harvester for CSW servers
@@ -647,9 +633,6 @@ class GeminiCswHarvester(GeminiHarvester, SingletonPlugin):
                     # Create a new HarvestObject for this identifier
                     obj = HarvestObject(guid=identifier, job=harvest_job,
                                         harvest_source_reference=guid)
-                    # NB: Gemini uses GUID for the harvest_source_reference
-                    #     whereas INSPIRE specifies the Unique Resource
-                    #     Identifier
                     obj.save()
 
                     ids.append(obj.id)
@@ -824,9 +807,6 @@ class GeminiWafHarvester(GeminiHarvester, SingletonPlugin):
                                                 job=harvest_job,
                                                 content=gemini_string,
                                                 harvest_source_reference=url)
-                            # NB: Gemini uses WAF URL for the
-                            # harvest_source_reference whereas INSPIRE
-                            # specifies the Unique Resource Identifier
                             obj.save()
 
                             ids.append(obj.id)
