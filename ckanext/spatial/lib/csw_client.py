@@ -161,12 +161,14 @@ class CswService(OwsService):
         md = csw._exml.find("/{http://www.isotc211.org/2005/gmd}MD_Metadata")
         mdtree = etree.ElementTree(md)
         try:
-            record["xml"] = etree.tostring(mdtree, pretty_print=True, xml_declaration=True)
+            record["xml"] = etree.tostring(mdtree, pretty_print=True, encoding=unicode)
         except TypeError:
             # API incompatibilities between different flavours of elementtree
             try:
-                record["xml"] = etree.tostring(mdtree)
+                record["xml"] = etree.tostring(mdtree, pretty_print=True, encoding=unicode)
             except AssertionError:
-                record["xml"] = etree.tostring(md)
+                record["xml"] = etree.tostring(md, pretty_print=True, encoding=unicode)
+
+        record["xml"] = '<?xml version="1.0" encoding="UTF-8"?>\n' + record["xml"]
         record["tree"] = mdtree
         return record

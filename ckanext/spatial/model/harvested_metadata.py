@@ -603,6 +603,13 @@ class GeminiDocument(MappedXmlDocument):
             ],
             multiplicity="*",
         ),
+        GeminiResourceLocator(
+            name="resource-locator-identification",
+            search_paths=[
+                "gmd:identificationInfo//gmd:CI_OnlineResource",
+            ],
+            multiplicity="*",
+        ),
         GeminiElement(
             name="conformity-specification",
             search_paths=[
