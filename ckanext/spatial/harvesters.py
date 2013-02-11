@@ -525,6 +525,7 @@ class GeminiHarvester(SpatialHarvester):
                 counter = counter + 1
             return None
 
+    @classmethod
     def _extract_first_licence_url(self, licences):
         '''Given a list of pieces of licence info, hunt for the first one
         which looks like a URL and return it. Otherwise returns None.'''
