@@ -120,7 +120,7 @@ class ISO19139EdenSchema(XsdValidator):
         xml - etree of the ISO19139 XML record
         '''
         gemini = GeminiDocument(xml_tree=xml)
-        return gemini.read_value('resource-type')
+        return gemini.read_value('resource-type')[0]
 
 class ISO19139NGDCSchema(XsdValidator):
     '''

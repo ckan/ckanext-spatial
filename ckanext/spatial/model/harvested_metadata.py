@@ -1,5 +1,5 @@
 from lxml import etree
-    
+
 import logging
 log = logging.getLogger(__name__)
 
@@ -279,8 +279,7 @@ class GeminiReferenceDate(GeminiElement):
                 "gmd:date/gco:Date/text()",
                 "gmd:date/gco:DateTime/text()",
             ],
-            # TODO: check
-            multiplicity="*",
+            multiplicity="1",
         ),
     ]
 
@@ -311,6 +310,40 @@ class GeminiCoupledResources(GeminiElement):
 
     ]
 
+
+class GeminiBoundingBox(GeminiElement):
+
+    elements = [
+        GeminiElement(
+            name="west",
+            search_paths=[
+                "gmd:westBoundLongitude/gco:Decimal/text()",
+            ],
+            multiplicity="1",
+        ),
+        GeminiElement(
+            name="east",
+            search_paths=[
+                "gmd:eastBoundLongitude/gco:Decimal/text()",
+            ],
+            multiplicity="1",
+        ),
+        GeminiElement(
+            name="north",
+            search_paths=[
+                "gmd:northBoundLatitude/gco:Decimal/text()",
+            ],
+            multiplicity="1",
+        ),
+        GeminiElement(
+            name="south",
+            search_paths=[
+                "gmd:southBoundLatitude/gco:Decimal/text()",
+            ],
+            multiplicity="1",
+        ),
+    ]
+
 class GeminiDocument(MappedXmlDocument):
 
     # Attribute specifications from "XPaths for GEMINI" by Peter Parslow.
@@ -335,7 +368,7 @@ class GeminiDocument(MappedXmlDocument):
                 "gmd:hierarchyLevel/gmd:MD_ScopeCode/@codeListValue",
                 "gmd:hierarchyLevel/gmd:MD_ScopeCode/text()",
             ],
-            multiplicity="0..1",
+            multiplicity="*",
         ),
         GeminiResponsibleParty(
             name="metadata-point-of-contact",
@@ -382,7 +415,7 @@ class GeminiDocument(MappedXmlDocument):
                 "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date",
                 "gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date",
             ],
-            multiplicity="*",
+            multiplicity="1..*",
         ),
         ## Todo: Suggestion from PP not to bother pulling this into the package.
         #GeminiElement(
@@ -523,37 +556,13 @@ class GeminiDocument(MappedXmlDocument):
             ],
             multiplicity="*",
         ),
-        GeminiElement(
-            name="bbox-west-long",
+        GeminiBoundingBox(
+            name="bbox",
             search_paths=[
-                "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:westBoundLongitude/gco:Decimal/text()",
-                "gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:westBoundLongitude/gco:Decimal/text()",
+                "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox",
+                "gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox",
             ],
-            multiplicity="0..1",
-        ),
-        GeminiElement(
-            name="bbox-east-long",
-            search_paths=[
-                "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:eastBoundLongitude/gco:Decimal/text()",
-                "gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:eastBoundLongitude/gco:Decimal/text()",
-            ],
-            multiplicity="0..1",
-        ),
-        GeminiElement(
-            name="bbox-north-lat",
-            search_paths=[
-                "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:northBoundLatitude/gco:Decimal/text()",
-                "gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:northBoundLatitude/gco:Decimal/text()",
-            ],
-            multiplicity="0..1",
-        ),
-        GeminiElement(
-            name="bbox-south-lat",
-            search_paths=[
-                "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:southBoundLatitude/gco:Decimal/text()",
-                "gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:geographicElement/gmd:EX_GeographicBoundingBox/gmd:southBoundLatitude/gco:Decimal/text()",
-            ],
-            multiplicity="0..1",
+            multiplicity="*",
         ),
         GeminiElement(
             name="temporal-extent-begin",
@@ -586,13 +595,6 @@ class GeminiDocument(MappedXmlDocument):
             ],
             multiplicity="*",
         ),
-#        GeminiElement(
-#            name="coupled-resource",
-#            search_paths=[
-#                "gmd:identificationInfo/srv:SV_ServiceIdentification/srv:operatesOn/@xlink:href",
-#            ],
-#            multiplicity="*",
-#        ),
         GeminiElement(
             name="additional-information-source",
             search_paths=[
@@ -738,5 +740,3 @@ class GeminiDocument(MappedXmlDocument):
                 if value:
                     break
         values['contact-email'] = value
-
-

@@ -303,15 +303,10 @@ class GeminiHarvester(SpatialHarvester):
         # Just add some of the metadata as extras, not the whole lot
         for name in [
             # Essentials
-            'bbox-east-long',
-            'bbox-north-lat',
-            'bbox-south-lat',
-            'bbox-west-long',
             'spatial-reference-system',
             'guid',
             # Usefuls
             'dataset-reference-date',
-            'resource-type',
             'metadata-language', # Language
             'metadata-date', # Released
             'coupled-resource',
@@ -320,6 +315,8 @@ class GeminiHarvester(SpatialHarvester):
             'spatial-data-service-type',
         ]:
             extras[name] = gemini_values[name]
+
+        extras['resource-type'] = gemini_values['resource-type'][0]
 
         # Use-constraints can contain values which are:
         #  * free text
@@ -346,15 +343,21 @@ class GeminiHarvester(SpatialHarvester):
         extras['provider'] = provider
         extras['responsible-party'] = '; '.join(responsible_parties)
 
-        # Construct a GeoJSON extent so ckanext-spatial can register the extent geometry
-        extent_string = self.extent_template.substitute(
-                minx = extras['bbox-east-long'],
-                miny = extras['bbox-south-lat'],
-                maxx = extras['bbox-west-long'],
-                maxy = extras['bbox-north-lat']
-                )
+        if len(gemini_values['bbox']) >0:
+            extras['bbox-east-long'] = gemini_values['bbox'][0]['east']
+            extras['bbox-north-lat'] = gemini_values['bbox'][0]['north']
+            extras['bbox-south-lat'] = gemini_values['bbox'][0]['south']
+            extras['bbox-west-long'] = gemini_values['bbox'][0]['west']
 
-        extras['spatial'] = extent_string.strip()
+            # Construct a GeoJSON extent so ckanext-spatial can register the extent geometry
+            extent_string = self.extent_template.substitute(
+                    minx = extras['bbox-east-long'],
+                    miny = extras['bbox-south-lat'],
+                    maxx = extras['bbox-west-long'],
+                    maxy = extras['bbox-north-lat']
+                    )
+
+            extras['spatial'] = extent_string.strip()
 
         tags = []
         for tag in gemini_values['tags']:
@@ -593,7 +596,7 @@ class GeminiHarvester(SpatialHarvester):
 
     def get_gemini_string_and_guid(self,content,url=None):
         '''From a string buffer containing Gemini XML, return the tree
-        under gmd:MD_Metadata and the GUID for it. 
+        under gmd:MD_Metadata and the GUID for it.
 
         If it cannot parse the XML it will raise lxml.etree.XMLSyntaxError.
         If it cannot find the GUID element, then gemini_guid will be ''.
