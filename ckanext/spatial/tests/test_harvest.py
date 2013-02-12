@@ -12,9 +12,10 @@ from ckan.logic import get_action
 from ckanext.harvest.model import (setup as harvest_model_setup,
                                    HarvestSource, HarvestJob, HarvestObject)
 from ckanext.spatial.validation import Validators, SchematronValidator
-from ckanext.spatial.harvesters import (GeminiCswHarvester, GeminiDocHarvester,
-                                        GeminiWafHarvester, SpatialHarvester,
+from ckanext.spatial.harvesters.gemini import (GeminiDocHarvester,
+                                        GeminiWafHarvester,
                                         GeminiHarvester)
+from ckanext.spatial.harvesters.base import SpatialHarvester
 from ckanext.spatial.model.package_extent import setup as spatial_db_setup
 from ckanext.spatial.tests.base import SpatialTestBase
 
