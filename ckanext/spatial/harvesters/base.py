@@ -72,20 +72,20 @@ class SpatialHarvester(HarvesterBase):
 
     ## IHarvester
 
-    def validate_config(self,config):
-        if not config:
-            return config
+    def validate_config(self, source_config):
+        if not source_config:
+            return source_config
 
         try:
-            config_obj = json.loads(config)
+            source_config_obj = json.loads(source_config)
 
-            if 'validator_profiles' in config_obj:
-                if not isinstance(config_obj['validator_profiles'],list):
+            if 'validator_profiles' in source_config_obj:
+                if not isinstance(source_config_obj['validator_profiles'],list):
                     raise ValueError('validator_profiles must be a list')
 
                 # Check if all profiles exist
                 existing_profiles = [v.name for v in all_validators]
-                unknown_profiles = set(config_obj['validator_profiles']) - set(existing_profiles)
+                unknown_profiles = set(source_config_obj['validator_profiles']) - set(existing_profiles)
 
                 if len(unknown_profiles) > 0:
                     raise ValueError('Unknown validation profile(s): %s' % ','.join(unknown_profiles))
@@ -93,7 +93,7 @@ class SpatialHarvester(HarvesterBase):
         except ValueError,e:
             raise e
 
-        return config
+        return source_config
 
     ##
 
@@ -109,6 +109,15 @@ class SpatialHarvester(HarvesterBase):
             log.error('WMS check for %s failed with exception: %s' % (url, str(e)))
         return False
 
+
+    def _set_source_config(self, config_str):
+        if config_str:
+            self.source_config = json.loads(config_str)
+            log.debug('Using config: %r', self.source_config)
+        else:
+            self.source_config = {}
+
+
     def _get_validator(self):
         '''
         Returns the validator object using the relevant profiles
@@ -120,8 +129,8 @@ class SpatialHarvester(HarvesterBase):
         3. Default value as defined in DEFAULT_VALIDATOR_PROFILES
         '''
         if not hasattr(self, '_validator'):
-            if hasattr(self, 'config') and self.config.get('validator_profiles',None):
-                profiles = self.config.get('validator_profiles')
+            if hasattr(self, 'source_config') and self.source_config.get('validator_profiles',None):
+                profiles = self.source_config.get('validator_profiles')
             elif config.get('ckan.spatial.validator.profiles', None):
                 profiles = [
                     x.strip() for x in
@@ -386,7 +395,7 @@ class SpatialHarvester(HarvesterBase):
             log.error('No harvest object received')
             return False
 
-        self._set_config(harvest_object.source.config)
+        self._set_source_config(harvest_object.source.config)
 
         status = get_extra(harvest_object, 'status')
 
@@ -420,8 +429,8 @@ class SpatialHarvester(HarvesterBase):
                 return False
 
             # Validate against FGDC schema
-            if self.config.get('validation_profiles'):
-                profiles = self.config.get('validation_profiles').split(',')
+            if self.source_config.get('validation_profiles'):
+                profiles = self.source_config.get('validation_profiles').split(',')
             else:
                 profiles = ['fgdc-minimal']
 
