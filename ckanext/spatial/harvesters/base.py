@@ -232,9 +232,9 @@ class SpatialHarvester(HarvesterBase):
         # Package name
         package = harvest_object.package
         if package is None or package.title != iso_values['title']:
-            name = self.gen_new_name(iso_values['title'])
+            name = self._gen_new_name(iso_values['title'])
             if not name:
-                name = self.gen_new_name(str(iso_values['guid']))
+                name = self._gen_new_name(str(iso_values['guid']))
             if not name:
                 raise Exception('Could not generate a unique name from the title or the GUID. Please choose a more unique title.')
             package_dict['name'] = name
@@ -274,7 +274,7 @@ class SpatialHarvester(HarvesterBase):
             return None
 
         if len(extras['licence']):
-            license_url_extracted = self._extract_first_license_url(extras['licence'])
+            license_url_extracted = _extract_first_license_url(extras['licence'])
             if license_url_extracted:
                 extras['licence_url'] = license_url_extracted
 
