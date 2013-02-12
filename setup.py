@@ -35,6 +35,10 @@ setup(
     cswserver=ckanext.spatial.plugin:CatalogueServiceWeb
     spatial_harvest_metadata_api=ckanext.spatial.plugin:HarvestMetadataApi
 
+    csw_harvester=ckanext.spatial.harvesters:CSWHarvester
+    waf_harvester=ckanext.spatial.harvesters:WAFHarvester
+    doc_harvester=ckanext.spatial.harvesters:DocHarvester
+
     # Legacy harvesters
     gemini_csw_harvester=ckanext.spatial.harvesters.gemini:GeminiCswHarvester
     gemini_doc_harvester=ckanext.spatial.harvesters.gemini:GeminiDocHarvester
