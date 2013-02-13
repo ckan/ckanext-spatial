@@ -517,7 +517,7 @@ class GeminiCswHarvester(GeminiHarvester, SingletonPlugin):
     def info(self):
         return {
             'name': 'csw',
-            'title': 'CSW Server IN NEW LOCATION!!',
+            'title': 'CSW Server',
             'description': 'A server that implements OGC\'s Catalog Service for the Web (CSW) standard'
             }
 
