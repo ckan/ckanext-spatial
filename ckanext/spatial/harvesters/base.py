@@ -28,7 +28,7 @@ from ckanext.harvest.harvesters.base import HarvesterBase
 from ckanext.harvest.model import HarvestObject
 
 from ckanext.spatial.validation import Validators, all_validators
-from ckanext.spatial.model import GeminiDocument
+from ckanext.spatial.model import ISODocument
 
 log = logging.getLogger(__name__)
 
@@ -505,7 +505,7 @@ class SpatialHarvester(HarvesterBase):
 
         # Parse ISO document
         try:
-            iso_values = GeminiDocument(harvest_object.content).read_values()
+            iso_values = ISODocument(harvest_object.content).read_values()
         except Exception, e:
             self._save_object_error('Error parsing ISO document for object {0}: {1}'.format(harvest_object.id,str(e)),
                                     harvest_object,'Import')

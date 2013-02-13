@@ -2,7 +2,7 @@ import os
 
 from nose.tools import assert_equal
 
-from ckanext.spatial.model import GeminiDocument
+from ckanext.spatial.model import ISODocument
 
 def open_xml_fixture(xml_filename):
     xml_filepath = os.path.join(os.path.dirname(__file__),
@@ -20,15 +20,15 @@ def open_xml_fixture(xml_filename):
 
 def test_simple():
     xml_string = open_xml_fixture('gemini_dataset.xml')
-    gemini_document = GeminiDocument(xml_string)
-    gemini_values = gemini_document.read_values()
-    assert_equal(gemini_values['guid'], 'test-dataset-1')
-    assert_equal(gemini_values['metadata-date'], '2011-09-23T10:06:08')
+    iso_document = ISODocument(xml_string)
+    iso_values = iso_document.read_values()
+    assert_equal(iso_values['guid'], 'test-dataset-1')
+    assert_equal(iso_values['metadata-date'], '2011-09-23T10:06:08')
 
 def test_multiplicity_warning():
     # This dataset lacks a value for Metadata Date and should
     # produce a log.warning, but not raise an exception.
     xml_string = open_xml_fixture('FCSConservancyPolygons.xml')
-    gemini_document = GeminiDocument(xml_string)
-    gemini_values = gemini_document.read_values()
-    assert_equal(gemini_values['guid'], 'B8A22DF4-B0DC-4F0B-A713-0CF5F8784A28')
+    iso_document = ISODocument(xml_string)
+    iso_values = iso_document.read_values()
+    assert_equal(iso_values['guid'], 'B8A22DF4-B0DC-4F0B-A713-0CF5F8784A28')
