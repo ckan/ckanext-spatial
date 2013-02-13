@@ -7,7 +7,6 @@ import logging
 from string import Template
 from urlparse import urlparse
 from datetime import datetime
-from numbers import Number
 import uuid
 import hashlib
 import dateutil
@@ -303,11 +302,11 @@ class SpatialHarvester(HarvesterBase):
                     view_resources[0]['ckan_recommended_wms_preview'] = True
 
         extras_as_dict = []
-        for key,value in extras.iteritems():
-            if isinstance(value,(basestring,Number)):
-                extras_as_dict.append({'key':key,'value':value})
+        for key, value in extras.iteritems():
+            if isinstance(value, (list, dict)):
+                extras_as_dict.append({'key': key, 'value': json.dumps(value)})
             else:
-                extras_as_dict.append({'key':key,'value':json.dumps(value)})
+                extras_as_dict.append({'key': key, 'value': value})
 
         package_dict['extras'] = extras_as_dict
 
