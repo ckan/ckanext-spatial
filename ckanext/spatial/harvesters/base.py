@@ -313,6 +313,36 @@ class SpatialHarvester(HarvesterBase):
 
         return package_dict
 
+
+    def transform_to_iso(self, original_document, original_format, harvest_object):
+        '''
+        Transforms an XML document to ISO 19139
+
+        This method will be only called from the import stage if the
+        harvest_object content is null and original_document and
+        original_format harvest object extras exist (eg if an FGDC document
+        was harvested).
+
+        In that case, this method should do the necessary to provide an
+        ISO 1939 like document, otherwise the import process will stop.
+
+
+        :param original_document: Original XML document
+        :type original_document: string
+        :param original_format: Original format (eg 'fgdc')
+        :type original_format: string
+        :param harvest_object: HarvestObject domain object (with access to
+            job and source objects)
+        :type harvest_object: HarvestObject
+
+        :returns: An ISO 19139 document or None if the transformation was not
+            successful
+        :rtype: string
+
+        '''
+
+        return None
+
     ##
 
 
@@ -405,12 +435,6 @@ class SpatialHarvester(HarvesterBase):
         if not validator:
             validator = self._get_validator()
 
-
-        #TODO: remove! geo.data.gov specific
-        from ckanext.geodatagov.harvesters.validation import MinimalFGDCValidator
-        validator.add_validator(MinimalFGDCValidator)
-
-
         document_string = re.sub('<\?xml(.*)\?>','',document_string)
 
         try:
@@ -457,57 +481,28 @@ class SpatialHarvester(HarvesterBase):
 
             return True
 
-        original_document = get_extra(harvest_object, 'original_document')
-        if harvest_object.content is None and not original_document:
-            self._save_object_error('Empty content for object {0}'.format(harvest_object.id), harvest_object, 'Import')
-            return False
 
         # Check if it is a non ISO document
+        original_document = get_extra(harvest_object, 'original_document')
         original_format = get_extra(harvest_object, 'original_format')
-        if original_format and original_format == 'fgdc':
-            #TODO: geo.data.gov specific
-            transform_service = config.get('ckanext.geodatagov.fgdc2iso_service')
-            if not transform_service:
-                self._save_object_error('No FGDC to ISO transformation service', harvest_object, 'Import')
-                return False
-
-            # Validate against FGDC schema
-            if self.source_config.get('validation_profiles'):
-                profiles = self.source_config.get('validation_profiles').split(',')
+        if original_document and original_format:
+            content = self.transform_to_iso(original_document, original_format, harvest_object)
+            if content:
+                harvest_object.content = content
             else:
-                profiles = ['fgdc-minimal']
-
-            is_valid, profile, errors = self._validate_document(original_document, harvest_object,
-                                                       validator=Validators(profiles=profiles))
-            if not is_valid:
-                # TODO: Provide an option to continue anyway
+                self._save_object_error('Transformation to ISO failed for object {0}'.format(harvest_object.id), harvest_object, 'Import')
                 return False
-
-            response = requests.post(transform_service,
-                                     data=original_document.encode('utf8'),
-                                     headers={'content-type': 'text/xml; charset=utf-8'})
-            if response.status_code == 200:
-                # XML coming from the conversion tool is already declared and encoded as utf-8
-                harvest_object.content = response.content
-                harvest_object.save()
-            else:
-                msg = 'The transformation service returned an error for object {0}'
-                if response.status_code and response.content:
-                    msg += ': [{0}] {1}'.format(response.status_code, response.content)
-                elif response.error:
-                    msg += ': {0}'.format(response.error)
-                self._save_object_error(msg ,harvest_object,'Import')
-                return False
-
         else:
             if harvest_object.content is None:
                 self._save_object_error('Empty content for object {0}'.format(harvest_object.id), harvest_object, 'Import')
                 return False
-            # Document is ISO, validate
+
+            # Validate ISO document
             is_valid, profile, errors = self._validate_document(harvest_object.content, harvest_object)
             if not is_valid:
                 # TODO: Provide an option to continue anyway
                 return False
+
 
         # Parse ISO document
         try:
