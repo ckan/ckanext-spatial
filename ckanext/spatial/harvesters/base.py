@@ -65,6 +65,8 @@ class SpatialHarvester(HarvesterBase):
 
     _user_name = None
 
+    source_config = {}
+
     force_import = False
 
     extent_template = Template('''
@@ -364,8 +366,6 @@ class SpatialHarvester(HarvesterBase):
         if config_str:
             self.source_config = json.loads(config_str)
             log.debug('Using config: %r', self.source_config)
-        else:
-            self.source_config = {}
 
 
     def _get_validator(self):
