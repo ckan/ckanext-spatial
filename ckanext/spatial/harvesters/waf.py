@@ -16,7 +16,7 @@ from ckanext.harvest.model import HarvestObject
 from ckanext.harvest.model import HarvestObjectExtra as HOExtra
 import ckanext.harvest.queue as queue
 
-from ckanext.spatial.harvesters.base import SpatialHarvester, get_extra, guess_standard
+from ckanext.spatial.harvesters.base import SpatialHarvester, guess_standard
 
 class WAFHarvester(SpatialHarvester, SingletonPlugin):
     '''
@@ -171,7 +171,7 @@ class WAFHarvester(SpatialHarvester, SingletonPlugin):
     def fetch_stage(self, harvest_object):
 
         # Check harvest object status
-        status = get_extra(harvest_object,'status')
+        status = self._get_object_extra(harvest_object,'status')
 
         if status == 'delete':
             # No need to fetch anything, just pass to the import stage
@@ -180,7 +180,7 @@ class WAFHarvester(SpatialHarvester, SingletonPlugin):
         # We need to fetch the remote document
 
         # Get location
-        url = get_extra(harvest_object, 'waf_location')
+        url = self._get_object_extra(harvest_object, 'waf_location')
         if not url:
             self._save_object_error(
                     'No location defined for object {0}'.format(harvest_object.id),

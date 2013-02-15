@@ -45,11 +45,6 @@ def text_traceback():
     return res
 
 
-def get_extra(harvest_object, key):
-    for extra in harvest_object.extras:
-        if extra.key == key:
-            return extra.value
-    return None
 
 def guess_standard(content):
     lowered = content.lower()
@@ -362,6 +357,11 @@ class SpatialHarvester(HarvesterBase):
             log.error('WMS check for %s failed with exception: %s' % (url, str(e)))
         return False
 
+    def _get_object_extra(self, harvest_object, key):
+        for extra in harvest_object.extras:
+            if extra.key == key:
+                return extra.value
+        return None
 
     def _set_source_config(self, config_str):
         if config_str:
@@ -492,7 +492,7 @@ class SpatialHarvester(HarvesterBase):
 
         self._set_source_config(harvest_object.source.config)
 
-        status = get_extra(harvest_object, 'status')
+        status = self._get_object_extra(harvest_object, 'status')
 
         # Get the last harvested object (if any)
         previous_object = model.Session.query(HarvestObject) \
@@ -511,8 +511,8 @@ class SpatialHarvester(HarvesterBase):
 
 
         # Check if it is a non ISO document
-        original_document = get_extra(harvest_object, 'original_document')
-        original_format = get_extra(harvest_object, 'original_format')
+        original_document = self._get_object_extra(harvest_object, 'original_document')
+        original_format = self._get_object_extra(harvest_object, 'original_format')
         if original_document and original_format:
             content = self.transform_to_iso(original_document, original_format, harvest_object)
             if content:
