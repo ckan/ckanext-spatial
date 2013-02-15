@@ -18,6 +18,7 @@ from owslib import wms
 import requests
 from lxml import etree
 
+from ckan import plugins as p
 from ckan import model
 from ckan.lib.helpers import json
 from ckan import logic
@@ -527,8 +528,12 @@ class SpatialHarvester(HarvesterBase):
             # Validate ISO document
             is_valid, profile, errors = self._validate_document(harvest_object.content, harvest_object)
             if not is_valid:
-                # TODO: Provide an option to continue anyway
-                return False
+                # If validation errors were found, import will stop unless
+                # configuration per source or per instance says otherwise
+                continue_import = p.toolkit.asbool(config.get('ckanext.spatial.harvest.continue_on_validation_errors', False)) or \
+                                  self.source_config.get('continue_on_validation_errors')
+                if not continue_import:
+                   return False
 
 
         # Parse ISO document
