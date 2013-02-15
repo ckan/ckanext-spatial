@@ -63,6 +63,8 @@ def guess_standard(content):
 
 class SpatialHarvester(HarvesterBase):
 
+    _user_name = None
+
     force_import = False
 
     extent_template = Template('''
@@ -390,6 +392,32 @@ class SpatialHarvester(HarvesterBase):
         return self._validator
 
 
+    def _get_user_name(self):
+        '''
+        Returns the name of the user that will perform the harvesting actions
+        (deleting, updating and creating datasets)
+
+        By default this will be the internal site admin user. This is the
+        recommended setting, but if necessary it can be overridden with the
+        `ckanext.spatial.harvest.user_name` config option, eg to support the
+        old hardcoded 'harvest' user:
+
+           ckanext.spatial.harvest.user_name = harvest
+
+        '''
+        if self._user_name:
+            return self._user_name
+
+        config_user_name = config.get('ckanext.spatial.harvest.user_name')
+        if config_user_name:
+            self._user_name = config_user_name
+        else:
+            user = get_action('get_site_user')({'model': model, 'ignore_auth': True}, {})
+            self._user_name = user['name']
+
+        return self._user_name
+
+
     def _get_content(self, url):
         '''
         DEPRECATED: Use _get_content_as_unicode instead
@@ -473,7 +501,7 @@ class SpatialHarvester(HarvesterBase):
 
         if status == 'delete':
             # Delete package
-            context = {'model':model, 'session': model.Session, 'user':'harvest'} #TODO: user
+            context = {'model':model, 'session': model.Session, 'user': self._get_user_name()}
 
             get_action('package_delete')(context, {'id': harvest_object.package_id})
             log.info('Deleted package {0} with guid {1}'.format(harvest_object.package_id, harvest_object.guid))
@@ -558,7 +586,7 @@ class SpatialHarvester(HarvesterBase):
 
         context = {'model':model,
                    'session': model.Session,
-                   'user':'harvest', # TODO: user
+                   'user': self._get_user_name(),
                    'extras_as_string':True, # TODO: check if needed
                    'api_version': '2',
                    'return_id_only': True}
