@@ -22,7 +22,6 @@ from ckan import plugins as p
 from ckan import model
 from ckan.lib.helpers import json
 from ckan import logic
-from ckan.logic import get_action, ValidationError
 from ckan.lib.navl.validators import not_empty
 
 from ckanext.harvest.harvesters.base import HarvesterBase
@@ -413,7 +412,7 @@ class SpatialHarvester(HarvesterBase):
         if config_user_name:
             self._user_name = config_user_name
         else:
-            user = get_action('get_site_user')({'model': model, 'ignore_auth': True}, {})
+            user = p.toolkit.get_action('get_site_user')({'model': model, 'ignore_auth': True}, {})
             self._user_name = user['name']
 
         return self._user_name
@@ -504,7 +503,7 @@ class SpatialHarvester(HarvesterBase):
             # Delete package
             context = {'model':model, 'session': model.Session, 'user': self._get_user_name()}
 
-            get_action('package_delete')(context, {'id': harvest_object.package_id})
+            p.toolkit.get_action('package_delete')(context, {'id': harvest_object.package_id})
             log.info('Deleted package {0} with guid {1}'.format(harvest_object.package_id, harvest_object.guid))
 
             return True
@@ -624,9 +623,9 @@ class SpatialHarvester(HarvesterBase):
             model.Session.flush()
 
             try:
-                package_id = get_action('package_create')(context, package_dict)
+                package_id = p.toolkit.get_action('package_create')(context, package_dict)
                 log.info('Created new package %s with guid %s', package_id, harvest_object.guid)
-            except ValidationError,e:
+            except p.toolkit.ValidationError, e:
                 self._save_object_error('Validation Error: %s' % str(e.error_summary), harvest_object, 'Import')
                 return False
 
@@ -651,9 +650,9 @@ class SpatialHarvester(HarvesterBase):
 
                 package_dict['id'] = harvest_object.package_id
                 try:
-                    package_id = get_action('package_update')(context, package_dict)
+                    package_id = p.toolkit.get_action('package_update')(context, package_dict)
                     log.info('Updated package %s with guid %s', package_id, harvest_object.guid)
-                except ValidationError,e:
+                except p.toolkit.ValidationError, e:
                     self._save_object_error('Validation Error: %s' % str(e.error_summary), harvest_object, 'Import')
                     return False
 
