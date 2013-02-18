@@ -44,7 +44,6 @@ def text_traceback():
     return res
 
 
-
 def guess_standard(content):
     lowered = content.lower()
     if '</gmd:MD_Metadata>'.lower() in lowered:
@@ -65,7 +64,7 @@ class SpatialHarvester(HarvesterBase):
     force_import = False
 
     extent_template = Template('''
-    {"type":"Polygon","coordinates":[[[$minx, $miny],[$minx, $maxy], [$maxx, $maxy], [$maxx, $miny], [$minx, $miny]]]}
+    {"type", "Polygon", "coordinates": [[[$minx, $miny], [$minx, $maxy], [$maxx, $maxy], [$maxx, $miny], [$minx, $miny]]]}
     ''')
 
     ## IHarvester
@@ -78,7 +77,7 @@ class SpatialHarvester(HarvesterBase):
             source_config_obj = json.loads(source_config)
 
             if 'validator_profiles' in source_config_obj:
-                if not isinstance(source_config_obj['validator_profiles'],list):
+                if not isinstance(source_config_obj['validator_profiles'], list):
                     raise ValueError('validator_profiles must be a list')
 
                 # Check if all profiles exist
@@ -88,7 +87,7 @@ class SpatialHarvester(HarvesterBase):
                 if len(unknown_profiles) > 0:
                     raise ValueError('Unknown validation profile(s): %s' % ','.join(unknown_profiles))
 
-        except ValueError,e:
+        except ValueError, e:
             raise e
 
         return source_config
@@ -139,13 +138,13 @@ class SpatialHarvester(HarvesterBase):
         tags = []
         for tag in iso_values['tags']:
             tag = tag[:50] if len(tag) > 50 else tag
-            tags.append({'name':tag})
+            tags.append({'name': tag})
 
         package_dict = {
             'title': iso_values['title'],
             'notes': iso_values['abstract'],
             'tags': tags,
-            'resources':[]
+            'resources': [],
         }
 
         # We need to get the owner organization (if any) from the harvest
@@ -170,7 +169,6 @@ class SpatialHarvester(HarvesterBase):
             'guid': harvest_object.guid,
         }
 
-
         # Just add some of the metadata as extras, not the whole lot
         for name in [
             # Essentials
@@ -178,8 +176,8 @@ class SpatialHarvester(HarvesterBase):
             'guid',
             # Usefuls
             'dataset-reference-date',
-            'metadata-language', # Language
-            'metadata-date', # Released
+            'metadata-language',  # Language
+            'metadata-date',  # Released
             'coupled-resource',
             'contact-email',
             'frequency-of-update',
@@ -203,10 +201,10 @@ class SpatialHarvester(HarvesterBase):
             if license_url_extracted:
                 extras['licence_url'] = license_url_extracted
 
-        extras['access_constraints'] = iso_values.get('limitations-on-public-access','')
-        if iso_values.has_key('temporal-extent-begin'):
+        extras['access_constraints'] = iso_values.get('limitations-on-public-access', '')
+        if 'temporal-extent-begin' in iso_values:
             extras['temporal_coverage-from'] = iso_values['temporal-extent-begin']
-        if iso_values.has_key('temporal-extent-end'):
+        if 'temporal-extent-end' in iso_values:
             extras['temporal_coverage-to'] = iso_values['temporal-extent-end']
 
         # Save responsible organization roles
@@ -249,23 +247,22 @@ class SpatialHarvester(HarvesterBase):
 
             # Construct a GeoJSON extent so ckanext-spatial can register the extent geometry
             extent_string = self.extent_template.substitute(
-                    minx = extras['bbox-east-long'],
-                    miny = extras['bbox-south-lat'],
-                    maxx = extras['bbox-west-long'],
-                    maxy = extras['bbox-north-lat']
-                    )
+                minx=iso_values['bbox'][0]['east'],
+                miny=iso_values['bbox'][0]['south'],
+                maxx=iso_values['bbox'][0]['west'],
+                maxy=iso_values['bbox'][0]['north']
+            )
 
             extras['spatial'] = extent_string.strip()
         else:
             log.debug('No spatial extent defined for this object')
 
-
         resource_locators = iso_values.get('resource-locator', []) +\
-                            iso_values.get('resource-locator-identification', [])
+            iso_values.get('resource-locator-identification', [])
 
         if len(resource_locators):
             for resource_locator in resource_locators:
-                url = resource_locator.get('url','')
+                url = resource_locator.get('url', '')
                 if url:
                     resource_format = ''
                     resource = {}
@@ -282,11 +279,11 @@ class SpatialHarvester(HarvesterBase):
                     resource.update(
                         {
                             'url': url,
-                            'name': resource_locator.get('name',''),
+                            'name': resource_locator.get('name', ''),
                             'description': resource_locator.get('description') if resource_locator.get('description') else 'Resource locator',
                             'format': resource_format or None,
-                            'resource_locator_protocol': resource_locator.get('protocol',''),
-                            'resource_locator_function':resource_locator.get('function','')
+                            'resource_locator_protocol': resource_locator.get('protocol', ''),
+                            'resource_locator_function': resource_locator.get('function', '')
 
                         })
                     package_dict['resources'].append(resource)
@@ -310,7 +307,6 @@ class SpatialHarvester(HarvesterBase):
         package_dict['extras'] = extras_as_dict
 
         return package_dict
-
 
     def transform_to_iso(self, original_document, original_format, harvest_object):
         '''
@@ -341,145 +337,6 @@ class SpatialHarvester(HarvesterBase):
 
         return None
 
-    ##
-
-
-    def _is_wms(self,url):
-        try:
-            capabilities_url = wms.WMSCapabilitiesReader().capabilities_url(url)
-            res = urllib2.urlopen(capabilities_url,None,10)
-            xml = res.read()
-
-            s = wms.WebMapService(url,xml=xml)
-            return isinstance(s.contents, dict) and s.contents != {}
-        except Exception, e:
-            log.error('WMS check for %s failed with exception: %s' % (url, str(e)))
-        return False
-
-    def _get_object_extra(self, harvest_object, key):
-        for extra in harvest_object.extras:
-            if extra.key == key:
-                return extra.value
-        return None
-
-    def _set_source_config(self, config_str):
-        if config_str:
-            self.source_config = json.loads(config_str)
-            log.debug('Using config: %r', self.source_config)
-
-
-    def _get_validator(self):
-        '''
-        Returns the validator object using the relevant profiles
-
-        The profiles to be used are assigned in the following order:
-
-        1. 'validator_profiles' property of the harvest source config object
-        2. 'ckan.spatial.validator.profiles' configuration option in the ini file
-        3. Default value as defined in DEFAULT_VALIDATOR_PROFILES
-        '''
-        if not hasattr(self, '_validator'):
-            if hasattr(self, 'source_config') and self.source_config.get('validator_profiles',None):
-                profiles = self.source_config.get('validator_profiles')
-            elif config.get('ckan.spatial.validator.profiles', None):
-                profiles = [
-                    x.strip() for x in
-                    config.get('ckan.spatial.validator.profiles').split(',')
-                ]
-            else:
-                profiles = DEFAULT_VALIDATOR_PROFILES
-            self._validator = Validators(profiles=profiles)
-        return self._validator
-
-
-    def _get_user_name(self):
-        '''
-        Returns the name of the user that will perform the harvesting actions
-        (deleting, updating and creating datasets)
-
-        By default this will be the internal site admin user. This is the
-        recommended setting, but if necessary it can be overridden with the
-        `ckanext.spatial.harvest.user_name` config option, eg to support the
-        old hardcoded 'harvest' user:
-
-           ckanext.spatial.harvest.user_name = harvest
-
-        '''
-        if self._user_name:
-            return self._user_name
-
-        config_user_name = config.get('ckanext.spatial.harvest.user_name')
-        if config_user_name:
-            self._user_name = config_user_name
-        else:
-            user = p.toolkit.get_action('get_site_user')({'model': model, 'ignore_auth': True}, {})
-            self._user_name = user['name']
-
-        return self._user_name
-
-
-    def _get_content(self, url):
-        '''
-        DEPRECATED: Use _get_content_as_unicode instead
-        '''
-        url = url.replace(' ','%20')
-        http_response = urllib2.urlopen(url)
-        return http_response.read()
-
-
-    def _get_content_as_unicode(self, url):
-        '''
-        Get remote content as unicode.
-
-        We let requests handle the conversion [1] , which will use the content-type
-        header first or chardet if the header is missing (requests uses its own
-        embedded chardet version).
-
-        As we will be storing and serving the contents as unicode, we actually
-        replace the original XML encoding declaration with an UTF-8 one.
-
-
-        [1] http://github.com/kennethreitz/requests/blob/63243b1e3b435c7736acf1e51c0f6fa6666d861d/requests/models.py#L811
-
-        '''
-        url = url.replace(' ','%20')
-        response = requests.get(url, timeout=10)
-
-        content = response.text
-
-        # Remove original XML declaration
-        content = re.sub('<\?xml(.*)\?>','',content)
-
-        # Get rid of the BOM and other rubbish at the beginning of the file
-        content = re.sub('.*?<', '<', content, 1)
-        content = content[content.index('<'):]
-
-        content = u'<?xml version="1.0" encoding="UTF-8"?>\n' + content
-
-        return content
-
-    def _validate_document(self, document_string, harvest_object, validator=None):
-        if not validator:
-            validator = self._get_validator()
-
-        document_string = re.sub('<\?xml(.*)\?>','',document_string)
-
-        try:
-            xml = etree.fromstring(document_string)
-        except etree.XMLSyntaxError, e:
-            self._save_object_error('Could not parse XML file: {0}'.format(str(e)), harvest_object,'Import')
-            return False, None, []
-
-
-        valid, profile, errors = validator.is_valid(xml)
-        if not valid:
-            log.error('Validation errors found using profile {0} for object with GUID {1}'.format(profile, harvest_object.guid))
-            for error in errors:
-                self._save_object_error(error[0], harvest_object,'Validation',line=error[1])
-
-        return valid, profile, errors
-
-
     def import_stage(self, harvest_object):
 
         log = logging.getLogger(__name__ + '.import')
@@ -504,13 +361,12 @@ class SpatialHarvester(HarvesterBase):
 
         if status == 'delete':
             # Delete package
-            context = {'model':model, 'session': model.Session, 'user': self._get_user_name()}
+            context = {'model': model, 'session': model.Session, 'user': self._get_user_name()}
 
             p.toolkit.get_action('package_delete')(context, {'id': harvest_object.package_id})
             log.info('Deleted package {0} with guid {1}'.format(harvest_object.package_id, harvest_object.guid))
 
             return True
-
 
         # Check if it is a non ISO document
         original_document = self._get_object_extra(harvest_object, 'original_document')
@@ -533,17 +389,16 @@ class SpatialHarvester(HarvesterBase):
                 # If validation errors were found, import will stop unless
                 # configuration per source or per instance says otherwise
                 continue_import = p.toolkit.asbool(config.get('ckanext.spatial.harvest.continue_on_validation_errors', False)) or \
-                                  self.source_config.get('continue_on_validation_errors')
+                    self.source_config.get('continue_on_validation_errors')
                 if not continue_import:
-                   return False
-
+                    return False
 
         # Parse ISO document
         try:
             iso_values = ISODocument(harvest_object.content).read_values()
         except Exception, e:
-            self._save_object_error('Error parsing ISO document for object {0}: {1}'.format(harvest_object.id,str(e)),
-                                    harvest_object,'Import')
+            self._save_object_error('Error parsing ISO document for object {0}: {1}'.format(harvest_object.id, str(e)),
+                                    harvest_object, 'Import')
             return False
 
         # Flag previous object as not current anymore
@@ -562,7 +417,7 @@ class SpatialHarvester(HarvesterBase):
                             .first()
             if existing_object:
                 self._save_object_error('Object {0} already has this guid {1}'.format(existing_object.id, iso_guid),
-                                    harvest_object,'Import')
+                        harvest_object, 'Import')
                 return False
 
             harvest_object.guid = iso_guid
@@ -571,7 +426,7 @@ class SpatialHarvester(HarvesterBase):
         # Generate GUID if not present (i.e. it's a manual import)
         if not harvest_object.guid:
             m = hashlib.md5()
-            m.update(harvest_object.content.encode('utf8',errors='ignore'))
+            m.update(harvest_object.content.encode('utf8', errors='ignore'))
             harvest_object.guid = m.hexdigest()
             harvest_object.add()
 
@@ -591,10 +446,10 @@ class SpatialHarvester(HarvesterBase):
 
         # Create / update the package
 
-        context = {'model':model,
+        context = {'model': model,
                    'session': model.Session,
                    'user': self._get_user_name(),
-                   'extras_as_string':True, # TODO: check if needed
+                   'extras_as_string': True,
                    'api_version': '2',
                    'return_id_only': True}
 
@@ -659,8 +514,160 @@ class SpatialHarvester(HarvesterBase):
                     self._save_object_error('Validation Error: %s' % str(e.error_summary), harvest_object, 'Import')
                     return False
 
-
         model.Session.commit()
 
-
         return True
+    ##
+
+    def _is_wms(self, url):
+        '''
+        Checks if the provided URL actually points to a Web Map Service.
+        Uses owslib WMS reader to parse the response.
+        '''
+        try:
+            capabilities_url = wms.WMSCapabilitiesReader().capabilities_url(url)
+            res = urllib2.urlopen(capabilities_url, None, 10)
+            xml = res.read()
+
+            s = wms.WebMapService(url, xml=xml)
+            return isinstance(s.contents, dict) and s.contents != {}
+        except Exception, e:
+            log.error('WMS check for %s failed with exception: %s' % (url, str(e)))
+        return False
+
+    def _get_object_extra(self, harvest_object, key):
+        '''
+        Helper function for retrieving the value from a harvest object extra,
+        given the key
+        '''
+        for extra in harvest_object.extras:
+            if extra.key == key:
+                return extra.value
+        return None
+
+    def _set_source_config(self, config_str):
+        '''
+        Loads the source configuration JSON object into a dict for
+        convenient access
+        '''
+        if config_str:
+            self.source_config = json.loads(config_str)
+            log.debug('Using config: %r', self.source_config)
+
+    def _get_validator(self):
+        '''
+        Returns the validator object using the relevant profiles
+
+        The profiles to be used are assigned in the following order:
+
+        1. 'validator_profiles' property of the harvest source config object
+        2. 'ckan.spatial.validator.profiles' configuration option in the ini file
+        3. Default value as defined in DEFAULT_VALIDATOR_PROFILES
+        '''
+        if not hasattr(self, '_validator'):
+            if hasattr(self, 'source_config') and self.source_config.get('validator_profiles', None):
+                profiles = self.source_config.get('validator_profiles')
+            elif config.get('ckan.spatial.validator.profiles', None):
+                profiles = [
+                    x.strip() for x in
+                    config.get('ckan.spatial.validator.profiles').split(',')
+                ]
+            else:
+                profiles = DEFAULT_VALIDATOR_PROFILES
+            self._validator = Validators(profiles=profiles)
+        return self._validator
+
+    def _get_user_name(self):
+        '''
+        Returns the name of the user that will perform the harvesting actions
+        (deleting, updating and creating datasets)
+
+        By default this will be the internal site admin user. This is the
+        recommended setting, but if necessary it can be overridden with the
+        `ckanext.spatial.harvest.user_name` config option, eg to support the
+        old hardcoded 'harvest' user:
+
+           ckanext.spatial.harvest.user_name = harvest
+
+        '''
+        if self._user_name:
+            return self._user_name
+
+        config_user_name = config.get('ckanext.spatial.harvest.user_name')
+        if config_user_name:
+            self._user_name = config_user_name
+        else:
+            user = p.toolkit.get_action('get_site_user')({'model': model, 'ignore_auth': True}, {})
+            self._user_name = user['name']
+
+        return self._user_name
+
+    def _get_content(self, url):
+        '''
+        DEPRECATED: Use _get_content_as_unicode instead
+        '''
+        url = url.replace(' ', '%20')
+        http_response = urllib2.urlopen(url)
+        return http_response.read()
+
+    def _get_content_as_unicode(self, url):
+        '''
+        Get remote content as unicode.
+
+        We let requests handle the conversion [1] , which will use the
+        content-type header first or chardet if the header is missing
+        (requests uses its own embedded chardet version).
+
+        As we will be storing and serving the contents as unicode, we actually
+        replace the original XML encoding declaration with an UTF-8 one.
+
+
+        [1] http://github.com/kennethreitz/requests/blob/63243b1e3b435c7736acf1e51c0f6fa6666d861d/requests/models.py#L811
+
+        '''
+        url = url.replace(' ', '%20')
+        response = requests.get(url, timeout=10)
+
+        content = response.text
+
+        # Remove original XML declaration
+        content = re.sub('<\?xml(.*)\?>', '', content)
+
+        # Get rid of the BOM and other rubbish at the beginning of the file
+        content = re.sub('.*?<', '<', content, 1)
+        content = content[content.index('<'):]
+
+        content = u'<?xml version="1.0" encoding="UTF-8"?>\n' + content
+
+        return content
+
+    def _validate_document(self, document_string, harvest_object, validator=None):
+        '''
+        Validates an XML document with the default, or if present, the
+        provided validators.
+
+        It will create a HarvestObjectError for each validation error found,
+        so they can be shown properly on the frontend.
+
+        Returns a tuple, with a boolean showing whether the validation passed
+        or not, the profile used and a list of errors (tuples with error
+        message and error lines if present).
+        '''
+        if not validator:
+            validator = self._get_validator()
+
+        document_string = re.sub('<\?xml(.*)\?>', '', document_string)
+
+        try:
+            xml = etree.fromstring(document_string)
+        except etree.XMLSyntaxError, e:
+            self._save_object_error('Could not parse XML file: {0}'.format(str(e)), harvest_object, 'Import')
+            return False, None, []
+
+        valid, profile, errors = validator.is_valid(xml)
+        if not valid:
+            log.error('Validation errors found using profile {0} for object with GUID {1}'.format(profile, harvest_object.guid))
+            for error in errors:
+                self._save_object_error(error[0], harvest_object, 'Validation', line=error[1])
+
+        return valid, profile, errors
