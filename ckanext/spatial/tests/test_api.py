@@ -1,6 +1,7 @@
 import logging
 import json
 from pprint import pprint
+from nose.plugins.skip import SkipTest
 from nose.tools import assert_equal, assert_raises
 from ckan.logic.action.create import package_create
 from ckan.logic.action.delete import package_delete
@@ -125,3 +126,92 @@ class TestActionPackageSearch(SpatialTestBase,WsgiAppCase):
         assert_equal(result['count'], 1)
         assert_equal(result['results'][0]['name'], 'test-spatial-dataset-search-point-2')
 
+
+class TestHarvestedMetadataAPI(WsgiAppCase):
+
+
+    @classmethod
+    def setup_class(cls):
+        try:
+            from ckanext.harvest.model import HarvestObject, HarvestJob, HarvestSource, HarvestObjectExtra
+        except ImportError:
+            raise SkipTest('The harvester extension is needed for these tests')
+
+        cls.content1 = '<xml>Content 1</xml>'
+        ho1 = HarvestObject(guid='test-ho-1',
+                job=HarvestJob(source=HarvestSource(url='http://', type='xx')),
+                            content=cls.content1)
+
+        cls.content2 = '<xml>Content 2</xml>'
+        cls.original_content2 = '<xml>Original Content 2</xml>'
+        ho2 = HarvestObject(guid='test-ho-2',
+                job=HarvestJob(source=HarvestSource(url='http://', type='xx')),
+                            content=cls.content2)
+
+        hoe = HarvestObjectExtra(key='original_document',
+                value=cls.original_content2,
+                object=ho2)
+
+        Session.add(ho1)
+        Session.add(ho2)
+        Session.add(hoe)
+        Session.commit()
+
+        cls.object_id_1 = ho1.id
+        cls.object_id_2 = ho2.id
+
+
+    def test_api(self):
+
+        # Test redirects for old URLs
+        url = '/api/2/rest/harvestobject/{0}/xml'.format(self.object_id_1)
+        r = self.app.get(url)
+        assert r.status == 301
+        assert '/harvest/object/{0}'.format(self.object_id_1) in r.header_dict['Location']
+
+        url = '/api/2/rest/harvestobject/{0}/html'.format(self.object_id_1)
+        r = self.app.get(url)
+        assert r.status == 301
+        assert '/harvest/object/{0}/html'.format(self.object_id_1) in r.header_dict['Location']
+
+
+        # Access object content
+        url = '/harvest/object/{0}'.format(self.object_id_1)
+        r = self.app.get(url)
+        assert r.status == 200
+        assert r.header_dict['Content-Type'] == 'application/xml; charset=utf-8'
+        assert r.body == self.content1
+
+        # Access original content in object extra (if present)
+        url = '/harvest/object/{0}/original'.format(self.object_id_1)
+        r = self.app.get(url, status=404)
+        assert r.status == 404
+
+        url = '/harvest/object/{0}/original'.format(self.object_id_2)
+        r = self.app.get(url)
+        assert r.status == 200
+        assert r.header_dict['Content-Type'] == 'application/xml; charset=utf-8'
+        assert r.body == self.original_content2
+
+        # Access HTML transformation
+        url = '/harvest/object/{0}/html'.format(self.object_id_1)
+        r = self.app.get(url)
+        assert r.status == 200
+        assert r.header_dict['Content-Type'] == 'text/html; charset=utf-8'
+        assert 'GEMINI record about' in r.body
+
+        url = '/harvest/object/{0}/html/original'.format(self.object_id_1)
+        r = self.app.get(url, status=404)
+        assert r.status == 404
+
+        url = '/harvest/object/{0}/html'.format(self.object_id_2)
+        r = self.app.get(url)
+        assert r.status == 200
+        assert r.header_dict['Content-Type'] == 'text/html; charset=utf-8'
+        assert 'GEMINI record about' in r.body
+
+        url = '/harvest/object/{0}/html/original'.format(self.object_id_2)
+        r = self.app.get(url)
+        assert r.status == 200
+        assert r.header_dict['Content-Type'] == 'text/html; charset=utf-8'
+        assert 'GEMINI record about' in r.body
