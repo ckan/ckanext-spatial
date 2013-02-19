@@ -200,9 +200,29 @@ Enabled with the ``ckan.plugins = spatial_harvest_metadata_api`` (previous known
 
 To view the harvest objects (containing the harvested metadata) in the web interface, these controller locations are added:
 
-/api/2/rest/harvestobject/<id>/xml
+* raw XML document: /harvest/object/{id}
+* HTML representation: /harvest/object/{id}/html
 
-/api/2/rest/harvestobject/<id>/html
+.. note::
+    The old URLs are now deprecated and redirect to the previously defined.
+
+    /api/2/rest/harvestobject/<id>/xml
+    /api/2/rest/harvestobject/<id>/html
+
+
+For those harvest objects that have an original document (which was transformed to ISO), this can be accessed via:
+
+* raw XML document: /harvest/object/{id}/original
+* HTML representation: /harvest/object/{id}/html/original
+
+The HTML representation is created via an XSLT transformation. The extension provides an XSLT file that should work
+on ISO 19139 based documents, but if you want to use your own on your extension, you can override it using
+the following configuration options::
+
+    ckanext.spatial.harvest.xslt_html_content = ckanext.myext:templates/xslt/custom.xslt
+    ckanext.spatial.harvest.xslt_html_content_original = ckanext.myext:templates/xslt/custom2.xslt
+
+If your project does not transform different metadata types you can ignore the second option.
 
 
 CSW Client
