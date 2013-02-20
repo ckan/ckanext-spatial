@@ -129,7 +129,7 @@ class SpatialQuery(SingletonPlugin):
             if not bbox:
                 raise SearchError('Wrong bounding box provided')
 
-            if search_params['sort'] == 'spatial desc':
+            if 'sort' in search_params and search_params['sort'] == 'spatial desc':
                 if search_params['q'] or search_params['fq']:
                     raise SearchError('Spatial ranking cannot be mixed with other search parameters')
                     # ...because it is too inefficient to use SOLR to filter
