@@ -136,9 +136,10 @@ class SpatialHarvester(HarvesterBase):
         '''
 
         tags = []
-        for tag in iso_values['tags']:
-            tag = tag[:50] if len(tag) > 50 else tag
-            tags.append({'name': tag})
+        if 'tags' in iso_values:
+            for tag in iso_values['tags']:
+                tag = tag[:50] if len(tag) > 50 else tag
+                tags.append({'name': tag})
 
         package_dict = {
             'title': iso_values['title'],
