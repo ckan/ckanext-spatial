@@ -34,9 +34,15 @@ setup(
     wms_preview=ckanext.spatial.nongeos_plugin:WMSPreview
     cswserver=ckanext.spatial.plugin:CatalogueServiceWeb
     spatial_harvest_metadata_api=ckanext.spatial.plugin:HarvestMetadataApi
-    gemini_csw_harvester=ckanext.spatial.harvesters:GeminiCswHarvester
-    gemini_doc_harvester=ckanext.spatial.harvesters:GeminiDocHarvester
-    gemini_waf_harvester=ckanext.spatial.harvesters:GeminiWafHarvester
+
+    csw_harvester=ckanext.spatial.harvesters:CSWHarvester
+    waf_harvester=ckanext.spatial.harvesters:WAFHarvester
+    doc_harvester=ckanext.spatial.harvesters:DocHarvester
+
+    # Legacy harvesters
+    gemini_csw_harvester=ckanext.spatial.harvesters.gemini:GeminiCswHarvester
+    gemini_doc_harvester=ckanext.spatial.harvesters.gemini:GeminiDocHarvester
+    gemini_waf_harvester=ckanext.spatial.harvesters.gemini:GeminiWafHarvester
 
     [paste.paster_command]
     spatial=ckanext.spatial.commands.spatial:Spatial

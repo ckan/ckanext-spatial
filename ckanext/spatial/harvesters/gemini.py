@@ -7,27 +7,17 @@ but can be easily adapted for other INSPIRE/ISO19139 XML metadata
     - GeminiDocHarvester - An individual GEMINI resource
     - GeminiWafHarvester - An index page with links to GEMINI resources
 
-TODO: Harvesters for generic INSPIRE CSW servers
-
 '''
-import cgitb
-import warnings
-import urllib2
+import os
 from urlparse import urlparse
 from datetime import datetime
-from string import Template
 from numbers import Number
-import sys
 import uuid
-import os
 import logging
 import difflib
 
 from lxml import etree
-from pylons import config
 from sqlalchemy.sql import update, bindparam
-from sqlalchemy.exc import InvalidRequestError
-from owslib import wms
 
 from ckan import model
 from ckan.model import Session, Package
@@ -40,126 +30,20 @@ from ckan.logic import get_action, ValidationError
 from ckan.lib.navl.validators import not_empty
 
 from ckanext.harvest.interfaces import IHarvester
-from ckanext.harvest.model import HarvestObject, HarvestGatherError, \
-                                    HarvestObjectError
+from ckanext.harvest.model import HarvestObject
 
 from ckanext.spatial.model import GeminiDocument
 from ckanext.spatial.lib.csw_client import CswService
-from ckanext.spatial.validation import Validators, all_validators
+
+from ckanext.spatial.harvesters.base import SpatialHarvester, text_traceback
+
 
 log = logging.getLogger(__name__)
-
-DEFAULT_VALIDATOR_PROFILES = ['iso19139']
-
-
-def text_traceback():
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore")
-        res = 'the original traceback:'.join(
-            cgitb.text(sys.exc_info()).split('the original traceback:')[1:]
-        ).strip()
-    return res
 
 # When developing, it might be helpful to 'export DEBUG=1' to reraise the
 # exceptions, rather them being caught.
 debug_exception_mode = bool(os.getenv('DEBUG'))
 
-class SpatialHarvester(object):
-    # Q: Why does this not inherit from HarvesterBase in ckanext-harvest?
-
-    def _is_wms(self,url):
-        try:
-            capabilities_url = wms.WMSCapabilitiesReader().capabilities_url(url)
-            res = urllib2.urlopen(capabilities_url,None,10)
-            xml = res.read()
-
-            s = wms.WebMapService(url,xml=xml)
-            return isinstance(s.contents, dict) and s.contents != {}
-        except Exception, e:
-            log.error('WMS check for %s failed with exception: %s' % (url, str(e)))
-        return False
-
-    def _get_validator(self):
-        '''
-        Returns the validator object using the relevant profiles
-
-        The profiles to be used are assigned in the following order:
-
-        1. 'validator_profiles' property of the harvest source config object
-        2. 'ckan.spatial.validator.profiles' configuration option in the ini file
-        3. Default value as defined in DEFAULT_VALIDATOR_PROFILES
-        '''
-        if not hasattr(self, '_validator'):
-            if hasattr(self, 'config') and self.config.get('validator_profiles',None):
-                profiles = self.config.get('validator_profiles')
-            elif config.get('ckan.spatial.validator.profiles', None):
-                profiles = [
-                    x.strip() for x in
-                    config.get('ckan.spatial.validator.profiles').split(',')
-                ]
-            else:
-                profiles = DEFAULT_VALIDATOR_PROFILES
-            self._validator = Validators(profiles=profiles)
-        return self._validator
-
-    def _save_gather_error(self, message, job):
-        err = HarvestGatherError(message=message, job=job)
-        try:
-            err.save()
-        except InvalidRequestError:
-            Session.rollback()
-            err.save()
-        finally:
-            log.error(message)
-
-    def _save_object_error(self,message,obj,stage=u'Fetch',line=None):
-        err = HarvestObjectError(message=message,
-                                 object=obj,
-                                 stage=stage,
-                                 line=line)
-        try:
-            err.save()
-        except InvalidRequestError,e:
-            Session.rollback()
-            err.save()
-        finally:
-            log_message = '{0}, line {1}'.format(message,line) if line else message
-            log.debug(log_message)
-
-    def _get_content(self, url):
-        url = url.replace(' ','%20')
-        http_response = urllib2.urlopen(url)
-        return http_response.read()
-
-    def _set_config(self,config_str):
-        if config_str:
-            self.config = json.loads(config_str)
-            log.debug('Using config: %r', self.config)
-        else:
-            self.config = {}
-
-    def validate_config(self,config):
-        if not config:
-            return config
-
-        try:
-            config_obj = json.loads(config)
-
-            if 'validator_profiles' in config_obj:
-                if not isinstance(config_obj['validator_profiles'],list):
-                    raise ValueError('validator_profiles must be a list')
-
-                # Check if all profiles exist
-                existing_profiles = [v.name for v in all_validators]
-                unknown_profiles = set(config_obj['validator_profiles']) - set(existing_profiles)
-
-                if len(unknown_profiles) > 0:
-                    raise ValueError('Unknown validation profile(s): %s' % ','.join(unknown_profiles))
-
-        except ValueError,e:
-            raise e
-
-        return config
 
 class GeminiHarvester(SpatialHarvester):
     '''Base class for spatial harvesting GEMINI2 documents for the UK Location
@@ -168,11 +52,6 @@ class GeminiHarvester(SpatialHarvester):
     All three harvesters share the same import stage
     '''
 
-    force_import = False
-
-    extent_template = Template('''
-    {"type":"Polygon","coordinates":[[[$minx, $miny],[$minx, $maxy], [$maxx, $maxy], [$maxx, $miny], [$minx, $miny]]]}
-    ''')
 
     def import_stage(self, harvest_object):
         log = logging.getLogger(__name__ + '.import')
@@ -303,15 +182,10 @@ class GeminiHarvester(SpatialHarvester):
         # Just add some of the metadata as extras, not the whole lot
         for name in [
             # Essentials
-            'bbox-east-long',
-            'bbox-north-lat',
-            'bbox-south-lat',
-            'bbox-west-long',
             'spatial-reference-system',
             'guid',
             # Usefuls
             'dataset-reference-date',
-            'resource-type',
             'metadata-language', # Language
             'metadata-date', # Released
             'coupled-resource',
@@ -320,6 +194,8 @@ class GeminiHarvester(SpatialHarvester):
             'spatial-data-service-type',
         ]:
             extras[name] = gemini_values[name]
+
+        extras['resource-type'] = gemini_values['resource-type'][0]
 
         # Use-constraints can contain values which are:
         #  * free text
@@ -346,15 +222,21 @@ class GeminiHarvester(SpatialHarvester):
         extras['provider'] = provider
         extras['responsible-party'] = '; '.join(responsible_parties)
 
-        # Construct a GeoJSON extent so ckanext-spatial can register the extent geometry
-        extent_string = self.extent_template.substitute(
-                minx = extras['bbox-east-long'],
-                miny = extras['bbox-south-lat'],
-                maxx = extras['bbox-west-long'],
-                maxy = extras['bbox-north-lat']
-                )
+        if len(gemini_values['bbox']) >0:
+            extras['bbox-east-long'] = gemini_values['bbox'][0]['east']
+            extras['bbox-north-lat'] = gemini_values['bbox'][0]['north']
+            extras['bbox-south-lat'] = gemini_values['bbox'][0]['south']
+            extras['bbox-west-long'] = gemini_values['bbox'][0]['west']
 
-        extras['spatial'] = extent_string.strip()
+            # Construct a GeoJSON extent so ckanext-spatial can register the extent geometry
+            extent_string = self.extent_template.substitute(
+                    minx = extras['bbox-east-long'],
+                    miny = extras['bbox-south-lat'],
+                    maxx = extras['bbox-west-long'],
+                    maxy = extras['bbox-north-lat']
+                    )
+
+            extras['spatial'] = extent_string.strip()
 
         tags = []
         for tag in gemini_values['tags']:
@@ -525,6 +407,7 @@ class GeminiHarvester(SpatialHarvester):
                 counter = counter + 1
             return None
 
+    @classmethod
     def _extract_first_licence_url(self, licences):
         '''Given a list of pieces of licence info, hunt for the first one
         which looks like a URL and return it. Otherwise returns None.'''
@@ -592,7 +475,7 @@ class GeminiHarvester(SpatialHarvester):
 
     def get_gemini_string_and_guid(self,content,url=None):
         '''From a string buffer containing Gemini XML, return the tree
-        under gmd:MD_Metadata and the GUID for it. 
+        under gmd:MD_Metadata and the GUID for it.
 
         If it cannot parse the XML it will raise lxml.etree.XMLSyntaxError.
         If it cannot find the GUID element, then gemini_guid will be ''.

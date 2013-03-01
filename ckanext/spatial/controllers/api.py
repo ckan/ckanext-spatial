@@ -118,6 +118,8 @@ class HarvestMetadataApiController(BaseApiController):
         response.headers['Content-Type'] = 'application/xml; charset=utf-8'
         response.headers['Content-Length'] = len(content)
 
+        if not '<?xml' in content.split('\n')[0]:
+            content = u'<?xml version="1.0" encoding="UTF-8"?>\n' + content
         return content.encode('utf-8')
 
     def display_html(self,id):

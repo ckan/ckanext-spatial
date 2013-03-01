@@ -193,6 +193,18 @@ Each contains code to do the three stages of harvesting:
 
 You must specify which validators to use in the configuration of ``ckan.spatial.validator.profiles`` - see below.
 
+By default the harvesting actions (eg creating or updating datasets) will be performed by the internal site admin user.
+This is the recommended setting, but if necessary, it can be overridden with the
+``ckanext.spatial.harvest.user_name`` config option, eg to support the old hardcoded 'harvest' user::
+
+    ckanext.spatial.harvest.user_name = harvest
+
+By default, the import stage will stop if the validation of the harvested document fails. This can be
+modified setting the ``ckanext.spatial.harvest.continue_on_validation_errors`` to True. The setting can
+also be applied at the source level setting to True the ``continue_on_validation_errors`` key on the source
+configuration object.
+
+
 Harvest Metadata API
 --------------------
 

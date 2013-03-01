@@ -1,6 +1,6 @@
 import os
 from pkg_resources import resource_stream
-from ckanext.spatial.model import GeminiDocument
+from ckanext.spatial.model import ISODocument
 
 from lxml import etree
 
@@ -119,8 +119,8 @@ class ISO19139EdenSchema(XsdValidator):
 
         xml - etree of the ISO19139 XML record
         '''
-        gemini = GeminiDocument(xml_tree=xml)
-        return gemini.read_value('resource-type')
+        iso_parser = ISODocument(xml_tree=xml)
+        return iso_parser.read_value('resource-type')[0]
 
 class ISO19139NGDCSchema(XsdValidator):
     '''
