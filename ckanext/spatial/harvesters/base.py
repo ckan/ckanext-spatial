@@ -64,7 +64,7 @@ class SpatialHarvester(HarvesterBase):
     force_import = False
 
     extent_template = Template('''
-    {"type", "Polygon", "coordinates": [[[$minx, $miny], [$minx, $maxy], [$maxx, $maxy], [$maxx, $miny], [$minx, $miny]]]}
+    {"type": "Polygon", "coordinates": [[[$minx, $miny], [$minx, $maxy], [$maxx, $maxy], [$maxx, $miny], [$minx, $miny]]]}
     ''')
 
     ## IHarvester
@@ -637,8 +637,6 @@ class SpatialHarvester(HarvesterBase):
         # Get rid of the BOM and other rubbish at the beginning of the file
         content = re.sub('.*?<', '<', content, 1)
         content = content[content.index('<'):]
-
-        content = u'<?xml version="1.0" encoding="UTF-8"?>\n' + content
 
         return content
 

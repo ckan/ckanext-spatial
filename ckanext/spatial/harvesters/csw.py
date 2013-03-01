@@ -1,3 +1,4 @@
+import re
 import urllib
 import urlparse
 
@@ -163,7 +164,10 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
         try:
             # Save the fetch contents in the HarvestObject
             # Contents come from csw_client already declared and encoded as utf-8
-            harvest_object.content = record['xml']
+            # Remove original XML declaration
+            content = re.sub('<\?xml(.*)\?>', '', record['xml'])
+
+            harvest_object.content = content.strip()
             harvest_object.save()
         except Exception,e:
             self._save_object_error('Error saving the harvest object for GUID %s [%r]' % \
