@@ -55,6 +55,56 @@ def guess_standard(content):
     return 'unknown'
 
 
+def guess_resource_format(url, use_mimetypes=True):
+    '''
+    Given a URL try to guess the best format to assign to the resource
+
+    The function looks for common patterns in popular geospatial services and
+    file extensions, so it may not be 100% accurate. It just looks at the
+    provided URL, it does not attempt to perform any remote check.
+
+    if 'use_mimetypes' is True (default value), the mimetypes module will be
+    used if no match was found before.
+
+    Returns None if no format could be guessed.
+
+    '''
+    url = url.lower().strip()
+
+    resource_types = {
+        # OGC
+        'wms': ('service=wms', 'geoserver/wms', 'mapsercer/wmsserver', 'com.esri.wms.Esrimap'),
+        'wfs': ('service=wfs', 'geoserver/wfs', 'mapserver/wfsserver', 'com.esri.wfs.Esrimap'),
+        'wcs': ('service=wcs', 'geoserver/wcs', 'imageserver/wcsserver', 'mapserver/wcsserver'),
+        'sos': ('service=sos',),
+        'csw': ('service=csw',),
+        # ESRI
+        'kml': ('mapserver/generatekml',),
+        'arcims': ('com.esri.esrimap.esrimap',),
+        'arcgis_rest': ('arcgis/rest/services',),
+    }
+
+    for resource_type, parts in resource_types.iteritems():
+        if any(part in url for part in parts):
+            return resource_type
+
+    file_types = {
+        'kml' : ('kml',),
+        'kmz': ('kmz',),
+        'gml': ('gml',),
+    }
+
+    for file_type, extensions in file_types.iteritems():
+        if any(url.endswith(extension) for extension in extensions):
+            return file_type
+
+    resource_format, encoding = mimetypes.guess_type(url)
+    if resource_format:
+        return resource_format
+
+    return None
+
+
 class SpatialHarvester(HarvesterBase):
 
     _user_name = None
@@ -263,40 +313,28 @@ class SpatialHarvester(HarvesterBase):
 
         if len(resource_locators):
             for resource_locator in resource_locators:
-                url = resource_locator.get('url', '')
+                url = resource_locator.get('url', '').strip()
                 if url:
-                    resource_format = ''
                     resource = {}
-                    if extras['resource-type'] == 'service':
+                    resource['format'] = guess_resource_format(url)
+                    if resource['format'] == 'wms' and config.get('ckanext.spatial.harvest.validate_wms', False):
                         # Check if the service is a view service
                         test_url = url.split('?')[0] if '?' in url else url
                         if self._is_wms(test_url):
                             resource['verified'] = True
                             resource['verified_date'] = datetime.now().isoformat()
-                            resource_format = 'WMS'
-                    if not resource_format:
-                        resource_format, encoding = mimetypes.guess_type(url)
 
                     resource.update(
                         {
                             'url': url,
                             'name': resource_locator.get('name', ''),
                             'description': resource_locator.get('description') if resource_locator.get('description') else 'Resource locator',
-                            'format': resource_format or None,
                             'resource_locator_protocol': resource_locator.get('protocol', ''),
                             'resource_locator_function': resource_locator.get('function', '')
 
                         })
                     package_dict['resources'].append(resource)
 
-            # Guess the best view service to use in WMS preview
-            verified_view_resources = [r for r in package_dict['resources'] if 'verified' in r and r['format'] == 'WMS']
-            if len(verified_view_resources):
-                verified_view_resources[0]['ckan_recommended_wms_preview'] = True
-            else:
-                view_resources = [r for r in package_dict['resources'] if r['format'] == 'WMS']
-                if len(view_resources):
-                    view_resources[0]['ckan_recommended_wms_preview'] = True
 
         extras_as_dict = []
         for key, value in extras.iteritems():
