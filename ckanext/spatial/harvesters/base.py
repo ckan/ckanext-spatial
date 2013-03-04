@@ -327,8 +327,8 @@ class SpatialHarvester(HarvesterBase):
                     resource.update(
                         {
                             'url': url,
-                            'name': resource_locator.get('name', ''),
-                            'description': resource_locator.get('description') if resource_locator.get('description') else 'Resource locator',
+                            'name': resource_locator.get('name', p.toolkit._('Unnamed resource')),
+                            'description': resource_locator.get('description', ''),
                             'resource_locator_protocol': resource_locator.get('protocol', ''),
                             'resource_locator_function': resource_locator.get('function', '')
 
