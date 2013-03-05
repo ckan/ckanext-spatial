@@ -311,7 +311,7 @@ class SpatialHarvester(HarvesterBase):
                 # Some publishers define the same two corners for the bbox (ie a point),
                 # that causes problems in the search if stored as polygon
                 if xmin == xmax or ymin == ymax:
-                    extent_string = '{"type": "Point", "coordinates": [{x}, {y}]}'.format(
+                    extent_string = Template('{"type": "Point", "coordinates": [$x, $y]}').substitute(
                         x=xmin, y=ymin
                     )
                     self._save_object_error('Point extent defined instead of polygon for object {0}'.format(harvest_object.id),
