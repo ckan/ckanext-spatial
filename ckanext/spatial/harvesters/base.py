@@ -114,7 +114,7 @@ class SpatialHarvester(HarvesterBase):
     force_import = False
 
     extent_template = Template('''
-    {"type": "Polygon", "coordinates": [[[$minx, $miny], [$minx, $maxy], [$maxx, $maxy], [$maxx, $miny], [$minx, $miny]]]}
+    {"type": "Polygon", "coordinates": [[[$xmin, $ymin], [$xmin, $ymax], [$xmax, $ymax], [$xmax, $ymin], [$xmin, $ymin]]]}
     ''')
 
     ## IHarvester
@@ -291,20 +291,37 @@ class SpatialHarvester(HarvesterBase):
             extras['provider'] = u''
 
         if len(iso_values['bbox']) > 0:
-            extras['bbox-east-long'] = iso_values['bbox'][0]['east']
-            extras['bbox-north-lat'] = iso_values['bbox'][0]['north']
-            extras['bbox-south-lat'] = iso_values['bbox'][0]['south']
-            extras['bbox-west-long'] = iso_values['bbox'][0]['west']
+            bbox = iso_values['bbox'][0]
+            extras['bbox-east-long'] = bbox['east']
+            extras['bbox-north-lat'] = bbox['north']
+            extras['bbox-south-lat'] = bbox['south']
+            extras['bbox-west-long'] = bbox['west']
 
-            # Construct a GeoJSON extent so ckanext-spatial can register the extent geometry
-            extent_string = self.extent_template.substitute(
-                minx=iso_values['bbox'][0]['east'],
-                miny=iso_values['bbox'][0]['south'],
-                maxx=iso_values['bbox'][0]['west'],
-                maxy=iso_values['bbox'][0]['north']
-            )
+            try:
+                xmin = float(bbox['west'])
+                xmax = float(bbox['east'])
+                ymin = float(bbox['south'])
+                ymax = float(bbox['north'])
+            except ValueError, e:
+                self._save_object_error('Error parsing bounding box value: {0}'.format(str(e)),
+                                    harvest_object, 'Import')
+            else:
+                # Construct a GeoJSON extent so ckanext-spatial can register the extent geometry
 
-            extras['spatial'] = extent_string.strip()
+                # Some publishers define the same two corners for the bbox (ie a point),
+                # that causes problems in the search if stored as polygon
+                if xmin == xmax or ymin == ymax:
+                    extent_string = '{"type": "Point", "coordinates": [{x}, {y}]}'.format(
+                        x=xmin, y=ymin
+                    )
+                    self._save_object_error('Point extent defined instead of polygon for object {0}'.format(harvest_object.id),
+                                     harvest_object, 'Import')
+                else:
+                    extent_string = self.extent_template.substitute(
+                        xmin=xmin, ymin=ymin, xmax=xmax, ymax=ymax
+                    )
+
+                extras['spatial'] = extent_string.strip()
         else:
             log.debug('No spatial extent defined for this object')
 
