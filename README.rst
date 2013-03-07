@@ -597,7 +597,7 @@ added via the ``AddGeometryColumn`` function::
 
     ALTER TABLE package_extent OWNER TO [your_user];
 
-    SELECT AddGeometryColumn('package_extent','the_geom', 4326, 'POLYGON', 2);
+    SELECT AddGeometryColumn('package_extent','the_geom', 4326, 'GEOMETRY', 2);
 
 This will add a geometry column in the ``package_extent`` table called
 ``the_geom``, with the spatial reference system EPSG:4326. The stored
@@ -619,7 +619,6 @@ defined in the geometry column creation::
         "package_extent_pkey" PRIMARY KEY, btree (package_id)
     Check constraints:
         "enforce_dims_the_geom" CHECK (st_ndims(the_geom) = 2)
-        "enforce_geotype_the_geom" CHECK (geometrytype(the_geom) = 'POLYGON'::text OR the_geom IS NULL)
         "enforce_srid_the_geom" CHECK (st_srid(the_geom) = 4326)
 
 Installing libxml2
