@@ -76,7 +76,7 @@ class SpatialMetadata(p.SingletonPlugin):
         # TODO: deleted extra
         for extra in package.extras_list:
             if extra.key == 'spatial':
-                if extra.state == 'active':
+                if extra.state == 'active' and extra.value:
                     try:
                         log.debug('Received: %r' % extra.value)
                         geometry = json.loads(extra.value)
@@ -99,7 +99,7 @@ class SpatialMetadata(p.SingletonPlugin):
                         error_dict = {'spatial':[u'Error: %s' % str(e)]}
                         raise p.toolkit.ValidationError(error_dict, error_summary=package_error_summary(error_dict))
 
-                elif extra.state == 'deleted':
+                elif (extra.state == 'active' and not extra.value) or extra.state == 'deleted':
                     # Delete extent from table
                     save_package_extent(package.id,None)
 
