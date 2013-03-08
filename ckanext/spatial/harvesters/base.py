@@ -253,42 +253,21 @@ class SpatialHarvester(HarvesterBase):
                 extras['licence_url'] = license_url_extracted
 
         extras['access_constraints'] = iso_values.get('limitations-on-public-access', '')
-        if 'temporal-extent-begin' in iso_values:
-            extras['temporal_coverage-from'] = iso_values['temporal-extent-begin']
-        if 'temporal-extent-end' in iso_values:
-            extras['temporal_coverage-to'] = iso_values['temporal-extent-end']
+
+        for key in ['temporal-extent-begin', 'temporal-extent-end']:
+            if len(iso_values[key]) > 0:
+                extras[key] = iso_values[key][0]
 
         # Save responsible organization roles
-        parties = {}
-        owners = []
-        publishers = []
-        for responsible_party in iso_values['responsible-organisation']:
-
-            if responsible_party['role'] == 'owner':
-                owners.append(responsible_party['organisation-name'])
-            elif responsible_party['role'] == 'publisher':
-                publishers.append(responsible_party['organisation-name'])
-
-            if responsible_party['organisation-name'] in parties:
-                if not responsible_party['role'] in parties[responsible_party['organisation-name']]:
-                    parties[responsible_party['organisation-name']].append(responsible_party['role'])
-            else:
-                parties[responsible_party['organisation-name']] = [responsible_party['role']]
-
-        parties_extra = []
-        for party_name in parties:
-            parties_extra.append('%s (%s)' % (party_name, ', '.join(parties[party_name])))
-        extras['responsible-party'] = '; '.join(parties_extra)
-
-        # Save provider in a separate extra:
-        # first organization to have a role of 'owner', and if there is none, first one with
-        # a role of 'publisher'
-        if len(owners):
-            extras['provider'] = owners[0]
-        elif len(publishers):
-            extras['provider'] = publishers[0]
-        else:
-            extras['provider'] = u''
+        if iso_values['responsible-organisation']:
+            parties = {}
+            for party in iso_values['responsible-organisation']:
+                if party['organisation-name'] in parties:
+                    if not party['role'] in parties[party['organisation-name']]:
+                        parties[party['organisation-name']].append(party['role'])
+                else:
+                    parties[party['organisation-name']] = [party['role']]
+            extras['responsible-party'] = [{'name': k, 'roles': v} for k, v in parties.iteritems()]
 
         if len(iso_values['bbox']) > 0:
             bbox = iso_values['bbox'][0]
