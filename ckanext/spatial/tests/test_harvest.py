@@ -218,7 +218,7 @@ class TestHarvest(HarvestFixtureBase):
             'bbox-north-lat': u'61.0243',
             'bbox-south-lat': u'54.4764484375',
             'bbox-west-long': u'-9.099786875',
-            'spatial': u'{"type":"Polygon","coordinates":[[[0.5242365625, 54.4764484375],[0.5242365625, 61.0243], [-9.099786875, 61.0243], [-9.099786875, 54.4764484375], [0.5242365625, 54.4764484375]]]}',
+            'spatial': u'{"type": "Polygon", "coordinates": [[[0.5242365625, 54.4764484375], [0.5242365625, 61.0243], [-9.099786875, 61.0243], [-9.099786875, 54.4764484375], [0.5242365625, 54.4764484375]]]}',
             # Other
             'coupled-resource': u'[{"href": ["http://scotgovsdi.edina.ac.uk/srv/en/csw?service=CSW&request=GetRecordById&version=2.0.2&outputSchema=http://www.isotc211.org/2005/gmd&elementSetName=full&id=250ea276-48e2-4189-8a89-fcc4ca92d652"], "uuid": ["250ea276-48e2-4189-8a89-fcc4ca92d652"], "title": []}]',
             'dataset-reference-date': u'[{"type": "publication", "value": "2011-09-08"}]',
@@ -326,7 +326,7 @@ class TestHarvest(HarvestFixtureBase):
             'bbox-north-lat': u'61.06066944',
             'bbox-south-lat': u'54.529947158',
             'bbox-west-long': u'-8.97114288',
-            'spatial': u'{"type":"Polygon","coordinates":[[[0.205857204, 54.529947158],[0.205857204, 61.06066944], [-8.97114288, 61.06066944], [-8.97114288, 54.529947158], [0.205857204, 54.529947158]]]}',
+            'spatial': u'{"type": "Polygon", "coordinates": [[[0.205857204, 54.529947158], [0.205857204, 61.06066944], [-8.97114288, 61.06066944], [-8.97114288, 54.529947158], [0.205857204, 54.529947158]]]}',
             # Other
             'coupled-resource': u'[]',
             'dataset-reference-date': u'[{"type": "creation", "value": "2004-02"}, {"type": "revision", "value": "2006-07-03"}]',

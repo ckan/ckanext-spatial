@@ -230,10 +230,10 @@ class GeminiHarvester(SpatialHarvester):
 
             # Construct a GeoJSON extent so ckanext-spatial can register the extent geometry
             extent_string = self.extent_template.substitute(
-                    minx = extras['bbox-east-long'],
-                    miny = extras['bbox-south-lat'],
-                    maxx = extras['bbox-west-long'],
-                    maxy = extras['bbox-north-lat']
+                    xmin = extras['bbox-east-long'],
+                    ymin = extras['bbox-south-lat'],
+                    xmax = extras['bbox-west-long'],
+                    ymax = extras['bbox-north-lat']
                     )
 
             extras['spatial'] = extent_string.strip()
@@ -362,6 +362,7 @@ class GeminiHarvester(SpatialHarvester):
         parties = {}
         owners = []
         publishers = []
+        from nose.tools import set_trace; set_trace()
         for responsible_party in responsible_organisations:
             if responsible_party['role'] == 'owner':
                 owners.append(responsible_party['organisation-name'])
