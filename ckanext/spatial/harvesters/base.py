@@ -236,7 +236,11 @@ class SpatialHarvester(HarvesterBase):
         ]:
             extras[name] = iso_values[name]
 
-        extras['resource-type'] = iso_values['resource-type'][0]
+
+        if len(iso_values.get('resource-type', [])):
+            extras['resource-type'] = iso_values['resource-type'][0]
+        else:
+            extras['resource-type'] = ''
 
         extras['licence'] = iso_values.get('use-constraints', '')
 
