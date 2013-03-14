@@ -3,3 +3,4 @@ Shapely>=1.2.13
 owslib
 lxml<=2.2.99
 argparse
+pyparsing==1.5.6
