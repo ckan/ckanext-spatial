@@ -99,14 +99,6 @@ this.ckan.module('wmspreview', function (jQuery, _) {
           var layers = capabilities.capability.layers;
 
           var olLayers = [];
-            baseLayer = new OpenLayers.Layer.WMS( "OpenLayers WMS",
-                        "http://vmap0.tiles.osgeo.org/wms/vmap0",
-                                            {layers: 'basic'} );
-          olLayers.push(baseLayer);
-          $("#data-preview").empty();
-          $("#data-preview").append($("<div></div>").attr("id","map"));
-
-
           var maxExtent = false;
           var maxScale = false;
           var minScale = false;
@@ -139,7 +131,7 @@ this.ckan.module('wmspreview', function (jQuery, _) {
             );
 
           }
-/*
+
           var dummyLayer = new OpenLayers.Layer("Dummy",{
             "maxExtent": maxExtent,
             "displayInLayerSwitcher":false,
@@ -147,12 +139,11 @@ this.ckan.module('wmspreview', function (jQuery, _) {
             "visibility":false,
             "minScale": (minScale) ? minScale : null,
             "maxScale": (maxScale) ? maxScale : null
-
           });
-          
-
           olLayers.push(dummyLayer);
-          */
+
+          $("#data-preview").empty();
+          $("#data-preview").append($("<div></div>").attr("id","map"));
 
           // Create a new map
           self.map = new OpenLayers.Map("map" ,

@@ -411,7 +411,7 @@ class SpatialHarvester(HarvesterBase):
             if content:
                 harvest_object.content = content
             else:
-                self._save_object_error('Transformation to ISO failed', harvest_object, 'Import')
+                self._save_object_error('Transformation to ISO failed for object {0}'.format(harvest_object.id), harvest_object, 'Import')
                 return False
         else:
             if harvest_object.content is None:
