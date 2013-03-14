@@ -55,8 +55,8 @@ class WAFHarvester(SpatialHarvester, SingletonPlugin):
         self._set_source_config(harvest_job.source.config)
 
         # Get contents
-        response = requests.get(source_url, timeout=60)
         try:
+            response = requests.get(source_url, timeout=60)
             response.raise_for_status()
         except requests.exceptions.RequestException, e:
             self._save_gather_error('Unable to get content for URL: %s: %r' % \
@@ -168,7 +168,7 @@ class WAFHarvester(SpatialHarvester, SingletonPlugin):
         else:
             self._save_gather_error('No records to change',
                                      harvest_job)
-            return None
+            return []
 
     def fetch_stage(self, harvest_object):
 
