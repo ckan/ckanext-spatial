@@ -75,7 +75,7 @@ class SpatialMetadata(p.SingletonPlugin):
 
         # TODO: deleted extra
         for extra in package.extras_list:
-            if extra.key == 'spatial':
+            if extra.key == 'spatial' and len(extra.value) > 0:
                 if extra.state == 'active':
                     try:
                         log.debug('Received: %r' % extra.value)
