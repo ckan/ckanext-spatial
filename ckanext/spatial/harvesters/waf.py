@@ -55,14 +55,16 @@ class WAFHarvester(SpatialHarvester, SingletonPlugin):
         self._set_source_config(harvest_job.source.config)
 
         # Get contents
+        response = requests.get(source_url, timeout=60)
         try:
-            response = requests.get(source_url, timeout=60)
-            content = response.content
-            scraper = _get_scraper(response.headers.get('server'))
-        except Exception,e:
+            response.raise_for_status()
+        except requests.exceptions.RequestException, e:
             self._save_gather_error('Unable to get content for URL: %s: %r' % \
                                         (source_url, e),harvest_job)
             return None
+
+        content = response.content
+        scraper = _get_scraper(response.headers.get('server'))
 
         ######  Get current harvest object out of db ######
 
