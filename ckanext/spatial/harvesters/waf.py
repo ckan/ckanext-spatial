@@ -18,6 +18,9 @@ import ckanext.harvest.queue as queue
 
 from ckanext.spatial.harvesters.base import SpatialHarvester, guess_standard
 
+log = logging.getLogger(__name__)
+
+
 class WAFHarvester(SpatialHarvester, SingletonPlugin):
     '''
     A Harvester for WAF (Web Accessible Folders) containing spatial metadata documents.
@@ -286,12 +289,12 @@ def _extract_waf(content, base_url, scraper, results = None, depth=0):
         if '..' not in url and url[0] != '/' and url[-1] == '/':
             new_depth = depth + 1
             if depth > 10:
-                print 'max depth reached'
+                log.info('Max WAF depth reached')
                 continue
             new_url = urljoin(base_url, url)
             if not new_url.startswith(base_url):
                 continue
-            print 'new_url', new_url
+            log.debug('WAF new_url: %s', new_url)
             try:
                 response = requests.get(new_url)
                 content = response.content
