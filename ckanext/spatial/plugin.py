@@ -43,7 +43,7 @@ class SpatialMetadata(p.SingletonPlugin):
     p.implements(p.IPackageController, inherit=True)
     p.implements(p.IConfigurable, inherit=True)
     p.implements(p.IConfigurer, inherit=True)
-
+    p.implements(p.ITemplateHelpers, inherit=True)
 
     def configure(self, config):
 
@@ -108,6 +108,15 @@ class SpatialMetadata(p.SingletonPlugin):
 
     def delete(self, package):
         save_package_extent(package.id,None)
+
+    ## ITemplateHelpers
+
+    def get_helpers(self):
+        from ckanext.spatial import helpers as spatial_helpers
+        return {
+                'get_reference_date' : spatial_helpers.get_reference_date,
+                'get_responsible_party': spatial_helpers.get_responsible_party,
+                }
 
 class SpatialQuery(p.SingletonPlugin):
 
