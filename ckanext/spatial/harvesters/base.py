@@ -327,14 +327,12 @@ class SpatialHarvester(HarvesterBase):
                     resource.update(
                         {
                             'url': url,
-                            'name': resource_locator.get('name', p.toolkit._('Unnamed resource')),
-                            'description': resource_locator.get('description', ''),
-                            'resource_locator_protocol': resource_locator.get('protocol', ''),
-                            'resource_locator_function': resource_locator.get('function', '')
-
+                            'name': resource_locator.get('name') or p.toolkit._('Unnamed resource'),
+                            'description': resource_locator.get('description') or  '',
+                            'resource_locator_protocol': resource_locator.get('protocol') or '',
+                            'resource_locator_function': resource_locator.get('function') or '',
                         })
                     package_dict['resources'].append(resource)
-
 
         extras_as_dict = []
         for key, value in extras.iteritems():
