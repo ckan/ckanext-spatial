@@ -73,7 +73,7 @@ def guess_resource_format(url, use_mimetypes=True):
 
     resource_types = {
         # OGC
-        'wms': ('service=wms', 'geoserver/wms', 'mapsercer/wmsserver', 'com.esri.wms.Esrimap'),
+        'wms': ('service=wms', 'geoserver/wms', 'mapserver/wmsserver', 'com.esri.wms.Esrimap'),
         'wfs': ('service=wfs', 'geoserver/wfs', 'mapserver/wfsserver', 'com.esri.wfs.Esrimap'),
         'wcs': ('service=wcs', 'geoserver/wcs', 'imageserver/wcsserver', 'mapserver/wcsserver'),
         'sos': ('service=sos',),
