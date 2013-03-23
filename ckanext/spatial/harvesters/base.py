@@ -114,7 +114,7 @@ class SpatialHarvester(HarvesterBase):
     force_import = False
 
     extent_template = Template('''
-    {"type": "Polygon", "coordinates": [[[$xmin, $ymin], [$xmin, $ymax], [$xmax, $ymax], [$xmax, $ymin], [$xmin, $ymin]]]}
+    {"type": "Polygon", "coordinates": [[[$xmin, $ymin], [$xmax, $ymin], [$xmax, $ymax], [$xmin, $ymax], [$xmin, $ymin]]]}
     ''')
 
     ## IHarvester
