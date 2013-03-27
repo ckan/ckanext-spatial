@@ -77,7 +77,8 @@ class DocHarvester(SpatialHarvester, SingletonPlugin):
             harvest_object = HarvestObject(job=harvest_job,
                                 extras=create_extras(url,
                                                      'change'),
-                                guid=existing_object.guid
+                                guid=existing_object.guid,
+                                package_id=existing_object.package_id
                                )
 
         harvest_object.add()
