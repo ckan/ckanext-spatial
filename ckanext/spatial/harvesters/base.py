@@ -173,6 +173,7 @@ class SpatialHarvester(HarvesterBase):
 
                     return package_dict
 
+        If a dict is not returned by this function, the import stage will be cancelled.
 
         :param iso_values: Dictionary with parsed values from the ISO 19139
             XML document
@@ -480,6 +481,9 @@ class SpatialHarvester(HarvesterBase):
 
         # Build the package dict
         package_dict = self.get_package_dict(iso_values, harvest_object)
+        if not package_dict:
+            log.error('No package dict returned, aborting import for object {0}'.format(harvest_object.id))
+            return False
 
         # Create / update the package
 
