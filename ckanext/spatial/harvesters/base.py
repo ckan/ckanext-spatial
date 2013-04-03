@@ -73,7 +73,7 @@ def guess_resource_format(url, use_mimetypes=True):
 
     resource_types = {
         # OGC
-        'wms': ('service=wms', 'geoserver/wms', 'mapsercer/wmsserver', 'com.esri.wms.Esrimap'),
+        'wms': ('service=wms', 'geoserver/wms', 'mapserver/wmsserver', 'com.esri.wms.Esrimap'),
         'wfs': ('service=wfs', 'geoserver/wfs', 'mapserver/wfsserver', 'com.esri.wfs.Esrimap'),
         'wcs': ('service=wcs', 'geoserver/wcs', 'imageserver/wcsserver', 'mapserver/wcsserver'),
         'sos': ('service=sos',),
@@ -173,6 +173,7 @@ class SpatialHarvester(HarvesterBase):
 
                     return package_dict
 
+        If a dict is not returned by this function, the import stage will be cancelled.
 
         :param iso_values: Dictionary with parsed values from the ISO 19139
             XML document
@@ -480,6 +481,9 @@ class SpatialHarvester(HarvesterBase):
 
         # Build the package dict
         package_dict = self.get_package_dict(iso_values, harvest_object)
+        if not package_dict:
+            log.error('No package dict returned, aborting import for object {0}'.format(harvest_object.id))
+            return False
 
         # Create / update the package
 
