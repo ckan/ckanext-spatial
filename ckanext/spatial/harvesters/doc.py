@@ -67,7 +67,7 @@ class DocHarvester(SpatialHarvester, SingletonPlugin):
                     HOExtra(key='status', value=status)]
 
         if not existing_object:
-            guid=hashlib.md5(url.encode('utf8',errors='ignore')).hexdigest()
+            guid=hashlib.md5(url.encode('utf8', 'ignore')).hexdigest()
             harvest_object = HarvestObject(job=harvest_job,
                                 extras=create_extras(url,
                                                      'new'),
