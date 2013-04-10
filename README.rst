@@ -173,25 +173,39 @@ For example you can ask the capabilities of the CSW server installed into CKAN r
 
 The standard CSW response is in XML format.
 
-GEMINI Harvesters
------------------
+Spatial Harvesters
+------------------
 
-These harvesters were are designed to harvest metadata records in the GEMINI2 format, which is an XML spatial metadata format very similar to ISO19139. This was developed for the UK Location Programme and GEMINI2, but it would be simple to adapt them for other INSPIRE or ISO19139-based metadata.
+The spatial extension provides some harvesters for importing ISO19139-based
+metadata into CKAN, as well as providing a base class for writing new ones.
+The harvesters use the interface provided by ckanext-harvest_, so you will need to
+install and set it up first.
 
-The harvesters get the metadata from these types of server:
+Once ckanext-harvest is installed, you can add the following plugins to your
+ini file to enable the different harvesters (If you are upgrading from a
+previous version to CKAN 2.0 see legacy_harvesters_):
 
- * GeminiCswHarvester - CSW server
- * GeminiWafHarvester - WAF file server - An index page with links to GEMINI resources
- * GeminiDocHarvester - HTTP file server - An individual GEMINI resource
+ * ``csw_harvester`` - CSW server
+ * ``waf_harvester`` - WAF (Web Accessible Folder): An online accessible index page with links to metadata documents
+ * ``doc_harvester`` - A single online accessible metadata document.
 
-The GEMINI-specific parts of the code are restricted to the fields imported into CKAN, so it would be relatively simple to generalise these to other INSPIRE profiles.
+Have a look at the ckanext-harvest `documentation
+<https://github.com/okfn/ckanext-harvest#the-harvesting-interface>`_ if you want to have an
+overview of how the CKAN harvesters work, but basically there are three
+separate stages:
 
-Each contains code to do the three stages of harvesting:
- * gather_stage - Submits a request to Harvest Sources and assembles a list of all the metadata URLs (since each CSW record can recursively refer to more records?). Some processing of the XML or validation may occur.
- * fetch_stage - Fetches all the Gemini metadata
- * import_stage - validates all the Gemini, converts it to a CKAN Package and saves it in CKAN
+ * gather_stage - Aggregates all the remote identifiers for a particular source (ie identifiers for a CSW server, files for a WAF).
+ * fetch_stage  - Fetches all the remote documents and stores them on the database.
+ * import_stage - Performs all the processing for transforming the remote content into a CKAN dataset: validates the document, parses it, converts it to a CKAN dataset dict and saves it in the database.
 
-You must specify which validators to use in the configuration of ``ckan.spatial.validator.profiles`` - see below.
+The extension provides different XSD and schematron based validators. You can specify which validators to use for the remote documents with the following configuration option::
+
+    ckan.spatial.validator.profiles = iso19193eden
+
+By default, the import stage will stop if the validation of the harvested document fails. This can be
+modified setting the ``ckanext.spatial.harvest.continue_on_validation_errors`` to True. The setting can
+also be applied at the source level setting to True the ``continue_on_validation_errors`` key on the source
+configuration object.
 
 By default the harvesting actions (eg creating or updating datasets) will be performed by the internal site admin user.
 This is the recommended setting, but if necessary, it can be overridden with the
@@ -199,11 +213,35 @@ This is the recommended setting, but if necessary, it can be overridden with the
 
     ckanext.spatial.harvest.user_name = harvest
 
-By default, the import stage will stop if the validation of the harvested document fails. This can be
-modified setting the ``ckanext.spatial.harvest.continue_on_validation_errors`` to True. The setting can
-also be applied at the source level setting to True the ``continue_on_validation_errors`` key on the source
-configuration object.
+Customizing the harvesters
+++++++++++++++++++++++++++
 
+The default harvesters provided in this extension can be overriden from
+extensions to customize to your needs. You can either extend `CswHarvester` or
+`WAFfHarverster` or the main `SpatialHarvester` class. There are some extension points that can be safely overriden from your extension. Probably the most useful is `get_package_dict`, which allows to tweak the dataset fields before creating or updating them. `transform_to_iso` allows to hook into transformation mechanisms to transform other formats into ISO1939, the only one directly supported byt he spatial harvesters. Finally, the whole `import_stage` can be overriden if the default logic does not suit your needs.
+
+Check the source code of `ckanext/spatial/harvesters/base.py` for more details on these functions.
+
+The `ckanext-geodatagov <https://github.com/okfn/ckanext-geodatagov/blob/master/ckanext/geodatagov/harvesters/>`_ extension contains live examples on how to extend the default spatial harvesters and create new ones for other spatial services.
+
+
+
+
+.. _legacy_harvesters:
+
+Legacy harvesters
++++++++++++++++++
+
+Prior to CKAN 2.0, the spatial harvesters available on this extension were
+based on the GEMINI2 format, an ISO19139 profile used by the UK Location Programme, and the logic for creating or updating datasets and the resulting fields were somehow adapted to the needs for this particular project. The harvesters were still generic enough and should work fine with other ISO19139 based sources, but extra care has been put to make the new harvesters more generic and robust, so these ones should only be used on existing instances:
+
+ * ``gemini_csw_harvester``
+ * ``gemini_waf_harvester``
+ * ``gemini_doc_harvester``
+
+If you are using these harvesters please consider upgrading to the new versions described on the previous section.
+
+.. _ckanext-harvest: https://github.com/okfn/ckanext-harvest
 
 Harvest Metadata API
 --------------------
