@@ -217,10 +217,10 @@ Customizing the harvesters
 ++++++++++++++++++++++++++
 
 The default harvesters provided in this extension can be overriden from
-extensions to customize to your needs. You can either extend `CswHarvester` or
-`WAFfHarverster` or the main `SpatialHarvester` class. There are some extension points that can be safely overriden from your extension. Probably the most useful is `get_package_dict`, which allows to tweak the dataset fields before creating or updating them. `transform_to_iso` allows to hook into transformation mechanisms to transform other formats into ISO1939, the only one directly supported byt he spatial harvesters. Finally, the whole `import_stage` can be overriden if the default logic does not suit your needs.
+extensions to customize to your needs. You can either extend ``CswHarvester`` or
+``WAFfHarverster`` or the main ``SpatialHarvester`` class. There are some extension points that can be safely overriden from your extension. Probably the most useful is ``get_package_dict``, which allows to tweak the dataset fields before creating or updating them. ``transform_to_iso`` allows to hook into transformation mechanisms to transform other formats into ISO1939, the only one directly supported byt he spatial harvesters. Finally, the whole ``import_stage`` can be overriden if the default logic does not suit your needs.
 
-Check the source code of `ckanext/spatial/harvesters/base.py` for more details on these functions.
+Check the source code of ``ckanext/spatial/harvesters/base.py`` for more details on these functions.
 
 The `ckanext-geodatagov <https://github.com/okfn/ckanext-geodatagov/blob/master/ckanext/geodatagov/harvesters/>`_ extension contains live examples on how to extend the default spatial harvesters and create new ones for other spatial services.
 
