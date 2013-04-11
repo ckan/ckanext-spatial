@@ -464,7 +464,7 @@ class SpatialHarvester(HarvesterBase):
         # Generate GUID if not present (i.e. it's a manual import)
         if not harvest_object.guid:
             m = hashlib.md5()
-            m.update(harvest_object.content.encode('utf8', errors='ignore'))
+            m.update(harvest_object.content.encode('utf8', 'ignore'))
             harvest_object.guid = m.hexdigest()
             harvest_object.add()
 
