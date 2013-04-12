@@ -222,8 +222,7 @@ class SpatialQuery(p.SingletonPlugin):
 
             defType - edismax (We need to define EDisMax to use bf)
             bf - {function} A boost function to influence the score (thus
-                 influencing the sorting). The algorithm was adapted from [1]
-                 and can be basically defined as:
+                 influencing the sorting). The algorithm can be basically defined as:
 
                     2 * X / Q + T
 
@@ -235,7 +234,6 @@ class SpatialQuery(p.SingletonPlugin):
                   function to be between 0 and 1, effectively applying the
                   spatial filter.
 
-            [1] http://pubs.usgs.gov/of/2006/1279/2006-1279.pdf
         '''
 
         variables =dict(
