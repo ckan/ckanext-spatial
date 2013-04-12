@@ -141,7 +141,7 @@ class SpatialQuery(p.SingletonPlugin):
 
     def before_index(self, pkg_dict):
 
-        if 'extras_spatial' in pkg_dict and self.search_backend in ('solr', 'solr-spatial-field'):
+        if pkg_dict.get('extras_spatial', None) and self.search_backend in ('solr', 'solr-spatial-field'):
             try:
                 geometry = json.loads(pkg_dict['extras_spatial'])
             except ValueError, e:
@@ -200,8 +200,7 @@ class SpatialQuery(p.SingletonPlugin):
         return pkg_dict
 
     def before_search(self, search_params):
-        if 'extras' in search_params and 'ext_bbox' in search_params['extras'] \
-            and search_params['extras']['ext_bbox']:
+        if search_params.get('extras', None) and search_params['extras'].get('ext_bbox', None):
 
             bbox = validate_bbox(search_params['extras']['ext_bbox'])
             if not bbox:
