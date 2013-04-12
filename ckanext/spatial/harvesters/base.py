@@ -298,7 +298,7 @@ class SpatialHarvester(HarvesterBase):
                     extent_string = Template('{"type": "Point", "coordinates": [$x, $y]}').substitute(
                         x=xmin, y=ymin
                     )
-                    self._save_object_error('Point extent defined instead of polygon for object {0}'.format(harvest_object.id),
+                    self._save_object_error('Point extent defined instead of polygon',
                                      harvest_object, 'Import')
                 else:
                     extent_string = self.extent_template.substitute(
