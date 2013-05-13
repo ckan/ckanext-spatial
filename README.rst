@@ -32,36 +32,26 @@ About the components
 Spatial Search
 --------------
 
-To enable the spatial query you need to add the `spatial_query` plugin to your
-ini file (See `Configuration`_). This plugin requires the `spatial_metadata`
-plugin.
-
-The extension adds the following call to the CKAN search API, which returns
-datasets with an extent that intersects with the bounding box provided::
-
-    /api/2/search/dataset/geo?bbox={minx,miny,maxx,maxy}[&crs={srid}]
-
-If the bounding box coordinates are not in the same projection as the one
-defined in the database, a CRS must be provided, in one of the following
-forms:
-
-- urn:ogc:def:crs:EPSG::4326
-- EPSG:4326
-- 4326
-
-As of CKAN 1.6, you can integrate your spatial query in the full CKAN
-search, via the web interface (see the `Spatial Search Widget`_) or
-via the `action API`__, e.g.::
+The spatial extension allows to index datasets with spatial information so
+they can be filtered via a spatial query. This includes both via the web
+interface (see the `Spatial Search Widget`_) or via the `action API`__, e.g.::
 
     POST http://localhost:5000/api/action/package_search
     {
         "q": "Pollution",
+        "facet": "true",
+        "facet.field": "country",
         "extras": {
             "ext_bbox": "-7.535093,49.208494,3.890688,57.372349"
         }
     }
 
 __ http://docs.ckan.org/en/latest/apiv3.html
+
+To enable the spatial query you need to add the ``spatial_query`` plugin to your
+ini file (See `Configuration`_). This plugin requires the ``spatial_metadata``
+plugin.
+
 
 Geo-Indexing your datasets
 ++++++++++++++++++++++++++
@@ -83,7 +73,7 @@ the information stored in the extra with the geometry table.
 
 
 Spatial Search Widget
----------------------
++++++++++++++++++++++
 
 The extension provides a snippet to add a map widget to the search form, which allows
 filtering results by an area of interest.
@@ -109,6 +99,27 @@ or with a GeoJSON object describing a bounding box (note the escaped quotes)::
   {% snippet "spatial/snippets/spatial_query.html", default_extent="{ \"type\": \"Polygon\", \"coordinates\": [[[74.89, 29.39],[74.89, 38.45], [60.50, 38.45], [60.50, 29.39], [74.89, 29.39]]]}" %}
 
 You need to load the `spatial_metadata` and `spatial_query` plugins to use this snippet.
+
+Legacy API
+++++++++++
+
+.. note:: This API endpoint will be deprecated on future versions of CKAN and
+    should not be used.
+
+The extension adds the following call to the CKAN search API, which returns
+datasets with an extent that intersects with the bounding box provided::
+
+    /api/2/search/dataset/geo?bbox={minx,miny,maxx,maxy}[&crs={srid}]
+
+If the bounding box coordinates are not in the same projection as the one
+defined in the database, a CRS must be provided, in one of the following
+forms:
+
+- urn:ogc:def:crs:EPSG::4326
+- EPSG:4326
+- 4326
+
+
 
 Dataset Extent Map
 ------------------
