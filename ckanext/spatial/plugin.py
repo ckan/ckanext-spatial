@@ -3,8 +3,6 @@ import re
 from logging import getLogger
 
 from pylons import config
-from genshi.input import HTML
-from genshi.filters import Transformer
 
 import shapely
 
@@ -12,8 +10,6 @@ from ckan import plugins as p
 
 from ckan.lib.search import SearchError, PackageSearchQuery
 from ckan.lib.helpers import json
-
-import html
 
 from ckanext.spatial.lib import save_package_extent,validate_bbox, bbox_query, bbox_query_ordered
 from ckanext.spatial.model.package_extent import setup as setup_model
@@ -339,30 +335,6 @@ class SpatialQuery(p.SingletonPlugin):
                 pkgs.append(json.loads(pkg))
             search_results['results'] = pkgs
         return search_results
-
-
-class SpatialQueryWidget(p.SingletonPlugin):
-
-    p.implements(p.IGenshiStreamFilter)
-
-    def filter(self, stream):
-        from pylons import request, tmpl_context as c
-        routes = request.environ.get('pylons.routes_dict')
-        if routes.get('controller') == 'package' and \
-            routes.get('action') == 'search':
-
-            data = {
-                'bbox': request.params.get('ext_bbox',''),
-                'default_extent': config.get('ckan.spatial.default_map_extent','')
-            }
-            stream = stream | Transformer('body//div[@id="dataset-search-ext"]')\
-                .append(HTML(html.SPATIAL_SEARCH_FORM % data))
-            stream = stream | Transformer('head')\
-                .append(HTML(html.SPATIAL_SEARCH_FORM_EXTRA_HEADER % data))
-            stream = stream | Transformer('body')\
-                .append(HTML(html.SPATIAL_SEARCH_FORM_EXTRA_FOOTER % data))
-
-        return stream
 
 
 class CatalogueServiceWeb(p.SingletonPlugin):
