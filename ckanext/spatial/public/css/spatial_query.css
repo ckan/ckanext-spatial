@@ -1,0 +1,82 @@
+.module-narrow #dataset-map-container {
+  height: 200px;
+}
+.module-content #dataset-map-container {
+  height: 250px;
+}
+#dataset-map-attribution {
+  font-size: 11px;
+  line-height: 1.5;
+}
+.module-narrow #dataset-map-attribution {
+  margin: 5px 8px;
+  color: #666;
+}
+.leaflet-draw-label-single {
+  display: none;
+}
+.leaflet-draw-label-subtext {
+  display: none;
+}
+#field-location {
+  width: 190px;
+}
+.select2-results .select2-no-results {
+  padding: 3px 6px;
+}
+#dataset-map-edit {
+  margin: 5px 8px;
+}
+#dataset-map-edit-buttons {
+  display: none;
+}
+.leaflet-control-draw-rectangle {
+  background-image: url("../img/pencil.png");
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  -o-border-radius: 5px;
+  border-radius: 5px;
+}
+.dataset-map-expanded #dataset-map {
+  position: absolute;
+  width: 940px;
+  height: 384px;
+  top: -384px;
+  left: -1px;
+  background-color: white;
+  border: 1px solid #CCC;
+  margin: 0;
+}
+.dataset-map-expanded #dataset-map #dataset-map-container {
+  height: 300px;
+}
+.dataset-map-expanded #dataset-map #dataset-map-attribution {
+  *zoom: 1;
+}
+.dataset-map-expanded #dataset-map #dataset-map-attribution:before,
+.dataset-map-expanded #dataset-map #dataset-map-attribution:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+.dataset-map-expanded #dataset-map #dataset-map-attribution:after {
+  clear: both;
+}
+.dataset-map-expanded #dataset-map #dataset-map-attribution div {
+  float: left;
+  margin-right: 10px;
+}
+.dataset-map-expanded #dataset-map #dataset-map-edit-buttons {
+  display: block;
+  float: right;
+  padding: 10px;
+}
+.dataset-map-expanded #dataset-map #dataset-map-edit {
+  display: none;
+}
+.dataset-map-expanded #dataset-map .module-heading {
+  border-top-color: #000;
+}
+.dataset-map-expanded .wrapper {
+  margin-top: 383px;
+}

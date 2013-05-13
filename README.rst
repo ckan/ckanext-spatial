@@ -6,8 +6,7 @@ This extension contains plugins that add geospatial capabilities to CKAN.
 The following plugins are currently available:
 
 * Spatial model for CKAN datasets and automatic geo-indexing (`spatial_metadata`)
-* Spatial Search - Spatial search integration and API call (`spatial_query`).
-* Spatial Search Widget - Map widget integrated on the search form (`spatial_query_widget`).
+* Spatial Search - Spatial filtering for the dataset search (`spatial_query`).
 * WMS Preview - a Web Map Service (WMS) previewer (`wms_preview`).
 * CSW Server - a basic CSW server - to server metadata from the CKAN instance (`cswserver`)
 * GEMINI Harvesters - for importing INSPIRE-style metadata into CKAN (`gemini_csw_harvester`, `gemini_doc_harvester`, `gemini_waf_harvester`)
@@ -15,6 +14,7 @@ The following plugins are currently available:
 
 These snippets (to be used with CKAN>=2.0):
 * Dataset Extent Map - Map widget showing a dataset extent.
+* Spatial Search Widget - Map widget integrated on the search form (`spatial_query_widget`).
 
 These libraries:
 * CSW Client - a basic client for accessing a CSW server
@@ -165,16 +165,20 @@ the information stored in the extra with the geometry table.
 Spatial Search Widget
 +++++++++++++++++++++
 
-**Note**: this plugin requires CKAN 1.6 or higher.
+The extension provides a snippet to add a map widget to the search form, which allows
+filtering results by an area of interest.
 
-To enable the search map widget you need to add the `spatial_query_widget` plugin to your
-ini file (See `Configuration`_). You also need to load both the `spatial_metadata`
-and the `spatial_query` plugins.
+To add the map widget to the to the sidebar of the search page, add
+this to the dataset search page template
+(``myproj/ckanext/myproj/templates/package/search.html``)::
 
-When the plugin is enabled, a map widget will be shown in the dataset search form,
-where users can refine their searchs drawing an area of interest.
+    {% block secondary_content %}
 
+      {% snippet "spatial/snippets/spatial_query.html" %}
 
+    {% endblock %}
+
+You need to load the `spatial_metadata` plugin to use this snippet.
 
 Solr configuration issues on legacy PostGIS backend
 +++++++++++++++++++++++++++++++++++++++++++++++++++
