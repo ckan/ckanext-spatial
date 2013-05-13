@@ -126,31 +126,6 @@ class SpatialQuery(p.SingletonPlugin):
             action='spatial_query')
         return map
 
-    def before_index(self, pkg_dict):
-        from shapely.geometry import asShape
-        if 'extras_spatial' in pkg_dict and config.get('ckanext.spatial.search_backend') == 'solr':
-            try:
-                geometry = json.loads(pkg_dict['extras_spatial'])
-            except ValueError, e:
-                log.error('Geometry not valid GeoJSON, not indexing')
-                return pkg_dict
-            # Check wrong bboxes (4 same points)
-            if geometry['type'] == 'Polygon' and len(geometry['coordinates'][0]) == 5:
-                x = [p[0] for p in geometry['coordinates'][0]]
-                y = [p[1] for p in geometry['coordinates'][0]]
-
-                if x.count(x[0]) == 5 and y.count(y[0]) == 5:
-                    geometry = {'type': 'Point', 'coordinates': [x[0], y[0]]}
-
-            shape = asShape(geometry)
-            if not shape.is_valid:
-                log.error('Wrong geometry, not indexing')
-                return pkg_dict
-
-            pkg_dict['spatial_geom'] = shape.wkt
-        return pkg_dict
-
-
     def before_search(self,search_params):
         if 'extras' in search_params and 'ext_bbox' in search_params['extras'] \
             and search_params['extras']['ext_bbox']:
@@ -159,70 +134,53 @@ class SpatialQuery(p.SingletonPlugin):
             if not bbox:
                 raise SearchError('Wrong bounding box provided')
 
-            if config.get('ckanext.spatial.search_backend') == 'solr':
-                search_params = self._params_for_solr_search(bbox, search_params)
+            # Note: This will be deprecated at some point in favour of the
+            # Solr 4 spatial sorting capabilities
+            if search_params['sort'] == 'spatial desc' and \
+               p.toolkit.asbool(config.get('ckanext.spatial.use_postgis_sorting', 'False')):
+                if search_params['q'] or search_params['fq']:
+                    raise SearchError('Spatial ranking cannot be mixed with other search parameters')
+                    # ...because it is too inefficient to use SOLR to filter
+                    # results and return the entire set to this class and
+                    # after_search do the sorting and paging.
+                extents = bbox_query_ordered(bbox)
+                are_no_results = not extents
+                search_params['extras']['ext_rows'] = search_params['rows']
+                search_params['extras']['ext_start'] = search_params['start']
+                # this SOLR query needs to return no actual results since
+                # they are in the wrong order anyway. We just need this SOLR
+                # query to get the count and facet counts.
+                rows = 0
+                search_params['sort'] = None # SOLR should not sort.
+                # Store the rankings of the results for this page, so for
+                # after_search to construct the correctly sorted results
+                rows = search_params['extras']['ext_rows'] = search_params['rows']
+                start = search_params['extras']['ext_start'] = search_params['start']
+                search_params['extras']['ext_spatial'] = [
+                    (extent.package_id, extent.spatial_ranking) \
+                    for extent in extents[start:start+rows]]
             else:
-                search_params = self._params_for_postgis_search(bbox, search_params)
+                extents = bbox_query(bbox)
+                are_no_results = extents.count() == 0
 
-        return search_params
+            if are_no_results:
+                # We don't need to perform the search
+                search_params['abort_search'] = True
+            else:
+                # We'll perform the existing search but also filtering by the ids
+                # of datasets within the bbox
+                bbox_query_ids = [extent.package_id for extent in extents]
 
-    def _params_for_solr_search(self, bbox, search_params):
-        search_params['fq'] += ' +spatial_geom:"Intersects({minx} {miny} {maxx} {maxy})"' \
-                .format(minx=bbox['minx'],miny=bbox['miny'],maxx=bbox['maxx'],maxy=bbox['maxy'])
+                q = search_params.get('q','').strip() or '""'
+                new_q = '%s AND ' % q if q else ''
+                new_q += '(%s)' % ' OR '.join(['id:%s' % id for id in bbox_query_ids])
 
-        #TODO: sorting
-
-        return search_params
-
-    def _params_for_postgis_search(self, bbox, search_params):
-
-        # Note: This will be deprecated at some point in favour of the
-        # Solr 4 spatial sorting capabilities
-        if search_params['sort'] == 'spatial desc' and \
-           p.toolkit.asbool(config.get('ckanext.spatial.use_postgis_sorting', 'False')):
-            if search_params['q'] or search_params['fq']:
-                raise SearchError('Spatial ranking cannot be mixed with other search parameters')
-                # ...because it is too inefficient to use SOLR to filter
-                # results and return the entire set to this class and
-                # after_search do the sorting and paging.
-            extents = bbox_query_ordered(bbox)
-            are_no_results = not extents
-            search_params['extras']['ext_rows'] = search_params['rows']
-            search_params['extras']['ext_start'] = search_params['start']
-            # this SOLR query needs to return no actual results since
-            # they are in the wrong order anyway. We just need this SOLR
-            # query to get the count and facet counts.
-            rows = 0
-            search_params['sort'] = None # SOLR should not sort.
-            # Store the rankings of the results for this page, so for
-            # after_search to construct the correctly sorted results
-            rows = search_params['extras']['ext_rows'] = search_params['rows']
-            start = search_params['extras']['ext_start'] = search_params['start']
-            search_params['extras']['ext_spatial'] = [
-                (extent.package_id, extent.spatial_ranking) \
-                for extent in extents[start:start+rows]]
-        else:
-            extents = bbox_query(bbox)
-            are_no_results = extents.count() == 0
-
-        if are_no_results:
-            # We don't need to perform the search
-            search_params['abort_search'] = True
-        else:
-            # We'll perform the existing search but also filtering by the ids
-            # of datasets within the bbox
-            bbox_query_ids = [extent.package_id for extent in extents]
-
-            q = search_params.get('q','').strip() or '""'
-            new_q = '%s AND ' % q if q else ''
-            new_q += '(%s)' % ' OR '.join(['id:%s' % id for id in bbox_query_ids])
-
-            search_params['q'] = new_q
+                search_params['q'] = new_q
 
         return search_params
 
     def after_search(self, search_results, search_params):
-
+        
         # Note: This will be deprecated at some point in favour of the
         # Solr 4 spatial sorting capabilities
 
@@ -281,12 +239,12 @@ class HarvestMetadataApi(p.SingletonPlugin):
     '''
     Harvest Metadata API
     (previously called "InspireApi")
-
+    
     A way for a user to view the harvested metadata XML, either as a raw file or
     styled to view in a web browser.
     '''
     p.implements(p.IRoutes)
-
+        
     def before_map(self, route_map):
         controller = "ckanext.spatial.controllers.api:HarvestMetadataApiController"
 
