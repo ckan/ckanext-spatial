@@ -127,45 +127,27 @@ class SpatialQuery(p.SingletonPlugin):
         return map
 
     def before_index(self, pkg_dict):
-        import shapely
-
+        from shapely.geometry import asShape
         if 'extras_spatial' in pkg_dict and config.get('ckanext.spatial.search_backend') == 'solr':
             try:
                 geometry = json.loads(pkg_dict['extras_spatial'])
             except ValueError, e:
                 log.error('Geometry not valid GeoJSON, not indexing')
                 return pkg_dict
+            # Check wrong bboxes (4 same points)
+            if geometry['type'] == 'Polygon' and len(geometry['coordinates'][0]) == 5:
+                x = [p[0] for p in geometry['coordinates'][0]]
+                y = [p[1] for p in geometry['coordinates'][0]]
 
-            wkt = None
+                if x.count(x[0]) == 5 and y.count(y[0]) == 5:
+                    geometry = {'type': 'Point', 'coordinates': [x[0], y[0]]}
 
-            # Check potential problems with bboxes
-            if geometry['type'] == 'Polygon' \
-               and len(geometry['coordinates']) == 1 \
-               and len(geometry['coordinates'][0]) == 5:
+            shape = asShape(geometry)
+            if not shape.is_valid:
+                log.error('Wrong geometry, not indexing')
+                return pkg_dict
 
-                # Check wrong bboxes (4 same points)
-                xs = [p[0] for p in geometry['coordinates'][0]]
-                ys = [p[1] for p in geometry['coordinates'][0]]
-
-                if xs.count(xs[0]) == 5 and ys.count(ys[0]) == 5:
-                    wkt = 'POINT({x} {y})'.format(x=xs[0], y=ys[0])
-                else:
-                    # Check if coordinates are defined counter-clockwise,
-                    # otherwise we'll get wrong results from Solr
-                    lr = shapely.geometry.polygon.LinearRing(geometry['coordinates'][0])
-                    if not lr.is_ccw:
-                        lr.coords = list(lr.coords)[::-1]
-                    polygon = shapely.geometry.polygon.Polygon(lr)
-                    wkt = polygon.wkt
-
-            if not wkt:
-                shape = shapely.geometry.asShape(geometry)
-                if not shape.is_valid:
-                    log.error('Wrong geometry, not indexing')
-                    return pkg_dict
-                wkt = shape.wkt
-
-            pkg_dict['spatial_geom'] = wkt
+            pkg_dict['spatial_geom'] = shape.wkt
         return pkg_dict
 
 
