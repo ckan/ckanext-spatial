@@ -118,13 +118,6 @@ class SpatialQuery(p.SingletonPlugin):
 
     p.implements(p.IRoutes, inherit=True)
     p.implements(p.IPackageController, inherit=True)
-    p.implements(p.IConfigurable, inherit=True)
-
-    search_backend = None
-
-    def configure(self, config):
-
-        self.search_backend = config.get('ckanext.spatial.search_backend', 'postgis')
 
     def before_map(self, map):
 
@@ -136,7 +129,7 @@ class SpatialQuery(p.SingletonPlugin):
     def before_index(self, pkg_dict):
         import shapely
 
-        if 'extras_spatial' in pkg_dict and self.search_backend == 'solr':
+        if 'extras_spatial' in pkg_dict and config.get('ckanext.spatial.search_backend') == 'solr':
             try:
                 geometry = json.loads(pkg_dict['extras_spatial'])
             except ValueError, e:
@@ -176,14 +169,15 @@ class SpatialQuery(p.SingletonPlugin):
         return pkg_dict
 
 
-    def before_search(self, search_params):
-        if search_params.get('extras', None) and search_params['extras'].get('ext_bbox', None):
+    def before_search(self,search_params):
+        if 'extras' in search_params and 'ext_bbox' in search_params['extras'] \
+            and search_params['extras']['ext_bbox']:
 
             bbox = validate_bbox(search_params['extras']['ext_bbox'])
             if not bbox:
                 raise SearchError('Wrong bounding box provided')
 
-            if self.search_backend == 'solr':
+            if config.get('ckanext.spatial.search_backend') == 'solr':
                 search_params = self._params_for_solr_search(bbox, search_params)
             else:
                 search_params = self._params_for_postgis_search(bbox, search_params)
