@@ -13,8 +13,7 @@ this.ckan.module('spatial-query', function ($, _) {
         fillColor: '#F06F64',
         fillOpacity: 0.1
       },
-      default_extent: [[15.62, -139.21], [64.92, -61.87]] //TODO: customize
-      //[[90, 180], [-90, -180]]
+      default_extent: [[90, 180], [-90, -180]]
     },
     template: {
       buttons: [
@@ -28,6 +27,17 @@ this.ckan.module('spatial-query', function ($, _) {
     initialize: function () {
       var module = this;
       $.proxyAll(this, /_on/);
+
+      var user_default_extent = this.el.data('default_extent');
+      if (user_default_extent ){
+        if (user_default_extent instanceof Array) {
+          // Assume it's a pair of coords like [[90, 180], [-90, -180]]
+          this.options.default_extent = user_default_extent;
+        } else if (user_default_extent instanceof Object) {
+          // Assume it's a GeoJSON bbox
+          this.options.default_extent = new L.GeoJSON(user_default_extent).getBounds();
+        }
+      }
       this.el.ready(this._onReady);
     },
 

@@ -178,7 +178,18 @@ this to the dataset search page template
 
     {% endblock %}
 
-You need to load the `spatial_metadata` plugin to use this snippet.
+By default the map widget will show the whole world. If you want to set
+up a different default extent, you can pass an extra ``default_extent`` to the
+snippet, either with a pair of coordinates like this::
+
+  {% snippet "spatial/snippets/spatial_query.html", default_extent="[[15.62, -139.21], [64.92, -61.87]]" %}
+
+or with a GeoJSON object describing a bounding box (note the escaped quotes)::
+
+  {% snippet "spatial/snippets/spatial_query.html", default_extent="{ \"type\": \"Polygon\", \"coordinates\": [[[74.89, 29.39],[74.89, 38.45], [60.50, 38.45], [60.50, 29.39], [74.89, 29.39]]]}" %}
+
+You need to load the `spatial_metadata` and `spatial_query` plugins to use this snippet.
+
 
 Solr configuration issues on legacy PostGIS backend
 +++++++++++++++++++++++++++++++++++++++++++++++++++
