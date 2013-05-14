@@ -369,15 +369,31 @@ Setup
 Install Python
 --------------
 
-Install this extension into your python environment (where CKAN is also installed) in the normal way::
+1. Install this extension into your python environment (where CKAN is also installed).
 
-  (pyenv) $ pip install -e git+https://github.com/okfn/ckanext-spatial.git#egg=ckanext-spatial
+   *Note:* Depending on the CKAN core version you are targeting you will need to
+   use a different branch from the extension.
 
-``cswserver`` requires that ckanext-harvest is also installed (and enabled) - see https://github.com/okfn/ckanext-harvest
+   For a production site, use the `stable` branch, unless there is a specific
+   branch that targets the CKAN core version that you are using.
 
-There are various python modules required by the various components of this module. To install them all, use::
+   To target the latest CKAN core release::
 
-  (pyenv) $ pip install -r pip-requirements.txt
+     (pyenv) $ pip install -e git+https://github.com/okfn/ckanext-spatial.git@stable#egg=ckanext-spatial
+
+   To target an old release (if a release branch exists, otherwise use `stable`)::
+
+     (pyenv) $ pip install -e git+https://github.com/okfn/ckanext-spatial.git@release-v1.8#egg=ckanext-spatial
+
+   To target CKAN `master`, use the extension `master` branch (ie no branch defined)::
+
+     (pyenv) $ pip install -e git+https://github.com/okfn/ckanext-spatial.git#egg=ckanext-spatial
+
+   ``cswserver`` requires that ckanext-harvest is also installed (and enabled) - see https://github.com/okfn/ckanext-harvest
+
+2. Install the rest of python modules required by the extension::
+
+     (pyenv) $ pip install -r pip-requirements.txt
 
 Install System Packages
 -----------------------
