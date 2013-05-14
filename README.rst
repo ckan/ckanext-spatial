@@ -5,24 +5,27 @@ ckanext-spatial - Geo related plugins for CKAN
 This extension contains plugins that add geospatial capabilities to CKAN.
 The following plugins are currently available:
 
-* Spatial model for CKAN datasets and automatic geo-indexing (`spatial_metadata`)
-* Spatial Search - Spatial filtering for the dataset search (`spatial_query`).
-* WMS Preview - a Web Map Service (WMS) previewer (`wms_preview`).
-* CSW Server - a basic CSW server - to server metadata from the CKAN instance (`cswserver`)
-* GEMINI Harvesters - for importing INSPIRE-style metadata into CKAN (`gemini_csw_harvester`, `gemini_doc_harvester`, `gemini_waf_harvester`)
-* Harvest Metadata API - a way for a user to view the harvested metadata XML, either as a raw file or styled to view in a web browser. (`spatial_harvest_metadata_api`)
+* `Spatial model <#geo-indexing-your-datasets>`_ for CKAN datasets and automatic geo-indexing (``spatial_metadata``)
+* `Spatial Search`_ - Spatial filtering for the dataset search (``spatial_query``).
+* `Spatial Harvesters`_ - for importing spatial metadata into CKAN (``csw_harvester``, ``doc_harvester``, ``waf_harvester``)
+* `Harvest Metadata API`_ - a way for a user to view the harvested metadata XML, either as a raw file or styled to view in a web browser. (``spatial_harvest_metadata_api``)
+* `WMS Preview`_ - a Web Map Service (WMS) previewer (``wms_preview``).
+* `CSW Server`_ - a basic CSW server - to server metadata from the CKAN instance (``cswserver``)
 
 These snippets (to be used with CKAN>=2.0):
-* Dataset Extent Map - Map widget showing a dataset extent.
-* Spatial Search Widget - Map widget integrated on the search form (`spatial_query_widget`).
+
+* `Dataset Extent Map`_ - Map widget showing a dataset extent.
+* `Spatial Search Widget`_ - Map widget integrated on the search form (``spatial_query_widget``).
 
 These libraries:
-* CSW Client - a basic client for accessing a CSW server
-* Validators - uses XSD / Schematron to validate geographic metadata XML. Used by the GEMINI Harvesters
+
+* `CSW Client`_  - a basic client for accessing a CSW server
+* `Validators`_ - uses XSD / Schematron to validate geographic metadata XML. Used by the Spatial Harvesters
 * Validators for ISO19139/INSPIRE/GEMINI2 metadata. Used by the Validator.
 
 And these command-line tools:
-* cswinfo - a command-line tool to help making requests of any CSW server
+
+* `cswinfo`_ - a command-line tool to help making requests of any CSW server
 
 As of October 2012, ckanext-csw and ckanext-inspire were merged into this extension.
 
@@ -51,6 +54,7 @@ __ http://docs.ckan.org/en/latest/apiv3.html
 To enable the spatial query you need to add the ``spatial_query`` plugin to your
 ini file (See `Configuration`_). This plugin requires the ``spatial_metadata``
 plugin.
+
 
 
 Geo-Indexing your datasets
@@ -98,7 +102,7 @@ or with a GeoJSON object describing a bounding box (note the escaped quotes)::
 
   {% snippet "spatial/snippets/spatial_query.html", default_extent="{ \"type\": \"Polygon\", \"coordinates\": [[[74.89, 29.39],[74.89, 38.45], [60.50, 38.45], [60.50, 29.39], [74.89, 29.39]]]}" %}
 
-You need to load the `spatial_metadata` and `spatial_query` plugins to use this snippet.
+You need to load the ``spatial_metadata`` and ``spatial_query`` plugins to use this snippet.
 
 Legacy API
 ++++++++++
@@ -132,7 +136,7 @@ bdoy of the dataset details page, but these can easily modified to suit your pro
 needs
 
 To add a map to the sidebar, add this to the dataset details page template
-(eg `myproj/ckanext/myproj/templates/package/read.html`)::
+(eg ``myproj/ckanext/myproj/templates/package/read.html``)::
 
     {% block secondary_content %}
       {{ super() }}
@@ -163,13 +167,13 @@ For adding the map to the main body, add this::
     {% endblock %}
 
 
-You need to load the `spatial_metadata` plugin to use these snippets.
+You need to load the ``spatial_metadata`` plugin to use these snippets.
 
 WMS Preview
 -----------
 
-To enable the WMS previewer you need to add the `wms_preview` plugin to your
-ini file (See `Configuration`_). This plugin also requires the `resource_proxy`
+To enable the WMS previewer you need to add the ``wms_preview`` plugin to your
+ini file (See `Configuration`_). This plugin also requires the ``resource_proxy``
 plugin and the following option in your ini file::
 
     ckan.resource_proxy_enabled=1
@@ -316,8 +320,8 @@ To specify which validators to use during harvesting, specify their names in CKA
   ckan.spatial.validator.profiles = iso19139,gemini2,constraints
 
 
-cswinfo tool
-------------
+cswinfo
+-------
 
 When ckanext-csw is installed, it provides a command-line tool ``cswinfo``, for making queries on CSW servers and returns the info in nicely formatted JSON. This may be more convenient to type than using, for example, curl.
 
@@ -369,7 +373,7 @@ Install this extension into your python environment (where CKAN is also installe
 
   (pyenv) $ pip install -e git+https://github.com/okfn/ckanext-spatial.git#egg=ckanext-spatial
 
-`cswserver` requires that ckanext-harvest is also installed (and enabled) - see https://github.com/okfn/ckanext-harvest
+``cswserver`` requires that ckanext-harvest is also installed (and enabled) - see https://github.com/okfn/ckanext-harvest
 
 There are various python modules required by the various components of this module. To install them all, use::
 
@@ -378,9 +382,9 @@ There are various python modules required by the various components of this modu
 Install System Packages
 -----------------------
 
-There are also some system packages that are required::
+There are also some system packages that are required:
 
-* PostGIS and must be installed and the database needs spatial features enabling to be able to use Spatial Search. See the "Setting up PostGIS" section for details.
+* PostGIS must be installed and the database needs spatial features enabling to be able to use Spatial Search. See the `Setting up PostGIS`_ section for details.
 
 * Shapely requires libgeos to be installed. If you installed PostGIS on
   the same machine you have already got it, but if PostGIS is located on another server
@@ -404,9 +408,9 @@ Check the Troubleshooting_ section if you get errors at this stage.
 
 Each plugin can be enabled by adding its name to the ``ckan.plugins`` in the CKAN ini file. For example::
 
-    ckan.plugins = spatial_metadata spatial_query spatial_query_widget dataset_extent_map wms_preview
+    ckan.plugins = spatial_metadata spatial_query wms_preview
 
-**Note:** Plugins `spatial_query`, `spatial_query_widget` and `dataset_extent_map` depend on the `spatial_metadata` plugin also being enabled.
+**Note:** Plugin ``spatial_query`` depends on the ``spatial_metadata`` plugin also being enabled.
 
 When enabling the spatial metadata, you can define the projection
 in which extents are stored in the database with the following option. Use
@@ -415,30 +419,6 @@ the EPSG code as an integer (e.g 4326, 4258, 27700, etc). It defaults to
 
     ckan.spatial.srid = 4326
 
-Configuration - Dataset Extent Map
-----------------------------------
-
-If you want to define a default map extent for the different map widgets,
-(e.g. if you are running a national instance of CKAN) you can do so adding
-this configuration option::
-
-    ckan.spatial.default_map_extent=<minx>,<miny>,<maxx>,<maxy>
-
-Coordinates must be in latitude/longitude, e.g.::
-
-    ckan.spatial.default_map_extent=-6.88,49.74,0.50,59.2
-
-The Dataset Extent Map displays only on certain routes. By default it is just the 'Package' controller, 'read' method. To display it on other routes you can specify it in a space separated list like this::
-
-    ckan.spatial.dataset_extent_map.routes = package/read ckanext.dgu.controllers.package:PackageController/read
-
-The Dataset Extent Map provides two different map types. It defaults to 'osm' but if you have a license and apikey for 'os' then you can use that map type using this configuration::
-
-    ckan.spatial.dataset_extent_map.map_type = os
-
-The Dataset Extent Map will be inserted by default at the end of the dataset page. This can be changed by supplying an alternative element_id to the default::
-
-    ckan.spatial.dataset_extent_map.element_id = dataset
 
 Configuration - CSW Server
 --------------------------
@@ -475,7 +455,7 @@ SOLR Configuration
 
 If using Spatial Query functionality then there is an additional SOLR/Lucene setting that should be used to set the limit on number of datasets searchable with a spatial value.
 
-The setting is ``maxBooleanClauses`` in the solrconfig.xml and the value is the number of datasets spatially searchable. The default is ``1024`` and this could be increased to say ``16384``. For a SOLR single core this will probably be at `/etc/solr/conf/solrconfig.xml`. For a multiple core set-up, there will me several solrconfig.xml files a couple of levels below `/etc/solr`. For that case, *ALL* of the cores' `solrconfig.xml` should have this setting at the new value.
+The setting is ``maxBooleanClauses`` in the solrconfig.xml and the value is the number of datasets spatially searchable. The default is ``1024`` and this could be increased to say ``16384``. For a SOLR single core this will probably be at ``/etc/solr/conf/solrconfig.xml``. For a multiple core set-up, there will me several solrconfig.xml files a couple of levels below ``/etc/solr``. For that case, *all* of the cores' ``solrconfig.xml`` should have this setting at the new value.
 
 Example::
 
@@ -519,7 +499,7 @@ extension:
 
     InvalidRequestError: SQL expression, column, or mapped entity expected - got '<class 'ckanext.spatial.model.PackageExtent'>'
 
-  The spatial model has not been loaded. You probably forgot to add the `spatial_metadata` plugin to your ini configuration file.
+  The spatial model has not been loaded. You probably forgot to add the ``spatial_metadata`` plugin to your ini configuration file.
   ::
 
     InternalError: (InternalError) Operation on two geometries with different SRIDs
