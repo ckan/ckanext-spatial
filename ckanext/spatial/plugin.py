@@ -4,6 +4,8 @@ from logging import getLogger
 
 from pylons import config
 
+import shapely
+
 from ckan import plugins as p
 
 from ckan.lib.search import SearchError, PackageSearchQuery
@@ -118,6 +120,13 @@ class SpatialQuery(p.SingletonPlugin):
 
     p.implements(p.IRoutes, inherit=True)
     p.implements(p.IPackageController, inherit=True)
+    p.implements(p.IConfigurable, inherit=True)
+
+    search_backend = None
+
+    def configure(self, config):
+
+        self.search_backend = config.get('ckanext.spatial.search_backend', 'postgis')
 
     def before_map(self, map):
 
@@ -126,61 +135,192 @@ class SpatialQuery(p.SingletonPlugin):
             action='spatial_query')
         return map
 
-    def before_search(self,search_params):
-        if 'extras' in search_params and 'ext_bbox' in search_params['extras'] \
-            and search_params['extras']['ext_bbox']:
+    def before_index(self, pkg_dict):
+
+        if pkg_dict.get('extras_spatial', None) and self.search_backend in ('solr', 'solr-spatial-field'):
+            try:
+                geometry = json.loads(pkg_dict['extras_spatial'])
+            except ValueError, e:
+                log.error('Geometry not valid GeoJSON, not indexing')
+                return pkg_dict
+
+            if self.search_backend == 'solr':
+                # Only bbox supported for this backend
+                if not (geometry['type'] == 'Polygon'
+                   and len(geometry['coordinates']) == 1
+                   and len(geometry['coordinates'][0]) == 5):
+                    log.error('Solr backend only supports bboxes, ignoring geometry {0}'.format(pkg_dict['extras_spatial']))
+                    return pkg_dict
+
+                coords = geometry['coordinates']
+                pkg_dict['maxy'] = max(coords[0][2][1], coords[0][0][1])
+                pkg_dict['miny'] = min(coords[0][2][1], coords[0][0][1])
+                pkg_dict['maxx'] = max(coords[0][2][0], coords[0][0][0])
+                pkg_dict['minx'] = min(coords[0][2][0], coords[0][0][0])
+                pkg_dict['bbox_area'] = (pkg_dict['maxx'] - pkg_dict['minx']) * \
+                                        (pkg_dict['maxy'] - pkg_dict['miny'])
+
+            elif self.search_backend == 'solr-spatial-field':
+                wkt = None
+
+                # Check potential problems with bboxes
+                if geometry['type'] == 'Polygon' \
+                   and len(geometry['coordinates']) == 1 \
+                   and len(geometry['coordinates'][0]) == 5:
+
+                    # Check wrong bboxes (4 same points)
+                    xs = [p[0] for p in geometry['coordinates'][0]]
+                    ys = [p[1] for p in geometry['coordinates'][0]]
+
+                    if xs.count(xs[0]) == 5 and ys.count(ys[0]) == 5:
+                        wkt = 'POINT({x} {y})'.format(x=xs[0], y=ys[0])
+                    else:
+                        # Check if coordinates are defined counter-clockwise,
+                        # otherwise we'll get wrong results from Solr
+                        lr = shapely.geometry.polygon.LinearRing(geometry['coordinates'][0])
+                        if not lr.is_ccw:
+                            lr.coords = list(lr.coords)[::-1]
+                        polygon = shapely.geometry.polygon.Polygon(lr)
+                        wkt = polygon.wkt
+
+                if not wkt:
+                    shape = shapely.geometry.asShape(geometry)
+                    if not shape.is_valid:
+                        log.error('Wrong geometry, not indexing')
+                        return pkg_dict
+                    wkt = shape.wkt
+
+                pkg_dict['spatial_geom'] = wkt
+
+
+        return pkg_dict
+
+    def before_search(self, search_params):
+        if search_params.get('extras', None) and search_params['extras'].get('ext_bbox', None):
 
             bbox = validate_bbox(search_params['extras']['ext_bbox'])
             if not bbox:
                 raise SearchError('Wrong bounding box provided')
 
-            # Note: This will be deprecated at some point in favour of the
-            # Solr 4 spatial sorting capabilities
-            if search_params['sort'] == 'spatial desc' and \
-               p.toolkit.asbool(config.get('ckanext.spatial.use_postgis_sorting', 'False')):
-                if search_params['q'] or search_params['fq']:
-                    raise SearchError('Spatial ranking cannot be mixed with other search parameters')
-                    # ...because it is too inefficient to use SOLR to filter
-                    # results and return the entire set to this class and
-                    # after_search do the sorting and paging.
-                extents = bbox_query_ordered(bbox)
-                are_no_results = not extents
-                search_params['extras']['ext_rows'] = search_params['rows']
-                search_params['extras']['ext_start'] = search_params['start']
-                # this SOLR query needs to return no actual results since
-                # they are in the wrong order anyway. We just need this SOLR
-                # query to get the count and facet counts.
-                rows = 0
-                search_params['sort'] = None # SOLR should not sort.
-                # Store the rankings of the results for this page, so for
-                # after_search to construct the correctly sorted results
-                rows = search_params['extras']['ext_rows'] = search_params['rows']
-                start = search_params['extras']['ext_start'] = search_params['start']
-                search_params['extras']['ext_spatial'] = [
-                    (extent.package_id, extent.spatial_ranking) \
-                    for extent in extents[start:start+rows]]
-            else:
-                extents = bbox_query(bbox)
-                are_no_results = extents.count() == 0
+            if self.search_backend == 'solr':
+                search_params = self._params_for_solr_search(bbox, search_params)
+            elif self.search_backend == 'solr-spatial-field':
+                search_params = self._params_for_solr_spatial_search(bbox, search_params)
+            elif self.search_backend == 'postgis':
+                search_params = self._params_for_postgis_search(bbox, search_params)
 
-            if are_no_results:
-                # We don't need to perform the search
-                search_params['abort_search'] = True
-            else:
-                # We'll perform the existing search but also filtering by the ids
-                # of datasets within the bbox
-                bbox_query_ids = [extent.package_id for extent in extents]
+        return search_params
 
-                q = search_params.get('q','').strip() or '""'
-                new_q = '%s AND ' % q if q else ''
-                new_q += '(%s)' % ' OR '.join(['id:%s' % id for id in bbox_query_ids])
+    def _params_for_solr_search(self, bbox, search_params):
+        '''
+        This will add the following parameters to the query:
 
-                search_params['q'] = new_q
+            defType - edismax (We need to define EDisMax to use bf)
+            bf - {function} A boost function to influence the score (thus
+                 influencing the sorting). The algorithm can be basically defined as:
+
+                    2 * X / Q + T
+
+                 Where X is the intersection between the query area Q and the
+                 target geometry T. It gives a ratio from 0 to 1 where 0 means
+                 no overlap at all and 1 a perfect fit
+
+             fq - Adds a filter that force the value returned by the previous
+                  function to be between 0 and 1, effectively applying the
+                  spatial filter.
+
+        '''
+
+        variables =dict(
+            x11=bbox['minx'],
+            x12=bbox['maxx'],
+            y11=bbox['miny'],
+            y12=bbox['maxy'],
+            x21='minx',
+            x22='maxx',
+            y21='miny',
+            y22='maxy',
+            area_search = abs(bbox['maxx'] - bbox['minx']) * abs(bbox['maxy'] - bbox['miny'])
+        )
+
+        bf = '''div(
+                   mul(
+                   mul(max(0, sub(min({x12},{x22}) , max({x11},{x21}))),
+                       max(0, sub(min({y12},{y22}) , max({y11},{y21})))
+                       ),
+                   2),
+                   add({area_search}, mul(sub({y22}, {y21}), sub({x22}, {x21})))
+                )'''.format(**variables).replace('\n','').replace(' ','')
+
+        search_params['fq_list'] = ['{!frange incl=false l=0 u=1}%s' % bf]
+
+        search_params['bf'] = bf
+        search_params['defType'] = 'edismax'
+
+        return search_params
+
+    def _params_for_solr_spatial_field_search(self, bbox, search_params):
+        '''
+        This will add an fq filter with the form:
+
+            +spatial_geom:"Intersects({minx} {miny} {maxx} {maxy})
+
+        '''
+        search_params['fq_list'] = search_params.get('fq_list', [])
+        search_params['fq_list'].append('+spatial_geom:"Intersects({minx} {miny} {maxx} {maxy})"'
+                                     .format(minx=bbox['minx'],miny=bbox['miny'],maxx=bbox['maxx'],maxy=bbox['maxy']))
+
+        return search_params
+
+    def _params_for_postgis_search(self, bbox, search_params):
+
+        # Note: This will be deprecated at some point in favour of the
+        # Solr 4 spatial sorting capabilities
+        if search_params['sort'] == 'spatial desc' and \
+           p.toolkit.asbool(config.get('ckanext.spatial.use_postgis_sorting', 'False')):
+            if search_params['q'] or search_params['fq']:
+                raise SearchError('Spatial ranking cannot be mixed with other search parameters')
+                # ...because it is too inefficient to use SOLR to filter
+                # results and return the entire set to this class and
+                # after_search do the sorting and paging.
+            extents = bbox_query_ordered(bbox)
+            are_no_results = not extents
+            search_params['extras']['ext_rows'] = search_params['rows']
+            search_params['extras']['ext_start'] = search_params['start']
+            # this SOLR query needs to return no actual results since
+            # they are in the wrong order anyway. We just need this SOLR
+            # query to get the count and facet counts.
+            rows = 0
+            search_params['sort'] = None # SOLR should not sort.
+            # Store the rankings of the results for this page, so for
+            # after_search to construct the correctly sorted results
+            rows = search_params['extras']['ext_rows'] = search_params['rows']
+            start = search_params['extras']['ext_start'] = search_params['start']
+            search_params['extras']['ext_spatial'] = [
+                (extent.package_id, extent.spatial_ranking) \
+                for extent in extents[start:start+rows]]
+        else:
+            extents = bbox_query(bbox)
+            are_no_results = extents.count() == 0
+
+        if are_no_results:
+            # We don't need to perform the search
+            search_params['abort_search'] = True
+        else:
+            # We'll perform the existing search but also filtering by the ids
+            # of datasets within the bbox
+            bbox_query_ids = [extent.package_id for extent in extents]
+
+            q = search_params.get('q','').strip() or '""'
+            new_q = '%s AND ' % q if q else ''
+            new_q += '(%s)' % ' OR '.join(['id:%s' % id for id in bbox_query_ids])
+
+            search_params['q'] = new_q
 
         return search_params
 
     def after_search(self, search_results, search_params):
-        
+
         # Note: This will be deprecated at some point in favour of the
         # Solr 4 spatial sorting capabilities
 
@@ -239,12 +379,12 @@ class HarvestMetadataApi(p.SingletonPlugin):
     '''
     Harvest Metadata API
     (previously called "InspireApi")
-    
+
     A way for a user to view the harvested metadata XML, either as a raw file or
     styled to view in a web browser.
     '''
     p.implements(p.IRoutes)
-        
+
     def before_map(self, route_map):
         controller = "ckanext.spatial.controllers.api:HarvestMetadataApiController"
 
