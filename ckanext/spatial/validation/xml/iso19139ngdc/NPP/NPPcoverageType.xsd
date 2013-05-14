@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://www.ngdc.noaa.gov/NPP" 
+	xmlns:gco="http://www.isotc211.org/2005/gco" 
+	elementFormDefault="qualified" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<!-- ================================== Imports ================================== -->
+	<xs:import namespace="http://www.isotc211.org/2005/gco" schemaLocation="../schema/gco/gco.xsd"/>
+	<!-- ########################################################################### -->
+	<!-- ########################################################################### -->
+	<!-- ================================== Classes ================================= -->
+	<!--====================================-->
+	<!--LayerCloudBaseHeight-->
+	<xs:complexType name="LayerCloudBaseHeight">
+		<xs:sequence>
+			<xs:element name="measure" type="gco:Integer_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--====================================-->
+	<!--AverageCloudBaseHeight-->
+	<xs:complexType name="AverageCloudBaseHeight">
+		<xs:sequence>
+			<xs:element name="measure" type="gco:Integer_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--====================================-->
+	<!-- QF1_VIIRSCBHLAYEREDR_0-1 -->
+	<xs:complexType name="QF1_VIIRSCBHLAYEREDR_0-1">
+		<xs:sequence>
+			<xs:element name="measure" type="gco:Integer_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--====================================-->
+	<!-- QF1_VIIRSCBHLAYEREDR_2-3 -->
+	<xs:complexType name=" QF1_VIIRSCBHLAYEREDR_2-3 ">
+		<xs:sequence>
+			<xs:element name="measure" type="gco:Integer_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--====================================-->
+	<!-- QF1_VIIRSCBHLAYEREDR_4-5 -->
+	<xs:complexType name="QF1_VIIRSCBHLAYEREDR_4-5">
+		<xs:sequence>
+			<xs:element name="measure" type="gco:Integer_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--====================================-->
+	<!-- QF1_VIIRSCBHLAYEREDR_6-7 -->
+	<xs:complexType name="QF1_VIIRSCBHLAYEREDR_6-7">
+		<xs:sequence>
+			<xs:element name="measure" type="gco:Integer_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--====================================-->
+	<!-- QF2_VIIRSCBHLAYEREDR_0-1 -->
+	<xs:complexType name="QF2_VIIRSCBHLAYEREDR_0-1">
+		<xs:sequence>
+			<xs:element name="measure" type="gco:Integer_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--====================================-->
+	<!-- QF2_VIIRSCBHLAYEREDR_2-2 -->
+	<xs:complexType name="QF2_VIIRSCBHLAYEREDR_2-2">
+		<xs:sequence>
+			<xs:element name="measure" type="gco:Integer_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--====================================-->
+	<!-- QF2_VIIRSCBHLAYEREDR_3-3 -->
+	<xs:complexType name="QF2_VIIRSCBHLAYEREDR_3-3">
+		<xs:sequence>
+			<xs:element name="measure" type="gco:Integer_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--====================================-->
+	<!-- QF2_VIIRSCBHLAYEREDR_4-4 -->
+	<xs:complexType name="QF2_VIIRSCBHLAYEREDR_4-4">
+		<xs:sequence>
+			<xs:element name="measure" type="gco:Integer_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--====================================-->
+	<!-- QF3_VIIRSCBHAVGEDR_0-1 -->
+	<xs:complexType name="QF3_VIIRSCBHAVGEDR_0-1">
+		<xs:sequence>
+			<xs:element name="measure" type="gco:Integer_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--====================================-->
+	<!-- QF3_VIIRSCBHAVGEDR_2-3 -->
+	<xs:complexType name="QF3_VIIRSCBHAVGEDR_2-3">
+		<xs:sequence>
+			<xs:element name="measure" type="gco:Integer_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--====================================-->
+	<!-- QF3_VIIRSCBHAVGEDR_4-5 -->
+	<xs:complexType name="QF3_VIIRSCBHAVGEDR_4-5">
+		<xs:sequence>
+			<xs:element name="measure" type="gco:Integer_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--====================================-->
+	<!-- QF3_VIIRSCBHAVGEDR_6-7 -->
+	<xs:complexType name="QF3_VIIRSCBHAVGEDR_6-7">
+		<xs:sequence>
+			<xs:element name="measure" type="gco:Integer_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--====================================-->
+	<!-- QF4_VIIRSCBHAVGEDR_0-1 -->
+	<xs:complexType name="QF4_VIIRSCBHAVGEDR_0-1">
+		<xs:sequence>
+			<xs:element name="measure" type="gco:Integer_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--====================================-->
+	<!-- QF4_VIIRSCBHAVGEDR_2-2 -->
+	<xs:complexType name="QF4_VIIRSCBHAVGEDR_2-2">
+		<xs:sequence>
+			<xs:element name="measure" type="gco:Integer_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--====================================-->
+	<!-- QF4_VIIRSCBHAVGEDR_3-3 -->
+		<xs:complexType name="QF4_VIIRSCBHAVGEDR_3-3">
+		<xs:sequence>
+			<xs:element name="measure" type="gco:Integer_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--====================================-->
+	<!-- QF4_VIIRSCBHAVGEDR_4-4 -->
+	<xs:complexType name="QF4_VIIRSCBHAVGEDR_4-4">
+		<xs:sequence>
+			<xs:element name="measure" type="gco:Integer_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--====================================-->
+	<!-- QF5_VIIRSCBHEDR_0-1 -->
+	<xs:complexType name="QF5_VIIRSCBHEDR_0-1">
+		<xs:sequence>
+			<xs:element name="measure" type="gco:Integer_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--====================================-->
+	<!-- QF5_VIIRSCBHEDR_2-3 -->
+	<xs:complexType name="QF5_VIIRSCBHEDR_2-3">
+		<xs:sequence>
+			<xs:element name="measure" type="gco:Integer_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--====================================-->
+	<!-- QF5_VIIRSCBHEDR_4-5 -->
+	<xs:complexType name="QF5_VIIRSCBHEDR_4-5">
+		<xs:sequence>
+			<xs:element name="measure" type="gco:Integer_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--====================================-->
+	<!-- QF5_VIIRSCBHEDR_6-7 -->
+	<xs:complexType name="QF5_VIIRSCBHEDR_6-7">
+		<xs:sequence>
+			<xs:element name="measure" type="gco:Integer_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--====================================-->
+	<!-- QF6_VIIRSCBHEDR_0-1 -->
+	<xs:complexType name="QF6_VIIRSCBHEDR_0-1">
+		<xs:sequence>
+			<xs:element name="measure" type="gco:Integer_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--====================================-->
+	<!-- QF6_VIIRSCBHEDR_2-3 -->
+	<xs:complexType name="QF6_VIIRSCBHEDR_2-3">
+		<xs:sequence>
+			<xs:element name="measure" type="gco:Integer_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--====================================-->
+	<!--=======EOF=======-->
+</xs:schema>
+

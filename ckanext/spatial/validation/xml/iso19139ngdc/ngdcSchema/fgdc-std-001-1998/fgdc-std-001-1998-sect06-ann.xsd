@@ -1,0 +1,1097 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" blockDefault="#all"
+	xmlns:sch="http://www.ascc.net/xml/schematron">
+<xsd:annotation>
+	<xsd:documentation>
+		Section 6 : Distribution Information
+	</xsd:documentation>
+</xsd:annotation>
+
+<xsd:element name="distinfo" type="distinfoType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Distribution Information
+		Section: 6
+		Description: information about the distributor of and options for obtaining the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Distribution Information</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="distinfoType">
+	<xsd:sequence>
+		<xsd:element ref="distrib"/>
+		<xsd:sequence>
+			<xsd:element ref="resdesc" minOccurs="0"/>
+			<xsd:element ref="distliab"/>
+			<xsd:element ref="stdorder" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element ref="custom" minOccurs="0"/>
+			<xsd:element ref="techpreq" minOccurs="0"/>
+			<xsd:element ref="availabl" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:sequence>
+	</xsd:complexType>
+
+<xsd:element name="distrib" type="distribType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Distributor
+		Section: 6.1
+		Description: the party from whom the data set may be obtained.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Distributor</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="distribType">
+	<xsd:sequence>
+		<xsd:element ref="cntinfo"/>
+	</xsd:sequence>
+	</xsd:complexType>
+
+<xsd:element name="resdesc" type="resdescType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Resource Description
+		Section: 6.2
+		Description: the identifier by which the distributor knows the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Resource Description</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="resdescType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="distliab" type="distliabType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Distribution Liability
+		Section: 6.3
+		Description: statement of the liability assumed by the distributor.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Distribution Liability</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="distliabType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="stdorder" type="stdorderType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Standard Order Process
+		Section: 6.4
+		Description: the common ways in which the data set may be obtained or received, and related instructions and fee information.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Standard Order Process</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="stdorderType">
+	<xsd:sequence>
+		<xsd:choice>
+			<xsd:element ref="nondig"/>
+			<xsd:element ref="digform" maxOccurs="unbounded"/>
+		</xsd:choice>
+		<xsd:element ref="fees"/>
+		<xsd:element ref="ordering" minOccurs="0"/>
+		<xsd:element ref="turnarnd" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="nondig" type="nondigType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Non-digital Form
+		Section: 6.4.1
+		Description: the description of options for obtaining the data set on non-computer- compatible media.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Non-digital Form</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="nondigType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="digform" type="digformType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Digital Form
+		Section: 6.4.2
+		Description: the description of options for obtaining the data set on computer-compatible media.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Digital Form</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="digformType">
+	<xsd:sequence>
+		<xsd:element ref="digtinfo"/>
+		<xsd:element ref="digtopt"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="digtinfo" type="digtinfoType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Digital Transfer Information
+		Section: 6.4.2.1
+		Description: description of the form of the data to be distributed.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Digital Transfer Information</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="digtinfoType">
+	<xsd:sequence>
+		<xsd:element ref="formname"/>
+		<xsd:sequence minOccurs="0">
+			<xsd:choice>
+				<xsd:element ref="formvern"/>
+				<xsd:element ref="formverd"/>
+			</xsd:choice>
+			<xsd:element ref="formspec" minOccurs="0"/>
+		</xsd:sequence>
+		<xsd:element ref="formcont" minOccurs="0"/>
+		<xsd:element ref="filedec" minOccurs="0"/>
+		<xsd:element ref="transize" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="formname" type="formnameType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Format Name
+		Section: 6.4.2.1.1
+		Description: the name of the data transfer format.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Format Name</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="formnameType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: see standard for table of enumerated domain values; free text
+		</xsd:documentation>
+		<xsd:documentation>
+			Enumerated values also match "free text"
+
+			<![CDATA[
+				<xsd:restriction base="xsd:token">
+					<xsd:enumeration value="ARCE"/>
+					<xsd:enumeration value="ARCG"/>
+					<xsd:enumeration value="ASCII"/>
+					<xsd:enumeration value="BIL"/>
+					<xsd:enumeration value="BIP"/>
+					<xsd:enumeration value="BSQ"/>
+					<xsd:enumeration value="CDF"/>
+					<xsd:enumeration value="CFF"/>
+					<xsd:enumeration value="COORD"/>
+					<xsd:enumeration value="DEM"/>
+					<xsd:enumeration value="DFAD"/>
+					<xsd:enumeration value="DGN"/>
+					<xsd:enumeration value="DIGEST"/>
+					<xsd:enumeration value="DLG"/>
+					<xsd:enumeration value="DTED"/>
+					<xsd:enumeration value="DWG"/>
+					<xsd:enumeration value="DX90"/>
+					<xsd:enumeration value="DXF"/>
+					<xsd:enumeration value="ERDAS"/>
+					<xsd:enumeration value="GRASS"/>
+					<xsd:enumeration value="HDF"/>
+					<xsd:enumeration value="IGDS"/>
+					<xsd:enumeration value="IGES"/>
+					<xsd:enumeration value="MOSS"/>
+					<xsd:enumeration value="netCDF"/>
+					<xsd:enumeration value="NITF"/>
+					<xsd:enumeration value="RPF"/>
+					<xsd:enumeration value="RVC"/>
+					<xsd:enumeration value="RVF"/>
+					<xsd:enumeration value="SDTS"/>
+					<xsd:enumeration value="SIF"/>
+					<xsd:enumeration value="SLF"/>
+					<xsd:enumeration value="TIFF"/>
+					<xsd:enumeration value="TGRLN"/>
+					<xsd:enumeration value="VPF"/>
+				</xsd:restriction>
+			]]>
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="formvern" type="formvernType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Format Version Number
+		Section: 6.4.2.1.2
+		Description: version number of the format.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Format Version Number</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="formvernType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="formverd" type="formverdType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Format Version Date
+		Section: 6.4.2.1.3
+		Description: date of the version of the format.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Format Version Date</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="formverdType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: date
+			Domain: free date
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCdate"/>
+</xsd:simpleType>
+
+<xsd:element name="formspec" type="formspecType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Format Specification
+		Section: 6.4.2.1.4
+		Description: name of a subset, profile, or product specification of the format.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Format Specification</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="formspecType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="formcont" type="formcontType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Format Information Content
+		Section: 6.4.2.1.5
+		Description: description of the content of the data encoded in a format.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Format Information Content</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="formcontType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="filedec" type="filedecType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: File Decompression Technique
+		Section: 6.4.2.1.6
+		Description: recommendations of algorithms or processes (including means of obtaining these algorithms or processes) that can be applied to read or expand data sets to which data compression techniques have been applied.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>File Decompression Technique</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="filedecType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "No compression applied", free text
+		</xsd:documentation>
+		<xsd:documentation>
+			Enumerated value also matches "free text"
+
+			<![CDATA[
+				<xsd:restriction base="xsd:token">
+					<xsd:enumeration value="No compression applied"/>
+				</xsd:restriction>
+			]]>
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="transize" type="transizeType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Transfer Size
+		Section: 6.4.2.1.7
+		Description: the size, or estimated size, of the transferred data set in megabytes.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Transfer Size</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="transizeType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: Transfer Size &gt; 0.0
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:double">
+		<xsd:minExclusive value="0.0"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="digtopt" type="digtoptType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Digital Transfer Option
+		Section: 6.4.2.2
+		Description: the means and media by which a data set is obtained from the distributor.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Digital Transfer Option</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="digtoptType">
+	<xsd:choice maxOccurs="unbounded">
+		<xsd:element ref="onlinopt"/>
+		<xsd:element ref="offoptn"/>
+	</xsd:choice>
+</xsd:complexType>
+
+<xsd:element name="onlinopt" type="onlinoptType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Online Option
+		Section: 6.4.2.2.1
+		Description: information required to directly obtain the data set electronically.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Online Option</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="onlinoptType">
+	<xsd:sequence>
+		<xsd:element ref="computer" maxOccurs="unbounded"/>
+		<xsd:element ref="accinstr" minOccurs="0"/>
+		<xsd:element ref="oncomp" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="computer" type="computerType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Computer Contact Information
+		Section: 6.4.2.2.1.1
+		Description: instructions for establishing communications with the distribution computer.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Computer Contact Information</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="computerType">
+	<xsd:choice>
+		<xsd:element ref="networka"/>
+		<xsd:element ref="dialinst"/>
+	</xsd:choice>
+</xsd:complexType>
+
+<xsd:element name="networka" type="networkaType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Network Address
+		Section: 6.4.2.2.1.1.1
+		Description: the electronic address from which the data set can be obtained from the distribution computer.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Network Address</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="networkaType">
+	<xsd:sequence>
+		<xsd:element ref="networkr" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="networkr" type="networkrType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Network Resource Name
+		Section: 6.4.2.2.1.1.1.1
+		Description: the name of the file or service from which the data set can be obtained.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Network Resource Name</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="networkrType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="dialinst" type="dialinstType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Dialup Instructions
+		Section: 6.4.2.2.1.1.2
+		Description: information required to access the distribution computer remotely through telephone lines.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Dialup Instructions</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="dialinstType">
+	<xsd:sequence>
+		<xsd:element ref="lowbps"/>
+		<xsd:element ref="highbps" minOccurs="0"/>
+		<xsd:element ref="numdata"/>
+		<xsd:element ref="numstop"/>
+		<xsd:element ref="parity"/>
+		<xsd:element ref="compress" minOccurs="0"/>
+		<xsd:element ref="dialtel" maxOccurs="unbounded"/>
+		<xsd:element ref="dialfile" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:simpleType name="bpsType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Elements: lowbps, highbps
+			Type: integer
+			Domain: BPS &gt;= 110
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:integer">
+		<xsd:minInclusive value="110"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="lowbps" type="lowbpsType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Lowest BPS
+		Section: 6.4.2.2.1.1.2.1
+		Description: lowest or only speed for the connection's communication, expressed in bits per second.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Lowest BPS</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="lowbpsType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: integer
+			Domain: Lowest BPS &gt;= 110
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="bpsType"/>
+</xsd:simpleType>
+
+<xsd:element name="highbps" type="highbpsType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Highest BPS
+		Section: 6.4.2.2.1.1.2.2
+		Description: highest speed for the connection's communication, expressed in bits per second. Used in cases when a range of rates are provided.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Highest BPS</sch:title>
+	</xsd:appinfo>
+	<xsd:appinfo>
+		<sch:schema>
+			<sch:pattern name="Bitrate Restriction">
+				<sch:rule context="highbps">
+					<sch:assert test=". &gt; parent::dialinst/lowbps">Highest BPS (<sch:emph>highbps</sch:emph>) must be greater than Lowest BPS (<sch:emph>lowbps</sch:emph>).</sch:assert>
+				</sch:rule>
+			</sch:pattern>
+		</sch:schema>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="highbpsType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: integer
+			Domain: Highest BPS &gt; Lowest BPS
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="bpsType"/>
+</xsd:simpleType>
+
+<xsd:element name="numdata" type="numdataType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Number DataBits
+		Section: 6.4.2.2.1.1.2.3
+		Description: number of stop bits in each character exchanged in the communication.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Number DataBits</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="numdataType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: integer
+			Domain: 7 &lt;= Number DataBits &lt;= 8
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:integer">
+		<xsd:minInclusive value="7"/>
+		<xsd:maxInclusive value="8"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="numstop" type="numstopType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Number StopBits
+		Section: 6.4.2.2.1.1.2.4
+		Description: number of stop bits in each character exchanged in the communication.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Number StopBits</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="numstopType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: integer
+			Domain: 1 &lt;= Number StopBits &lt;= 2
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:integer">
+		<xsd:minInclusive value="1"/>
+		<xsd:maxInclusive value="2"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="parity" type="parityType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Parity
+		Section: 6.4.2.2.1.1.2.5
+		Description: parity error checking used in each character exchanged in the communication.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Parity</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="parityType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "None" "Odd" "Even" "Mark" "Space"
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:token">
+		<xsd:enumeration value="None"/>
+		<xsd:enumeration value="Odd"/>
+		<xsd:enumeration value="Even"/>
+		<xsd:enumeration value="Mark"/>
+		<xsd:enumeration value="Space"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="compress" type="compressType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Compression Support
+		Section: 6.4.2.2.1.1.2.6
+		Description: data compression available through the modem service to speed data transfer.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Compression Support</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="compressType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "V.32" "V.32bis" "V.42" "V.42bis" free text
+		</xsd:documentation>
+		<xsd:documentation>
+			Enumerated values also match "free text"
+
+			<![CDATA[
+				<xsd:restriction base="xsd:token">
+					<xsd:enumeration value="V.32"/>
+					<xsd:enumeration value="V.32bis"/>
+					<xsd:enumeration value="V.42"/>
+					<xsd:enumeration value="V.42bis"/>
+				</xsd:restriction>
+			]]>
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="dialtel" type="dialtelType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Dialup Telephone
+		Section: 6.4.2.2.1.1.2.7
+		Description: the telephone number of the distribution computer.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Dialup Telephone</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="dialtelType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="dialfile" type="dialfileType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Dialup File Name
+		Section: 6.4.2.2.1.1.2.8
+		Description: the name of a file containing the data set on the distribution computer.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Dialup File Name</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="dialfileType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="accinstr" type="accinstrType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Access Instructions
+		Section: 6.4.2.2.1.2
+		Description: instructions on the steps required to access the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Access Instructions</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="accinstrType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="oncomp" type="oncompType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Online Computer and Operating System
+		Section: 6.4.2.2.1.3
+		Description: the brand of distribution computer and its operating system.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Online Computer and Operating System</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="oncompType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="offoptn" type="offoptnType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Offline Option
+		Section: 6.4.2.2.2
+		Description: information about media-specific options for receiving the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Offline Option</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="offoptnType">
+	<xsd:sequence>
+		<xsd:element ref="offmedia"/>
+		<xsd:element ref="reccap" minOccurs="0"/>
+		<xsd:element ref="recfmt" maxOccurs="unbounded"/>
+		<xsd:element ref="compat" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="offmedia" type="offmediaType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Offline Media
+		Section: 6.4.2.2.2.1
+		Description: name of the media on which the data set can be received.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Offline Media</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="offmediaType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "CD-ROM" "3-1/2 inch floppy disk" "5-1/4 inch floppy disk" "9-track tape" "4 mm cartridge tape" "8 mm cartridge tape" "1/4-inch cartridge tape" free text
+		</xsd:documentation>
+		<xsd:documentation>
+			Enumerated values also match "free text"
+
+			<![CDATA[
+				<xsd:restriction base="xsd:token">
+					<xsd:enumeration value="CD-ROM"/>
+					<xsd:enumeration value="3-1/2 inch floppy disk"/>
+					<xsd:enumeration value="5-1/4 inch floppy disk"/>
+					<xsd:enumeration value="9-track tape"/>
+					<xsd:enumeration value="4 mm cartridge tape"/>
+					<xsd:enumeration value="8 mm cartridge tape"/>
+					<xsd:enumeration value="1/4-inch cartridge tape"/>
+				</xsd:restriction>
+			]]>
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="reccap" type="reccapType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Recording Capacity
+		Section: 6.4.2.2.2.2
+		Description: the density of information to which data are written.  Used in cases where different recording capacities are possible.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Recording Capacity</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="reccapType">
+	<xsd:sequence>
+		<xsd:element ref="recden" maxOccurs="unbounded"/>
+		<xsd:element ref="recdenu"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="recden" type="recdenType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Recording Density
+		Section: 6.4.2.2.2.2.1
+		Description: the density in which the data set can be recorded.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Recording Density</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="recdenType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: Recording Density &gt; 0.0
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:double">
+		<xsd:minExclusive value="0.0"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="recdenu" type="recdenuType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Recording Density Units
+		Section: 6.4.2.2.2.2.2
+		Description: the units of measure for the recording density.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Recording Density Units</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="recdenuType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="recfmt" type="recfmtType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Recording Format
+		Section: 6.4.2.2.2.3
+		Description: the options available or method used to write the data set to the medium.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Recording Format</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="recfmtType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "cpio" "tar" "High Sierra" "ISO 9660" "ISO 9660 with Rock Ridge extensions" "ISO 9660 with Apple HFS extensions" free text
+		</xsd:documentation>
+		<xsd:documentation>
+			Enumerated values also match "free text"
+
+			<![CDATA[
+				<xsd:restriction base="xsd:token">
+					<xsd:enumeration value="cpio"/>
+					<xsd:enumeration value="tar"/>
+					<xsd:enumeration value="High Sierra"/>
+					<xsd:enumeration value="ISO 9660"/>
+					<xsd:enumeration value="ISO 9660 with Rock Ridge extensions"/>
+					<xsd:enumeration value="ISO 9660 with Apple HFS extensions"/>
+				</xsd:restriction>
+			]]>
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="compat" type="compatType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Compatibility Information
+		Section: 6.4.2.2.2.4
+		Description: description of other limitations or requirements for using the medium.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Compatibility Information</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="compatType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="fees" type="feesType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Fees
+		Section: 6.4.3
+		Description: the fees and terms for retrieving the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Fees</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="feesType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="ordering" type="orderingType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Ordering Instructions
+		Section: 6.4.4
+		Description: general instructions and advice about, and special terms and services provided for, the data set by the distributor.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Ordering Instructions</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="orderingType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="turnarnd" type="turnarndType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Turnaround
+		Section: 6.4.5
+		Description: typical turnaround time for the filling of an order.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Turnaround</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="turnarndType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="custom" type="customType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Custom Order Process
+		Section: 6.5
+		Description: description of custom distribution services available, and the terms and conditions for obtaining these services.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Custom Order Process</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="customType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="techpreq" type="techpreqType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Technical Prerequisites
+		Section: 6.6
+		Description: description of any technical capabilities that the consumer must have to use the data set in the form(s) provided by the distributor.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Technical Prerequisites</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="techpreqType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="availabl" type="availablType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Available Time Period
+		Section: 6.7
+		Description: the time period when the data set will be available from the distributor (see Section 9 for schema definitions).
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Available Time Period</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="availablType">
+	<xsd:sequence>
+		<xsd:element ref="timeinfo"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+</xsd:schema>

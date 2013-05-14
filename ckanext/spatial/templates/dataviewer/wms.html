@@ -1,0 +1,14 @@
+{% extends "dataviewer/base.html" %}
+
+{% block page %}
+    <div data-module="wmspreview" id="data-preview">
+        <h4 class="loading-dialog">
+          <div class="loading-spinner"></div>
+          <div class="left">{{ _('Loading...') }}</div>
+        </h4>
+    </div>
+
+  {% resource 'ckanext-spatial/wms' %}
+
+{% endblock %}
+

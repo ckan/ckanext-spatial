@@ -1,0 +1,1324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:cit="eml://ecoinformatics.org/literature-2.1.0" xmlns:rp="eml://ecoinformatics.org/party-2.1.0" xmlns:doc="eml://ecoinformatics.org/documentation-2.1.0" xmlns:res="eml://ecoinformatics.org/resource-2.1.0" xmlns="eml://ecoinformatics.org/coverage-2.1.0" xmlns:unit="eml://ecoinformatics.org/units-2.1.0" targetNamespace="eml://ecoinformatics.org/coverage-2.1.0">
+  <xs:import namespace="eml://ecoinformatics.org/literature-2.1.0" schemaLocation="eml-literature.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/documentation-2.1.0" schemaLocation="eml-documentation.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/party-2.1.0" schemaLocation="eml-party.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/resource-2.1.0" schemaLocation="eml-resource.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/units-2.1.0" schemaLocation="eml-unitTypeDefinitions.xsd"/>
+  <xs:annotation>
+    <xs:documentation>
+               '$RCSfile: eml-coverage.xsd,v $'
+       Copyright: 1997-2002 Regents of the University of California,
+                            University of New Mexico, and
+                            Arizona State University
+        Sponsors: National Center for Ecological Analysis and Synthesis and
+                  Partnership for Interdisciplinary Studies of Coastal Oceans,
+                     University of California Santa Barbara
+                  Long-Term Ecological Research Network Office,
+                     University of New Mexico
+                  Center for Environmental Studies, Arizona State University
+   Other funding: National Science Foundation (see README for details)
+                  The David and Lucile Packard Foundation
+     For Details: http://knb.ecoinformatics.org/
+
+        '$Author: obrien $'
+          '$Date: 2009/02/25 23:51:54 $'
+      '$Revision: 1.95 $'
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    </xs:documentation>
+    <xs:appinfo>
+      <doc:moduleDocs>
+        <doc:moduleName>eml-coverage</doc:moduleName>
+        <doc:moduleDescription>
+          <section xmlns="">
+            <title>
+            The eml-coverage module - Geographic, temporal, and taxonomic extents
+            of resources
+          </title>
+            <para>
+            The eml-coverage module contains fields for describing the coverage
+            of a resource in terms of time, space, and taxonomy. These
+            coverages (temporal, spatial, and taxonomic) represent the extent
+            of applicability of the resource in those domains.
+            The Geographic coverage section allows for 2 means of expressing
+            coverage
+            on the surface of the earth: 1) via a set of bounding coordinates
+            that define the North, South, East and West points in a rectangular
+            area, optionally including a bounding altitude,
+            and 2) using a G-Ring polygon definition, where an irregularly
+            shaped area may be defined using a ordered list of
+            latitude/longitude coordinates.  A G-Ring may also include an
+            "inner G-Ring" that defines one or more
+            "cut-outs" in the area, i.e. the donut hole concept.
+          </para>
+            <para>
+            The temporal coverage section allows for the definition of either a
+            single date or time, or a range of dates or times. These may be
+            expressed as a calendar date according to the ISO 8601 Date and Time
+            Specification, or by using an alternate time scale, such as the
+            geologic time scale. Currently, EML does not have specific fields to indicate
+            that a data resource may be "ongoing." Two examples are data tables 
+			that are planned to be appended in the future, or resources 
+            with complex connection definitions (such as to a database) which may return 
+			data in real time. It is important that EML be 
+            able to  handle data from both the "producer" and "consumer" points of view,
+            although currently the temporal coverage modules are designed for the latter.
+            There is no universally acceptable recommendation for describing "ongoing" data
+            within EML. Some groups have chosen to use the &lt;alternateTimeScale&gt; 
+            node for the end date, with a value of "ongoing," although this practice
+            is not endorsed by the EML authors. A better solution could be to use very
+			general content for the endDate (such as only the current year) so that the 
+			data are accurately described, and searches return datasets as expected.
+			A future version of EML will 
+            accommodate such data types with coverage elements specific to their needs.
+          </para>
+            <para>
+            The taxonomic coverage section allows for detailed description of
+            the taxonomic extent of the dataset or resource.  The taxonomic
+            classification consists of a recursive set of taxon rank names,
+            their values, and their common names.  This construct allows for a
+            taxonomic hierarchy to be built to show the level of identification
+            (e.g. Rank Name = Kingdom, Rank Value = Animalia, Common Name =
+            Animals, and so on down the hierarchy.) The taxonomic coverage
+            module also allows for the definition of the classification system
+            in cases where alternative systems are used.
+          </para>
+            <para>
+            The eml-coverage module, like other modules, may be
+            "referenced" via the &lt;references&gt; tag.  This allows
+            the coverage extent to be described once, and then used as a
+            reference in other locations within the EML document via its ID.
+          </para>
+          </section>
+        </doc:moduleDescription>
+        <doc:recommendedUsage>all datasets where spatial, temporal or taxonomic
+        coverage is important</doc:recommendedUsage>
+        <doc:standAlone>no</doc:standAlone>
+      </doc:moduleDocs>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:complexType name="Coverage">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Coverage</doc:tooltip>
+        <doc:summary>
+          Spatial, temporal, and taxonomic coverage information.
+        </doc:summary>
+        <doc:description>This field is a container for the spatial, temporal
+        and taxonomic coverages that apply to various resources, often dataset
+        resources.  Please see the individual descriptions of the sub fields for
+        more detail.
+        </doc:description>
+        <doc:example>Please see the individual sub fields for specific
+        examples.</doc:example>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:choice>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element name="geographicCoverage" type="GeographicCoverage">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Geographic coverage</doc:tooltip>
+              <doc:summary>Geographic coverage information.</doc:summary>
+              <doc:description>Geographic Coverage is a container for spatial
+              information about a project, a resource, or an entity within a
+              resource. It allows a bounding box for the overall coverage (in
+              lat long), and also allows description of arbitrary polygons with
+              exclusions.</doc:description>
+              <doc:example>Please see the individual sub fields for specific
+              examples.</doc:example>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="temporalCoverage">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Temporal coverage</doc:tooltip>
+              <doc:summary>Temporal coverage information.</doc:summary>
+              <doc:description>This field specifies temporal coverage, and
+              allows coverages to be a single point in time, multiple points in
+              time, or a range of dates. Dates can be expressed in terms of both
+              calendar dates and geologic dating systems.</doc:description>
+              <doc:example>Please see the individual sub fields for specific
+              examples.</doc:example>
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="TemporalCoverage">
+                <xs:attribute name="system" type="res:SystemType" use="optional"/>
+                <xs:attribute name="scope" type="res:ScopeType" use="optional" default="document"/>
+              </xs:extension>
+            </xs:complexContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="taxonomicCoverage">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Taxonomic coverage</doc:tooltip>
+              <doc:summary>Taxonomic coverage information.</doc:summary>
+              <doc:description>Taxonomic Coverage is a container for Taxonomic
+              information about a project, a resource, or an entity within a
+              resource. It includes a list of species names (or higher level
+              ranks) from one or more classification systems.</doc:description>
+              <doc:example>Please see the individual sub fields for specific
+              examples.</doc:example>
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="TaxonomicCoverage">
+                <xs:attribute name="system" type="res:SystemType" use="optional"/>
+                <xs:attribute name="scope" type="res:ScopeType" use="optional" default="document"/>
+              </xs:extension>
+            </xs:complexContent>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+      <xs:group ref="res:ReferencesGroup"/>
+    </xs:choice>
+    <xs:attribute name="id" type="res:IDType" use="optional"/>
+    <xs:attribute name="system" type="res:SystemType" use="optional"/>
+    <xs:attribute name="scope" type="res:ScopeType" use="optional" default="document"/>
+  </xs:complexType>
+  <xs:complexType name="TemporalCoverage">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Temporal coverage</doc:tooltip>
+        <doc:summary>Temporal coverage information.</doc:summary>
+        <doc:description>The temporal coverage fields are intended to be used
+        in describing the date and time of an event. It allows for three
+        general descriptions: a single date or time, multiple dates or times, and a
+        range of date or times.</doc:description>
+        <doc:example>Please see the individual sub fields for specific
+        examples.</doc:example>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:choice>
+      <xs:choice>
+        <xs:element name="singleDateTime" type="SingleDateTimeType" maxOccurs="unbounded">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Single Date/Time</doc:tooltip>
+              <doc:summary>Means of encoding a single date and
+              time</doc:summary>
+              <doc:description>The singleDateTime field is intended to
+              describe a
+              single date and time for an event. There is a choice between two
+              options: a calendar date with a time, or a geologic
+              age.</doc:description>
+              <doc:example>Please see the individual sub-elements for
+              example.</doc:example>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="rangeOfDates">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Range of dates/times</doc:tooltip>
+              <doc:summary>Means of encoding a range of dates and
+        times.</doc:summary>
+              <doc:description>The 'RangeOfDatesType' field is intended to be used for
+        describing a range of dates and/or times. It may be used multiple times
+        to document multiple date ranges. It allows for two 'singleDateTime'
+        fields, the first to be used as the beginning dateTime, and the second
+        to be used as the ending dateTime of the range.</doc:description>
+              <doc:example>Please see the examples from the 'singleDateTime'
+        field for specific examples.</doc:example>
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="beginDate" type="SingleDateTimeType">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <doc:tooltip>Begin Date</doc:tooltip>
+                    <doc:summary>A single time stamp signifying the beginning of
+              some time period</doc:summary>
+                    <doc:description>A single time stamp signifying the beginning of
+              some time period.  There is a choice between two
+              options: a calendar date with a time, or a geologic
+              age.</doc:description>
+                    <doc:example>Please see the individual sub-elements for
+              example.</doc:example>
+                  </xs:appinfo>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="endDate" type="SingleDateTimeType">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <doc:tooltip>End Date</doc:tooltip>
+                    <doc:summary>A single time stamp signifying the end of
+              some time period</doc:summary>
+                    <doc:description>A single time stamp signifying the end of
+              some time period.  There is a choice between two
+              options: a calendar date with a time, or a geologic
+              age.</doc:description>
+                    <doc:example>Please see the individual sub-elements for
+              example.</doc:example>
+                  </xs:appinfo>
+                </xs:annotation>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+      <xs:group ref="res:ReferencesGroup"/>
+    </xs:choice>
+    <xs:attribute name="id" type="res:IDType" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="SingleDateTimeType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Single Date/Time</doc:tooltip>
+        <doc:summary>Means of encoding a single date and time</doc:summary>
+        <doc:description>The SingleDateTimeType field is intended to describe a
+        single date and time for an event. There is a choice between two
+        options: a calendar date with a time, or a geologic
+        age.</doc:description>
+        <doc:example>Please see the individual sub-elements for
+        example.</doc:example>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:choice>
+      <xs:sequence>
+        <xs:element name="calendarDate" type="res:yearDate">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Calendar date</doc:tooltip>
+              <doc:summary>The calendar date for an event.</doc:summary>
+              <doc:description>The calendar date field is used to express a
+              date, giving the year, month, and day. The format should be one
+              that complies with the International Standards Organization's
+              standard 8601. The recommended format for EML is YYYY-MM-DD,
+              where Y is the four digit year, M is the two digit month code
+              (01 - 12, where January = 01), and D is the two digit day of
+              the month (01 - 31). This field can also be used to enter just 
+	      the year portion of a date.</doc:description>
+              <doc:example>2001-01-01</doc:example>
+              <doc:example>2001-10-12</doc:example>
+              <doc:example>2001</doc:example>
+              <doc:example>1895</doc:example>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="time" type="xs:time" minOccurs="0">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Time of day</doc:tooltip>
+              <doc:summary>The time of day for an event.</doc:summary>
+              <doc:description>The time field is used to express the hour
+              (and optionally minute, or minute and second) of the day for an
+              event, and should comply with the International Standards
+              Organization's standard 8601. The recommended format for EML is
+              hh:mm:ssTZD, where hh is the two digit hour of the day, mm is
+              the two digit minute of the hour, and ss is the two digit
+              second of the minute. TZD stands for Time Zone Designator which
+              is used to handle time zone offsets. Times may be expressed in
+              two ways: 1) UTC (Coordinated Universal Time, also known as
+              Greenwich Mean Time, or GMT), with a special UTC designator
+              ("Z"), 2) local time, together with a time zone offset in hours
+              and minutes. A time zone offset of "+hh:mm" indicates that the
+              date or time uses a local time zone which is "hh" hours and "mm"
+              minutes ahead of UTC. A time zone offset of "-hh:mm" indicates
+              a local time zone which is "hh" hours
+              and "mm" minutes behind UTC.</doc:description>
+              <doc:example>1) 08:31:22Z , which means eight thirty one and 22
+              seconds in the morning at Coordinated Universal Time (Greenwich
+              Mean Time). 2) 14:06:09-08:00 , which means six minutes, nine
+              seconds past two o'clock p.m., Pacific Standard Time (which is
+              offset eight hours behind UTC)</doc:example>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+      <xs:element name="alternativeTimeScale">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Alternative Time Scale</doc:tooltip>
+            <doc:summary>A name, code, or date describing an event or period
+            in an alternative time scale, such as one of the geologic time
+            scales.</doc:summary>
+            <doc:description>A name, code, or date describing an event or
+            period in an alternative time scale, for instance as an absolute
+            date calculated using a named dating method, or as a relative
+            date that is drawn from stratigraphy or biostratigraphy.
+            Calendar dates as provided in the ISO
+            8601 dating system used in the standard CSDGM are not adequate to
+            describe geologic time periods. Absolute geologic time is usually
+            measured in millions of years before present, but may use different
+            units and relative base times. Relative geologic time is measured by
+            subdivisions of the earth's geology. in an order based upon relative
+            age, most commonly, vertical or stratigraphic position. The actual
+            dating systems used in geologic studies often tie relative times
+            measured through stratigraphy or biostratigraphy to a particular
+            absolute time using radioisotope dating techniques, among others. As
+            these methods for absolute dating have improved, the estimates of
+            the dates for strata have changed, consequently, it would be
+            inaccurate to record absolute dates in situations where relative
+            dates were measured.  This structure is provided as an optional
+            alternative to the standard calendar dates provided by ISO 8601.
+            </doc:description>
+            <doc:example>Please see the individual sub-fields for specific
+            examples.</doc:example>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="timeScaleName" type="res:NonEmptyStringType">
+              <xs:annotation>
+                <xs:appinfo>
+                  <doc:tooltip>alternative time scale</doc:tooltip>
+                  <doc:summary>Name of a recognized alternative time
+                  scale.</doc:summary>
+                  <doc:description>Name of a recognized alternative time scale.
+                  This includes 'Absolute' as the name of the time scale for
+                  measuring geologic dates before the present and names of
+                  geologic dating systems that are arrangements of symbols or
+                  names in order of relative geologic time.</doc:description>
+                  <doc:example>'Absolute', 'Geomagnetic Polarity Time Scale',
+                  'International Geological Time Scale',
+                  'Oxygen-Isotope'</doc:example>
+                </xs:appinfo>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="timeScaleAgeEstimate" type="res:NonEmptyStringType">
+              <xs:annotation>
+                <xs:appinfo>
+                  <doc:tooltip>Time scale age estimate</doc:tooltip>
+                  <doc:summary/>
+                  <doc:description>Either an absolute date or a relative age
+                  name describing an event or period in an alternative time
+                  scale such as the Geologic Time Scale.</doc:description>
+                  <doc:example>For example, '300 Ma' (300 million years before
+                  present) is a Geologic_Age_Estimate based on the Absolute
+                  Geologic_Time_Scale, 'C28r' is a chron name from the
+                  Geomagnetic Polarity Time Scale, and 'Maastrichtian' and
+                  'Jurassic' are names from the International Geological Time
+                  Scale. Since different relative geologic time scales are
+                  often not aligned, multiple geologic dates may need to be
+                  specified. For example, the Geomagnetic Polarity Time Scale
+                  chron 'C29r', at the K/T boundary lies in both the
+                  'Maastrichtian' and the 'Danian' stages from the
+                  International Geological Time Scale, thus if you were
+                  documenting this event using the International Geological
+                  Time Scale, both 'Maastrichtian' and 'Danian' should be
+                  included here.</doc:example>
+                </xs:appinfo>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="timeScaleAgeUncertainty" type="res:NonEmptyStringType" minOccurs="0">
+              <xs:annotation>
+                <xs:appinfo>
+                  <doc:tooltip>Time scale age uncertainty</doc:tooltip>
+                  <doc:summary>The error estimate for the alternative time
+                  scale.</doc:summary>
+                  <doc:description>The error estimate for the alternative time.
+                  This should include the units of measure, a description of
+                  what the error estimate represents and how it was
+                  calculated.</doc:description>
+                  <doc:example>+/- 5 Ma (Million Years)</doc:example>
+                </xs:appinfo>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="timeScaleAgeExplanation" type="res:NonEmptyStringType" minOccurs="0">
+              <xs:annotation>
+                <xs:appinfo>
+                  <doc:tooltip>Time scale age explanation</doc:tooltip>
+                  <doc:summary>The name and/or description of the method used to
+                  calculate the time scale age estimate.</doc:summary>
+                  <doc:description>The name and/or description of the method
+                  used to calculate the age estimate. Detailed information
+                  about the method may be provided through references
+                  contained in the Time Scale Citation field.</doc:description>
+                </xs:appinfo>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="timeScaleCitation" type="cit:CitationType" minOccurs="0" maxOccurs="unbounded">
+              <xs:annotation>
+                <xs:appinfo>
+                  <doc:tooltip>Time Scale citation</doc:tooltip>
+                  <doc:summary>Citation for works providing detailed information
+                  about any element of the time scale age.</doc:summary>
+                  <doc:description>Citation for works providing detailed
+                  information about any element of the time scale
+                  age.</doc:description>
+                  <doc:example>For example, a publication describing the
+                  methodology used for carbon dating or describing the basic
+                  geologic time scale in more detail could be cited
+                  here.</doc:example>
+                </xs:appinfo>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="GeographicCoverage">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Geographic coverage</doc:tooltip>
+        <doc:summary>Geographic coverage information.</doc:summary>
+        <doc:description>Geographic Coverage is a container for spatial
+        information about a a project, a resource, or an entity within a
+        resource. It is meant for general information and not for accurate
+mapping.  More specific information, including mapping projections, is covered by EML in
+the spatialReference schema.</doc:description>
+        <doc:example>Please see the individual sub-elements for specific
+        examples.</doc:example>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:choice>
+      <xs:sequence>
+        <xs:element name="geographicDescription" type="res:NonEmptyStringType">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Description of geographic extent</doc:tooltip>
+              <doc:summary>Short text description of the geographic areal domain of
+              the data set.</doc:summary>
+              <doc:description>
+                <section xmlns="">
+                  <para>geographicDescription is a short text description of a dataset's 
+              geographic areal domain. A text description is especially important to 
+              provide a geographic                           setting 
+               when the extent of the data set cannot be well described
+              by the "boundingCoordinates", or in the case of data
+              which are not specifically geospatial. Assuming the
+              "boundingCoordinates" do not adequately describe the
+              extent of the data set, the discrepancy can be identified and
+              described here. The coordinates may define a rectangle around a
+              country, with this geographicDescription element
+              containing a disclaimer  
+               and/or further details concerning the border.
+             A study of the diseases of salmon may not have a
+              specific geographic extent associated with it, but the salmon
+               were collected in the states of Washington and Oregon.
+              The "boundingCoordinates" might form a
+              general rectangle around the states of Washington and Oregon, but
+              the "geographicDescription" might describe the fact
+              that the study took place only along
+              certain rivers within those states. </para>
+                  <para>
+              This data element differs
+              from the standard data element "Place_Keyword" in that it allows
+              a free text description of the geographic extent, rather than
+              just a list of words or phrases useful as an index of location
+              names associated with the data set.  </para>
+                  <para>This element can also contain information
+              about the collection of the boundingCoordinates, e.g., an altitude value that is referenced
+              to Mean Lower Low Water, or the projection system that the latitude and 
+              longitude coordinates were taken from.</para>
+                </section>
+              </doc:description>
+              <doc:example>"Manistee River watershed"</doc:example>
+              <doc:example>
+              "extent of 7 1/2 minute quads containing any property belonging
+              to Yellowstone National Park"</doc:example>
+              <doc:example> "ponds and reservoirs larger
+              than 2 acres in Jefferson County, Colorado". </doc:example>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="boundingCoordinates">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Bounding coordinates</doc:tooltip>
+              <doc:summary>The four margins (N, S, E, W) of a bounding box on the earth's surface, 
+              or when considered in lat-lon pairs, the corners of the box. To define a single
+              point, use the same value in each lat or lon pair.  These elements are meant to convey general 
+              information and are not for accurate mapping.  More specific information may be
+              included by using the elements in the spatialReference schema.</doc:summary>
+              <doc:description>
+                <section>
+                  <para>Bounding Coordinates are the four margins (N, S, E, W) of a bounding box, 
+              or when considered in lat-lon pairs, the corners of the box. These elements are meant to convey general 
+              information and are not for accurate mapping.  More specific information may be
+              included by using the elements in the spatialReference schema.</para>
+                  <para>The limits of coverage of a data set should be expressed
+              as decimal latitudes and longitudes, and in the order western-most,
+              eastern-most, northern-most, and southern-most. By convention, 
+              latitudes and longitudes are referenced to the  Equator and to the Prime Meridian
+              (the datums), respectively. 
+              By definition, the 0 and 180 meridians themselves do not belong in either hemisphere, 
+              but local conventions may place them in either. All coordinates are typed as decimals. 
+              Since all four elements are required, a bounding area that is a 
+              single point should use the same values for
+              northBoundingCoordinate and southBoundingCoordinate, and likewise
+             for westBoundingCoordinate and eastBoundingCoordinate. </para>
+                  <para>In the case of a data set that comprises 
+                    all longitudes (e.g., a horizontal band between 2 parallels that fully 
+                    encompasses the earth ), please use a westBoundingCoordinate of -180.0, and an
+                    eastBoundingCoordinate of 180.0 (or +180.0). In this case, it could be considered geographically                
+                    appropriate to specify both values as "180" (or any other meridian), but this could 
+                    also be interpreted as only the  meridian itself, so this is not recommended</para>
+                </section>
+              </doc:description>
+              <doc:example>Please see the individual sub-fields.</doc:example>
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="westBoundingCoordinate">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <doc:tooltip>West bounding coordinate, in decimal degrees</doc:tooltip>
+                    <doc:summary>Western-most limit of a bounding box, expressed in degrees of
+                    longitude.</doc:summary>
+                    <doc:description>The westBoundingCoordinate field defines
+                    the longitude of the western-most point of the bounding box that is being
+                    described. A longitude coordinate is typed as a decimal, i.e.,
+                    decimal degrees from -180 to 180, inclusive. Decimal degrees may be expressed to 
+                    any precision desired. Fractions of a degree in minutes and seconds should be 
+                    converted to degree fractions. Strings denoting direction or hemisphere (e.g., 'W' or 'west') are 
+                    not allowed. Longitudes east of the prime meridian must be specified by
+                    a plus sign (+), or by the absence of a minus sign (-), and longitudes west of 
+                    the meridian shall be  prefixed with minus sign (-). In the case of a data set that comprises 
+                    all longitudes (e.g., a horizontal band between 2 parallels that fully 
+                    encompasses the earth ), please use a westBoundingCoordinate of -180.0, and an
+                    eastBoundingCoordinate of 180.0 (or +180.0). In this case, it could be considered geographically                
+                    appropriate to specify both values as "180" (or any other meridian), but this could 
+                    also be interpreted as only the  meridian itself, so this is not recommended.</doc:description>
+                    <doc:example>-118.25</doc:example>
+                    <doc:example>+25</doc:example>
+                    <doc:example>45.24755</doc:example>
+                  </xs:appinfo>
+                </xs:annotation>
+                <xs:simpleType>
+                  <xs:restriction base="xs:decimal">
+                    <xs:minInclusive value="-180.0"/>
+                    <xs:maxInclusive value="180.0"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="eastBoundingCoordinate">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <doc:tooltip>East bounding coordinate</doc:tooltip>
+                    <doc:summary>Eastern-most limit of a bounding box, expressed in degrees of
+                    longitude.</doc:summary>
+                    <doc:description>The eastBoundingCoordinate field defines
+                    the longitude of the eastern-most point of the bounding box that is being
+                    described. A longitude coordinate is typed as a decimal, i.e.,
+                    decimal degrees from -180 to 180, inclusive. Decimal degrees may be expressed to 
+                    any precision desired. Fractions of a degree in minutes and seconds should be 
+                    converted to degree fractions. Strings denoting direction or hemisphere (e.g., 'W' or 'west') are 
+                    not allowed. Longitudes east of the prime meridian must be specified by
+                    a plus sign (+), or by the absence of a minus sign (-), and longitudes west of 
+                    the meridian shall be  prefixed with minus sign (-). In the case of a data set that comprises 
+                    all longitudes (e.g., a horizontal band between 2 parallels that fully 
+                    encompasses the earth ), please use a westBoundingCoordinate of -180.0, and an
+                    eastBoundingCoordinate of 180.0 (or +180.0). In this case, it could be considered geographically                
+                    appropriate to specify both values as "180" (or any other meridian), but this could 
+                    also be interpreted as only the  meridian itself, so this is not recommended.</doc:description>
+                    <doc:example>-118.25</doc:example>
+                    <doc:example>+25</doc:example>
+                    <doc:example>45.24755</doc:example>
+                  </xs:appinfo>
+                </xs:annotation>
+                <xs:simpleType>
+                  <xs:restriction base="xs:decimal">
+                    <xs:minInclusive value="-180.0"/>
+                    <xs:maxInclusive value="180.0"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="northBoundingCoordinate">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <doc:tooltip>North bounding coordinate</doc:tooltip>
+                    <doc:summary>Northern-most lilmit of a bounding box expressed in latitude.</doc:summary>
+                    <doc:description>The northBoundingCoordinate field defines
+                    the latitude of the northern-most point of the bounding box that is being
+                    described. A latitude coordinate is typed as a decimal, i.e.,
+                    decimal degrees from -180 to 180, inclusive. Decimal degrees may be expressed to 
+                    any precision desired. Fractions of a degree in minutes and seconds should be 
+                    converted to degree fractions. Strings denoting direction or hemisphere (e.g., 'N' or north') are 
+                    not allowed. Latitudes north of the equator must be denoted by
+                    a plus sign (+), or by the absence of a minus sign (-), and latitudes south of 
+                    the equator shall be  prefixed with minus sign (-).  A location with latitude of +90 (90)
+                     or -90 degrees will specify the position at the North or South Pole,
+                    respectively.</doc:description>
+                    <doc:example>-18.25</doc:example>
+                    <doc:example>+25</doc:example>
+                    <doc:example>65.24755</doc:example>
+                  </xs:appinfo>
+                </xs:annotation>
+                <xs:simpleType>
+                  <xs:restriction base="xs:decimal">
+                    <xs:minInclusive value="-90.0"/>
+                    <xs:maxInclusive value="90.0"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="southBoundingCoordinate">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <doc:tooltip>South bounding coordinate</doc:tooltip>
+                    <doc:summary>Southern-most limit of the bounding box expressed in latitude.</doc:summary>
+                    <doc:description>The southBoundingCoordinate field defines
+                    the latitude of the southern-most point of the bounding box that is being
+                    described. A latitude coordinate is typed as a decimal, i.e.,
+                    decimal degrees from -180 to 180, inclusive. Decimal degrees may be expressed to 
+                    any precision desired. Fractions of a degree in minutes and seconds should be 
+                    converted to degree fractions. Strings denoting direction or hemisphere (e.g., 'N' or north') are 
+                    not allowed. Latitudes north of the equator must be denoted by
+                    a plus sign (+), or by the absence of a minus sign (-), and latitudes south of 
+                    the equator shall be  prefixed with minus sign (-).  A location with latitude of +90 (90)
+                     or -90 degrees will specify the position at the North or South Pole,
+                    respectively.</doc:description>
+                    <doc:example>-118.25</doc:example>
+                    <doc:example>+25</doc:example>
+                    <doc:example>84.24755</doc:example>
+                  </xs:appinfo>
+                </xs:annotation>
+                <xs:simpleType>
+                  <xs:restriction base="xs:decimal">
+                    <xs:minInclusive value="-90.0"/>
+                    <xs:maxInclusive value="90.0"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="boundingAltitudes" minOccurs="0">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <doc:tooltip>Bounding altitudes</doc:tooltip>
+                    <doc:summary>The vertical limits of a data set expressed
+                    by altitude.</doc:summary>
+                    <doc:description>The bounding altitude field is intended to
+                    contain altitudinal (elevation) measurements for
+                    the bounding box being described. It allows for minimum and
+                    maximum altitude fields, as well as a field for the units
+                    of measure. The combination of these fields provide the
+                    vertical extent information for the bounding box. </doc:description>
+                    <doc:example>Please see the individual sub-fields for
+                    specific examples.</doc:example>
+                  </xs:appinfo>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="altitudeMinimum" type="xs:decimal">
+                      <xs:annotation>
+                        <xs:appinfo>
+                          <doc:tooltip>Minimum altitude</doc:tooltip>
+                          <doc:summary>The minimum altitude extent of
+                          coverage.</doc:summary>
+                          <doc:description>The minimum altitude extent of
+                          coverage for the bounding box that is being
+                          described. The minimum altitude should be in
+                          reference to a known datum (e.g., Mean Sea Level), which should be part of the geographicDescription.</doc:description>
+                          <doc:example>100.6 </doc:example>
+                          <doc:example>-12 </doc:example>
+                        </xs:appinfo>
+                      </xs:annotation>
+                    </xs:element>
+                    <xs:element name="altitudeMaximum" type="xs:decimal">
+                      <xs:annotation>
+                        <xs:appinfo>
+                          <doc:tooltip>Maximum altitude</doc:tooltip>
+                          <doc:summary>The maximum altitude extent of
+                          coverage.</doc:summary>
+                          <doc:description>The maximum altitude extent of
+                          coverage for the bounding box that is being
+                          described. The maximum altitude should be in
+                          reference to a known datum, which should be part of the geographicDescription.</doc:description>
+                          <doc:example>100.6</doc:example>
+                          <doc:example>-10</doc:example>
+                        </xs:appinfo>
+                      </xs:annotation>
+                    </xs:element>
+                    <xs:element name="altitudeUnits" type="unit:LengthUnitType">
+                      <xs:annotation>
+                        <xs:appinfo>
+                          <doc:tooltip>Altitude Units</doc:tooltip>
+                          <doc:summary>The unit of altitude </doc:summary>
+                          <doc:description>The unit that the altitude is expressed in. See the description under the Type definition</doc:description>
+                        </xs:appinfo>
+                      </xs:annotation>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="datasetGPolygon" minOccurs="0" maxOccurs="unbounded">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Polygon data set</doc:tooltip>
+              <doc:summary>This construct creates a spatial ring with a
+              hollow center.</doc:summary>
+              <doc:description>This construct creates a spatial ring with a
+              hollow center.  This doughnut shape is specified by the outer
+              ring (datasetGPolygonOuterRing) and the inner exclusion zone
+              (datasetGPolygonExclusionGRing) which can be thought of as the
+              hole in the center of a doughnut.  This is useful for defining
+              areas such as the shores of a pond where you only want to specify
+              the shore excluding the pond itself.</doc:description>
+              <doc:example>Please see the individual sub-fields for specific
+              examples.</doc:example>
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="datasetGPolygonOuterGRing">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <doc:tooltip>Outer polygon</doc:tooltip>
+                    <doc:summary>
+                      The outer containment loop of a datasetGPolygon.
+                    </doc:summary>
+                    <doc:description>
+                      <section xmlns="">
+                        <para>The outer containment loop of a
+                    datasetGPolygon.  This is the outer part of the doughnut
+                    shape that encompasses the broadest area of coverage. 
+                    It can be created either by a gRing (list of points) or 3 or more gRingPoints. 
+                    See the sub-elements and their Type definitions for more specific 
+                    information.</para>
+                        <para>
+                    This element is generally analogous to the FGDC outer ring although
+                    somewhat differently specified.  Documentation for an FGDC G-Ring 
+                    states that 4 points are required 
+                    to define a polygon, and the first and last should be identical. 
+                    However this is not enforceable in XML Schema, and so in EML
+                    a minimum of 3 &lt;gRingPoint&gt;s is required to define a polygon, and
+                    it can be assumed that a polygon is closed by joining the last point to the
+                    first.
+                    XSL stylesheets that transform EML instances to the FGDC specification 
+                    should repeat the first gRingPoint node as the last when creating a list of points.
+                    </para>
+                      </section>
+                    </doc:description>
+                  </xs:appinfo>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:choice>
+                    <xs:sequence>
+                      <xs:element name="gRingPoint" type="GRingPointType" minOccurs="3" maxOccurs="unbounded">
+                        <xs:annotation>
+                          <xs:appinfo>
+                            <doc:tooltip>G Ring Point</doc:tooltip>
+                            <doc:summary>A single geographic location</doc:summary>
+                            <doc:description>A single geographic location.  As a child of &lt;datasetGPolygonOuterGRing&gt;
+                            a minimum of 3 are required to define a polygon. The polygon is presumed to be closed. Please see the sub elements and the Type description for more information about creating a point location.</doc:description>
+                          </xs:appinfo>
+                        </xs:annotation>
+                      </xs:element>
+                    </xs:sequence>
+                    <xs:element name="gRing" type="GRingType">
+                      <xs:annotation>
+                        <xs:appinfo>
+                          <doc:tooltip>G-Ring</doc:tooltip>
+                          <doc:description>A set of ordered pairs of floating-point numbers,
+        The number of points in the string is not enforced by EML. 
+        However, authors should note that in order for this field is to be directly translated to FGDC, 4 points should
+        be included in the string. See the Type for more information on constructing the string. </doc:description>
+                          <!--  <doc:example> 12.453,15.0 5,101 -111,45</doc:example> -->
+                        </xs:appinfo>
+                      </xs:annotation>
+                    </xs:element>
+                  </xs:choice>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="datasetGPolygonExclusionGRing" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <doc:tooltip>Exclusion polygon</doc:tooltip>
+                    <doc:summary>
+                    Data Set G-Polygon Exclusion G-Ring, the
+                    closed nonintersecting boundary of a void area (or hole in
+                    an interior area).
+                    </doc:summary>
+                    <doc:description>
+                      <section xmlns="">
+                        <para> the
+                    closed nonintersecting boundary of a void area (or hole in
+                    an interior area).  This is the center of the doughnut
+                    shape created by the datasetGPolygon. It can be created either by
+                    a gRing (list of points) or one or more gRingPoints. See the sub-elements and their 
+                    Type definitions for more information.</para>
+                        <para>
+                        This element is generally analogous to an FGDC exclusion ring "Data Set G-Polygon 
+                        Exclusion G-Ring", although it's children are
+                    somewhat differently described.  Documentation for the FGDC component states that
+                    4 points are required to define a polygon, and the first and last should be identical. 
+                    However this EML element requires only one point so that a single point can be
+                    excluded,  presumably, a single station.  If multiple single stations are to be 
+                    excluded, then authors should include multiple &lt;datasetGPolygonExclusionGRing&gt;s.
+                                                </para>
+                      </section>
+                    </doc:description>
+                  </xs:appinfo>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:choice>
+                    <xs:element name="gRingPoint" type="GRingPointType" maxOccurs="unbounded">
+                      <xs:annotation>
+                        <xs:appinfo>
+                          <doc:tooltip>G Ring Point</doc:tooltip>
+                          <doc:summary>A single geographic location</doc:summary>
+                          <doc:description>A single geographic location.  This is useful if you
+        register your datasets by a single geospatial point, such as the
+        lat/long of your research station. Please see the sub elements and the Type description 
+		for more information on constructing a gRingPoint</doc:description>
+                        </xs:appinfo>
+                      </xs:annotation>
+                    </xs:element>
+                    <xs:element name="gRing" type="GRingType">
+                      <xs:annotation>
+                        <xs:appinfo>
+                          <doc:tooltip>G-Ring</doc:tooltip>
+                          <doc:description>A set of ordered pairs of floating-point numbers,
+        See the Type for more information</doc:description>
+                        </xs:appinfo>
+                      </xs:annotation>
+                    </xs:element>
+                  </xs:choice>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:group ref="res:ReferencesGroup"/>
+    </xs:choice>
+    <xs:attribute name="id" type="res:IDType" use="optional"/>
+    <xs:attribute name="system" type="res:SystemType" use="optional"/>
+    <xs:attribute name="scope" type="res:ScopeType" use="optional" default="document"/>
+  </xs:complexType>
+  <xs:complexType name="GRingPointType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>G-Ring point</doc:tooltip>
+        <doc:summary>
+        A single geographic location.
+        </doc:summary>
+        <doc:description>A single geographic location.  This is useful if you
+        register your datasets by a single geospatial point, such as the
+        lat/long of your research station.</doc:description>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="gRingLatitude">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>G-Ring Latitude</doc:tooltip>
+            <doc:summary>
+            The latitude of a point of the
+            g-ring.</doc:summary>
+            <doc:description> A latitude coordinate is typed as a decimal, i.e.,
+                    decimal degrees from -90 to 90, inclusive. Decimal degrees may be expressed to 
+                    any precision desired. Fractions of a degree in minutes and seconds should be 
+                    converted to degree fractions. Strings denoting direction or hemisphere (e.g., 'S' or 'south') are 
+                    not allowed. Latitudes north of the equator must be specified by
+                    a plus sign (+), or by the absence of a minus sign (-), and latitudes south of 
+                    the equator shall be  prefixed with minus sign (-). </doc:description>
+            <doc:example>34.123</doc:example>
+            <doc:example>-18.25</doc:example>
+            <doc:example>+78.25</doc:example>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:decimal">
+            <xs:minInclusive value="-90.0"/>
+            <xs:maxInclusive value="90.0"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+      <xs:element name="gRingLongitude">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>G-Ring Longitude</doc:tooltip>
+            <doc:summary/>
+            <doc:description>The longitude of a point of the
+            g-ring A longitude coordinate is typed as a decimal, i.e.,
+                    decimal degrees from -180 to 180, inclusive. Decimal degrees may be expressed to 
+                    any precision desired. Fractions of a degree in minutes and seconds should be 
+                    converted to degree fractions. Strings denoting direction or hemisphere (e.g., 'W' or 'west') are 
+                    not allowed. Longitudes east of the prime meridian must be specified by
+                    a plus sign (+), or by the absence of a minus sign (-), and longitudes west of 
+                    the meridian shall be  prefixed with minus sign (-).</doc:description>
+            <doc:example>-118.25</doc:example>
+            <doc:example>+25</doc:example>
+            <doc:example>45.24755</doc:example>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:decimal">
+            <xs:minInclusive value="-180.0"/>
+            <xs:maxInclusive value="180.0"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="GRingType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>G-Ring</doc:tooltip>
+        <doc:summary/>
+        <doc:description>
+          <section xmlns="">
+            <para>A set of ordered pairs of floating-point numbers,
+        separated by commas, in which the first number in each pair is the
+        longitude of a point and the second is the latitude of the point.
+        Longitude and latitude are specified in decimal degrees with north
+        latitudes positive and south negative, east longitude positive and west
+        negative</para>
+            <para>Note on the relationship to FGDC:
+        This element is generally analogous to the FGDC component for ring, 
+        although implemented somewhat differently. Documentation for FGDC
+        states that 4 points are required to define a polygon, and the first and last 
+        should be identical, although this is not enforceable in XML Schema. In addition,
+        EML does not enforce any pattern on the string used for a GRingType, so that
+        it may be used differently as a child of EML's &lt;datasetGPolygonOuterGRing&gt;  
+        or &lt;datasetGPolygonExclusionGRing&gt; elements.
+        If authors of EML instance documents wish the contents of this element  to be 
+        directly translated to FGDC, they should comply with the example below when
+        constructing their strings. Alternatively, in most cases, a sequence of gRingPoints 
+        can be used in EML instances, which can be processed into content for an 
+        FGDC Data Set G-Polygon G-Ring.</para>
+          </section>
+        </doc:description>
+        <doc:example>This is an acceptable gRing:
+</doc:example>
+        <doc:example>
+        12, 2.0987
+        12, -7.5555
+        34.345,10.40
+        </doc:example>
+        <doc:example>However, for translation to FGDC, construct your string like this:</doc:example>
+        <doc:example>
+        -119.453,35.0
+        -125,37.5555
+        -122,40
+        -119.453,35.0
+        </doc:example>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+  <xs:complexType name="TaxonomicCoverage">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Taxonomic coverage</doc:tooltip>
+        <doc:summary>Taxonomic coverage information.</doc:summary>
+        <doc:description>Taxonomic Coverage is a container for taxonomic
+        information about a project, a resource, or an entity within a
+        resource.</doc:description>
+        <doc:example>Please see the individual sub-fields for specific
+        examples.</doc:example>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:choice>
+      <xs:sequence>
+        <xs:element name="taxonomicSystem" minOccurs="0">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Taxonomic system</doc:tooltip>
+              <doc:summary>Documentation of taxonomic sources, procedures, and
+              treatments.</doc:summary>
+              <doc:description>Documentation of taxonomic sources, procedures,
+              and treatments.</doc:description>
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="classificationSystem" maxOccurs="unbounded">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <doc:tooltip>Classification system/authority</doc:tooltip>
+                    <doc:summary>Information about the classification system or
+                    authority used.</doc:summary>
+                    <doc:description>Information about the classification
+                    system or authority used.</doc:description>
+                    <doc:example>Flora of North America</doc:example>
+                  </xs:appinfo>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="classificationSystemCitation" type="cit:CitationType">
+                      <xs:annotation>
+                        <xs:appinfo>
+                          <doc:tooltip>Taxonomic citation</doc:tooltip>
+                          <doc:summary/>
+                          <doc:description>Relevant literature for documenting
+                          the used classification system.</doc:description>
+                        </xs:appinfo>
+                      </xs:annotation>
+                    </xs:element>
+                    <xs:element name="classificationSystemModifications" type="res:NonEmptyStringType" minOccurs="0">
+                      <xs:annotation>
+                        <xs:appinfo>
+                          <doc:tooltip>Classification system
+                          modification</doc:tooltip>
+                          <doc:summary/>
+                          <doc:description>A description of any modifications
+                          or exceptions made to the classification system or
+                          authority used.</doc:description>
+                        </xs:appinfo>
+                      </xs:annotation>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="identificationReference" type="cit:CitationType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <doc:tooltip>Non-authoritative citation</doc:tooltip>
+                    <doc:summary/>
+                    <doc:description>Information on any non-authoritative
+                    materials (e.g. field guides) useful for reconstructing the
+                    actual identification process.</doc:description>
+                  </xs:appinfo>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="identifierName" type="rp:ResponsibleParty" maxOccurs="unbounded">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <doc:tooltip>Identifier's Name</doc:tooltip>
+                    <doc:summary/>
+                    <doc:description>Information about the individual(s)
+                    responsible for the identification(s) of the specimens or
+                    sightings, etc.</doc:description>
+                  </xs:appinfo>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="taxonomicProcedures" type="res:NonEmptyStringType">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <doc:tooltip>Taxonomic procedures</doc:tooltip>
+                    <doc:summary/>
+                    <doc:description>Description of the methods used for the
+                    taxonomic identification.</doc:description>
+                    <doc:example>specimen processing, comparison with museum
+                    materials, keys and key characters, chemical or genetic
+                    analyses</doc:example>
+                  </xs:appinfo>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="taxonomicCompleteness" type="res:NonEmptyStringType" minOccurs="0">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <doc:tooltip>Taxonomic completeness</doc:tooltip>
+                    <doc:summary/>
+                    <doc:description>Information concerning the proportions and
+                    treatment of unidentified materials, estimates of the
+                    importance and possible identities of uncertain
+                    determinations, synonyms or other incorrect usages, taxa
+                    not well treated or requiring further work, and expertise
+                    of field workers.</doc:description>
+                    <doc:example>materials sent to experts, and not yet
+                    determined</doc:example>
+                  </xs:appinfo>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="vouchers" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <doc:tooltip>Specimen information</doc:tooltip>
+                    <doc:summary/>
+                    <doc:description>Information on the types of specimen, the
+                    repository, and the individuals who identified the
+                    vouchers.</doc:description>
+                  </xs:appinfo>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="specimen" type="res:NonEmptyStringType">
+                      <xs:annotation>
+                        <xs:appinfo>
+                          <doc:tooltip>Specimen type</doc:tooltip>
+                          <doc:summary/>
+                          <doc:description>A word or phrase describing the type
+                          of specimen collected.</doc:description>
+                          <doc:example>herbarium specimens, blood samples,
+                          photographs, individuals, or batches</doc:example>
+                        </xs:appinfo>
+                      </xs:annotation>
+                    </xs:element>
+                    <xs:element name="repository">
+                      <xs:annotation>
+                        <xs:appinfo>
+                          <doc:tooltip>Storage location of
+                          specimen</doc:tooltip>
+                          <doc:summary/>
+                          <doc:description>Information about the curator or
+                          contact person and/or agency responsible for the
+                          specimens.</doc:description>
+                        </xs:appinfo>
+                      </xs:annotation>
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="originator" type="rp:ResponsibleParty" maxOccurs="unbounded">
+                            <xs:annotation>
+                              <xs:appinfo>
+                                <doc:tooltip>Originator</doc:tooltip>
+                                <doc:summary>A person or organization asociated
+                                with this resource.</doc:summary>
+                                <doc:description>The 'originator' element
+                                provides the full name of the person,
+                                organization, or position associated with the
+                                resource. Typically, the originator role is set
+                                to "owner" to indicate the list of parties who
+                                "own" the resource, but other roles such as
+                                "principal investigator", "author", and
+                                "editor" are provided.</doc:description>
+                                <doc:example>Please see the examples within the
+                                sub fields for the responsible
+                                party.</doc:example>
+                              </xs:appinfo>
+                            </xs:annotation>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="generalTaxonomicCoverage" type="res:NonEmptyStringType" minOccurs="0">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>General taxonomic coverage</doc:tooltip>
+              <doc:summary>A description of the range of taxa addressed in the
+              data set or collection.</doc:summary>
+              <doc:description>A description of the range of taxa addressed in
+              the data set or collection.</doc:description>
+              <doc:example>"All vascular plants were identified to family or
+              species, mosses and lichens were identified as moss or
+              lichen."</doc:example>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="taxonomicClassification" type="TaxonomicClassificationType" maxOccurs="unbounded">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Taxonomic classification</doc:tooltip>
+              <doc:summary>Information about the range of taxa addressed in the data
+        set or collection.</doc:summary>
+              <doc:description>Information about the range of taxa addressed in the
+        data set or collection. See the Type definition for more information.</doc:description>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+      <xs:group ref="res:ReferencesGroup"/>
+    </xs:choice>
+    <xs:attribute name="id" type="res:IDType" use="optional"/>
+  </xs:complexType>
+  <xs:complexType name="TaxonomicClassificationType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Taxonomic classification</doc:tooltip>
+        <doc:summary>Information about the range of taxa addressed in the data
+        set or collection.</doc:summary>
+        <doc:description>Information about the range of taxa addressed in the
+        data set or collection. It is recommended that one provide information
+        starting from the taxonomic rank of kingdom, to a level which reflects
+        the data set or collection being documented. The levels of Kingdom,
+        Division/Phylum, Class, Order, Family, Genus, and Species should be
+        included as ranks as appropriate. Because the taxonomic ranks are
+        hierarchical, the Taxonomic Classification field is self-referencing to
+        allow for an arbitrary depth of rank, down to
+        species.</doc:description>
+        <doc:example>The Taxonomic Classification field consists of a sequence
+        of 4 fields: taxonomic rank, taxonomic rank value, common name, and
+        finally Taxonomic Classification (self-referencing). Please see the
+        sub-fields for specific examples.</doc:example>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="taxonRankName" type="res:NonEmptyStringType" minOccurs="0">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Taxon rank name</doc:tooltip>
+            <doc:summary>The name of the taxonomic rank for which the Taxon
+            rank value is provided.</doc:summary>
+            <doc:description>The name of the taxonomic rank for which the
+            Taxon rank value is provided. This field allows for the name one
+            of the accepted levels of Taxa.</doc:description>
+            <doc:example>'Kingdom', 'Division/Phylum', 'Class', 'Order',
+            'Family', 'Genus', and 'Species'</doc:example>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="taxonRankValue" type="res:NonEmptyStringType" minOccurs="0">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Taxon rank value</doc:tooltip>
+            <doc:summary>The name representing the taxonomic rank of the
+            taxon being described.</doc:summary>
+            <doc:description>The name representing the taxonomic rank of the
+            taxon being described. The values included may be referenced from
+            an authoritative source such as the Integrated Taxonomic
+            Information System (ITIS)in the U.S. (http://www/itis.usda.gov)
+            and in Canada (http://sis.agr.gc.ca/pls/itisca/taxaget). Also,
+            Species2000 is another source of taxonomic information, found at
+            (http://www.sp2000.org)</doc:description>
+            <doc:example>Acer would be an example of a genus rank value, and
+            rubrum would be an example of a species rank value, together
+            indicating the common name of red maple. It is recommended to
+            start with Kingdom and include ranks down to the most detailed
+            level possible.</doc:example>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="commonName" type="res:NonEmptyStringType" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Common name</doc:tooltip>
+            <doc:summary>Specification of applicable common
+            names.</doc:summary>
+            <doc:description>Specification of applicable common names. These
+            common names may be general descriptions of a group of organisms
+            if appropriate.</doc:description>
+            <doc:example>insects, vertebrate, grasses, waterfowl, vascular
+            plants, red maple.</doc:example>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="taxonomicClassification" type="TaxonomicClassificationType" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Taxonomic classification</doc:tooltip>
+            <doc:summary>Information about the range of taxa addressed in the data
+        set or collection.</doc:summary>
+            <doc:description>Information about the range of taxa addressed in the
+        data set or collection. See the Type definition for more information.</doc:description>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <!--
+<xs:element name="taxonomicClassification" type="TaxonomicClassificationType" maxOccurs="unbounded">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Taxonomic classification</doc:tooltip>
+              <doc:summary>Information about the range of taxa addressed in the data
+        set or collection.</doc:summary>
+              <doc:description>Information about the range of taxa addressed in the
+        data set or collection. See the Type definition for more information.</doc:description>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+
+-->
+</xs:schema>

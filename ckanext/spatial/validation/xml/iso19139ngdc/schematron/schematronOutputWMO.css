@@ -1,0 +1,49 @@
+schematron-output {
+  display : block;
+  margin : 1em;
+}
+
+schematron-output:before {
+  display : block;
+  content : "WMO Profile - Schematron Error Report";
+  /*border-bottom : 0.1em solid navy;*/
+  padding-bottom : 0.5em;
+  font-size : large;
+  font-weight : bold;
+  color : navy;
+  background-color : inherit;
+}
+
+active-pattern{
+  display: none;
+}
+  
+failed-assert:before  {
+  display:block;
+  font-weight : bold;
+  color: black;
+  padding-top : 0.5em;
+  content : "Error found at Xpath: "
+  }  
+  
+xpath {
+  display: block;
+  font-weight : normal;
+  color: black;
+}
+
+text {
+  display: block;
+  font-weight: bold;
+  color: red;
+  padding-bottom : 0.5em;
+  border-bottom : 0.1em solid navy;
+}
+  
+successful-report:after {
+  font-weight : bold;
+  color: green;
+  content: "Non-ASCII character found at XPath: " attr(test); 
+}
+
+

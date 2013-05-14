@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:sch="http://www.ascc.net/xml/schematron" blockDefault="#all">
+    <xsd:include schemaLocation="../fgdc-std-001-1998/fgdc-std-001-1998-sect03-ann.xsd"/>
+    <xsd:complexType name="rseSpdoinfoType">
+        <xsd:sequence>
+            <xsd:element ref="indspref" minOccurs="0"/>
+            <xsd:sequence minOccurs="0">
+                <xsd:element ref="direct"/>
+                <xsd:choice minOccurs="0">
+                    <xsd:element ref="ptvctinf"/>
+                    <xsd:element name="rastinfo" type="rseRastinfoType">
+                        <xsd:annotation>
+                            <xsd:documentation>
+                                Element: Raster Object Information
+                                Section: 3.4
+                                Description: the types and numbers of raster spatial objects in the data set.
+                            </xsd:documentation>
+                            <xsd:appinfo>
+                                <sch:title>Raster Object Information</sch:title>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                </xsd:choice>
+            </xsd:sequence>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="rseRastinfoType">
+        <xsd:sequence>
+            <xsd:element name="cvaltype" type="FGDCstring">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Element: Cell Value Type
+                        Description: Bit representation of data value in raster cell.
+                    </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Cell Value Type</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:choice>
+                <xsd:sequence>
+                    <!-- Use local rasttype with "Swath" extended domain as per 2002 RSE spec
+                        xsd:element ref="rasttype"/-->
+                      
+                    <xsd:element name="rasttype" type="rasttypeExtendedType">
+                        <xsd:annotation>
+                                <xsd:documentation>
+                                        Element: Raster Object Type
+                                        Section: 3.4.1
+                                        Description: raster spatial objects used to locate zero-, two-, or three-dimensional locations in the data set.
+                                </xsd:documentation>
+                                <xsd:appinfo>
+                                        <sch:title>Raster Object Type</sch:title>
+                                </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:sequence minOccurs="0">
+                        <xsd:element ref="rowcount"/>
+                        <xsd:element ref="colcount"/>
+                        <xsd:element ref="vrtcount" minOccurs="0"/>
+                    </xsd:sequence>
+                </xsd:sequence>
+                <xsd:element name="dimdesc" type="dimdescType">
+                    <xsd:annotation>
+                        <xsd:documentation> Element: Dimension Description Description:
+                            Specification for the independent axes in the coordinate system in which
+                            spatial data are located. </xsd:documentation>
+                        <xsd:appinfo>
+                            <sch:title>Dimension Description</sch:title>
+                        </xsd:appinfo>
+                    </xsd:annotation>
+                </xsd:element>
+            </xsd:choice>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <!-- Must ensure that any .xsd file including fgdc-std-012-2002-instinfo.xsd
+            also includes fgdc-std-012-2002-sect03.xsd. -->
+    <xsd:simpleType name="rasttypeExtendedType">
+            <xsd:annotation>
+                    <xsd:documentation>
+                            Type: text
+                            Domain: (With the exception of "voxel", the domain is from "Spatial Data Concepts," which is chapter 2 of part 1 in Department of Commerce, 1992, Spatial Data Transfer Standard (SDTS) (Federal Information Processing Standard 173): Washington, Department of Commerce, National Institute of Standards and Technology): "Point" "Pixel" "Grid Cell" "Voxel"
+                            Extended Domain: "Point" "Pixel" "Grid Cell" "Voxel" "Swath"
+                            Rationale: "Swath" is another kind of raster.
+                            </xsd:documentation>
+            </xsd:annotation>
+            <xsd:restriction base="xsd:token">
+                    <xsd:enumeration value="Point"/>
+                    <xsd:enumeration value="Pixel"/>
+                    <xsd:enumeration value="Grid Cell"/>
+                    <xsd:enumeration value="Voxel"/>
+                    <xsd:enumeration value="Swath"/>
+            </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:complexType name="dimdescType">
+        <xsd:sequence>
+            <xsd:element name="nodatdim" type="positiveIntegerType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Number of Data Dimensions Description: Number of
+                        axes used in spatial data matrix. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Number of Data Dimensions</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="dimprops" type="dimpropsType" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Element: Dimension Properties
+                        Description: Description of individual axis in spatial data matrix.
+                    </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Dimension Properties</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="dimpropsType">
+        <xsd:sequence>
+            <xsd:element name="namedim" type="FGDCstring">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Name of Dimension Description: Designation assigned
+                        to an axis. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Name of Dimension</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="dimcount" type="positiveIntegerType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Dimension Count Description: The maximum number of
+                        data points along the corresponding axis. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Dimension Count</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>

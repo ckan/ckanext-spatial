@@ -1,0 +1,19 @@
+{#
+Displays a map showing the dataset extent on the dataset page sidebar
+
+extent
+  GeoJSON representation of the geometry to draw (ie the value of the
+  'spatial' extra)
+
+  e.g.
+  {% set dataset_extent = h.get_pkg_dict_extra(c.pkg_dict, 'spatial', '') %}
+  {% if dataset_extent %}
+    {% snippet "spatial/snippets/dataset_map_sidebar.html", extent=dataset_extent %}
+  {% endif %}
+
+#}
+
+<section class="module module-narrow dataset-map">
+<h2 class="module-heading"><i class="icon-medium icon-globe"></i> {{ _('Dataset extent') }}</h2>
+  {% snippet "spatial/snippets/dataset_map_base.html", extent=extent %}
+</section>

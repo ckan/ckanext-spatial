@@ -5,22 +5,27 @@ ckanext-spatial - Geo related plugins for CKAN
 This extension contains plugins that add geospatial capabilities to CKAN.
 The following plugins are currently available:
 
-* Spatial model for CKAN datasets and automatic geo-indexing (`spatial_metadata`)
-* Spatial Search - Spatial search integration and API call (`spatial_query`).
-* Spatial Search Widget - Map widget integrated on the search form (`spatial_query_widget`).
-* Dataset Extent Map - Map widget showing a dataset extent (`dataset_extent_map`).
-* WMS Preview - a Web Map Service (WMS) previewer (`wms_preview`).
-* CSW Server - a basic CSW server - to server metadata from the CKAN instance (`cswserver`)
-* GEMINI Harvesters - for importing INSPIRE-style metadata into CKAN (`gemini_csw_harvester`, `gemini_doc_harvester`, `gemini_waf_harvester`)
-* Harvest Metadata API - a way for a user to view the harvested metadata XML, either as a raw file or styled to view in a web browser. (`spatial_harvest_metadata_api`)
+* `Spatial model <#geo-indexing-your-datasets>`_ for CKAN datasets and automatic geo-indexing (``spatial_metadata``)
+* `Spatial Search`_ - Spatial filtering for the dataset search (``spatial_query``).
+* `Spatial Harvesters`_ - for importing spatial metadata into CKAN (``csw_harvester``, ``doc_harvester``, ``waf_harvester``)
+* `Harvest Metadata API`_ - a way for a user to view the harvested metadata XML, either as a raw file or styled to view in a web browser. (``spatial_harvest_metadata_api``)
+* `WMS Preview`_ - a Web Map Service (WMS) previewer (``wms_preview``).
+* `CSW Server`_ - a basic CSW server - to server metadata from the CKAN instance (``cswserver``)
+
+These snippets (to be used with CKAN>=2.0):
+
+* `Dataset Extent Map`_ - Map widget showing a dataset extent.
+* `Spatial Search Widget`_ - Map widget integrated on the search form (``spatial_query_widget``).
 
 These libraries:
-* CSW Client - a basic client for accessing a CSW server
-* Validators - uses XSD / Schematron to validate geographic metadata XML. Used by the GEMINI Harvesters
+
+* `CSW Client`_  - a basic client for accessing a CSW server
+* `Validators`_ - uses XSD / Schematron to validate geographic metadata XML. Used by the Spatial Harvesters
 * Validators for ISO19139/INSPIRE/GEMINI2 metadata. Used by the Validator.
 
 And these command-line tools:
-* cswinfo - a command-line tool to help making requests of any CSW server
+
+* `cswinfo`_ - a command-line tool to help making requests of any CSW server
 
 As of October 2012, ckanext-csw and ckanext-inspire were merged into this extension.
 
@@ -30,36 +35,27 @@ About the components
 Spatial Search
 --------------
 
-To enable the spatial query you need to add the `spatial_query` plugin to your
-ini file (See `Configuration`_). This plugin requires the `spatial_metadata`
-plugin.
-
-The extension adds the following call to the CKAN search API, which returns
-datasets with an extent that intersects with the bounding box provided::
-
-    /api/2/search/dataset/geo?bbox={minx,miny,maxx,maxy}[&crs={srid}]
-
-If the bounding box coordinates are not in the same projection as the one
-defined in the database, a CRS must be provided, in one of the following
-forms:
-
-- urn:ogc:def:crs:EPSG::4326
-- EPSG:4326
-- 4326
-
-As of CKAN 1.6, you can integrate your spatial query in the full CKAN
-search, via the web interface (see the `Spatial Query Widget`_) or
-via the `action API`__, e.g.::
+The spatial extension allows to index datasets with spatial information so
+they can be filtered via a spatial query. This includes both via the web
+interface (see the `Spatial Search Widget`_) or via the `action API`__, e.g.::
 
     POST http://localhost:5000/api/action/package_search
     {
         "q": "Pollution",
+        "facet": "true",
+        "facet.field": "country",
         "extras": {
             "ext_bbox": "-7.535093,49.208494,3.890688,57.372349"
         }
     }
 
 __ http://docs.ckan.org/en/latest/apiv3.html
+
+To enable the spatial query you need to add the ``spatial_query`` plugin to your
+ini file (See `Configuration`_). This plugin requires the ``spatial_metadata``
+plugin.
+
+
 
 Geo-Indexing your datasets
 ++++++++++++++++++++++++++
@@ -81,40 +77,112 @@ the information stored in the extra with the geometry table.
 
 
 Spatial Search Widget
----------------------
++++++++++++++++++++++
 
-**Note**: this plugin requires CKAN 1.6 or higher.
+The extension provides a snippet to add a map widget to the search form, which allows
+filtering results by an area of interest.
 
-To enable the search map widget you need to add the `spatial_query_widget` plugin to your
-ini file (See `Configuration`_). You also need to load both the `spatial_metadata`
-and the `spatial_query` plugins.
+To add the map widget to the to the sidebar of the search page, add
+this to the dataset search page template
+(``myproj/ckanext/myproj/templates/package/search.html``)::
 
-When the plugin is enabled, a map widget will be shown in the dataset search form,
-where users can refine their searchs drawing an area of interest.
+    {% block secondary_content %}
+
+      {% snippet "spatial/snippets/spatial_query.html" %}
+
+    {% endblock %}
+
+By default the map widget will show the whole world. If you want to set
+up a different default extent, you can pass an extra ``default_extent`` to the
+snippet, either with a pair of coordinates like this::
+
+  {% snippet "spatial/snippets/spatial_query.html", default_extent="[[15.62, -139.21], [64.92, -61.87]]" %}
+
+or with a GeoJSON object describing a bounding box (note the escaped quotes)::
+
+  {% snippet "spatial/snippets/spatial_query.html", default_extent="{ \"type\": \"Polygon\", \"coordinates\": [[[74.89, 29.39],[74.89, 38.45], [60.50, 38.45], [60.50, 29.39], [74.89, 29.39]]]}" %}
+
+You need to load the ``spatial_metadata`` and ``spatial_query`` plugins to use this snippet.
+
+Legacy API
+++++++++++
+
+.. note:: This API endpoint will be deprecated on future versions of CKAN and
+    should not be used.
+
+The extension adds the following call to the CKAN search API, which returns
+datasets with an extent that intersects with the bounding box provided::
+
+    /api/2/search/dataset/geo?bbox={minx,miny,maxx,maxy}[&crs={srid}]
+
+If the bounding box coordinates are not in the same projection as the one
+defined in the database, a CRS must be provided, in one of the following
+forms:
+
+- urn:ogc:def:crs:EPSG::4326
+- EPSG:4326
+- 4326
+
 
 
 Dataset Extent Map
 ------------------
 
-To enable the dataset map you need to add the `dataset_extent_map` plugin to your
-ini file (See `Configuration`_). You need to load the `spatial_metadata` plugin also.
-
-When the plugin is enabled, if datasets contain a 'spatial' extra like the one
+Using the snippets provided, if datasets contain a 'spatial' extra like the one
 described in the previous section, a map will be shown on the dataset details page.
 
+There are snippets already created to laod the map on the left sidebar or in the main
+bdoy of the dataset details page, but these can easily modified to suit your project
+needs
+
+To add a map to the sidebar, add this to the dataset details page template
+(eg ``myproj/ckanext/myproj/templates/package/read.html``)::
+
+    {% block secondary_content %}
+      {{ super() }}
+
+      {% set dataset_extent = h.get_pkg_dict_extra(c.pkg_dict, 'spatial', '') %}
+      {% if dataset_extent %}
+        {% snippet "spatial/snippets/dataset_map_sidebar.html", extent=dataset_extent %}
+      {% endif %}
+
+    {% endblock %}
+
+For adding the map to the main body, add this::
+
+    {% block primary_content %}
+
+      <!-- ... -->
+
+      <article class="module prose">
+
+        <!-- ... -->
+
+        {% set dataset_extent = h.get_pkg_dict_extra(c.pkg_dict, 'spatial', '') %}
+        {% if dataset_extent %}
+          {% snippet "spatial/snippets/dataset_map.html", extent=dataset_extent %}
+        {% endif %}
+
+      </article>
+    {% endblock %}
+
+
+You need to load the ``spatial_metadata`` plugin to use these snippets.
 
 WMS Preview
 -----------
 
-To enable the WMS previewer you need to add the `wms_preview` plugin to your
-ini file (See `Configuration`_).
+To enable the WMS previewer you need to add the ``wms_preview`` plugin to your
+ini file (See `Configuration`_). This plugin also requires the ``resource_proxy``
+plugin and the following option in your ini file::
+
+    ckan.resource_proxy_enabled=1
 
 Please note that this is an experimental plugin and may be unstable.
 
 When the plugin is enabled, if datasets contain a resource that has 'WMS' format,
-a 'View available WMS layers' link will be displayed on the dataset details page.
-It forwards to a simple map viewer that will attempt to load the remote service
-layers, based on the GetCapabilities response.
+the resource page will load simple map viewer that will attempt to load the
+remote service layers, based on the GetCapabilities response.
 
 
 CSW Server
@@ -135,25 +203,75 @@ For example you can ask the capabilities of the CSW server installed into CKAN r
 
 The standard CSW response is in XML format.
 
-GEMINI Harvesters
------------------
+Spatial Harvesters
+------------------
 
-These harvesters were are designed to harvest metadata records in the GEMINI2 format, which is an XML spatial metadata format very similar to ISO19139. This was developed for the UK Location Programme and GEMINI2, but it would be simple to adapt them for other INSPIRE or ISO19139-based metadata.
+The spatial extension provides some harvesters for importing ISO19139-based
+metadata into CKAN, as well as providing a base class for writing new ones.
+The harvesters use the interface provided by ckanext-harvest_, so you will need to
+install and set it up first.
 
-The harvesters get the metadata from these types of server:
+Once ckanext-harvest is installed, you can add the following plugins to your
+ini file to enable the different harvesters (If you are upgrading from a
+previous version to CKAN 2.0 see legacy_harvesters_):
 
- * GeminiCswHarvester - CSW server
- * GeminiWafHarvester - WAF file server - An index page with links to GEMINI resources
- * GeminiDocHarvester - HTTP file server - An individual GEMINI resource
+ * ``csw_harvester`` - CSW server
+ * ``waf_harvester`` - WAF (Web Accessible Folder): An online accessible index page with links to metadata documents
+ * ``doc_harvester`` - A single online accessible metadata document.
 
-The GEMINI-specific parts of the code are restricted to the fields imported into CKAN, so it would be relatively simple to generalise these to other INSPIRE profiles.
+Have a look at the ckanext-harvest `documentation
+<https://github.com/okfn/ckanext-harvest#the-harvesting-interface>`_ if you want to have an
+overview of how the CKAN harvesters work, but basically there are three
+separate stages:
 
-Each contains code to do the three stages of harvesting:
- * gather_stage - Submits a request to Harvest Sources and assembles a list of all the metadata URLs (since each CSW record can recursively refer to more records?). Some processing of the XML or validation may occur.
- * fetch_stage - Fetches all the Gemini metadata
- * import_stage - validates all the Gemini, converts it to a CKAN Package and saves it in CKAN
+ * gather_stage - Aggregates all the remote identifiers for a particular source (ie identifiers for a CSW server, files for a WAF).
+ * fetch_stage  - Fetches all the remote documents and stores them on the database.
+ * import_stage - Performs all the processing for transforming the remote content into a CKAN dataset: validates the document, parses it, converts it to a CKAN dataset dict and saves it in the database.
 
-You must specify which validators to use in the configuration of ``ckan.spatial.validator.profiles`` - see below.
+The extension provides different XSD and schematron based validators. You can specify which validators to use for the remote documents with the following configuration option::
+
+    ckan.spatial.validator.profiles = iso19193eden
+
+By default, the import stage will stop if the validation of the harvested document fails. This can be
+modified setting the ``ckanext.spatial.harvest.continue_on_validation_errors`` to True. The setting can
+also be applied at the source level setting to True the ``continue_on_validation_errors`` key on the source
+configuration object.
+
+By default the harvesting actions (eg creating or updating datasets) will be performed by the internal site admin user.
+This is the recommended setting, but if necessary, it can be overridden with the
+``ckanext.spatial.harvest.user_name`` config option, eg to support the old hardcoded 'harvest' user::
+
+    ckanext.spatial.harvest.user_name = harvest
+
+Customizing the harvesters
+++++++++++++++++++++++++++
+
+The default harvesters provided in this extension can be overriden from
+extensions to customize to your needs. You can either extend ``CswHarvester`` or
+``WAFfHarverster`` or the main ``SpatialHarvester`` class. There are some extension points that can be safely overriden from your extension. Probably the most useful is ``get_package_dict``, which allows to tweak the dataset fields before creating or updating them. ``transform_to_iso`` allows to hook into transformation mechanisms to transform other formats into ISO1939, the only one directly supported byt he spatial harvesters. Finally, the whole ``import_stage`` can be overriden if the default logic does not suit your needs.
+
+Check the source code of ``ckanext/spatial/harvesters/base.py`` for more details on these functions.
+
+The `ckanext-geodatagov <https://github.com/okfn/ckanext-geodatagov/blob/master/ckanext/geodatagov/harvesters/>`_ extension contains live examples on how to extend the default spatial harvesters and create new ones for other spatial services.
+
+
+
+
+.. _legacy_harvesters:
+
+Legacy harvesters
++++++++++++++++++
+
+Prior to CKAN 2.0, the spatial harvesters available on this extension were
+based on the GEMINI2 format, an ISO19139 profile used by the UK Location Programme, and the logic for creating or updating datasets and the resulting fields were somehow adapted to the needs for this particular project. The harvesters were still generic enough and should work fine with other ISO19139 based sources, but extra care has been put to make the new harvesters more generic and robust, so these ones should only be used on existing instances:
+
+ * ``gemini_csw_harvester``
+ * ``gemini_waf_harvester``
+ * ``gemini_doc_harvester``
+
+If you are using these harvesters please consider upgrading to the new versions described on the previous section.
+
+.. _ckanext-harvest: https://github.com/okfn/ckanext-harvest
 
 Harvest Metadata API
 --------------------
@@ -162,9 +280,29 @@ Enabled with the ``ckan.plugins = spatial_harvest_metadata_api`` (previous known
 
 To view the harvest objects (containing the harvested metadata) in the web interface, these controller locations are added:
 
-/api/2/rest/harvestobject/<id>/xml
+* raw XML document: /harvest/object/{id}
+* HTML representation: /harvest/object/{id}/html
 
-/api/2/rest/harvestobject/<id>/html
+.. note::
+    The old URLs are now deprecated and redirect to the previously defined.
+
+    /api/2/rest/harvestobject/<id>/xml
+    /api/2/rest/harvestobject/<id>/html
+
+
+For those harvest objects that have an original document (which was transformed to ISO), this can be accessed via:
+
+* raw XML document: /harvest/object/{id}/original
+* HTML representation: /harvest/object/{id}/html/original
+
+The HTML representation is created via an XSLT transformation. The extension provides an XSLT file that should work
+on ISO 19139 based documents, but if you want to use your own on your extension, you can override it using
+the following configuration options::
+
+    ckanext.spatial.harvest.xslt_html_content = ckanext.myext:templates/xslt/custom.xslt
+    ckanext.spatial.harvest.xslt_html_content_original = ckanext.myext:templates/xslt/custom2.xslt
+
+If your project does not transform different metadata types you can ignore the second option.
 
 
 CSW Client
@@ -182,8 +320,8 @@ To specify which validators to use during harvesting, specify their names in CKA
   ckan.spatial.validator.profiles = iso19139,gemini2,constraints
 
 
-cswinfo tool
-------------
+cswinfo
+-------
 
 When ckanext-csw is installed, it provides a command-line tool ``cswinfo``, for making queries on CSW servers and returns the info in nicely formatted JSON. This may be more convenient to type than using, for example, curl.
 
@@ -210,14 +348,14 @@ Validator
 
 This python library uses Schematron and other schemas to validate the XML.
 
-Here is a simple example of using the Validator library:
+Here is a simple example of using the Validator library::
 
- from ckanext.csw.validation import Validator
- xml = etree.fromstring(gemini_string)
- validator = Validator(profiles=('iso19139', 'gemini2', 'constraints'))
- valid, messages = validator.isvalid(xml)
- if not valid:
-     print "Validation error: " + messages[0] + ':\n' + '\n'.join(messages[1:])
+    from ckanext.csw.validation import Validator
+    xml = etree.fromstring(gemini_string)
+    validator = Validator(profiles=('iso19139', 'gemini2', 'constraints'))
+    valid, messages = validator.isvalid(xml)
+    if not valid:
+        print "Validation error: " + messages[0] + ':\n' + '\n'.join(messages[1:])
 
 In DGU, the Validator is integrated here:
 https://github.com/okfn/ckanext-inspire/blob/master/ckanext/inspire/harvesters.py#L88
@@ -231,22 +369,38 @@ Setup
 Install Python
 --------------
 
-Install this extension into your python environment (where CKAN is also installed) in the normal way::
+1. Install this extension into your python environment (where CKAN is also installed).
 
-  (pyenv) $ pip install -e git+https://github.com/okfn/ckanext-spatial.git#egg=ckanext-spatial
+   *Note:* Depending on the CKAN core version you are targeting you will need to
+   use a different branch from the extension.
 
-`cswserver` requires that ckanext-harvest is also installed (and enabled) - see https://github.com/okfn/ckanext-harvest
+   For a production site, use the `stable` branch, unless there is a specific
+   branch that targets the CKAN core version that you are using.
 
-There are various python modules required by the various components of this module. To install them all, use::
+   To target the latest CKAN core release::
 
-  (pyenv) $ pip install -r pip-requirements.txt
+     (pyenv) $ pip install -e git+https://github.com/okfn/ckanext-spatial.git@stable#egg=ckanext-spatial
+
+   To target an old release (if a release branch exists, otherwise use `stable`)::
+
+     (pyenv) $ pip install -e git+https://github.com/okfn/ckanext-spatial.git@release-v1.8#egg=ckanext-spatial
+
+   To target CKAN `master`, use the extension `master` branch (ie no branch defined)::
+
+     (pyenv) $ pip install -e git+https://github.com/okfn/ckanext-spatial.git#egg=ckanext-spatial
+
+   ``cswserver`` requires that ckanext-harvest is also installed (and enabled) - see https://github.com/okfn/ckanext-harvest
+
+2. Install the rest of python modules required by the extension::
+
+     (pyenv) $ pip install -r pip-requirements.txt
 
 Install System Packages
 -----------------------
 
-There are also some system packages that are required::
+There are also some system packages that are required:
 
-* PostGIS and must be installed and the database needs spatial features enabling to be able to use Spatial Search. See the "Setting up PostGIS" section for details.
+* PostGIS must be installed and the database needs spatial features enabling to be able to use Spatial Search. See the `Setting up PostGIS`_ section for details.
 
 * Shapely requires libgeos to be installed. If you installed PostGIS on
   the same machine you have already got it, but if PostGIS is located on another server
@@ -270,9 +424,9 @@ Check the Troubleshooting_ section if you get errors at this stage.
 
 Each plugin can be enabled by adding its name to the ``ckan.plugins`` in the CKAN ini file. For example::
 
-    ckan.plugins = spatial_metadata spatial_query spatial_query_widget dataset_extent_map wms_preview
+    ckan.plugins = spatial_metadata spatial_query wms_preview
 
-**Note:** Plugins `spatial_query`, `spatial_query_widget` and `dataset_extent_map` depend on the `spatial_metadata` plugin also being enabled.
+**Note:** Plugin ``spatial_query`` depends on the ``spatial_metadata`` plugin also being enabled.
 
 When enabling the spatial metadata, you can define the projection
 in which extents are stored in the database with the following option. Use
@@ -281,30 +435,6 @@ the EPSG code as an integer (e.g 4326, 4258, 27700, etc). It defaults to
 
     ckan.spatial.srid = 4326
 
-Configuration - Dataset Extent Map
-----------------------------------
-
-If you want to define a default map extent for the different map widgets,
-(e.g. if you are running a national instance of CKAN) you can do so adding
-this configuration option::
-
-    ckan.spatial.default_map_extent=<minx>,<miny>,<maxx>,<maxy>
-
-Coordinates must be in latitude/longitude, e.g.::
-
-    ckan.spatial.default_map_extent=-6.88,49.74,0.50,59.2
-
-The Dataset Extent Map displays only on certain routes. By default it is just the 'Package' controller, 'read' method. To display it on other routes you can specify it in a space separated list like this::
-
-    ckan.spatial.dataset_extent_map.routes = package/read ckanext.dgu.controllers.package:PackageController/read
-
-The Dataset Extent Map provides two different map types. It defaults to 'osm' but if you have a license and apikey for 'os' then you can use that map type using this configuration::
-
-    ckan.spatial.dataset_extent_map.map_type = os
-
-The Dataset Extent Map will be inserted by default at the end of the dataset page. This can be changed by supplying an alternative element_id to the default::
-
-    ckan.spatial.dataset_extent_map.element_id = dataset
 
 Configuration - CSW Server
 --------------------------
@@ -341,7 +471,7 @@ SOLR Configuration
 
 If using Spatial Query functionality then there is an additional SOLR/Lucene setting that should be used to set the limit on number of datasets searchable with a spatial value.
 
-The setting is ``maxBooleanClauses`` in the solrconfig.xml and the value is the number of datasets spatially searchable. The default is ``1024`` and this could be increased to say ``16384``. For a SOLR single core this will probably be at `/etc/solr/conf/solrconfig.xml`. For a multiple core set-up, there will me several solrconfig.xml files a couple of levels below `/etc/solr`. For that case, *ALL* of the cores' `solrconfig.xml` should have this setting at the new value. 
+The setting is ``maxBooleanClauses`` in the solrconfig.xml and the value is the number of datasets spatially searchable. The default is ``1024`` and this could be increased to say ``16384``. For a SOLR single core this will probably be at ``/etc/solr/conf/solrconfig.xml``. For a multiple core set-up, there will me several solrconfig.xml files a couple of levels below ``/etc/solr``. For that case, *all* of the cores' ``solrconfig.xml`` should have this setting at the new value.
 
 Example::
 
@@ -350,9 +480,9 @@ Example::
 This setting is needed because PostGIS spatial query results are fed into SOLR using a Boolean expression, and the parser for that has a limit. So if your spatial area contains more than the limit (of which the default is 1024) then you will get this error::
 
  Dataset search error: ('SOLR returned an error running query...
- 
+
 and in the SOLR logs you see::
- 
+
  too many boolean clauses
  ...
  Caused by: org.apache.lucene.search.BooleanQuery$TooManyClauses:
@@ -385,7 +515,7 @@ extension:
 
     InvalidRequestError: SQL expression, column, or mapped entity expected - got '<class 'ckanext.spatial.model.PackageExtent'>'
 
-  The spatial model has not been loaded. You probably forgot to add the `spatial_metadata` plugin to your ini configuration file.
+  The spatial model has not been loaded. You probably forgot to add the ``spatial_metadata`` plugin to your ini configuration file.
   ::
 
     InternalError: (InternalError) Operation on two geometries with different SRIDs
@@ -585,7 +715,7 @@ Now check the install by running xmllint::
 
   $ xmllint --version
   xmllint: using libxml version 20900
-     compiled with: Threads Tree Output Push Reader Patterns Writer SAXv1 FTP HTTP DTDValid HTML Legacy C14N Catalog XPath XPointer XInclude Iconv ISO8859X Unicode Regexps Automata Expr Schemas Schematron Modules Debug Zlib 
+     compiled with: Threads Tree Output Push Reader Patterns Writer SAXv1 FTP HTTP DTDValid HTML Legacy C14N Catalog XPath XPointer XInclude Iconv ISO8859X Unicode Regexps Automata Expr Schemas Schematron Modules Debug Zlib
 
 Licence
 =======
@@ -595,5 +725,5 @@ This code falls under different copyrights, depending on when it was contributed
 * Crown Copyright
 * XML/XSD files: copyright of their respective owners, held in the files themselves
 
-All of this code is licensed for reuse under the Open Government Licence 
+All of this code is licensed for reuse under the Open Government Licence
 http://www.nationalarchives.gov.uk/doc/open-government-licence/

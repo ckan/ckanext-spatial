@@ -1,0 +1,12 @@
+/* Conditional stylesheet for IE. */
+.leaflet-control-draw {
+	border: 3px solid #999;
+}
+
+.leaflet-control-draw a {
+	background-color: #eee;
+}
+
+.leaflet-control-draw a:hover {
+	background-color: #fff;
+}

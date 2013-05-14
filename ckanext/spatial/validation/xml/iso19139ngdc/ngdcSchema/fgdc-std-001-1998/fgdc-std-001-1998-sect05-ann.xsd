@@ -1,0 +1,739 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" blockDefault="#all"
+	xmlns:sch="http://www.ascc.net/xml/schematron">
+<xsd:annotation>
+	<xsd:documentation>
+		Section 5 : Entity and Attribute Information
+	</xsd:documentation>
+</xsd:annotation>
+
+<xsd:element name="eainfo" type="eainfoType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Entity and Attribute Information
+		Section: 5
+		Description: details about the information content of the data set, including the entity types, their attributes, and the domains from which attribute values may be assigned.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Entity and Attribute Information</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="eainfoType">
+	<xsd:choice>
+		<xsd:sequence>
+			<xsd:element ref="detailed" maxOccurs="unbounded"/>
+			<xsd:element ref="overview" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:element ref="overview" maxOccurs="unbounded"/>
+	</xsd:choice>
+</xsd:complexType>
+
+<xsd:element name="detailed" type="detailedType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Detailed Description
+		Section: 5.1
+		Description: description of the entities, attributes, attribute values, and related characteristics encoded in the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Detailed Description</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="detailedType">
+	<xsd:sequence>
+		<xsd:element ref="enttyp"/>
+		<xsd:element ref="attr" minOccurs="0" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="enttyp" type="enttypType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Entity Type
+		Section: 5.1.1
+		Description: the definition and description of a set into which similar entity instances are classified.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Entity Type</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="enttypType">
+	<xsd:sequence>
+		<xsd:element ref="enttypl"/>
+		<xsd:element ref="enttypd"/>
+		<xsd:element ref="enttypds"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="enttypl" type="enttyplType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Entity Type Label
+		Section: 5.1.1.1
+		Description: the name of the entity type.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Entity Type Label</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="enttyplType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="enttypd" type="enttypdType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Entity Type Definition
+		Section: 5.1.1.2
+		Description: the description of the entity type.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Entity Type Definition</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="enttypdType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="enttypds" type="enttypdsType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Entity Type Definition Source
+		Section: 5.1.1.3
+		Description: the authority of the definition.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Entity Type Definition Source</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="enttypdsType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="attr" type="attrType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Attribute
+		Section: 5.1.2
+		Description: a defined characteristic of an entity.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Attribute</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="attrType">
+	<xsd:sequence>
+		<xsd:element ref="attrlabl"/>
+		<xsd:element ref="attrdef"/>
+		<xsd:element ref="attrdefs"/>
+		<xsd:element ref="attrdomv" maxOccurs="unbounded"/>
+		<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+			<xsd:element ref="begdatea"/>
+			<xsd:element ref="enddatea" minOccurs="0"/>
+		</xsd:sequence>
+		<xsd:element ref="attrvai" minOccurs="0"/>
+		<xsd:element ref="attrmfrq" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="attrlabl" type="attrlablType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Attribute Label
+		Section: 5.1.2.1
+		Description: the name of the attribute.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Attribute Label</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="attrlablType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="attrdef" type="attrdefType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Attribute Definition
+		Section: 5.1.2.2
+		Description: the description of the attribute.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Attribute Definition</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="attrdefType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="attrdefs" type="attrdefsType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Attribute Definition Source
+		Section: 5.1.2.3
+		Description: the authority of the definition.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Attribute Definition Source</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="attrdefsType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="attrdomv" type="attrdomvType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Attribute Domain Values
+		Section: 5.1.2.4
+		Description: the valid values that can be assigned for an attribute.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Attribute Domain Values</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="attrdomvType">
+	<xsd:choice>
+		<xsd:element ref="edom" maxOccurs="unbounded"/>
+		<xsd:element ref="rdom"/>
+		<xsd:element ref="codesetd"/>
+		<xsd:element ref="udom"/>
+	</xsd:choice>
+</xsd:complexType>
+
+<xsd:element name="edom" type="edomType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Enumerated Domain
+		Section: 5.1.2.4.1
+		Description: the members of an established set of valid values.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Enumerated Domain</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="edomType">
+	<xsd:sequence>
+		<xsd:element ref="edomv"/>
+		<xsd:element ref="edomvd"/>
+		<xsd:element ref="edomvds"/>
+		<xsd:element ref="attr" minOccurs="0" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="edomv" type="edomvType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Enumerated Domain Value
+		Section: 5.1.2.4.1.1
+		Description: the name or label of a member of the set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Enumerated Domain Value</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="edomvType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="edomvd" type="edomvdType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Enumerated Domain Value Definition
+		Section: 5.1.2.4.1.2
+		Description: the description of the value.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Enumerated Domain Value Definition</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="edomvdType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="edomvds" type="edomvdsType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Enumerated Domain Value Definition Source
+		Section: 5.1.2.4.1.3
+		Description: the authority of the definition.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Enumerated Domain Value Definition Source</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="edomvdsType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="rdom" type="rdomType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Range Domain
+		Section: 5.1.2.4.2
+		Description: the minimum and maximum values of a continuum of valid values.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Range Domain</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="rdomType">
+	<xsd:sequence>
+		<xsd:element ref="rdommin"/>
+		<xsd:element ref="rdommax"/>
+		<xsd:element ref="attrunit" minOccurs="0"/>
+		<xsd:element ref="attrmres" minOccurs="0"/>
+		<xsd:element ref="attr" minOccurs="0" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="rdommin" type="rdomminType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Range Domain Minimum
+		Section: 5.1.2.4.2.1
+		Description: the least value that the attribute can be assigned.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Range Domain Minimum</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="rdomminType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="rdommax" type="rdommaxType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Range Domain Maximum
+		Section: 5.1.2.4.2.2
+		Description: the greatest value that the attribute can be assigned.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Range Domain Maximum</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="rdommaxType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="attrunit" type="attrunitType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Attribute Units of Measure
+		Section: 5.1.2.4.2.3
+		Description: the standard of measurement for an attribute value.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Attribute Units of Measure</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="attrunitType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="attrmres" type="attrmresType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Attribute Measurement Resolution
+		Section: 5.1.2.4.2.4
+		Description: the smallest unit increment to which an attribute value is measured.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Attribute Measurement Resolution</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="attrmresType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: Attribute Measurement Resolution &gt; 0.0
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:double">
+		<xsd:minExclusive value="0.0"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="codesetd" type="codesetdType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Codeset Domain
+		Section: 5.1.2.4.3
+		Description: reference to a standard or list which contains the members of an established set of valid values.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Codeset Domain</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="codesetdType">
+	<xsd:sequence>
+		<xsd:element ref="codesetn"/>
+		<xsd:element ref="codesets"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="codesetn" type="codesetnType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Codeset Name
+		Section: 5.1.2.4.3.1
+		Description: the title of the codeset.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Codeset Name</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="codesetnType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="codesets" type="codesetsType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Codeset Source
+		Section: 5.1.2.4.3.2
+		Description: the authority for the codeset.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Codeset Source</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="codesetsType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="udom" type="udomType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Unrepresentable Domain
+		Section: 5.1.2.4.4
+		Description: description of the values and reasons why they cannot be represented.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Unrepresentable Domain</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="udomType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="begdatea" type="begdateaType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Beginning Date of Attribute Values
+		Section: 5.1.2.5
+		Description: earliest or only date for which the attribute values are current. In cases when a range of dates are provided, this is the earliest date for which the information is valid.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Beginning Date of Attribute Values</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="begdateaType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: date
+			Domain: free date
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCdate"/>
+</xsd:simpleType>
+
+<xsd:element name="enddatea" type="enddateaType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Ending Date of Attribute Values
+		Section: 5.1.2.6
+		Description: latest date for which the information is current. Used in cases when a range of dates are provided.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Ending Date of Attribute Values</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="enddateaType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: date
+			Domain: free date
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCdate"/>
+</xsd:simpleType>
+
+<xsd:element name="attrvai" type="attrvaiType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Attribute Value Accuracy Information
+		Section: 5.1.2.7
+		Description: an assessment of the accuracy of the assignment of attribute values.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Attribute Value Accuracy Information</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="attrvaiType">
+	<xsd:sequence>
+		<xsd:element ref="attrva"/>
+		<xsd:element ref="attrvae"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="attrva" type="attrvaType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Attribute Value Accuracy
+		Section: 5.1.2.7.1
+		Description: an estimate of the accuracy of the assignment of attribute values.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Attribute Value Accuracy</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="attrvaType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: free real
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:double"/>
+</xsd:simpleType>
+
+<xsd:element name="attrvae" type="attrvaeType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Attribute Value Accuracy Explanation
+		Section: 5.1.2.7.2
+		Description: the definition of the Attribute Value Accuracy measure and units, and a description of how the estimate was derived.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Attribute Value Accuracy Explanation</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="attrvaeType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="attrmfrq" type="attrmfrqType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Attribute Measurement Frequency
+		Section: 5.1.2.8
+		Description: the frequency with which attribute values are added.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Attribute Measurement Frequency</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="attrmfrqType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: "Unknown" "As needed" "Irregular" "None planned" free text
+		</xsd:documentation>
+		<xsd:documentation>
+			Enumerated values also match "free text"
+
+			<![CDATA[
+				<xsd:restriction base="xsd:token">
+					<xsd:enumeration value="Unknown"/>
+					<xsd:enumeration value="As needed"/>
+					<xsd:enumeration value="Irregular"/>
+					<xsd:enumeration value="None planned"/>
+				</xsd:restriction>
+			]]>
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="overview" type="overviewType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Overview Description
+		Section: 5.2
+		Description: summary of, and citation to detailed description of, the information content of the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Overview Description</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="overviewType">
+	<xsd:sequence>
+		<xsd:element ref="eaover"/>
+		<xsd:element ref="eadetcit" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="eaover" type="eaoverType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Entity and Attribute Overview
+		Section: 5.2.1
+		Description: detailed summary of the information contained in a data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Entity and Attribute Overview</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="eaoverType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="eadetcit" type="eadetcitType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Entity and Attribute Detail Citation
+		Section: 5.2.2
+		Description: reference to the complete description of the entity types, attributes, and attribute values for the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Entity and Attribute Detail Citation</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="eadetcitType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+</xsd:schema>

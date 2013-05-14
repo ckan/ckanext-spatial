@@ -9,13 +9,15 @@ from ckanext.spatial import validation
 
 class TestValidation:
 
+    def _get_file_path(self, file_name):
+       return os.path.join(os.path.dirname(__file__), 'xml', file_name)
+
     def get_validation_errors(self, validator, validation_test_filename):
-        validation_test_filepath = os.path.join(os.path.dirname(__file__),
-                                                'xml',
-                                                validation_test_filename)
+        validation_test_filepath = self._get_file_path(validation_test_filename)
         xml = etree.parse(validation_test_filepath)
         is_valid, errors = validator.is_valid(xml)
-        return ';'.join(errors)
+
+        return ';'.join([e[0] for e in errors])
 
     def test_iso19139_failure(self):
         errors = self.get_validation_errors(validation.ISO19139Schema,
@@ -117,7 +119,7 @@ class TestValidation:
                  'gemini2.1/validation/13_Dataset_Invalid_Element_srv.xml')
         assert len(errors) > 0
         assert_in('(gmx.xsd)', errors)
-        assert_in('(u"Element \'{http://www.isotc211.org/2005/srv}SV_ServiceIdentification\': This element is not expected.', errors)
+        assert_in('Element \'{http://www.isotc211.org/2005/srv}SV_ServiceIdentification\': This element is not expected.', errors)
 
     def test_schematron_error_extraction(self):
         validation_error_xml = '''
@@ -137,3 +139,15 @@ class TestValidation:
         assert_in("srv:serviceType/*[1] = 'discovery'", details)
         assert_in("/*[local-name()='MD_Metadata'", details)
         assert_in("Service type shall be one of 'discovery'", details)
+
+
+    def test_error_line_numbers(self):
+        file_path = self._get_file_path('iso19139/dataset-invalid.xml')
+        xml = etree.parse(file_path)
+        is_valid, profile, errors = validation.Validators(profiles=['iso19139']).is_valid(xml)
+        assert not is_valid
+        assert len(errors) == 2
+
+        message, line = errors[1]
+        assert 'This element is not expected' in message
+        assert line == 3

@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    xmlns:res="eml://ecoinformatics.org/resource-2.1.0" 
+    xmlns:doc="eml://ecoinformatics.org/documentation-2.1.0" 
+    xmlns:con="eml://ecoinformatics.org/constraint-2.1.0" 
+    xmlns:att="eml://ecoinformatics.org/attribute-2.1.0" 
+    xmlns:spref="eml://ecoinformatics.org/spatialReference-2.1.0" 
+    xmlns:ent="eml://ecoinformatics.org/entity-2.1.0" 
+    xmlns="eml://ecoinformatics.org/spatialVector-2.1.0" 
+    targetNamespace="eml://ecoinformatics.org/spatialVector-2.1.0">
+  <xs:import namespace="eml://ecoinformatics.org/documentation-2.1.0" 
+  schemaLocation="eml-documentation.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/spatialReference-2.1.0" 
+  schemaLocation="eml-spatialReference.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/entity-2.1.0" 
+  schemaLocation="eml-entity.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/resource-2.1.0" 
+  schemaLocation="eml-resource.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/attribute-2.1.0" 
+  schemaLocation="eml-attribute.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/constraint-2.1.0" 
+  schemaLocation="eml-constraint.xsd"/>
+  <xs:annotation>
+    <xs:documentation>
+    '$RCSfile: eml-spatialVector.xsd,v $'
+       Copyright: 1997-2002 Regents of the University of California,
+                            University of New Mexico, and
+                            Arizona State University
+        Sponsors: National Center for Ecological Analysis and Synthesis and
+                  Partnership for Interdisciplinary Studies of Coastal Oceans,
+                     University of California Santa Barbara
+                  Long-Term Ecological Research Network Office,
+                     University of New Mexico
+                  Center for Environmental Studies, Arizona State University
+   Other funding: National Science Foundation (see README for details)
+                  The David and Lucile Packard Foundation
+     For Details: http://knb.ecoinformatics.org/
+
+        '$Author: obrien $'
+          '$Date: 2009/02/25 23:51:54 $'
+      '$Revision: 1.43 $'
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    </xs:documentation>
+    <xs:appinfo>
+      <doc:moduleDocs>
+        <doc:moduleName>eml-spatialVector</doc:moduleName>
+        <doc:moduleDescription>
+          <section xmlns="">
+            <title>
+              The eml-spatialVector module - Logical information about
+              non-gridded geospatial image data
+            </title>
+            <para>
+              The eml-spatialVector module allows for the description of
+              spatial objects in a GIS system that are not defined in a
+              regularly gridded pattern.  These geometries include points and
+              vectors and the relationships among them.  Specific attributes of
+              a spatial vector can be documented here including the vector's
+              geometry type, count and topology level.
+            </para>
+          </section>
+        </doc:moduleDescription>
+        <doc:recommendedUsage>all spatial datasets that contain spatial data
+        entities represented as vector features.</doc:recommendedUsage>
+        <doc:standAlone>yes</doc:standAlone>
+      </doc:moduleDocs>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="spatialVector" type="SpatialVectorType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Spatial Vector</doc:tooltip>
+        <doc:summary>Description of a spatial data entity based on features
+        represented by vectors</doc:summary>
+        <doc:description>Description of a spatial data entity based on features
+        represented by vectors</doc:description>
+      </xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="SpatialVectorType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Spatial Vector Type</doc:tooltip>
+        <doc:summary/>
+        <doc:description/>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:choice>
+      <xs:sequence>
+        <xs:group ref="ent:EntityGroup"/>
+        <xs:element name="attributeList" type="att:AttributeListType">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Attribute List</doc:tooltip>
+              <doc:summary>The list of attributes associated with this
+              entity.</doc:summary>
+              <doc:description>The list of attributes associated with this
+              entity.  For more information see the eml-attribute
+              module.</doc:description>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="constraint" type="con:ConstraintType" minOccurs="0" maxOccurs="unbounded">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Constraint</doc:tooltip>
+              <doc:summary>Description of any relational constraints on 
+              this entity.</doc:summary>
+              <doc:description>Description of any relational constraints on 
+              this entity.  For more information see the eml-constraint
+              module.</doc:description>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="geometry" type="GeometryType" maxOccurs="unbounded">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Geometry</doc:tooltip>
+              <doc:summary>Type of geometric feature(s) represented in the
+              entity.</doc:summary>
+              <doc:description>Geometric feature classification is based on an
+              enumeration of simple feature classes defined by the OpenGIS
+              consortium and implemented in Geographic Markup Language as
+              simple feature types.</doc:description>
+              <doc:example>polygon</doc:example>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="geometricObjectCount" type="res:NonEmptyStringType" minOccurs="0">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Geometric Object Count</doc:tooltip>
+              <doc:summary>Total number of the geometric objects
+              occurring in the dataset.</doc:summary>
+              <doc:description>Total number of the geometric objects
+              occurring in the dataset.</doc:description>
+              <doc:example>24</doc:example>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="topologyLevel" type="TopologyLevel" minOccurs="0">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Topology Level</doc:tooltip>
+              <doc:summary>Code which identifies the degree of
+              complexity.</doc:summary>
+              <doc:description>This element describes the relative complexity
+              of the geometric information in the data file.</doc:description>
+              <doc:example>geometryOnly</doc:example>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="spatialReference" type="spref:SpatialReferenceType" minOccurs="0">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Spatial Reference</doc:tooltip>
+              <doc:summary/>
+              <doc:description/>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="horizontalAccuracy" type="DataQuality" minOccurs="0">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Horizontal Accuracy</doc:tooltip>
+              <doc:summary>Horizontal positional accuracy of the data</doc:summary>
+              <doc:description>Horizontal positional accuracy of the data
+              expressed as either text or quantitative assessment.
+              </doc:description>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="verticalAccuracy" type="DataQuality" minOccurs="0">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Vertical Accuracy</doc:tooltip>
+              <doc:summary>Vertical positional accuracy of the data</doc:summary>
+              <doc:description>Vertical positional accuracy of the data
+              expressed as either text or quantitative assessment.
+              </doc:description>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+      <xs:group ref="res:ReferencesGroup"/>
+    </xs:choice>
+    <xs:attribute name="id" type="res:IDType" use="optional"/>
+    <xs:attribute name="system" type="res:SystemType" use="optional"/>
+    <xs:attribute name="scope" type="res:ScopeType" use="optional" default="document"/>
+  </xs:complexType>
+  <xs:simpleType name="GeometryType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Geometry Type</doc:tooltip>
+        <doc:summary/>
+        <doc:description/>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Point"/>
+      <xs:enumeration value="LineString"/>
+      <xs:enumeration value="LinearRing"/>
+      <xs:enumeration value="Polygon"/>
+      <xs:enumeration value="MultiPoint"/>
+      <xs:enumeration value="MultiLineString"/>
+      <xs:enumeration value="MultiPolygon"/>
+      <xs:enumeration value="MultiGeometry"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="TopologyLevel">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Topology Level Type</doc:tooltip>
+        <doc:summary/>
+        <doc:description/>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="geometryOnly"/>
+      <xs:enumeration value="nonPlanarGraph"/>
+      <xs:enumeration value="planarLineGraph"/>
+      <xs:enumeration value="fullPlanarGraph"/>
+      <xs:enumeration value="surfaceGraph"/>
+      <xs:enumeration value="fullTopology3D"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="DataQuality">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Data Quality Type</doc:tooltip>
+        <doc:summary/>
+        <doc:description/>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element name="accuracyReport" type="res:NonEmptyStringType">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Accuracy Report</doc:tooltip>
+            <doc:summary>A qualitative statement about the accuracy of the data.</doc:summary>
+            <doc:description>A text statement of the data quality, included the means by which it was determined.
+            </doc:description>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="quantitativeAccuracyReport" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Quantitative Accuracy Report</doc:tooltip>
+            <doc:summary>A quantitative assessment of the data quality.</doc:summary>
+            <doc:description>A quantitative assessment of the data quality expressed as a value and 
+            the method of its determination.</doc:description>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="quantitativeAccuracyValue" type="res:NonEmptyStringType">
+              <xs:annotation>
+                <xs:appinfo>
+                  <doc:tooltip>Quantitative Accuracy Value</doc:tooltip>
+                  <doc:summary>The value resulting from the accuracy test.</doc:summary>
+                  <doc:description>The value resulting from the accuracy test. Typically, this will be expressed
+                  in units corresponding to those declared for the parameter being assessed.</doc:description>
+                  <doc:example>4.5</doc:example>
+                </xs:appinfo>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="quantitativeAccuracyMethod" type="res:NonEmptyStringType">
+              <xs:annotation>
+                <xs:appinfo>
+                  <doc:tooltip>Quantitative Accuracy Method</doc:tooltip>
+                  <doc:summary>The method used to calculate the accuracy value.</doc:summary>
+                  <doc:description>Identification and explanation of the method used to calculate the quantitative 
+                  accuracy assessment.</doc:description>
+                  <doc:example>Error expressed as root mean square of 5 control points. </doc:example>
+                </xs:appinfo>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

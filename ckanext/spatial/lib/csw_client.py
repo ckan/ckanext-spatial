@@ -90,7 +90,7 @@ class CswService(OwsService):
 
     def getidentifiers(self, qtype=None, typenames="csw:Record", esn="brief",
                        keywords=[], limit=None, page=10, outputschema="gmd",
-                       **kw):
+                       startposition=0, **kw):
         from owslib.csw import namespaces
         csw = self._ows(**kw)
         kwa = {
@@ -98,31 +98,44 @@ class CswService(OwsService):
             "keywords": keywords,
             "typenames": typenames,
             "esn": esn,
-            "startposition": 0,
+            "startposition": startposition,
             "maxrecords": page,
             "outputschema": namespaces[outputschema],
             }
         i = 0
+        matches = 0
         while True:
             log.info('Making CSW request: getrecords %r', kwa)
+
             csw.getrecords(**kwa)
             if csw.exceptionreport:
                 err = 'Error getting identifiers: %r' % \
                       csw.exceptionreport.exceptions
                 #log.error(err)
                 raise CswError(err)
+
+            if matches == 0:
+                matches = csw.results['matches']
+
             identifiers = csw.records.keys()
             if limit is not None:
                 identifiers = identifiers[:(limit-startposition)]
             for ident in identifiers:
                 yield ident
-            if len(identifiers) < page:
+
+            if len(identifiers) == 0:
                 break
+
             i += len(identifiers)
             if limit is not None and i > limit:
                 break
-            kwa["startposition"] += page
-            
+
+            startposition += page
+            if startposition >= (matches + 1):
+                break
+
+            kwa["startposition"] = startposition
+
     def getrecordbyid(self, ids=[], esn="full", outputschema="gmd", **kw):
         from owslib.csw import namespaces
         csw = self._ows(**kw)
@@ -148,12 +161,14 @@ class CswService(OwsService):
         md = csw._exml.find("/{http://www.isotc211.org/2005/gmd}MD_Metadata")
         mdtree = etree.ElementTree(md)
         try:
-            record["xml"] = etree.tostring(mdtree, pretty_print=True, xml_declaration=True)
+            record["xml"] = etree.tostring(mdtree, pretty_print=True, encoding=unicode)
         except TypeError:
             # API incompatibilities between different flavours of elementtree
             try:
-                record["xml"] = etree.tostring(mdtree)
+                record["xml"] = etree.tostring(mdtree, pretty_print=True, encoding=unicode)
             except AssertionError:
-                record["xml"] = etree.tostring(md)
+                record["xml"] = etree.tostring(md, pretty_print=True, encoding=unicode)
+
+        record["xml"] = '<?xml version="1.0" encoding="UTF-8"?>\n' + record["xml"]
         record["tree"] = mdtree
         return record

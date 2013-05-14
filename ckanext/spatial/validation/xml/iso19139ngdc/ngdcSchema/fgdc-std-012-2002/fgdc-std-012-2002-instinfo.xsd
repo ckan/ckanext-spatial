@@ -1,0 +1,2416 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" blockDefault="#all"
+    xmlns:sch="http://www.ascc.net/xml/schematron">
+    
+    <xsd:include schemaLocation="fgdc-std-012-2002-locainfo.xsd"/>
+    <xsd:element name="instinfo" type="instinfoType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Instrument Information Description: Instrument properties
+                and behavior. Rationale: The properties of the instrument must be known in order to
+                interpret the readings as geographic information. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Instrument Information</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    
+    <xsd:complexType name="instinfoType">
+        <!-- TODO: The following element, instdesc and instref should have an and/or relationship -->
+        <xsd:choice maxOccurs="2">
+            <xsd:element ref="instdesc" maxOccurs="unbounded"/>
+            <xsd:element ref="instref"  maxOccurs="unbounded"/>
+        </xsd:choice>
+    </xsd:complexType>
+    <xsd:element name="instdesc" type="instdescType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Instrument Description Description: Characteristics
+                and behavior of instrument. Rationale: Descriptive information about the
+                instrument may be in metadata accompanying the data. 
+           </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Instrument Description</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="instdescType">
+        <xsd:sequence>
+            <xsd:element ref="insttyp" />
+            <xsd:element ref="opmode" minOccurs="0" />
+            <xsd:element ref="colltype" />
+            <xsd:element ref="orininfo" minOccurs="0"/>
+            <xsd:choice>
+                <xsd:element ref="frame" />
+                <xsd:element ref="scan" />
+                <xsd:element ref="othcolde" />
+            </xsd:choice>
+            <xsd:element ref="instpdes" minOccurs="0" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="insttyp" type="insttypType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Instrument Type Description: Class of data
+                measuring instrument. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Instrument Type</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="insttypType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="opmode" type="opmodeType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Operational Mode Description: The way in which the
+                instrument is functioning. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Operational Mode</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="opmodeType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="colltype" type="colltypeType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Collection Type Description: The way in which the
+                instrument gathers data from the scene observed. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Collection Type</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="colltypeType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="orininfo" type="orininfoType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Sensor Orientation Description: Positioning and
+                direction of instrument components on platform. Rationale: This information
+                is required in order to derive the direction of observation. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Sensor Orientation</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="instpdes" type="instpdesType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Instrument Properties Description Description:
+                Textual information on instrument properties, in areas not otherwise
+                specified in this standard. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Instrument Properties Description</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="instpdesType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    
+    <xsd:complexType name="orininfoType">
+        <xsd:sequence>
+            <xsd:element name="axes" type="axesType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Axes Description: Orientation of instrument axes. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Axes</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element ref="rotdesc" minOccurs="0" />
+            <xsd:element ref="trandesc" minOccurs="0" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="rotdesc" type="rotdescType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Rotation Description Description: Description of
+                direction of instrument components relative to platform axes. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Rotation Description</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="rotdescType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="trandesc" type="trandescType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Translation Description Description: Description of
+                position of instrument components relative to platform axes. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Translation Description</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="trandescType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    
+    <xsd:complexType name="axesType">
+        <xsd:sequence>
+            <xsd:element ref="xaxisdef" />
+            <xsd:element ref="yaxisdef" />
+            <xsd:element ref="zaxisdef" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="xaxisdef" type="xaxisdefType">
+        <xsd:annotation>
+            <xsd:documentation> 
+                Element: X Axis Definition Description: Direction of instrument x-axis. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>X Axis Definition</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="xaxisdefType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="yaxisdef" type="yaxisdefType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Y Axis Definition Description: Direction of
+                instrument y-axis. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Y Axis Definition</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="yaxisdefType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="zaxisdef" type="zaxisdefType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Z Axis Definition Description: Direction of
+                instrument z-axis. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Z Axis Definition</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="zaxisdefType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="frame" type="frameType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Frame Camera Description: Description of
+                photographic system using a central perspective projection, with the
+                detector, normally film, pressed against a calibrated frame during the
+                exposure. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Frame Camera</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="frameType">
+        <xsd:sequence>
+            <xsd:element ref="fcamhwar" minOccurs="0"/>
+            <xsd:element ref="fcamoptc" />
+            <xsd:element ref="framegeo" />
+            <xsd:element ref="fcoper" minOccurs="0"/>
+            <xsd:element ref="fradprop" minOccurs="0"/>
+            <xsd:element ref="fcspecpr" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="fcamhwar" type="fcamhwarType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Frame Hardware Description: Physical description of
+                camera and film. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Frame Hardware</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="fcamhwarType">
+        <xsd:sequence>
+            <xsd:element ref="camtype" minOccurs="0" />
+            <xsd:element ref="camident" minOccurs="0" />
+            <xsd:element ref="lens" minOccurs="0" />
+            <xsd:element ref="magident" minOccurs="0" />
+            <xsd:element ref="filmtype" minOccurs="0" />
+            <xsd:element ref="afspeed" minOccurs="0" />
+            <xsd:element ref="eafspeed" minOccurs="0" />
+            <xsd:element ref="develop" minOccurs="0" /> 
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="camtype" type="camtypeType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Camera Type Description: Model of camera as defined
+                by manufacturer. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Camera Type</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="camtypeType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="camident" type="camidentType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Camera Identifier Description: Manufacturer's
+                unique alphanumeric code specifying the camera body. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Camera Identifier</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="camidentType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="lens" type="lensType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Lens Description: Optical component that uses
+                refraction to focus light on the image plane. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Lens</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="lensType">
+        <xsd:sequence>
+            <xsd:element ref="lenstype" />
+            <xsd:element ref="lensidnt" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="lenstype" type="lenstypeType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Lens Type Description: Manufacturer's name
+                specifying design of lens. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Lens Type</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="lenstypeType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="lensidnt" type="lensidntType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Lens Identifier Description: Unique alphanumeric
+                identifier assigned by camera manufacturer to individual lens. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Lens Identifier</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="lensidntType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    
+    
+    
+    <xsd:element name="magident" type="magidentType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Magazine Identifier Description: Unique
+                alphanumeric identifier of individual magazine as assigned by manufacturer. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Magazine Identifier</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="magidentType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="filmtype" type="filmtypeType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Film Type Description: Manufacturer's name and
+                specification of film </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Film Type</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="filmtypeType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="afspeed" type="afspeedType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Aerial Film Speed Description: Two-thirds of the
+                exposure in lux seconds at the point on the characteristic curve where the
+                density is 0.3 above fog density, under processing conditions defined in
+                ANSI PH2.34-1969. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Aerial Film Speed</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="afspeedType">
+        <xsd:restriction base="nonNegativeDoubleType" />
+    </xsd:simpleType>
+    <xsd:element name="aefspeed" type="aefspeedType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Effective Aerial Film Speed 
+            Description: Two-thirds of the exposure in lux seconds at the 
+            point on the characteristic curve where the density is 0.3 above 
+            fog density, under processing conditions other than those defined 
+            in ANSI PH2.34-1969 or determined empirically for color and 
+            infrared-sensitive films not covered by ANSI Standard PH 2.34-1969.</xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Effective Aerial Film Speed</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="aefspeedType">
+        <xsd:restriction base="nonNegativeDoubleType" />
+    </xsd:simpleType>
+    <xsd:element name="eafspeed" type="eafspeedType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Effective Aerial Film Speed Description: Two-thirds
+                of the exposure in lux seconds at the point on the characteristic curve
+                where the density is 0.3 above fog density, under processing conditions
+                other than those defined in ANSI PH2.34-1969 or determined empirically for
+                color and infrared-sensitive films not covered by ANSI Standard PH
+                2.34-1969. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Effective Aerial Film Speed</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="eafspeedType">
+        <xsd:restriction base="nonNegativeDoubleType" />
+    </xsd:simpleType>
+    <xsd:element name="develop" type="developType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Developing Institution Description: Institution
+                where the film was developed. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Developing Institution</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="developType">
+        <xsd:sequence>
+            <xsd:element ref="cntinfo"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="fcamoptc" type="fcamoptcType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Frame Optics Description: Physical description of
+                the photographic system. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Frame Optics</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="fcamoptcType">
+        <xsd:sequence>
+            <xsd:element ref="phorespo" minOccurs="0" />
+            <xsd:element ref="relaper" minOccurs="0"/>
+            <xsd:element ref="expotime" minOccurs="0" />
+            <xsd:element ref="calfocl" />
+            <xsd:element ref="quafocl" minOccurs="0"/>
+            <xsd:element ref="lastcali" minOccurs="0" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="phorespo" type="phorespoType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Photographic Resolving Power Description: Resolving
+                power of the camera at different field angles. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Photographic Resolving Power</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="phorespoType">
+        <xsd:sequence>
+            <xsd:element ref="nresval" />
+            <xsd:element ref="phoreset" maxOccurs="unbounded" />
+            <xsd:element ref="awar" minOccurs="0" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="nresval" type="nresvalType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Number of Resolution Values Description: Number of
+                angles at which values of resolving power are available. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Number of Resolution Values</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="nresvalType">
+        <xsd:restriction base="xsd:integer" />
+    </xsd:simpleType>
+    <xsd:element name="phoreset" type="phoresetType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Resolution Value Set Description: Resolving power
+                of the camera at different field angles. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Resolution Value Set</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="phoresetType">
+        <xsd:sequence>
+            <xsd:element ref="resangle" />
+            <xsd:element ref="resrad" />
+            <xsd:element ref="restang" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="resangle" type="resangleType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Resolving Angle Description: A field angle at which
+                values of the resolving power are available. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Resolving Angle</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="resangleType">
+        <xsd:restriction base="nonNegativeDoubleType" />
+    </xsd:simpleType>
+    <xsd:element name="resrad" type="resradType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Resolving Value Radial Description: Resolving power
+                in radial direction, given in line pairs per millimeter. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Resolving Value Radial</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="resradType">
+        <xsd:restriction base="positiveDoubleType" />
+    </xsd:simpleType>
+    <xsd:element name="restang" type="restangType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Resolving Value Tangential Description: Resolving
+                power in tangential direction, given in line pairs per millimeter. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Resolving Value Tangential</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="restangType">
+        <xsd:restriction base="positiveDoubleType" />
+    </xsd:simpleType>
+    <xsd:element name="awar" type="awarType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Area Weighted Average Resolution Description: Area
+                weighted average resolution, given in line pairs per millimeter. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Area Weighted Average Resolution</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="awarType">
+        <xsd:restriction base="positiveDoubleType" />
+    </xsd:simpleType>
+    <xsd:element name="relaper" type="relaperType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Relative Aperture Description: Ratio of focal
+                length of camera to diameter of opening through which camera gathers light. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Relative Aperture</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="relaperType">
+        <xsd:restriction base="positiveDoubleType" />
+    </xsd:simpleType>
+    <xsd:element name="expotime" type="expotimeType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Exposure Time Description: Length of exposure, in
+                seconds. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Exposure Time</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="expotimeType">
+        <xsd:restriction base="positiveDoubleType" />
+    </xsd:simpleType>
+    <xsd:element name="calfocl" type="calfoclType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Calibrated Focal Length Description: Approximate
+                distance between the projection center and the image plane in millimeters,
+                measured in the laboratory before launch. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Calibrated Focal Length</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="calfoclType">
+        <xsd:restriction base="positiveDoubleType" />
+    </xsd:simpleType>
+    <xsd:element name="quafocl" type="quafoclType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Quality of Focal Length Description: The standard
+                deviation in millimeters of the calibrated focal length. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Quality of Focal Length</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="quafoclType">
+        <xsd:restriction base="positiveDoubleType" />
+    </xsd:simpleType>
+    <xsd:element name="lastcali" type="lastcaliType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Last Calibration Description: Description of most
+                recent camera calibration. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Last Calibration</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="lastcaliType">
+        <xsd:sequence>
+            <xsd:element ref="datlcali" />
+            <xsd:element ref="metlcali" minOccurs="0"/>
+            <xsd:element ref="inslcali" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="datlcali" type="datlcaliType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Date of Last Calibration Description: Date of most
+                recent camera calibration. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Date of Last Calibration</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="datlcaliType">
+        <xsd:restriction base="FGDCdate" />
+    </xsd:simpleType>
+    <xsd:element name="metlcali" type="metlcaliType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Method of Last Calibration Description: Method of most
+                recent camera calibration. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Method of Last Calibration</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="metlcaliType">
+        <xsd:restriction base="xsd:token">
+            <xsd:enumeration value="optical"/>
+            <xsd:enumeration value="photographic"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:element name="inslcali" type="inslcaliType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Institution of Last Calibration Description:
+                Institution that performed the camera calibration that occurred at Date of
+                Last Calibration. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Institution of Last Calibration</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="inslcaliType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="framegeo" type="framegeoType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Frame Geometric Properties Description: Geometric
+                characteristics of instrument used to derive single frame images. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Frame Geometric Properties</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <!-- framegeo type -->
+    <xsd:complexType name="framegeoType">
+        <xsd:sequence>
+            <xsd:element ref="imsize" minOccurs="0"/>
+            <xsd:choice>
+                <xsd:element ref="fcfid" />
+                <xsd:element ref="fcres" />
+                <xsd:element ref="fcss" />
+            </xsd:choice>
+            <xsd:element ref="pripoaut" minOccurs="0"/>
+            <xsd:element ref="quappa" minOccurs="0"/>
+            <xsd:element ref="priposym" minOccurs="0"/>
+            <xsd:element ref="quapps" minOccurs="0"/>
+            <xsd:element ref="fidcent" minOccurs="0"/>
+            <xsd:element ref="sensello" minOccurs="0"/>
+            <xsd:element ref="distort" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="imsize" type="imsizeType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Image Size Description: Metric length and width of
+                the image. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Image Size</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="imsizeType">
+        <xsd:sequence>
+            <xsd:element ref="imsizex" />
+            <xsd:element ref="imsizey" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="imsizex" type="imsizexType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Image Size x Value Description: Image size, in
+                millimeters, in the direction of the x-axis. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Image Size x Value</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="imsizexType">
+        <xsd:restriction base="positiveDoubleType" />
+    </xsd:simpleType>
+    <xsd:element name="imsizey" type="imsizeyType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Image Size y Value Description: Image size, in
+                millimeters, in the direction of the y-axis. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Image Size y Value</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="imsizeyType">
+        <xsd:restriction base="positiveDoubleType" />
+    </xsd:simpleType>
+    <xsd:element name="fcfid" type="fcfidType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Fiducial Description: Calibrated coordinates
+                for four or more marks attached to the frame of the camera, in
+                millimeters in the image coordinate system. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Fiducial</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="fcfidType">
+        <xsd:sequence>
+            <xsd:element ref="locainfo" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="fcres" type="fcresType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Reseau Description: Calibrated positions of
+                engraved réseau-crosses that are pressed against the film during
+                exposure, given in millimeters in the image coordinate system. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Reseau</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="fcresType">
+        <xsd:sequence>
+            <xsd:element ref="locainfo"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:element name="fcss" type="fcssType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Sensor System Description: Image coordinate
+                system defined by the pixels of the scanner. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Sensor System</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="fcssType">
+        <xsd:sequence>
+            <xsd:element ref="fcssgrid" />
+            <xsd:element ref="fcsscapo" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="fcssgrid" type="fcssgridType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Sensor Grid Description: Number of cells along axes
+                of sensor grid. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Sensor Grid</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="fcssgridType">
+        <xsd:sequence>
+            <!-- Use local rasttype with "Swath" extended domain as per 2002 RSE spec
+                xsd:element ref="rasttype"/-->
+
+            <!-- Must ensure that any .xsd file including fgdc-std-012-2002-instinfo.xsd
+                    also includes fgdc-std-012-2002-sect03.xsd. -->
+            <xsd:element name="rasttype" type="rasttypeExtendedType">
+                <xsd:annotation>
+                        <xsd:documentation>
+                                Element: Raster Object Type
+                                Section: 3.4.1
+                                Description: raster spatial objects used to locate zero-, two-, or three-dimensional locations in the data set.
+                        </xsd:documentation>
+                        <xsd:appinfo>
+                                <sch:title>Raster Object Type</sch:title>
+                        </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:element name="fcsscapo" type="fcsscapoType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Calibrated Detector Positions Description: Position
+                of detectors in sensor grid coordinate system. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Calibrated Detector Positions</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="fcsscapoType">
+        <xsd:sequence>
+            <xsd:element ref="locainfo"/>
+        </xsd:sequence>
+    </xsd:complexType>
+        
+    <xsd:element name="pripoaut" type="pripoautType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Principal Point of Autocollimation Description: The
+                point (x0, y0) where the plumb line coming from the projection center
+                crosses the image plane, given in millimeters in the image coordinate
+                system, determined by projecting an illuminated object to infinity,
+                reflecting its image from a flat mirror surface, and adjusting the
+                instrument until both the object and image are in focus at the same plane. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Principal Point of Autocollimation</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="pripoautType">
+        <xsd:sequence>
+            <xsd:element ref="locainfo"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:element name="quappa" type="quappaType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Quality of Principal Point of Autocollimation
+                Description: Uncertainty in the location of the principal point of
+                autocollimation. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Quality of Principal Point of Autocollimation</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="quappaType">
+        <xsd:sequence>
+            <xsd:element ref="quappax" />
+            <xsd:element ref="quappay" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="quappax" type="quappaxType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Quality of Autocollimation Principal Point x Value
+                Description: Standard deviation, in millimeters, of the x-position of the
+                principal point of autocollimation. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Quality of Autocollimation Principal Point x Value</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="quappaxType">
+        <xsd:restriction base="nonNegativeDoubleType" />
+    </xsd:simpleType>
+    <xsd:element name="quappay" type="quappayType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Quality of Autocollimation Principal Point y Value
+                Description: Standard deviation, in millimeters, of the y-position of the
+                principal point of autocollimation. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Quality of Autocollimation Principal Point y Value</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="quappayType">
+        <xsd:restriction base="nonNegativeDoubleType" />
+    </xsd:simpleType>
+    <xsd:element name="priposym" type="priposymType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Principal Point of Symmetry Description: The
+                coordinate of the center of the circles of equal distortion of the lens
+                (xs,ys) in millimeters in the image coordinate system. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Principal Point of Symmetry</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="priposymType">
+        <xsd:sequence>
+            <xsd:element ref="locainfo"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="quapps" type="quappsType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Quality of Principal Point of Symmetry Description:
+                Uncertainty in the location of the principal point of symmetry. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Quality of Principal Point of Symmetry</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="quappsType">
+        <xsd:sequence>
+            <xsd:element ref="quappsx" />
+            <xsd:element ref="quappsy" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="quappsx" type="quappsxType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Quality of Symmetry Principal Point x Value
+                Description: Standard deviation, in millimeters, of the x-position of the
+                principal point of symmetry. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Quality of Symmetry Principal Point x Value</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="quappsxType">
+        <xsd:restriction base="nonNegativeDoubleType" />
+    </xsd:simpleType>
+    <xsd:element name="quappsy" type="quappsyType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Quality of Symmetry Principal Point y Value
+                Description: Standard deviation, in millimeters, of the y-position of the
+                principal point of symmetry. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Quality of Symmetry Principal Point y Value</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="quappsyType">
+        <xsd:restriction base="nonNegativeDoubleType" />
+    </xsd:simpleType>
+    
+    <xsd:element name="fidcent" type="fidcentType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Fiducial Center Description: Coordinates in
+                millimeters, in the image coordinate system, of center point where lines
+                between the four or more fiducial marks meet. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Fiducial Center</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="fidcentType">
+        <xsd:sequence>
+            <xsd:element ref="locainfo" />
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:element name="sensello" type="senselloType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Sensor Element Location Description: Physical
+                position of individual scanner pixels, in the image coordinate system. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Sensor Element Location</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="senselloType">
+        <xsd:sequence>
+            <xsd:element ref="senselav"/>
+            <xsd:element ref="senselso" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="senselav" type="senselavType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Availability of Element Locations Description: Whether or
+                not a reference providing sensor element location exists. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Availability of Element Locations</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="senselavType">
+        <xsd:restriction base="xsd:token">
+            <xsd:enumeration value="available"/>
+            <xsd:enumeration value="not available"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:element name="senselso" type="senselsoType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Source of Element Locations Description: Citation
+                for reference providing sensor element location information. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Source of Element Locations</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="senselsoType">
+        <xsd:sequence>
+            <xsd:element ref="citeinfo"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="distort" type="distortType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Distortion Description: Departure of positions in
+                image from those in scene imaged. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Distortion</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="distortType">
+        <xsd:sequence>
+            <xsd:element ref="dsttrs" minOccurs="0"/>
+            <xsd:element ref="dsttrasy" minOccurs="0"/>
+            <xsd:element ref="dsttaf" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="dsttrs" type="dsttrsType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Distortion Type Radial Symmetrical Description: The
+                shift of an image point towards the center (negative values) or border
+                (positive values) of the image. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Distortion Type Radial Symmetrical</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="dsttrsType">
+        <xsd:choice>
+            <xsd:element ref="rsdisdis" />
+            <xsd:element ref="rsaddist" />
+            <xsd:element ref="rsdispol" />
+        </xsd:choice>
+    </xsd:complexType>
+    <xsd:element name="rsdisdis" type="rsdisdisType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Distance Dependent Distortion Description: Lens
+                distortion values provided as a function of linear distance to the principal
+                point of best symmetry. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Distance Dependent Distortion</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="rsdisdisType">
+        <xsd:sequence>
+            <xsd:element ref="rsdmdist" />
+            <xsd:element ref="rsdnumv" />
+            <!-- The rsddval validation should be =Number of Distance Distortion Values -->
+            <xsd:element ref="rsddval" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:element name="rsdmdist" type="rsdmdistType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Radial Symmetrical Distance Interval Description:
+                Radial intervals at which distortion values are available, given in
+                millimeters. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Radial Symmetrical Distance Interval</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="rsdmdistType">
+        <xsd:restriction base="positiveDoubleType" />
+    </xsd:simpleType>
+
+    <xsd:element name="rsdnumv" type="rsdnumvType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Number of Distance Distortion Values Description:
+                Number of radial points at which distance-dependent distortion values are
+                provided. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Number of Distance Distortion Values</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="rsdnumvType">
+        <xsd:restriction base="positiveDoubleType" />
+    </xsd:simpleType>
+    <xsd:element name="rsddval" type="rsddvalType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Distance Distortion Value Description: Value of
+                distortion at one of the radial distances specified by Radial Distance
+                Interval, in micrometers. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Distance Distortion Value</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="rsddvalType">
+        <xsd:restriction base="xsd:double" />
+    </xsd:simpleType>
+    
+    <xsd:element name="rsaddist" type="rsaddistType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Angle Dependent Distortion Description: Lens
+                distortion values provided as a function of the angle from the optical axis. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Angle Dependent Distortion</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="rsaddistType">
+        <xsd:sequence>
+            <xsd:element ref="rsangint" />
+            <xsd:element ref="rsanumv" />
+            <!-- TODO element rsadval validation should be =Number of Angle Distortion Values -->
+            <xsd:element ref="rsadval" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="rsangint" type="rsangintType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Radial Symmetrical Angle Interval Description:
+                Interval in angle at which distortion values are available, given in
+                degrees. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Radial Symmetrical Angle Interval</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="rsangintType">
+        <xsd:restriction base="positiveDoubleType" />
+    </xsd:simpleType>
+    <xsd:element name="rsanumv" type="rsanumvType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Number of Angle Distortion Values Description:
+                Number of distortion values supplied as a function of angle. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Number of Angle Distortion Values</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="rsanumvType">
+        <xsd:restriction base="positiveDoubleType" />
+    </xsd:simpleType>
+    <xsd:element name="rsadval" type="rsadvalType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Angle Distortion Value Description: Value of
+                distortion at one of the angular distances specified by Radial Symmetrical
+                Measurement Angle, given in micrometers. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Angle Distortion Value</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="rsadvalType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="rsdispol" type="rsdispolType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Radial Symmetrical Distortion Polynomial
+                Description: Lens distortion in micrometers that is a function of the
+                distance to the principal point of best symmetry, presented in the form of
+                an odd-power polynomial: r = K0 * r + K1 * r3 + K2 * r5 + K3 * r7 . .
+                . </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Radial Symmetrical Distortion Polynomial</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="rsdispolType">
+        <xsd:sequence>
+            <xsd:element ref="polyfunc"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="dsttrasy" type="dsttrasyType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Distortion Type Radial Asymmetrical Description:
+                Distortion that can be expressed in the form x' = B1 (r'2 + 2x'2) + 2B2 *
+                x' * y' y' = B2 (r'2 + 2x'2) + 2B1 * x' * y' </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Distortion Type Radial Asymmetrical</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="dsttaf" type="dsttafType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Distortion Type Affine Description: Errors of the
+                image coordinate system that can be described with an affine transformation
+                of the following form: x' = C1 * x' + C2 * y' y' = 0 </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Distortion Type Affine</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="dsttrasyType">
+        <xsd:sequence>
+            <xsd:element ref="rab1" />
+            <xsd:element ref="rab2" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="rab1" type="rab1Type">
+        <xsd:annotation>
+            <xsd:documentation> Element: Radial Asymmetrical Coefficient B1 Description:
+                Value for B1 to be used in the formula given in the definition of Distortion
+                Type Radial Asymmetrical. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Radial Asymmetrical Coefficient B1</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="rab1Type">
+        <xsd:restriction base="xsd:double" />
+    </xsd:simpleType>
+    <xsd:element name="rab2" type="rab2Type">
+        <xsd:annotation>
+            <xsd:documentation> Element: Radial Asymmetrical Coefficient B2 Description:
+                Value to be used for B2 in the formula given in the definition of Distortion
+                Type Radial Asymmetrical. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Radial Asymmetrical Coefficient B2</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="rab2Type">
+        <xsd:restriction base="xsd:double" />
+    </xsd:simpleType>
+    
+    <xsd:complexType name="dsttafType">
+        <xsd:sequence>
+            <xsd:element ref="affc1" />
+            <xsd:element ref="affc2" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="affc1" type="affc1Type">
+        <xsd:annotation>
+            <xsd:documentation> Element: Affine Distortion X Prime Coefficient Description:
+                Coefficient of x' term in the formula given in the definition of Distortion
+                Type Affine. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Affine Distortion X Prime Coefficient</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="affc1Type">
+        <xsd:restriction base="xsd:double" />
+    </xsd:simpleType>
+    <xsd:element name="affc2" type="affc2Type">
+        <xsd:annotation>
+            <xsd:documentation> Element: Affine Distortion Y Prime Coefficient Description:
+                Coefficient of y' term in the formula given in the definition of Distortion
+                Type Affine. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Affine Distortion Y Prime Coefficient</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="affc2Type">
+        <xsd:restriction base="xsd:double" />
+    </xsd:simpleType>
+    <xsd:element name="fcoper" type="fcoperType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Frame Operation Description: Information describing
+                the configuration or motion of the camera mounting. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Frame Operation</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    
+    <xsd:complexType name="fcoperType">
+        <xsd:sequence>
+            <xsd:element ref="stabmnt" minOccurs="0" />
+            <xsd:element ref="fmc"  minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="stabmnt" type="stabmntType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Stabilized Mount Description: Type of stabilized
+                mount used during the photo flight. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Stabilized Mount</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="stabmntType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="fmc" type="fmcType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Forward Motion Compensation Description: Whether or
+                not image is moved in flying direction during exposure in order to
+                compensate image motion for ground speed. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Forward Motion Compensation</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="fmcType">
+        <xsd:restriction base="xsd:token">
+            <xsd:enumeration value="yes"/>
+            <xsd:enumeration value="no"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:element name="fradprop" type="fradpropType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Frame Radiometric Properties Description:
+                Information on the relation between radiation received and measured by a
+                detector system. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Frame Radiometric Properties</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    
+    <xsd:complexType name="fradpropType">
+        <xsd:sequence>
+            <xsd:element ref="fcradcal" minOccurs="0"/>
+            <xsd:element ref="lightdrp" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="fcradcal" type="fcradcalType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Frame Radiometric Calibration Description:
+                Transformation from units in which electronic detector measures to physical
+                units. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Frame Radiometric Calibration</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="fcradcalType">
+        <xsd:sequence>
+            <xsd:element ref="datascal" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="lightdrp" type="lightdrpType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Light Drop Description: The ratio of the light at the
+                border of the image to that at the center, given as a percentage. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Light Drop</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="lightdrpType">
+        <xsd:restriction base="xsd:double">
+            <xsd:minInclusive value="0"/>
+            <xsd:maxInclusive value="100"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:element name="fcspecpr" type="fcspecprType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Frame Spectral Properties Description:
+                Wavelength-dependent characteristics of system. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Frame Spectral Properties</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="fcspecprType">
+        <xsd:sequence>
+            <xsd:element ref="fcspecin" minOccurs="0"/>
+            <xsd:element ref="filtonca" minOccurs="0"/>
+            <xsd:element ref="spectlim" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="fcspecin" type="fcspecinType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Frame Spectral Information Description: Information
+                about wavelength sensitivity of detector. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Frame Spectral Information</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="fcspecinType">
+        <xsd:sequence>
+            <xsd:element ref="specinfo" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="filtonca" type="filtoncaType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Filter on Camera Description: Device placed in
+                front of camera lens limiting the range of wavelengths that can pass
+                through. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Filter on Camera</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="spectlim" type="spectlimType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Spectral Limit Description: Maximum wavelength, in
+                nanometers, at which focus of lens is judged accurate, errors due to
+                chromatic aberration being too large at longer wavelengths. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Spectral Limit</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="spectlimType">
+        <xsd:restriction base="positiveDoubleType" />
+    </xsd:simpleType>
+    <xsd:complexType name="filtoncaType">
+        <xsd:sequence>
+            <xsd:element ref="filtcain"/>
+            <xsd:element ref="ftrtyp" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="filtcain" type="filtcainType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Filter on Camera Indicator Description: Indicator as to
+                whether or not there is a filter in front of the camera. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Filter on Camera Indicator</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="filtcainType">
+        <xsd:restriction base="xsd:token">
+            <xsd:enumeration value="yes"/>
+            <xsd:enumeration value="no"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    <xsd:element name="ftrtyp" type="ftrtypType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Filter Type Description: Information Name: Filter
+                Type Short Name: ftrtyp Type: text Domain: "CTO 1" "L453" "L477" "L510"
+                "L599" "L731" "HF-3 (2B)" "No. 3(Aero 1)" "No. 8 (K2)" "No. 12 (Minus Blue)"
+                "No. 15 (G)" "No. 25 (A)" "No. 89 B (IR)" "Sandwich Color" "Haze Filter"
+                "Sandwich False Color" "Dark Yellow" "Light Red" "Infrared" "A2" "B" "D" "F"
+                "H" "I" "K" free text Parent: Filter on Camera Optionality:
+                Mandatory-if-applicable Repeatability: =1 Manufacturers name for and/or
+                description of filter used. (Note: CTO-1 and L filters are all manufactured
+                by AGFA Gevaert, HF-3 to 89 by Kodak Wratten, Sandwich Color to Infrared by
+                Wild, and A2 to K by Carl Zeiss.) </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Filter Type</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="ftrtypType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="scan" type="scanType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Scan Description: Properties of sensor whose
+                detector view moves over the ground in a direction roughly perpendicular
+                to the track of a moving point. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Scan</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="scanType">
+        <xsd:sequence>
+            <xsd:element ref="scangeom" maxOccurs="unbounded"/>
+            <xsd:element ref="sampprop" />
+            <xsd:element ref="sradprop" />
+            <xsd:element ref="scspprop" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="scangeom" type="scangeomType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Scan Geometric Properties Description: Spatial and
+                temporal description of scan. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Scan Geometric Properties</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="sradprop" type="sradpropType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Scan Radiometric Properties Description: Function
+                used to convert quantity in detector units to physical units. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Scan Radiometric Properties</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="scspprop" type="scsppropType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Scan Spectral Properties Description: Design
+                specifications for wavelength-dependent scanner properties. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Scan Spectral Properties</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="scangeomType">
+        <xsd:sequence>
+            <xsd:element ref="scanangu" />
+            <xsd:element ref="scantimu" />
+            <xsd:element ref="scandisu" />
+            <xsd:element ref="xtrkprop" minOccurs="0"/>
+            <xsd:element ref="elevprop" minOccurs="0"/>
+            <xsd:element ref="profprop" minOccurs="0"/>
+            <xsd:element ref="scantime" minOccurs="0"/>
+            <xsd:element ref="ifov"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="scanangu" type="scananguType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Scan Angle Units Description: Units in which angles
+                are measured in scan description. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Scan Angle Units</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="scananguType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="scantimu" type="scantimuType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Scan Time Units Description: Units in which time is
+                measured in scan description. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Scan Time Units</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="scantimuType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="scandisu" type="scandisuType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Scan Distance Units Description: Units in which
+                distance is measured in scan description. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Scan Distance Units</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="scandisuType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="xtrkprop" type="xtrkpropType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Scan Cross Track Properties Description:
+                Description of data sampling in direction approximately perpendicular to
+                track in horizontal direction. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Scan Cross Track Properties</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="xtrkpropType">
+        <xsd:sequence>
+            <xsd:element ref="xtkzero" />
+            <xsd:choice>
+                <xsd:element ref="xtkswp" />
+                <xsd:element ref="xtfixang" />
+            </xsd:choice>
+            <xsd:element ref="xtrkdesc" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="xtkzero" type="xtkzeroType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Cross Track Zero Description: Direction relative to
+                which cross-track angles are measured. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Cross Track Zero</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="xtkzeroType">
+        <xsd:sequence>
+            <xsd:element ref="xtkaxis" />
+            <!-- Suggested Values 'x' 'y' 'z' -->
+            <xsd:element ref="xtkdir"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="xtkaxis" type="xtkaxisType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Cross Track Axis Description: Axis about which
+                cross-track angles are measured. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Cross Track Axis</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="xtkaxisType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="xtkdir" type="xtkdirType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Cross Track Direction Description: Direction on Cross Track
+                Axis relative to which cross-track angles are measured. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Cross Track Direction</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="xtkdirType">
+        <xsd:restriction base="xsd:token">
+            <xsd:enumeration value="positive" />
+            <xsd:enumeration value="negative" />
+        </xsd:restriction>
+    </xsd:simpleType>
+            
+    <xsd:element name="xtkswp" type="xtkswpType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Cross Track Sweep Description: Description of
+                angular properties of cross-track sweep. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Cross Track Sweep</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="xtkswpType">
+        <xsd:sequence>
+            <xsd:element ref="xtksamp" />
+            <xsd:element ref="xtkstang" />
+            <xsd:choice>
+                <xsd:element ref="xtkexang" />
+                <xsd:element ref="xtstpang" />
+            </xsd:choice>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="xtksamp" type="xtksampType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Number of Cross Track Samples Description: Number
+                of measurements in direction across the track in each scan. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Number of Cross Track Samples</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="xtksampType">
+        <xsd:restriction base="positiveIntegerType" />
+    </xsd:simpleType>
+    <xsd:element name="xtkstang" type="xtkstangType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Cross Track Start Angle Description: Angle of start
+                of cross-track measurement from Cross Track Axis, in Scan Angle Units. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Cross Track Start Angle</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="xtkstangType">
+        <xsd:restriction base="xsd:double" />
+    </xsd:simpleType>
+    <xsd:element name="xtkexang" type="xtkexangType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Cross Track Extent Angle Description: Angle
+                between end and start of cross-track range. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Cross Track Extent Angle</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="xtkexangType">
+        <xsd:restriction base="positiveDoubleType" />
+    </xsd:simpleType>
+    <xsd:element name="xtstpang" type="xtstpangType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Cross Track Step Angle Description: Angle
+                between cross-track steps, in Scan Angle Units. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Cross Track Step Angle</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="xtstpangType">
+        <xsd:restriction base="positiveDoubleType" />
+    </xsd:simpleType>
+    <xsd:element name="xtfixang" type="xtfixangType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Cross Track Fixed Angle Description: Constant
+                angle relative to cross-track axis at which scanner is held while it
+                scans in another direction. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Cross Track Fixed Angle</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="xtfixangType">
+        <xsd:restriction base="xsd:double" />
+    </xsd:simpleType>
+
+    <xsd:element name="xtrkdesc" type="xtrkdescType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Cross Track Description Description: Additional
+                information about cross-track measurements, in text form. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Cross Track Description</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="xtrkdescType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    
+    <xsd:element name="elevprop" type="elevpropType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Scan Elevation Properties Description: Description
+                of data sampling in direction approximately perpendicular to track and
+                cross-track sweep direction. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Scan Elevation Properties</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="elevpropType">
+        <xsd:sequence>
+            <xsd:element ref="elevzero" />
+            <xsd:choice>
+                <xsd:element ref="elevswp" />
+                <xsd:element ref="elfixang" />
+            </xsd:choice>
+            <xsd:element ref="elevdesc" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="elevzero" type="elevzeroType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Elevation Zero Description: Direction relative to
+                which elevation angles are measured. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Elevation Zero</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="elevzeroType">
+        <xsd:sequence>
+            <xsd:element ref="elevaxis" />
+            <xsd:element ref="elevdir"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="elevaxis" type="elevaxisType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Elevation Axis Description: Axis about which
+                elevation angles are measured. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Elevation Axis</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="elevaxisType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    
+    <xsd:element name="elevswp" type="elevswpType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Elevation Sweep Description: Description of
+                angular properties of elevation sweep. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Elevation Sweep</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="elevswpType">
+        <xsd:sequence>
+            <xsd:element ref="elevsamp" />
+            <xsd:element ref="elestang" />
+            <xsd:choice>
+                <xsd:element ref="eleexang" />
+                <xsd:element ref="elstpang" />
+            </xsd:choice>
+        </xsd:sequence>
+    </xsd:complexType>
+    
+    <xsd:element name="elevsamp" type="elevsampType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Number of Elevation Samples Description: Number of
+                measurements in direction across the track in each scan. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Number of Elevation Samples</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="elevsampType">
+        <xsd:restriction base="positiveIntegerType" />
+    </xsd:simpleType>
+    <xsd:element name="elestang" type="elestangType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Elevation Start Angle Description: Angle of start
+                of elevation measurement from Elevation Axis, in Scan Angle Units. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Elevation Start Angle</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="elestangType">
+        <xsd:restriction base="xsd:double" />
+    </xsd:simpleType>
+    <xsd:element name="eleexang" type="eleexangType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Elevation Extent Angle Description: Angle
+                between end and start of elevation range. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Elevation Extent Angle</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="eleexangType">
+        <xsd:restriction base="positiveDoubleType" />
+    </xsd:simpleType>
+    <xsd:element name="elstpang" type="elstpangType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Elevation Step Angle Description: Angle between
+                elevation steps, in Scan Angle Units. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Elevation Step Angle</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="elstpangType">
+        <xsd:restriction base="positiveDoubleType" />
+    </xsd:simpleType>
+    
+    <xsd:element name="elfixang" type="elfixangType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Elevation Fixed Angle Description: Constant
+                angle relative to elevation axis at which scanner is held while it scans
+                in another direction. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Elevation Fixed Angle</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="elfixangType">
+        <xsd:restriction base="xsd:double" />
+    </xsd:simpleType>
+    
+    <xsd:element name="elevdesc" type="elevdescType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Elevation Description Description: Additional
+                information about elevation measurements, in text form. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Elevation Description</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="elevdescType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="profprop" type="profpropType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Profile Properties Description: Description of data
+                sampling in vertical direction. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Profile Properties</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="profpropType">
+        <xsd:sequence>
+            <xsd:choice>
+                <xsd:element ref="profsond" />
+                <xsd:element ref="proffix" />
+            </xsd:choice>
+            <xsd:element ref="profdesc" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="profsond" type="profsondType" >
+        <xsd:annotation>
+            <xsd:documentation> Element: Profile Sounding Description: Description of process of profile sampling.</xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Profile Sounding</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="profsondType">
+        <xsd:sequence>
+            <xsd:element ref="profsamp" />
+            <xsd:element ref="profdir"/>
+            <xsd:element ref="profst" />
+            <xsd:choice>
+                <xsd:element ref="profext" />
+                <xsd:element ref="profstep" />
+            </xsd:choice>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="proffix" type="positiveDoubleType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Profile Fixed Description: Fixed profile level at which scanning is taking place. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Profile Fixed</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="profdesc" type="FGDCstring">
+        <xsd:annotation>
+            <xsd:documentation> Element: Profile Description Description: Additional information about profile measurements, in text form.</xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Profile Description</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="profsamp" type="profsampType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Number of Profile Samples Description: Number of
+                heights at which measurements are made. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Number of Profile Samples</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="profsampType">
+        <xsd:restriction base="positiveIntegerType" />
+    </xsd:simpleType>
+    <xsd:element name="profdir" type="profdirType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Profiling Direction Description: Direction of sequence of
+                heights at which profile measurements are made. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Profiling Direction</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="profdirType">
+        <xsd:restriction base="xsd:token">
+            <xsd:enumeration value="positive"/>
+            <xsd:enumeration value="negative"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:element name="profst" type="positiveDoubleType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Profile Start Description: Height of start of
+                profile measurements. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Profile Start</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="profext" type="positiveDoubleType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Profile Extent Description: Distance between
+                end and start of profile range, in Scan Distance Units. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Profile Extent</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="profstep" type="positiveDoubleType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Profile Step Description: Distance between
+                profile steps, in Scan Distance Units. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Profile Step</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+        <xsd:element name="scantime" type="scantimeType">
+            <xsd:annotation>
+                <xsd:documentation> Element: Scan Timing Description: Schedule for scans. </xsd:documentation>
+                <xsd:appinfo>
+                    <sch:title>Scan Timing</sch:title>
+                </xsd:appinfo>
+            </xsd:annotation>
+        </xsd:element>    
+    
+    <xsd:element name="elevdir" type="elevdirType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Elevation Direction Description: Direction on Elevation
+                Axis relative to which elevation angles are measured. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Elevation Direction</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="elevdirType">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="positive" />
+            <xsd:enumeration value="negative" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:complexType name="scantimeType">
+        <xsd:sequence>
+            <xsd:element name="scanstart" type="scanstartType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Scan Start Time Description: Time at start of scan. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Scan Start Time</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:choice>
+                <xsd:element name="scandur" type="positiveDoubleType">
+                    <xsd:annotation>
+                        <xsd:documentation> Element: Scan Duration Description: Duration of a single
+                            scan, in Scan Time Units. </xsd:documentation>
+                        <xsd:appinfo>
+                            <sch:title>Scan Duration</sch:title>
+                        </xsd:appinfo>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element name="scanstept" type="positiveDoubleType">
+                    <xsd:annotation>
+                        <xsd:documentation> Element: Scan Step Time Description: Time for one step
+                            in scan, in Scan Time Units. </xsd:documentation>
+                        <xsd:appinfo>
+                            <sch:title>Scan Step Time</sch:title>
+                        </xsd:appinfo>
+                    </xsd:annotation>
+                </xsd:element>
+            </xsd:choice>
+            <xsd:element name="scanrptt" type="positiveDoubleType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Scan Repeat Time Description: Time between the
+                        start of one scan and the next, in Scan Time Units. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Scan Repeat Time</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="scanstartType">
+        <xsd:sequence>
+            <xsd:element ref="sngdate" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="ifov" type="ifovType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Instantaneous Field of View Description: Ground or target
+                area viewed by a sensor at a given time. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Instantaneous Field of View</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="ifovType">
+        <xsd:sequence>
+            <xsd:element ref="ifovunit" />
+            <xsd:element ref="ifovxdef" />
+            <xsd:element ref="ifovxval" />
+            <xsd:element ref="ifovydef" />
+            <xsd:element ref="ifovyval" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="ifovunit" type="ifovunitType">
+        <xsd:annotation>
+            <xsd:documentation> Element: IFOV Units Description: Units in which value of
+                instantaneous field of view is expressed. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>IFOV Units</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="ifovunitType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="ifovxdef" type="ifovxdefType">
+        <xsd:annotation>
+            <xsd:documentation> Element: IFOV x Definition Description: Definition of x
+                direction in instantaneous field of view. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>IFOV x Definition</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="ifovxdefType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="ifovxval" type="positiveDoubleType">
+        <xsd:annotation>
+            <xsd:documentation> Element: IFOV x Value Description: Size of instantaneous
+                field of view, in direction defined by IFOV x Definition, in units given by
+                IFOV Units. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>IFOV x Value</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="ifovydef" type="ifovydefType">
+        <xsd:annotation>
+            <xsd:documentation> Element: IFOV y Definition Description: Definition of y
+                direction in instantaneous field of view. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>IFOV y Definition</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="ifovydefType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="ifovyval" type="positiveDoubleType">
+        <xsd:annotation>
+            <xsd:documentation> Element: IFOV y Value Description: Size of instantaneous
+                field of view, in direction defined by IFOV y Definition, in units given by
+                IFOV Units. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>IFOV y Value</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="sampprop" type="samppropType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Sample Properties Description: Description of
+                sensor pixel properties. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Sample Properties</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    
+    <xsd:complexType name="samppropType">
+        <xsd:sequence>
+            <xsd:element name="sampdesu" type="sampdesuType">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Sample Description Units Description: Units in
+                        which pixel properties are provided. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Sample Description Units</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="pixldesc" type="pixldescType" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:documentation> Element: Pixel Description Description: Description of
+                        angular dimensions and location of scanner picture cell. </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Pixel Description</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="sampdesuType">
+        <xsd:sequence>
+            <xsd:element ref="sampangu" minOccurs="0"/>
+            <xsd:element ref="samprofu" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="sampangu" type="sampanguType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Sample Angle Units Description: Units in which
+                angles are measured in pixel description. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Sample Angle Units</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="sampanguType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="samprofu" type="samprofuType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Sample Profile Units Description: Units used to
+                measure profile heights and distances. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Sample Profile Units</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType mixed="true" name="samprofuType">
+        <xsd:sequence>
+            <xsd:element ref="altunits"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="pixldescType">
+        <xsd:sequence>
+            <xsd:element ref="pixxtksz" minOccurs="0"/>
+            <xsd:element name="pixelvsz" type="positiveDoubleType" minOccurs="0">
+                <xsd:annotation>
+                    <xsd:documentation>
+                        Element: Pixel Elevation Size
+                        Description: Size of pixel in elevation direction, in units specified in Sample Angle Units.
+                    </xsd:documentation>
+                    <xsd:appinfo>
+                        <sch:title>Pixel Elevation Size</sch:title>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element ref="pixprfsz" minOccurs="0"/>
+            <xsd:element ref="pixelhgt" minOccurs="0"/>
+            <xsd:element ref="pixelpsf" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="pixxtksz" type="positiveDoubleType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Pixel Cross Track Size Description: Angular extent
+                of pixel in cross-track direction, in units specified in Sample Angle Units. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Pixel Cross Track Size</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="sradpropType">
+        <xsd:sequence>
+            <xsd:element ref="datascal" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="scsppropType">
+        <xsd:sequence>
+            <xsd:element ref="specinfo" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="pixprfsz" type="positiveDoubleType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Pixel Profile Size Description: Size of pixel in
+                profile direction, in units specified in Sample Profile Units. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Pixel Profile Size</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="pixelhgt" type="positiveDoubleType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Pixel Height Above Ellipsoid Description: Height of
+                pixel above ellipsoid defined as part of spatial representation information,
+                in units specified in Sample Profile Units. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Pixel Height Above Ellipsoid</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:element name="pixelpsf" type="FGDCstring">
+        <xsd:annotation>
+            <xsd:documentation> Element: Pixel Point Spread Function Description: Pixel
+                image distribution that would be produced by a single point. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Pixel Point Spread Function</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+
+    <!-- Begin Spectral Information -->
+    <xsd:element name="specinfo" type="specinfoType">
+        <xsd:annotation>
+            <xsd:documentation>
+                Element: Spectral Information
+                Definition: 
+            </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Spectral Information</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType mixed="true" name="specinfoType">
+        <xsd:sequence>
+            <xsd:element ref="nowvband" />
+            <xsd:element ref="wvbandpr" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="nowvband" type="nowvbandType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Number of Wavelength Bands Description: Number of
+                separate wavelength ranges at which system measures. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Number of Wavelength Bands</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="nowvbandType">
+        <xsd:sequence>
+            <xsd:element ref="numbands"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="wvbandpr" type="wvbandprType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Wavelength Band Properties Description: Design
+                specifications for properties of an individual wavelength range. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Wavelength Band Properties</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="wvbandprType">
+        <xsd:sequence>
+            <xsd:element ref="waveunit" />
+            <xsd:element ref="bbnddef" minOccurs="0"/>
+            <xsd:element ref="lambdmin" />
+            <xsd:element ref="lambdmax" minOccurs="0"/>
+            <xsd:element ref="pkwavlen" minOccurs="0" />
+            <xsd:element ref="wavlreg" minOccurs="0"/>
+            <xsd:element ref="nomspres" minOccurs="0"/>
+            <xsd:element ref="bandqual" minOccurs="0"/>
+            <xsd:element ref="polrzcha" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element ref="banddesc" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="waveunit" type="waveunitType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Wavelength Units Description: Units in which band
+                wavelengths are expressed. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Wavelength Units</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="waveunitType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="bbnddef" type="bbnddefType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Band Boundary Definition Description: Designation
+                of criterion for defining maximum and minimum wavelengths for a spectral
+                band. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Band Boundary Definition</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="bbnddefType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="lambdmin" type="lambdminType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Minimum Wavelength Description: Minimum wavelength
+                boundary of the spectral range of the band using the criterion in Band
+                Boundary Definition, in units specified by Wavelength Units. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Minimum Wavelength</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="lambdminType">
+        <xsd:restriction base="positiveDoubleType" />
+    </xsd:simpleType>
+    <xsd:element name="lambdmax" type="lambdmaxType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Maximum Wavelength Description: Maximum wavelength
+                boundary of the spectral range of the band using the criterion in Band
+                Boundary Definition, in units specified by Wavelength Units. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Maximum Wavelength</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="lambdmaxType">
+    <!-- TODO: the following should actually be greater than lambdmin -->
+        <xsd:restriction base="positiveDoubleType" />
+    </xsd:simpleType>
+    
+    <xsd:element name="pkwavlen" type="pkwavlenType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Peak Wavelength Description: Wavelength of maximum
+                sensitivity within the band, in units specified by Wavelength Units. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Peak Wavelength</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="pkwavlenType">
+    <!-- TODO: the following should actually be between lambdmin and lambdmax -->
+        <xsd:restriction base="positiveDoubleType" />
+    </xsd:simpleType>
+    
+    <xsd:element name="wavlreg" type="wavlregType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Wavelength Region Description: Wavelength of maximum sensitivity within the band, in units specified by Wavelength Units.</xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Wavelength Region</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="wavlregType">
+    <!-- TODO: the following should actually be between lambdmin and lambdmax -->
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    
+    <xsd:element name="nomspres" type="nomspresType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Nominal Spatial Resolution Description: Smallest
+                distance between which separate points can be distinguished, as specified in
+                instrument design. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Nominal Spatial Resolution</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="nomspresType">
+        <xsd:sequence>
+            <xsd:element ref="spatresu" />
+            <xsd:element ref="spatresv" />
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="spatresu" type="spatresuType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Spatial Resolution Units Description: Units in
+                which spatial resolution is expressed. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Spatial Resolution Units</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="spatresuType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="spatresv" type="spatresvType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Spatial Resolution Value Description: Quantitative
+                measure of designed instrument spatial resolution, in units given by Spatial
+                Resolution Units. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Spatial Resolution Value</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="spatresvType">
+        <xsd:restriction base="positiveDoubleType" />
+    </xsd:simpleType>
+    <xsd:element name="bandqual" type="bandqualType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Band Quality Description: Description of state of
+                band, including degree of degradation and impact on resolution and
+                measurement accuracy. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Band Quality</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="bandqualType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="polrzcha" type="polrzchaType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Polarization Characteristics Description: Degree of
+                polarization of band. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Polarization Characteristics</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="polrzchaType">
+        <xsd:sequence>
+            <xsd:element ref="revrpolr" />
+            <xsd:element ref="sendpolr" minOccurs="0"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="revrpolr" type="revrpolrType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Receiver Polarization Description: Polarization
+                direction that a receiver is designed to accept. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Receiver Polarization</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="revrpolrType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="sendpolr" type="sendpolrType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Sender Polarization Description: Polarization of
+                radiation emitted as part of a measurement system. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Sender Polarization</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="sendpolrType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="banddesc" type="banddescType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Band Description Description: Additional
+                descriptive material about band properties. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Band Description</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="banddescType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="othcolde" type="othcoldeType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Other Collector Description Description:
+                Description of properties of data collection system other than frame
+                camera or whiskbroom scanner. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Other Collector Description</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="othcoldeType">
+        <xsd:restriction base="FGDCstring" />
+    </xsd:simpleType>
+    <xsd:element name="instref" type="instrefType">
+        <xsd:annotation>
+            <xsd:documentation> 
+            Element: Instrument Reference 
+            Description: Reference providing description of instrument properties and behavior.</xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Instrument Reference</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="instrefType">
+        <xsd:sequence>
+            <xsd:element ref="citeinfo" />
+        </xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>
