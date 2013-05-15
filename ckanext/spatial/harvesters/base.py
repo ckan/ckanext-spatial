@@ -259,6 +259,17 @@ class SpatialHarvester(HarvesterBase):
 
         extras['access_constraints'] = iso_values.get('limitations-on-public-access', '')
 
+        # Grpahic preview
+        browse_graphic = iso_values.get('browse-graphic')
+        if browse_graphic:
+            browse_graphic = browse_graphic[0]
+            extras['graphic-preview-file'] = browse_graphic.get('file')
+            if browse_graphic.get('description'):
+                extras['graphic-preview-description'] = browse_graphic.get('description')
+            if browse_graphic.get('type'):
+                extras['graphic-preview-type'] = browse_graphic.get('type')
+
+
         for key in ['temporal-extent-begin', 'temporal-extent-end']:
             if len(iso_values[key]) > 0:
                 extras[key] = iso_values[key][0]
