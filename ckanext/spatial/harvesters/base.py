@@ -219,6 +219,7 @@ class SpatialHarvester(HarvesterBase):
 
         extras = {
             'guid': harvest_object.guid,
+            'spatial_harvester': True,
         }
 
         # Just add some of the metadata as extras, not the whole lot
