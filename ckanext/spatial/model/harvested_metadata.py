@@ -344,6 +344,33 @@ class ISOBoundingBox(ISOElement):
         ),
     ]
 
+class ISOBrowseGraphic(ISOElement):
+
+    elements = [
+        ISOElement(
+            name="file",
+            search_paths=[
+                "gmd:fileName/gco:CharacterString/text()",
+            ],
+            multiplicity="1",
+        ),
+        ISOElement(
+            name="description",
+            search_paths=[
+                "gmd:fileDescription/gco:CharacterString/text()",
+            ],
+            multiplicity="0..1",
+        ),
+        ISOElement(
+            name="type",
+            search_paths=[
+                "gmd:fileType/gco:CharacterString/text()",
+            ],
+            multiplicity="0..1",
+        ),
+    ]
+
+
 class ISODocument(MappedXmlDocument):
 
     # Attribute specifications from "XPaths for GEMINI" by Peter Parslow.
@@ -651,7 +678,16 @@ class ISODocument(MappedXmlDocument):
                 "gmd:dataQualityInfo/gmd:DQ_DataQuality/gmd:lineage/gmd:LI_Lineage/gmd:statement/gco:CharacterString/text()",
             ],
             multiplicity="0..1",
-        )
+        ),
+        ISOBrowseGraphic(
+            name="browse-graphic",
+            search_paths=[
+                "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:graphicOverview/gmd:MD_BrowseGraphic",
+                "gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:graphicOverview/gmd:MD_BrowseGraphic",
+            ],
+            multiplicity="*",
+        ),
+
     ]
 
     def infer_values(self, values):
