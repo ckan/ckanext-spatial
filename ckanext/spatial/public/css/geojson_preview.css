@@ -9,3 +9,17 @@ html, body {
   width: 100%;
   height: 100%;
 }
+
+.popup-table {
+	border-collapse: collapse;
+	border: 1px solid #bbb;
+}
+
+.popup-table td, .popup-table th {
+	border: 1px solid #bbb;
+	padding: 4px;
+}
+
+.popup-table tr:nth-child(even) {
+	background-color: #eee;
+}
