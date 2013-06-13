@@ -290,9 +290,7 @@ WMS Preview
 
 To enable the WMS previewer you need to add the ``wms_preview`` plugin to your
 ini file (See `Configuration`_). This plugin also requires the ``resource_proxy``
-plugin and the following option in your ini file::
-
-    ckan.resource_proxy_enabled=1
+plugin.
 
 Please note that this is an experimental plugin and may be unstable.
 
