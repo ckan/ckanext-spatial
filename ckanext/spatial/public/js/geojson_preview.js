@@ -2,6 +2,13 @@
 ckan.module('geojsonpreview', function (jQuery, _) {
   return {
     options: {
+      table: '<table class="popup-table"><tbody>{body}</tbody><table>',
+      row:'<tr><th>{key}</th><td>{value}</td></tr>',
+      style: {
+        opacity: 0.7,
+        fillOpacity: 0.1,
+        weight: 2
+      }
     },
     initialize: function () {
       var self = this;
@@ -59,7 +66,17 @@ ckan.module('geojsonpreview', function (jQuery, _) {
 
     showPreview: function (geojsonFeature) {
       var self = this;
-      var gjLayer = L.geoJson().addTo(self.map);
+      var gjLayer = L.geoJson(undefined, {
+        style: self.options.style,
+        onEachFeature: function(feature, layer) {
+          var body = '';
+          jQuery.each(feature.properties, function(key, value){
+            body += L.Util.template(self.options.row, {key: key, value: value});
+          });
+          var popupContent = L.Util.template(self.options.table, {body: body});
+          layer.bindPopup(popupContent);
+        }
+      }).addTo(self.map);
       gjLayer.addData(geojsonFeature);
       self.map.fitBounds(gjLayer.getBounds());
     }
