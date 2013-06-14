@@ -127,6 +127,10 @@ class SpatialQuery(p.SingletonPlugin):
     def configure(self, config):
 
         self.search_backend = config.get('ckanext.spatial.search_backend', 'postgis')
+        if self.search_backend != 'postgis' and not p.toolkit.check_ckan_version('2.0.1'):
+            msg = 'The Solr backends for the spatial search require CKAN 2.0.1 or higher. ' + \
+                  'Please upgrade CKAN or select the \'postgis\' backend.'
+            raise p.toolkit.CkanVersionException(msg)
 
     def before_map(self, map):
 
