@@ -289,8 +289,8 @@ WMS Preview
 -----------
 
 To enable the WMS previewer you need to add the ``wms_preview`` plugin to your
-ini file (See `Configuration`_). This plugin also requires the ``resource_proxy``
-plugin.
+ini file (See `Configuration`_). This plugin also requires the `resource_proxy <http://docs.ckan.org/en/latest/data-viewer.html#viewing-remote-resources-the-resource-proxy>`_
+plugin (part of CKAN core).
 
 Please note that this is an experimental plugin and may be unstable.
 
