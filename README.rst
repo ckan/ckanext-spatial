@@ -299,6 +299,17 @@ the resource page will load simple map viewer that will attempt to load the
 remote service layers, based on the GetCapabilities response.
 
 
+GeoJSON Preview
+---------------
+
+To enable the GeoJSON previewer you need to add the ``geojson_preview`` plugin to your
+ini file (See `Configuration`_). This plugin also requires the ``resource_proxy``
+plugin.
+
+When the plugin is enabled, if datasets contain a resource that has 'gjson' or 'geojson'
+format, the resource page will load simple map viewer that will show the features on a map.
+
+
 CSW Server
 ----------
 
