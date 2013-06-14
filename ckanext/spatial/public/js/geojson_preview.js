@@ -2,7 +2,7 @@
 ckan.module('geojsonpreview', function (jQuery, _) {
   return {
     options: {
-      table: '<table class="popup-table"><tbody>{body}</tbody></table>',
+      table: '<table class="table table-striped table-bordered table-condensed"><tbody>{body}</tbody></table>',
       row:'<tr><th>{key}</th><td>{value}</td></tr>',
       style: {
         opacity: 0.7,
