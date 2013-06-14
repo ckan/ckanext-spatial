@@ -1,6 +1,10 @@
 {% extends "dataviewer/base.html" %}
 
 {% block page %}
+    {%- block styles %}
+      {% resource g.main_css[6:] %}
+    {% endblock %}
+
     <div data-module="geojsonpreview" id="data-preview">
         <h4 class="loading-dialog">
           <div class="loading-spinner"></div>

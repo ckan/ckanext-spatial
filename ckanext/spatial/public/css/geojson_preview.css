@@ -2,6 +2,7 @@ html, body {
   height: 600px;
   padding: 0;
   margin: 0;
+  background: none;
 }
 
 #map {
@@ -10,19 +11,6 @@ html, body {
   height: 100%;
 }
 
-.popup-table {
-	border-collapse: collapse;
-	border: 1px solid #bbb;
-  table-layout: fixed;
+#map .table{
   width: 300px;
-}
-
-.popup-table td, .popup-table th {
-	border: 1px solid #bbb;
-	padding: 4px;
-  word-wrap: break-word;
-}
-
-.popup-table tr:nth-child(even) {
-	background-color: #eee;
 }
