@@ -8,6 +8,9 @@ ckan.module('geojsonpreview', function (jQuery, _) {
         opacity: 0.7,
         fillOpacity: 0.1,
         weight: 2
+      },
+      i18n: {
+        'error': _('An error occurred: %(text)s %(error)s')
       }
     },
     initialize: function () {
@@ -58,15 +61,15 @@ ckan.module('geojsonpreview', function (jQuery, _) {
 
     showError: function (jqXHR, textStatus, errorThrown) {
       if (textStatus == 'error' && jqXHR.responseText.length) {
-        self.el.html(jqXHR.responseText);
+        this.el.html(jqXHR.responseText);
       } else {
-        self.el.html(self.i18n('error', {text: textStatus, error: errorThrown}));
+        this.el.html(this.i18n('error', {text: textStatus, error: errorThrown}));
       }
     },
 
     showPreview: function (geojsonFeature) {
       var self = this;
-      var gjLayer = L.geoJson(undefined, {
+      var gjLayer = L.geoJson(geojsonFeature, {
         style: self.options.style,
         onEachFeature: function(feature, layer) {
           var body = '';
@@ -80,7 +83,6 @@ ckan.module('geojsonpreview', function (jQuery, _) {
           layer.bindPopup(popupContent);
         }
       }).addTo(self.map);
-      gjLayer.addData(geojsonFeature);
       self.map.fitBounds(gjLayer.getBounds());
     }
   };
