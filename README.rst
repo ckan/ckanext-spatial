@@ -9,6 +9,7 @@ The following plugins are currently available:
 * `Spatial Search`_ - Spatial filtering for the dataset search (``spatial_query``).
 * `Spatial Harvesters`_ - for importing spatial metadata into CKAN (``csw_harvester``, ``doc_harvester``, ``waf_harvester``)
 * `Harvest Metadata API`_ - a way for a user to view the harvested metadata XML, either as a raw file or styled to view in a web browser. (``spatial_harvest_metadata_api``)
+* `GeoJSON Preview`_ - a GeoJSON previewer (``geojson_preview``).
 * `WMS Preview`_ - a Web Map Service (WMS) previewer (``wms_preview``).
 * `CSW Server`_ - a basic CSW server - to server metadata from the CKAN instance (``cswserver``)
 
