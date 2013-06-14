@@ -1,5 +1,5 @@
 html, body {
-  height: 100%;
+  height: 600px;
   padding: 0;
   margin: 0;
 }
@@ -13,11 +13,14 @@ html, body {
 .popup-table {
 	border-collapse: collapse;
 	border: 1px solid #bbb;
+  table-layout: fixed;
+  width: 300px;
 }
 
 .popup-table td, .popup-table th {
 	border: 1px solid #bbb;
 	padding: 4px;
+  word-wrap: break-word;
 }
 
 .popup-table tr:nth-child(even) {

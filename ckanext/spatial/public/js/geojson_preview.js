@@ -2,7 +2,7 @@
 ckan.module('geojsonpreview', function (jQuery, _) {
   return {
     options: {
-      table: '<table class="popup-table"><tbody>{body}</tbody><table>',
+      table: '<table class="popup-table"><tbody>{body}</tbody></table>',
       row:'<tr><th>{key}</th><td>{value}</td></tr>',
       style: {
         opacity: 0.7,
@@ -71,6 +71,9 @@ ckan.module('geojsonpreview', function (jQuery, _) {
         onEachFeature: function(feature, layer) {
           var body = '';
           jQuery.each(feature.properties, function(key, value){
+            if (value != null && typeof value === 'object') {
+              value = JSON.stringify(value);
+            }
             body += L.Util.template(self.options.row, {key: key, value: value});
           });
           var popupContent = L.Util.template(self.options.table, {body: body});
