@@ -51,5 +51,7 @@ option:
         elif cmd == 'load':
             ckan_url = self.options.ckan_url
             ckan_pycsw.load(config, ckan_url)
+        elif cmd == 'clear':
+            ckan_pycsw.clear(config)
         else:
             print 'Command %s not recognized' % cmd
