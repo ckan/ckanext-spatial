@@ -211,6 +211,20 @@ def load(pycsw_config, ckan_url):
             raise RuntimeError, 'ERROR: %s' % str(err)
 
 
+def clear(pycsw_config):
+
+    from sqlalchemy import create_engine, MetaData, Table
+
+    database = pycsw_config.get('repository', 'database')
+    table_name = pycsw_config.get('repository', 'table', 'records')
+
+    log.debug('Creating engine')
+    engine = create_engine(database)
+    records = Table(table_name, MetaData(engine))
+    records.delete().execute()
+    log.info('Table cleared')
+
+
 def get_record(context, repo, ckan_url, ckan_id, ckan_info):
     query = ckan_url + 'harvest/object/%s'
     url = query % ckan_info['harvest_object_id']
@@ -304,6 +318,8 @@ if __name__ == '__main__':
         if not arg.ckan_url:
             raise AssertionError('You need to provide a CKAN URL with -u or --ckan_url')
         load(pycsw_config, arg.ckan_url)
+    elif arg.command == 'clear':
+        clear(pycsw_config)
     else:
         print 'Unknown command {0}'.format(arg.command)
         sys.exit(1)
