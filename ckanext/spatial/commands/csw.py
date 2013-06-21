@@ -14,17 +14,20 @@ class Pycsw(script.command.Command):
     ckan-pycsw load [-p] [-u]
         Loads CKAN datasets as records into the pycsw db.
 
+    ckan-pycsw clear [-p]
+        Removes all records from the pycsw table.
+
 All commands require the pycsw configuration file. By default it will try
 to find a file called 'default.cfg' in the same directory, but you'll
 probably need to provide the actual location with the -p option.
 
-    paster ckan-pycsw setup -p /etc/pycsw/default.cfg
+    paster ckan-pycsw setup -p /etc/ckan/default/pycsw.cfg
 
 The load command requires a CKAN URL from where the datasets will be pulled.
 By default it is set to 'http://localhost', but you can define it with the -u
 option:
 
-    paster ckan-pycsw setup -p /etc/pycsw/default.cfg -u http://ckan.instance.org
+    paster ckan-pycsw load -p /etc/ckan/default/pycsw.cfg -u http://ckan.instance.org
 
     '''
 
@@ -32,7 +35,7 @@ option:
     parser.add_option('-p', '--pycsw-config', dest='pycsw_config',
             default='default.cfg', help='pycsw config file to use.')
     parser.add_option('-u', '--ckan-url', dest='ckan_url',
-            default='http://localhost', help='pycsw config file to use.')
+            default='http://localhost', help='CKAN instance to import the datasets from.')
 
     summary = __doc__.split('\n')[0]
     usage = __doc__
