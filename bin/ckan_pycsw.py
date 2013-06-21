@@ -137,6 +137,8 @@ def load(pycsw_config, ckan_url):
 
         response = requests.get(url)
         listing = response.json()
+        if not isinstance(listing, dict):
+            raise RuntimeError, 'Wrong API response: %s' % listing
         results = listing.get('results')
         if not results:
             break
