@@ -11,7 +11,7 @@ The following plugins are currently available:
 * `Harvest Metadata API`_ - a way for a user to view the harvested metadata XML, either as a raw file or styled to view in a web browser. (``spatial_harvest_metadata_api``)
 * `GeoJSON Preview`_ - a GeoJSON previewer (``geojson_preview``).
 * `WMS Preview`_ - a Web Map Service (WMS) previewer (``wms_preview``).
-* `CSW Server`_ - a basic CSW server - to server metadata from the CKAN instance (``cswserver``)
+* `CSW Server`_ - a basic CSW server - to server metadata from the CKAN instance (``cswserver``). **Deprecated:** Please see `ckan-pycsw`_.
 
 These snippets (to be used with CKAN>=2.0):
 
@@ -26,7 +26,9 @@ These libraries:
 
 And these command-line tools:
 
+* `ckan-pycsw`_ - a command for integrating CKAN with `pycsw <http://pycsw.org>`_, a fully compliant CSW server.
 * `cswinfo`_ - a command-line tool to help making requests of any CSW server
+
 
 As of October 2012, ckanext-csw and ckanext-inspire were merged into this extension.
 
@@ -313,11 +315,180 @@ from the spatial extension).
 When the plugin is enabled, if datasets contain a resource that has 'gjson' or 'geojson'
 format, the resource page will load simple map viewer that will show the features on a map.
 
-
 .. _resource_proxy: http://docs.ckan.org/en/latest/data-viewer.html#viewing-remote-resources-the-resource-proxy
+
+
+ckan-pycsw
+----------
+
+The spatial extension offers the ``ckan-pycsw`` command, which allows to expose
+the spatial datasets harvested from other sources in a CSW interface. This is
+powered by `pycsw <http://pycsw.org>`_, which fully implements the OGC CSW
+specification.
+
+How it works
+++++++++++++
+
+
+The current implementation is based on CKAN and pycsw being loosely integrated
+via the CKAN API. pycsw will be generally installed in the same server as CKAN
+(although it can also be run on a separate one), and the synchronization
+command will be run regularly to keep the records on the pycsw repository up to
+date. This is done using the CKAN API to get all the datasets identifiers (more
+precisely the ones from datasets that have been harvested) and then deciding
+which ones need to be created, updated or deleted on the pycsw repository. For
+those that need to be created or updated, the original harvested spatial
+document (ie ISO 19139) is requested from CKAN, and it is then imported using
+pycsw internal functions::
+
+   Harvested
+   datasets
+      +
+      |
+      v
+  +--------+                 +---------+
+  |        |    CKAN API     |         |
+  |  CKAN  | +------------>  |  pycsw  | +------> CSW
+  |        |                 |         |
+  +--------+                 +---------+
+
+
+Remember, only datasets that were harvested with the `Spatial Harvesters`_
+can currently be exposed via pycsw.
+
+All necessary tasks are done with the ``ckan-pycsw`` command. To get more
+details of its usage, run the following::
+
+    cd /usr/lib/ckan/default/src/ckanext-spatial
+    paster ckan-pycsw --help
+
+
+Setup
++++++
+
+1. Install pycsw. There are several options for this, depending on your
+   server setup, check the `pycsw documentation <http://pycsw.org/docs/installation.html>`_.
+
+   The following instructions assume that you have installed CKAN via a
+   `package install <http://docs.ckan.org/en/latest/install-from-package.html>`_
+   and should be run as root, but the steps are the same if you are setting
+   it up in another location::
+
+    cd /usr/lib/ckan/default/src
+    source ../bin/activate
+
+    # From now on the virtualenv should be activated
+
+    git clone https://github.com/geopython/pycsw.git
+    cd pycsw
+    pip install -e . && pip install -r requirements.txt
+    python setup.py build
+    python setup.py install
+
+2. Create a database for pycsw. In theory you can use the same database that
+   CKAN is using, but if you want to keep them separated, use the following
+   command to create a new one (we'll use the same default user though)::
+
+    sudo -u postgres createdb -O ckan_default pycsw -E utf-8
+
+3. Configure pycsw. An example configuration file is included on the source::
+
+    cp default-sample.cfg default.cfg
+
+   To keep things tidy we will create a symlink to this file on the CKAN
+   configuration directory::
+
+    ln -s /usr/lib/ckan/default/src/pycsw/default.cfg /etc/ckan/default/pycsw.cfg
+
+   Open the file with your favourite editor. The main settings you should tweak
+   are ``server.home`` and ``repository.database``::
+
+    [server]
+    home=/usr/lib/ckan/default/src/pycsw
+    ...
+    [repository]
+    database=postgresql://ckan_default:pass@localhost/pycsw
+
+   The rest of the options are described `here <http://pycsw.org/docs/configuration.html>`_.
+
+4. Setup the pycsw table. This is done with the ``ckan-pycsw`` paster command
+   (Remember to have the virtualenv activated when running it)::
+
+    cd /usr/lib/ckan/default/src/ckanext-spatial
+    paster ckan-pycsw setup -p /etc/ckan/default/pycsw.cfg
+
+   At this point you should be ready to run pycsw with the wsgi script that it
+   includes::
+
+    cd /usr/lib/ckan/default/src/pycsw
+    python csw.wsgi
+
+   This will run pycsw at http://localhost:8000. Visiting the following URL
+   should return you the Capabilities file:
+
+    http://localhost:8000?service=CSW&version=2.0.2&request=GetCapabilities
+
+5. Load the CKAN datasets into pycsw. Again we will use the ``ckan-pycsw``
+   command for this::
+
+    cd /usr/lib/ckan/default/src/ckanext-spatial
+    paster ckan-pycsw load -p /etc/ckan/default/pycsw.cfg
+
+   When the loading is finished, check that results are returned when visiting
+   this link:
+
+    http://localhost:8000/?request=GetRecords&service=CSW&version=2.0.2&resultType=results&outputSchema=http://www.isotc211.org/2005/gmd&typeNames=csw:Record&elementSetName=summary
+
+   The ``numberOfRecordsMatched`` should match the number of harvested datasets
+   in CKAN (minus import errors). If you run the command again new or udpated
+   datasets will be synchronized and deleted datasets from CKAN will be removed
+   from pycsw as well.
+
+Running it on production site
++++++++++++++++++++++++++++++
+
+On a production site you probably want to run the load command regularly to
+keep CKAN and pycsw in sync, and serve pycsw with Apache + mod_wsgi like CKAN.
+
+* To run the load command regularly you can set up a cron job. Type ``crontab -e``
+  and copy the following lines::
+
+    # m h  dom mon dow   command
+    0 *  *   *   *     /usr/lib/ckan/default/bin/paster --plugin=ckanext-spatial ckan-pycsw load -p /etc/ckan/default/pycsw.cfg
+
+  This particular example will run the load command every hour. You can of
+  course modify this periodicity, for instance reducing it for huge instances.
+  This `Wikipedia page <http://en.wikipedia.org/wiki/Cron#CRON_expression>`_
+  has a good overview of the crontab syntax.
+
+* To run pycsw under Apache check the pycsw `installation documentation <http://pycsw.org/docs/installation.html#running-on-wsgi>`_
+  or follow this quick steps (they assume the paths used on the previous steps):
+
+  - Edit ``/etc/apache2/sites-available/ckan_default`` and add the following
+    line just before the existing ``WSGIScriptAlias`` directive::
+
+      WSGIScriptAlias /csw /usr/lib/ckan/default/src/pycsw/csw.wsgi
+
+  - Edit the ``/usr/lib/ckan/default/src/pycsw/csw.wsgi`` file and add these two
+    lines just after the imports on the top of the file::
+
+      activate_this = os.path.join('/usr/lib/ckan/default/bin/activate_this.py')
+      execfile(activate_this, {"__file__":activate_this})
+
+    We need these to activate the virtualenv where we installed pycsw into.
+
+  - Restart Apache::
+
+      service apache2 restart
+
+    pycsw should be now accessible at http://localhost/csw
+
 
 CSW Server
 ----------
+
+.. note:: **Deprecated:** The old csw plugin has been deprecated, please see `ckan-pycsw`_
+    for details on how to integrate with pycsw.
 
 CSW (Catalogue Service for the Web) is an OGC standard for a web interface that allows you to access metadata (which are records that describe data or services)
 
@@ -454,7 +625,7 @@ To specify which validators to use during harvesting, specify their names in CKA
 cswinfo
 -------
 
-When ckanext-csw is installed, it provides a command-line tool ``cswinfo``, for making queries on CSW servers and returns the info in nicely formatted JSON. This may be more convenient to type than using, for example, curl.
+The command-line tool ``cswinfo`` allows to make queries on CSW servers and returns the info in nicely formatted JSON. This may be more convenient to type than using, for example, curl.
 
 Currently available queries are:
  * getcapabilities
@@ -569,6 +740,9 @@ the EPSG code as an integer (e.g 4326, 4258, 27700, etc). It defaults to
 
 Configuration - CSW Server
 --------------------------
+
+.. note:: **Deprecated:** The old csw plugin has been deprecated, please see `ckan-pycsw`_
+    for details on how to integrate with pycsw.
 
 Configure the CSW Server with the following keys in your CKAN config file (default values are shown)::
 
