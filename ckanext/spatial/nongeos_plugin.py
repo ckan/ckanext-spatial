@@ -21,7 +21,6 @@ class WMSPreview(p.SingletonPlugin):
 
         self.proxy_enabled = p.toolkit.asbool(config.get('ckan.resource_proxy_enabled', 'False'))
 
-
     def setup_template_variables(self, context, data_dict):
         import ckanext.resourceproxy.plugin as proxy
         if self.proxy_enabled and not data_dict['resource']['on_same_domain']:
@@ -30,6 +29,8 @@ class WMSPreview(p.SingletonPlugin):
             p.toolkit.c.resource['proxy_url'] = data_dict['resource']['url']
 
     def can_preview(self, data_dict):
+        format_lower = data_dict['resource']['format'].lower()
+
         correct_format = format_lower in self.WMS
         can_preview_from_domain = self.proxy_enabled or data_dict['resource']['on_same_domain']
         quality = 2
