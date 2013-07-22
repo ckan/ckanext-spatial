@@ -316,6 +316,8 @@ CSW Server
 
 CSW (Catalogue Service for the Web) is an OGC standard for a web interface that allows you to access metadata (which are records that describe data or services)
 
+NB Only 'harvested' datasets are served by this CSW Server. This is because the harvested document is the one that is served, not something derived from the CKAN Dataset object. Datasets that are created in CKAN by methods other than harvesting are not served.
+
 The currently supported methods with this CSW Server are:
  * GetCapabilities
  * GetRecords
@@ -326,6 +328,10 @@ ckanext-csw provides the CSW service at ``/csw``.
 For example you can ask the capabilities of the CSW server installed into CKAN running on 127.0.0.1:5000 like this::
 
  curl 'http://127.0.0.1:5000/csw?request=GetCapabilities&service=CSW'
+
+And get a list of the records like this::
+
+ curl 'http://127.0.0.1:5000/csw?request=GetRecords&service=CSW&resultType=results&elementSetName=full'
 
 The standard CSW response is in XML format.
 
