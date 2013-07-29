@@ -209,7 +209,7 @@ class SpatialQuery(p.SingletonPlugin):
             if self.search_backend == 'solr':
                 search_params = self._params_for_solr_search(bbox, search_params)
             elif self.search_backend == 'solr-spatial-field':
-                search_params = self._params_for_solr_spatial_search(bbox, search_params)
+                search_params = self._params_for_solr_spatial_field_search(bbox, search_params)
             elif self.search_backend == 'postgis':
                 search_params = self._params_for_postgis_search(bbox, search_params)
 
