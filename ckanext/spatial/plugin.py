@@ -280,7 +280,7 @@ class SpatialQuery(p.SingletonPlugin):
 
         # Note: This will be deprecated at some point in favour of the
         # Solr 4 spatial sorting capabilities
-        if search_params['sort'] == 'spatial desc' and \
+        if search_params.get('sort') == 'spatial desc' and \
            p.toolkit.asbool(config.get('ckanext.spatial.use_postgis_sorting', 'False')):
             if search_params['q'] or search_params['fq']:
                 raise SearchError('Spatial ranking cannot be mixed with other search parameters')
