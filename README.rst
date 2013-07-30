@@ -304,8 +304,9 @@ GeoJSON Preview
 ---------------
 
 To enable the GeoJSON previewer you need to add the ``geojson_preview`` plugin to your
-ini file (See `Configuration`_). This plugin also requires the ``resource_proxy``
-plugin.
+ini file (See `Configuration`_). This plugin also requires the `resource_proxy <http://docs.ckan.org/en/latest/data-viewer.html#viewing-remote-resources-the-resource-proxy>`_
+plugin (part of CKAN core). To avoid conflicts with the `text_preview <http://docs.ckan.org/en/latest/data-viewer.html#viewing-highlighted-xml-json-and-plain-text-data>`_ set
+``ckan.preview.json_formats = json`` in your CKAN ini file.
 
 When the plugin is enabled, if datasets contain a resource that has 'gjson' or 'geojson'
 format, the resource page will load simple map viewer that will show the features on a map.
