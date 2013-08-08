@@ -1,5 +1,5 @@
 html, body {
-  height: 600px;
+  max-height: 600px;
   padding: 0;
   margin: 0;
   background: none;
