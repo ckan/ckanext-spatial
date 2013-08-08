@@ -290,8 +290,9 @@ WMS Preview
 -----------
 
 To enable the WMS previewer you need to add the ``wms_preview`` plugin to your
-ini file (See `Configuration`_). This plugin also requires the `resource_proxy <http://docs.ckan.org/en/latest/data-viewer.html#viewing-remote-resources-the-resource-proxy>`_
-plugin (part of CKAN core).
+ini file (See `Configuration`_). This plugin also requires the `resource_proxy`_
+plugin (Make sure you load the ``resource_proxy`` plugin before any other
+from the spatial extension).
 
 Please note that this is an experimental plugin and may be unstable.
 
@@ -304,12 +305,16 @@ GeoJSON Preview
 ---------------
 
 To enable the GeoJSON previewer you need to add the ``geojson_preview`` plugin to your
-ini file (See `Configuration`_). This plugin also requires the ``resource_proxy``
-plugin.
+ini file (See `Configuration`_). This plugin also requires the `resource_proxy`_
+plugin (Make sure you load the ``resource_proxy`` plugin before any other
+from the spatial extension).
+
 
 When the plugin is enabled, if datasets contain a resource that has 'gjson' or 'geojson'
 format, the resource page will load simple map viewer that will show the features on a map.
 
+
+.. _resource_proxy: http://docs.ckan.org/en/latest/data-viewer.html#viewing-remote-resources-the-resource-proxy
 
 CSW Server
 ----------
