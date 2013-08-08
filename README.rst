@@ -16,7 +16,7 @@ The following plugins are currently available:
 These snippets (to be used with CKAN>=2.0):
 
 * `Dataset Extent Map`_ - Map widget showing a dataset extent.
-* `Spatial Search Widget`_ - Map widget integrated on the search form (``spatial_query_widget``).
+* `Spatial Search Widget`_ - Map widget integrated on the search form.
 
 These libraries:
 
