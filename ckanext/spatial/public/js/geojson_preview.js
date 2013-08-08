@@ -20,6 +20,9 @@ ckan.module('geojsonpreview', function (jQuery, _) {
       self.el.append($("<div></div>").attr("id","map"));
       self.map = L.map('map');
 
+      // hack to make leaflet use a particular location to look for images
+      L.Icon.Default.imagePath = this.options.site_url + 'js/vendor/leaflet/images';
+
       var mapUrl = "http://otile{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png";
       var osmAttribution = 'Map data &copy; 2011 OpenStreetMap contributors, Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="http://developer.mapquest.com/content/osm/mq_logo.png">';
       var bg = new L.TileLayer(mapUrl, {maxZoom: 18, attribution: osmAttribution, subdomains: '1234'});

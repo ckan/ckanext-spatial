@@ -5,7 +5,7 @@
       {% resource g.main_css[6:] %}
     {% endblock %}
 
-    <div data-module="geojsonpreview" id="data-preview">
+    <div data-module="geojsonpreview" id="data-preview" data-module-site_url="{{ h.dump_json(h.url('/', locale='default', qualified=true)) }}">
         <h4 class="loading-dialog">
           <div class="loading-spinner"></div>
           <div class="left">{{ _('Loading...') }}</div>
