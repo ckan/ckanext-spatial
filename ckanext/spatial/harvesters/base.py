@@ -505,6 +505,9 @@ class SpatialHarvester(HarvesterBase):
                    'extras_as_string': True,
                    'api_version': '2',
                    'return_id_only': True}
+        if context['user'] == self._site_user['name']:
+            context['ignore_auth'] = True
+
 
         # The default package schema does not like Upper case tags
         tag_schema = logic.schema.default_tags_schema()
@@ -646,12 +649,13 @@ class SpatialHarvester(HarvesterBase):
         if self._user_name:
             return self._user_name
 
+        self._site_user = p.toolkit.get_action('get_site_user')({'model': model, 'ignore_auth': True}, {})
+
         config_user_name = config.get('ckanext.spatial.harvest.user_name')
         if config_user_name:
             self._user_name = config_user_name
         else:
-            user = p.toolkit.get_action('get_site_user')({'model': model, 'ignore_auth': True}, {})
-            self._user_name = user['name']
+            self._user_name = self._site_user['name']
 
         return self._user_name
 
