@@ -60,7 +60,9 @@ class SpatialQueryTestBase(SpatialTestBase):
                    'session': model.Session,
                    'user': user['name'],
                    'extras_as_string': True,
-                   'api_version': 2}
+                   'api_version': 2,
+                   'ignore_auth': True,
+                  }
         package_dict = package_create(context, package_dict)
         return context.get('id')
 
