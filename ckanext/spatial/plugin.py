@@ -209,7 +209,7 @@ class SpatialQuery(p.SingletonPlugin):
             if self.search_backend == 'solr':
                 search_params = self._params_for_solr_search(bbox, search_params)
             elif self.search_backend == 'solr-spatial-field':
-                search_params = self._params_for_solr_spatial_search(bbox, search_params)
+                search_params = self._params_for_solr_spatial_field_search(bbox, search_params)
             elif self.search_backend == 'postgis':
                 search_params = self._params_for_postgis_search(bbox, search_params)
 
@@ -280,7 +280,7 @@ class SpatialQuery(p.SingletonPlugin):
 
         # Note: This will be deprecated at some point in favour of the
         # Solr 4 spatial sorting capabilities
-        if search_params['sort'] == 'spatial desc' and \
+        if search_params.get('sort') == 'spatial desc' and \
            p.toolkit.asbool(config.get('ckanext.spatial.use_postgis_sorting', 'False')):
             if search_params['q'] or search_params['fq']:
                 raise SearchError('Spatial ranking cannot be mixed with other search parameters')

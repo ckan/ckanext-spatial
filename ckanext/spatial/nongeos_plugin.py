@@ -11,6 +11,8 @@ class WMSPreview(p.SingletonPlugin):
     p.implements(p.IConfigurer, inherit=True)
     p.implements(p.IResourcePreview, inherit=True)
 
+    WMS = ['wms']
+
     def update_config(self, config):
 
         p.toolkit.add_public_directory(config, 'public')
@@ -18,7 +20,6 @@ class WMSPreview(p.SingletonPlugin):
         p.toolkit.add_resource('public', 'ckanext-spatial')
 
         self.proxy_enabled = p.toolkit.asbool(config.get('ckan.resource_proxy_enabled', 'False'))
-
 
     def setup_template_variables(self, context, data_dict):
         import ckanext.resourceproxy.plugin as proxy
@@ -30,11 +31,22 @@ class WMSPreview(p.SingletonPlugin):
     def can_preview(self, data_dict):
         format_lower = data_dict['resource']['format'].lower()
 
-        check = format_lower in ['wms']
-        if not self.proxy_enabled and check:
-            check = data_dict['resource']['on_same_domain']
+        correct_format = format_lower in self.WMS
+        can_preview_from_domain = self.proxy_enabled or data_dict['resource']['on_same_domain']
+        quality = 2
 
-        return check
+        if p.toolkit.check_ckan_version('2.1'):
+            if correct_format:
+                if can_preview_from_domain:
+                    return {'can_preview': True, 'quality': quality}
+                else:
+                    return {'can_preview': False,
+                            'fixable': 'Enable resource_proxy',
+                            'quality': quality}
+            else:
+                return {'can_preview': False, 'quality': quality}
+
+        return correct_format and can_preview_from_domain
 
     def preview_template(self, context, data_dict):
         return 'dataviewer/wms.html'
@@ -61,11 +73,22 @@ class GeoJSONPreview(p.SingletonPlugin):
     def can_preview(self, data_dict):
         format_lower = data_dict['resource']['format'].lower()
 
-        check = format_lower in self.GeoJSON
-        if not self.proxy_enabled and check:
-            check = data_dict['resource']['on_same_domain']
+        correct_format = format_lower in self.GeoJSON
+        can_preview_from_domain = self.proxy_enabled or data_dict['resource']['on_same_domain']
+        quality = 2
 
-        return check
+        if p.toolkit.check_ckan_version('2.1'):
+            if correct_format:
+                if can_preview_from_domain:
+                    return {'can_preview': True, 'quality': quality}
+                else:
+                    return {'can_preview': False,
+                            'fixable': 'Enable resource_proxy',
+                            'quality': quality}
+            else:
+                return {'can_preview': False, 'quality': quality}
+
+        return correct_format and can_preview_from_domain
 
     def setup_template_variables(self, context, data_dict):
         import ckanext.resourceproxy.plugin as proxy

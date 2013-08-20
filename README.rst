@@ -16,7 +16,7 @@ The following plugins are currently available:
 These snippets (to be used with CKAN>=2.0):
 
 * `Dataset Extent Map`_ - Map widget showing a dataset extent.
-* `Spatial Search Widget`_ - Map widget integrated on the search form (``spatial_query_widget``).
+* `Spatial Search Widget`_ - Map widget integrated on the search form.
 
 These libraries:
 
@@ -292,8 +292,9 @@ WMS Preview
 -----------
 
 To enable the WMS previewer you need to add the ``wms_preview`` plugin to your
-ini file (See `Configuration`_). This plugin also requires the `resource_proxy <http://docs.ckan.org/en/latest/data-viewer.html#viewing-remote-resources-the-resource-proxy>`_
-plugin (part of CKAN core).
+ini file (See `Configuration`_). This plugin also requires the `resource_proxy`_
+plugin (Make sure you load the ``resource_proxy`` plugin before any other
+from the spatial extension).
 
 Please note that this is an experimental plugin and may be unstable.
 
@@ -306,12 +307,15 @@ GeoJSON Preview
 ---------------
 
 To enable the GeoJSON previewer you need to add the ``geojson_preview`` plugin to your
-ini file (See `Configuration`_). This plugin also requires the ``resource_proxy``
-plugin.
+ini file (See `Configuration`_). This plugin also requires the `resource_proxy`_
+plugin (Make sure you load the ``resource_proxy`` plugin before any other
+from the spatial extension).
+
 
 When the plugin is enabled, if datasets contain a resource that has 'gjson' or 'geojson'
 format, the resource page will load simple map viewer that will show the features on a map.
 
+.. _resource_proxy: http://docs.ckan.org/en/latest/data-viewer.html#viewing-remote-resources-the-resource-proxy
 
 ckan-pycsw
 ----------
@@ -480,7 +484,6 @@ keep CKAN and pycsw in sync, and serve pycsw with Apache + mod_wsgi like CKAN.
 
 
 
-
 CSW Server
 ----------
 
@@ -488,6 +491,8 @@ CSW Server
     for details on how to integrate with pycsw.
 
 CSW (Catalogue Service for the Web) is an OGC standard for a web interface that allows you to access metadata (which are records that describe data or services)
+
+NB Only 'harvested' datasets are served by this CSW Server. This is because the harvested document is the one that is served, not something derived from the CKAN Dataset object. Datasets that are created in CKAN by methods other than harvesting are not served.
 
 The currently supported methods with this CSW Server are:
  * GetCapabilities
@@ -499,6 +504,10 @@ ckanext-csw provides the CSW service at ``/csw``.
 For example you can ask the capabilities of the CSW server installed into CKAN running on 127.0.0.1:5000 like this::
 
  curl 'http://127.0.0.1:5000/csw?request=GetCapabilities&service=CSW'
+
+And get a list of the records like this::
+
+ curl 'http://127.0.0.1:5000/csw?request=GetRecords&service=CSW&resultType=results&elementSetName=full'
 
 The standard CSW response is in XML format.
 

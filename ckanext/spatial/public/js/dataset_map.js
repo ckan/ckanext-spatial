@@ -25,6 +25,9 @@ this.ckan.module('dataset-map', function (jQuery, _) {
 
       this.extent = this.el.data('extent');
 
+      // hack to make leaflet use a particular location to look for images
+      L.Icon.Default.imagePath = this.options.site_url + 'js/vendor/leaflet/images';
+
       jQuery.proxyAll(this, /_on/);
       this.el.ready(this._onReady);
 
