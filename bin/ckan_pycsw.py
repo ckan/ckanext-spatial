@@ -8,6 +8,7 @@ from lxml import etree
 
 from pycsw import metadata, repository, util
 import pycsw.config
+import pycsw.admin
 
 logging.basicConfig(format='%(message)s', level=logging.INFO)
 
@@ -15,104 +16,21 @@ log = logging.getLogger(__name__)
 
 def setup_db(pycsw_config):
     """Setup database tables and indexes"""
-    from sqlalchemy import Column, create_engine, Integer, MetaData, \
-        Table, Text
+
+    from sqlalchemy import Column, Text
 
     database = pycsw_config.get('repository', 'database')
     table_name = pycsw_config.get('repository', 'table', 'records')
 
-    log.debug('Creating engine')
-    engine = create_engine(database)
-
-    mdata = MetaData(engine)
-
-    log.info('Creating table %s', table_name)
-    records = Table(
-        table_name, mdata,
-        # core; nothing happens without these
-        Column('identifier', Text, primary_key=True),
-        Column('typename', Text,
-               default='csw:Record', nullable=False, index=True),
-        Column('schema', Text,
-               default='http://www.opengis.net/cat/csw/2.0.2', nullable=False,
-               index=True),
-        Column('mdsource', Text, default='local', nullable=False,
-               index=True),
-        Column('insert_date', Text, nullable=False, index=True),
-        Column('xml', Text, nullable=False),
-        Column('anytext', Text, nullable=False),
-        Column('language', Text, index=True),
-
-        # identification
-        Column('type', Text, index=True),
-        Column('title', Text, index=True),
-        Column('title_alternate', Text, index=True),
-        Column('abstract', Text),
-        Column('keywords', Text),
-        Column('keywordstype', Text, index=True),
-        Column('parentidentifier', Text, index=True),
-        Column('relation', Text, index=True),
-        Column('time_begin', Text, index=True),
-        Column('time_end', Text, index=True),
-        Column('topicategory', Text, index=True),
-        Column('resourcelanguage', Text, index=True),
-
-        # attribution
-        Column('creator', Text, index=True),
-        Column('publisher', Text, index=True),
-        Column('contributor', Text, index=True),
-        Column('organization', Text, index=True),
-
-        # security
-        Column('securityconstraints', Text),
-        Column('accessconstraints', Text),
-        Column('otherconstraints', Text),
-
-        # date
-        Column('date', Text, index=True),
-        Column('date_revision', Text, index=True),
-        Column('date_creation', Text, index=True),
-        Column('date_publication', Text, index=True),
-        Column('date_modified', Text, index=True),
-
-        Column('format', Text, index=True),
-        Column('source', Text, index=True),
-
-        # geospatial
-        Column('crs', Text, index=True),
-        Column('geodescode', Text, index=True),
-        Column('denominator', Integer, index=True),
-        Column('distancevalue', Integer, index=True),
-        Column('distanceuom', Text, index=True),
-        Column('wkt_geometry', Text),
-
-        # service
-        Column('servicetype', Text, index=True),
-        Column('servicetypeversion', Text, index=True),
-        Column('operation', Text, index=True),
-        Column('couplingtype', Text, index=True),
-        Column('operateson', Text, index=True),
-        Column('operatesonidentifier', Text, index=True),
-        Column('operatesoname', Text, index=True),
-
-        # additional
-        Column('degree', Text, index=True),
-        Column('classification', Text, index=True),
-        Column('conditionapplyingtoaccessanduse', Text, index=True),
-        Column('lineage', Text, index=True),
-        Column('responsiblepartyrole', Text, index=True),
-        Column('specificationtitle', Text, index=True),
-        Column('specificationdate', Text, index=True),
-        Column('specificationdatetype', Text, index=True),
-
-        # distribution
-        # links: format "name,description,protocol,url[^,,,[^,,,]]"
-        Column('links', Text, index=True),
-
+    ckan_columns = [
         Column('ckan_id', Text, index=True),
         Column('ckan_modified', Text),
-    )
-    records.create()
+    ]
+
+    pycsw.admin.setup_db(database,
+        table_name, '',
+        create_plpythonu_functions=False,
+        extra_columns=ckan_columns)
 
 
 def load(pycsw_config, ckan_url):
