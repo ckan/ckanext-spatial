@@ -427,7 +427,7 @@ Setup
    This will run pycsw at http://localhost:8000. Visiting the following URL
    should return you the Capabilities file:
 
-    http://localhost:8000?service=CSW&version=2.0.2&request=GetCapabilities
+    http://localhost:8000/?service=CSW&version=2.0.2&request=GetCapabilities
 
 5. Load the CKAN datasets into pycsw. Again we will use the ``ckan-pycsw``
    command for this::
