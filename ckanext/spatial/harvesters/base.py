@@ -234,6 +234,7 @@ class SpatialHarvester(HarvesterBase):
             'coupled-resource',
             'contact-email',
             'frequency-of-update',
+            'progress',
             'spatial-data-service-type',
         ]:
             extras[name] = iso_values[name]
