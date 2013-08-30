@@ -86,13 +86,7 @@ this.ckan.module('spatial-query', function ($, _) {
       });
 
       // OK map time
-      map = new L.Map('dataset-map-container', {attributionControl: false});
-
-      // MapQuest OpenStreetMap base map
-      map.addLayer(new L.TileLayer(
-        'http://otile{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png',
-         {maxZoom: 18, subdomains: '1234'}
-      ));
+      map = ckan.commonLeafletMap('dataset-map-container', {attributionControl: false});
 
       // Initialize the draw control
       map.addControl(new L.Control.Draw({

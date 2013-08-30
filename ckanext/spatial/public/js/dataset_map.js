@@ -41,14 +41,7 @@ this.ckan.module('dataset-map', function (jQuery, _) {
           return false;
       }
 
-      map = new L.Map('dataset-map-container', {attributionControl: false });
-
-      // MapQuest OpenStreetMap base map
-      var backgroundLayer = new L.TileLayer(
-        'http://otile{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png',
-         {maxZoom: 18, subdomains: '1234'}
-      );
-      map.addLayer(backgroundLayer);
+      map = ckan.commonLeafletMap('dataset-map-container', {attributionControl: false});
 
       var ckanIcon = L.Icon.extend({options: this.options.styles.point});
 
