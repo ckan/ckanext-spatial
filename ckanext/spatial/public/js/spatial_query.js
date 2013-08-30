@@ -71,6 +71,11 @@ this.ckan.module('spatial-query', function ($, _) {
       var is_exanded = false;
       var should_zoom = true;
       var form = $("#dataset-search");
+      // CKAN 2.1
+      if (!form.length) {
+          form = $(".search-form");
+      }
+
       var buttons;
 
       // Add necessary fields to the search form if not already created
