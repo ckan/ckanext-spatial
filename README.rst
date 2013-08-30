@@ -397,6 +397,10 @@ Setup
 
     sudo -u postgres createdb -O ckan_default pycsw -E utf-8
 
+   It is strongly recommended that you install PostGIS in the pycsw databaset,
+   so its spatial functions are used. See the `Setting up PostGIS`_ section
+   for details.
+
 3. Configure pycsw. An example configuration file is included on the source::
 
     cp default-sample.cfg default.cfg
@@ -439,6 +443,13 @@ Setup
 
     cd /usr/lib/ckan/default/src/ckanext-spatial
     paster ckan-pycsw load -p /etc/ckan/default/pycsw.cfg
+
+   .. note:: If you get errors similar to this one, this is caused by
+        limitations on the pycsw model definition. This should be fixed in
+        future versions of pycsw::
+
+            ERROR: not inserted f8d48eaf-780b-40b8-a502-7a903fde5b1c Error:ERROR: value too long for type character varying(256)
+
 
    When the loading is finished, check that results are returned when visiting
    this link:
