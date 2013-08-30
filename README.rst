@@ -368,6 +368,9 @@ Setup
 1. Install pycsw. There are several options for this, depending on your
    server setup, check the `pycsw documentation <http://pycsw.org/docs/installation.html>`_.
 
+   .. note:: CKAN integration requires at least pycsw version 1.6.1. Make sure
+             to install at least this version.
+
    The following instructions assume that you have installed CKAN via a
    `package install <http://docs.ckan.org/en/latest/install-from-package.html>`_
    and should be run as root, but the steps are the same if you are setting
@@ -380,7 +383,9 @@ Setup
 
     git clone https://github.com/geopython/pycsw.git
     cd pycsw
-    pip install -e . && pip install -r requirements.txt
+    # Remember to use at least pycsw 1.6.1
+    git checkout 1.6.1
+    pip install -e .
     python setup.py build
     python setup.py install
 
@@ -503,11 +508,11 @@ ckanext-csw provides the CSW service at ``/csw``.
 
 For example you can ask the capabilities of the CSW server installed into CKAN running on 127.0.0.1:5000 like this::
 
- curl 'http://127.0.0.1:5000/csw?request=GetCapabilities&service=CSW'
+ curl 'http://127.0.0.1:5000/csw?request=GetCapabilities&service=CSW&version=2.0.2'
 
 And get a list of the records like this::
 
- curl 'http://127.0.0.1:5000/csw?request=GetRecords&service=CSW&resultType=results&elementSetName=full'
+ curl 'http://127.0.0.1:5000/csw?request=GetRecords&service=CSW&resultType=results&elementSetName=full&version=2.0.2'
 
 The standard CSW response is in XML format.
 
