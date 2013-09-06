@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" blockDefault="#all"
+	xmlns:sch="http://www.ascc.net/xml/schematron">
+<xsd:annotation>
+	<xsd:documentation>
+		Section 10 : Contact Information
+	</xsd:documentation>
+</xsd:annotation>
+
+<xsd:element name="cntinfo" type="cntinfoType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Contact Information
+		Section: 10
+		Description: Identity of, and means to communicate with, person(s) and organization(s) associated with the data set. (Note: this section provides a means of identifying individuals and organizations, and is used by other sections of the metadata standard. This section is never used alone.)
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Contact Information</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="cntinfoType">
+	<xsd:sequence>
+		<xsd:choice>
+			<xsd:element ref="cntperp"/>
+			<xsd:element ref="cntorgp"/>
+		</xsd:choice>
+		<xsd:element ref="cntpos" minOccurs="0"/>
+		<xsd:element ref="cntaddr" maxOccurs="unbounded"/>
+		<xsd:element ref="cntvoice" maxOccurs="unbounded"/>
+		<xsd:element ref="cnttdd" minOccurs="0" maxOccurs="unbounded"/>
+		<xsd:element ref="cntfax" minOccurs="0" maxOccurs="unbounded"/>
+		<xsd:element ref="cntemail" minOccurs="0" maxOccurs="unbounded"/>
+		<xsd:element ref="hours" minOccurs="0"/>
+		<xsd:element ref="cntinst" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="cntperp" type="cntperpType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Contact Person Primary
+		Section: 10.1
+		Description: the person, and the affiliation of the person, associated with the data set. Used in cases where the association of the person to the data set is more significant than the association of the organization to the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Contact Person Primary</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="cntperpType">
+	<xsd:sequence>
+		<xsd:element ref="cntper"/>
+		<xsd:element ref="cntorg" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="cntper" type="cntperType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Contact Person
+		Section: 10.1.1
+		Description: the name of the individual to which the contact type applies.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Contact Person</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="cntperType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="cntorg" type="cntorgType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Contact Organization
+		Section: 10.1.2
+		Description: the name of the organization to which the contact type applies.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Contact Organization</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="cntorgType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="cntorgp" type="cntorgpType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Contact Organization Primary
+		Section: 10.2
+		Description: the organization, and the member of the organization, associated with the data set. Used in cases where the association of the organization to the data set is more significant than the association of the person to the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Contact Organization Primary</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="cntorgpType">
+	<xsd:sequence>
+		<xsd:element ref="cntorg"/>
+		<xsd:element ref="cntper" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="cntpos" type="cntposType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Contact Position
+		Section: 10.3
+		Description: the title of individual.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Contact Position</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="cntposType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="cntaddr" type="cntaddrType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Contact Address
+		Section: 10.4
+		Description: the address for the organization or individual.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Contact Address</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="cntaddrType">
+	<xsd:sequence>
+		<xsd:element ref="addrtype"/>
+		<xsd:element ref="address" minOccurs="0" maxOccurs="unbounded"/>
+		<xsd:element ref="city"/>
+		<xsd:element ref="state"/>
+		<xsd:element ref="postal"/>
+		<xsd:element ref="country" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="addrtype" type="addrtypeType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Address Type
+		Section: 10.4.1
+		Description: the information provided by the address.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Address Type</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="addrtypeType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "mailing" "physical" "mailing and physical", free text
+		</xsd:documentation>
+		<xsd:documentation>
+			Enumerated values also match "free text"
+
+			<![CDATA[
+				<xsd:restriction base="xsd:token">
+					<xsd:enumeration value="mailing"/>
+					<xsd:enumeration value="physical"/>
+					<xsd:enumeration value="mailing and physical"/>
+				</xsd:restriction>
+			]]>
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="address" type="addressType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Address
+		Section: 10.4.2
+		Description: an address line for the address.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Address</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="addressType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="city" type="cityType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: City
+		Section: 10.4.3
+		Description: the city of the address.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>City</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="cityType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="state" type="stateType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: State or Province
+		Section: 10.4.4
+		Description: the state or province of the address.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>State or Province</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="stateType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="postal" type="postalType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Postal Code
+		Section: 10.4.5
+		Description: the ZIP or other postal code of the address.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Postal Code</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="postalType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="country" type="countryType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Country
+		Section: 10.4.6
+		Description: the country of the address.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Country</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="countryType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="cntvoice" type="cntvoiceType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Contact Voice Telephone
+		Section: 10.5
+		Description: the telephone number by which individuals can speak to the organization or individual.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Contact Voice Telephone</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="cntvoiceType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="cnttdd" type="cnttddType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Contact TDD/TTY Telephone
+		Section: 10.6
+		Description: the telephone number by which hearing-impaired individuals can contact the organization or individual.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Contact TDD/TTY Telephone</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="cnttddType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="cntfax" type="cntfaxType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Contact Facsimile Telephone
+		Section: 10.7
+		Description: the telephone number of a facsimile machine of the organization or individual.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Contact Facsimile Telephone</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="cntfaxType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="cntemail" type="cntemailType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Contact Electronic Mail Address
+		Section: 10.8
+		Description: the address of the electronic mailbox of the organization or individual.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Contact Electronic Mail Address</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="cntemailType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="hours" type="hoursType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Hours of Service
+		Section: 10.9
+		Description: time period when individuals can speak to the organization or individual.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Hours of Service</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="hoursType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="cntinst" type="cntinstType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Contact Instructions
+		Section: 10.10
+		Description: supplemental instructions on how or when to contact the individual or organization.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Contact Instructions</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="cntinstType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+</xsd:schema>

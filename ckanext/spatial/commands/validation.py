@@ -69,7 +69,7 @@ class Validation(CkanCommand):
 
     def validate_file(self):
         from ckanext.spatial.harvesters import SpatialHarvester
-        from ckanext.spatial.model import GeminiDocument
+        from ckanext.spatial.model import ISODocument
 
         if len(self.args) > 2:
             print 'Too many parameters %i' % len(self.args)
@@ -101,11 +101,11 @@ class Validation(CkanCommand):
         # CKAN read of values
         if valid:
             try:
-                gemini_document = GeminiDocument(xml_string)
-                gemini_values = gemini_document.read_values()
+                iso_document = ISODocument(xml_string)
+                iso_values = iso_document.read_values()
             except Exception, e:
                 valid = False
-                errors.append('CKAN exception reading values from GeminiDocument: %s' % e)
+                errors.append('CKAN exception reading values from ISODocument: %s' % e)
         
         print '***************'
         print 'Summary'

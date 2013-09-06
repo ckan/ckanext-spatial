@@ -1,6 +1,6 @@
 import os
-from pkg_resources import resource_stream, resource_filename
-from ckanext.spatial.model import GeminiDocument
+from pkg_resources import resource_stream
+from ckanext.spatial.model import ISODocument
 
 from lxml import etree
 
@@ -15,8 +15,12 @@ class BaseValidator(object):
     def is_valid(cls, xml):
         '''
         Runs the validation on the supplied XML etree.
+        Returns a tuple, the first value is a boolean indicating
+        whether the validation passed or not. The second is a list of tuples,
+        each containing the error message and the error line.
+
         Returns tuple:
-          (is_valid, error_message_list)
+          (is_valid, [(error_message_string, error_line_number)])
         '''
         raise NotImplementedError
 
@@ -26,7 +30,9 @@ class XsdValidator(BaseValidator):
     @classmethod
     def _is_valid(cls, xml, xsd_filepath, xsd_name):
         '''Returns whether or not an XML file is valid according to
-        an XSD.
+        an XSD. Returns a tuple, the first value is a boolean indicating
+        whether the validation passed or not. The second is a list of tuples,
+        each containing the error message and the error line.
 
         Params:
           xml - etree of the XML to be validated
@@ -34,7 +40,7 @@ class XsdValidator(BaseValidator):
           xsd_name - string describing the XSD
 
         Returns:
-          (is_valid_boolean, list_of_error_message_strings)
+          (is_valid, [(error_message_string, error_line_number)])
         '''
         xsd = etree.parse(xsd_filepath)
         schema = etree.XMLSchema(xsd)
@@ -44,12 +50,13 @@ class XsdValidator(BaseValidator):
         # XMLSchemaParseError: local list type: A type, derived by list or union, must have the simple ur-type definition as base type, not '{http://www.opengis.net/gml/3.2}doubleList'., line 118
         try:
             schema.assertValid(xml)
-        except AssertionError, e:
-            msg = '%s Schema Error: %s' % (xsd_name, e.args)
-            return False, [msg]
-        except etree.DocumentInvalid, e:
-            msg = '%s Validation Error: %s' % (xsd_name, e.args)
-            return False, [msg]
+        except etree.DocumentInvalid:
+            log.info('Validation errors found using schema {0}'.format(xsd_name))
+            errors = []
+            for error in schema.error_log:
+                errors.append((error.message, error.line))
+            errors.insert
+            return False, errors
         return True, []
 
 
@@ -62,7 +69,11 @@ class ISO19139Schema(XsdValidator):
         xsd_path = 'xml/iso19139'
         gmx_xsd_filepath = os.path.join(os.path.dirname(__file__),
                                             xsd_path, 'gmx/gmx.xsd')
-        is_valid, errors = cls._is_valid(xml, gmx_xsd_filepath, 'Dataset schema (gmx.xsd)')
+        xsd_name = 'Dataset schema (gmx.xsd)'
+        is_valid, errors = cls._is_valid(xml, gmx_xsd_filepath, xsd_name)
+        if not is_valid:
+            #TODO: not sure if we need this one, keeping for backwards compatibility
+            errors.insert(0, ('{0} Validation Error'.format(xsd_name), None))
         return is_valid, errors
 
 class ISO19139EdenSchema(XsdValidator):
@@ -78,15 +89,23 @@ class ISO19139EdenSchema(XsdValidator):
         if metadata_type in ('dataset', 'series'):
             gmx_xsd_filepath = os.path.join(os.path.dirname(__file__),
                                             xsd_path, 'gmx/gmx.xsd')
-            is_valid, errors = cls._is_valid(xml, gmx_xsd_filepath, 'Dataset schema (gmx.xsd)')
+            xsd_name = 'Dataset schema (gmx.xsd)'
+            is_valid, errors = cls._is_valid(xml, gmx_xsd_filepath, xsd_name)
+            if not is_valid:
+                #TODO: not sure if we need this one, keeping for backwards compatibility
+                errors.insert(0, ('{0} Validation Error'.format(xsd_name), None))
         elif metadata_type == 'service':
             gmx_and_srv_xsd_filepath = os.path.join(os.path.dirname(__file__),
                                                     xsd_path, 'gmx_and_srv.xsd')
-            is_valid, errors = cls._is_valid(xml, gmx_and_srv_xsd_filepath, 'Service schemas (gmx.xsd & srv.xsd)')
+            xsd_name = 'Service schemas (gmx.xsd & srv.xsd)'
+            is_valid, errors = cls._is_valid(xml, gmx_and_srv_xsd_filepath, xsd_name)
+            if not is_valid:
+                #TODO: not sure if we need this one, keeping for backwards compatibility
+                errors.insert(0, ('{0} Validation Error'.format(xsd_name), None))
         else:
             is_valid = False
-            errors = ['Metadata type not recognised "%s" - cannot choose an ISO19139 validator.' %
-                      metadata_type]
+            errors = [('Metadata type not recognised "%s" - cannot choose an ISO19139 validator.' %
+                      metadata_type, None)]
         if is_valid:
             return True, []
 
@@ -100,8 +119,50 @@ class ISO19139EdenSchema(XsdValidator):
 
         xml - etree of the ISO19139 XML record
         '''
-        gemini = GeminiDocument(xml_tree=xml)
-        return gemini.read_value('resource-type')
+        iso_parser = ISODocument(xml_tree=xml)
+        return iso_parser.read_value('resource-type')[0]
+
+class ISO19139NGDCSchema(XsdValidator):
+    '''
+    XSD based validation for ISO 19139 documents.
+
+    Uses XSD schema from the NOAA National Geophysical Data Center:
+
+    http://ngdc.noaa.gov/metadata/published/xsd/
+
+    '''
+    name = 'iso19139ngdc'
+    title = 'ISO19139 XSD Schema (NGDC)'
+
+    @classmethod
+    def is_valid(cls, xml):
+        xsd_path = 'xml/iso19139ngdc'
+
+        xsd_filepath = os.path.join(os.path.dirname(__file__),
+                                        xsd_path, 'schema.xsd')
+        return cls._is_valid(xml, xsd_filepath, 'NGDC Schema (schema.xsd)')
+
+class FGDCSchema(XsdValidator):
+    '''
+    XSD based validation for FGDC metadata documents.
+
+    Uses XSD schema from the Federal Geographic Data Comittee:
+
+    http://www.fgdc.gov/schemas/metadata/
+
+    '''
+
+    name = 'fgdc'
+    title = 'FGDC XSD Schema'
+
+    @classmethod
+    def is_valid(cls, xml):
+        xsd_path = 'xml/fgdc'
+
+        xsd_filepath = os.path.join(os.path.dirname(__file__),
+                                        xsd_path, 'fgdc-std-001-1998.xsd')
+        return cls._is_valid(xml, xsd_filepath, 'FGDC Schema (fgdc-std-001-1998.xsd)')
+
 
 class SchematronValidator(BaseValidator):
     '''Base class for a validator that uses Schematron.'''
@@ -115,6 +176,19 @@ class SchematronValidator(BaseValidator):
 
     @classmethod
     def is_valid(cls, xml):
+        '''Returns whether or not an XML file is valid according to
+        a schematron. Returns a tuple, the first value is a boolean indicating
+        whether the validation passed or not. The second is a list of tuples,
+        each containing the error message and the error line (which defaults to
+        None on the schematron validation case).
+
+        Params:
+          xml - etree of the XML to be validated
+
+        Returns:
+          (is_valid, [(error_message_string, error_line_number)])
+        '''
+
         if not hasattr(cls, 'schematrons'):
             log.info('Compiling schematron "%s"', cls.title)
             cls.schematrons = cls.get_schematrons()
@@ -129,7 +203,8 @@ class SchematronValidator(BaseValidator):
                 for error in errors:
                     message, details = cls.extract_error_details(error)
                     if not message in messages_already_reported:
-                        error_details.append(details)
+                        #TODO: perhaps can extract the source line from the error location
+                        error_details.append((details,None))
                         messages_already_reported.add(message)
                 return False, error_details
         return True, []
@@ -147,7 +222,8 @@ class SchematronValidator(BaseValidator):
         location = failed_assert_element.get('location')
         message_element = failed_assert_element.find("{http://purl.oclc.org/dsdl/svrl}text")
         message = message_element.text.strip()
-        failed_assert_element
+
+        #TODO: Do we really need such detail on the error messages?
         return message, 'Error Message: "%s"  Error Location: "%s"  Error Assert: "%s"' % (message, location, assert_)
 
     @classmethod
@@ -202,16 +278,18 @@ class Gemini2Schematron(SchematronValidator):
 
 class Gemini2Schematron13(SchematronValidator):
     name = 'gemini2-1.3'
-    title = 'GEMINI 2.1 Schematron 1.3a'
+    title = 'GEMINI 2.1 Schematron 1.3'
 
     @classmethod
     def get_schematrons(cls):
         with resource_stream("ckanext.spatial",
-                             "validation/xml/gemini2/Gemini2_R1r3a.sch") as schema:
+                             "validation/xml/gemini2/Gemini2_R1r3.sch") as schema:
             return [cls.schematron(schema)]
 
 all_validators = (ISO19139Schema,
                   ISO19139EdenSchema,
+                  ISO19139NGDCSchema,
+                  FGDCSchema,
                   ConstraintsSchematron,
                   ConstraintsSchematron14,
                   Gemini2Schematron,
@@ -224,26 +302,45 @@ class Validators(object):
     '''
     def __init__(self, profiles=["iso19139", "constraints", "gemini2"]):
         self.profiles = profiles
+        
+        self.validators = {} # name: class
+        for validator_class in all_validators:
+            self.validators[validator_class.name] = validator_class
+
+    def add_validator(self, validator_class):
+            self.validators[validator_class.name] = validator_class
 
     def isvalid(self, xml):
         '''For backward compatibility'''
         return self.is_valid(xml)
 
     def is_valid(self, xml):
-        if not hasattr(self, 'validators'):
-            self.validators = {} # name: class
-            for validator_class in all_validators:
-                self.validators[validator_class.name] = validator_class
+        '''Returns whether or not an XML file is valid.
+        Returns a tuple, the first value is a boolean indicating
+        whether the validation passed or not. The second is the name of the profile
+        that failed and the third is a list of tuples,
+        each containing the error message and the error line if present.
+
+        Params:
+          xml - etree of the XML to be validated
+
+        Returns:
+          (is_valid, failed_profile_name, [(error_message_string, error_line_number)])
+        '''
+
+
+        log.debug('Starting validation against profile(s) %s' % ','.join(self.profiles))
         for name in self.profiles:
             validator = self.validators[name]
             is_valid, error_message_list = validator.is_valid(xml)
             if not is_valid:
-                error_message_list.insert(0, 'Validating against "%s" profile failed' % validator.title)
-                log.info('%r', error_message_list)
-                return False, error_message_list
-            log.info('Validated against "%s"', validator.title)
+                #error_message_list.insert(0, 'Validating against "%s" profile failed' % validator.title)
+                log.info('Validating against "%s" profile failed' % validator.title)
+                log.debug('%r', error_message_list)
+                return False, validator.name, error_message_list
+            log.debug('Validated against "%s"', validator.title)
         log.info('Validation passed')
-        return True, []
+        return True, None, []
 
 if __name__ == '__main__':
     from sys import argv

@@ -1,0 +1,20 @@
+{#
+Displays a map showing the dataset extent on the dataset page sidebar
+
+extent
+  GeoJSON representation of the geometry to draw (ie the value of the
+  'spatial' extra)
+
+  e.g.
+  {% snippet "spatial/snippets/dataset_map_base.html", extent=extent %}
+
+#}
+<div class="dataset-map" data-module="dataset-map" data-extent="{{ extent }}" data-module-site_url="{{ h.dump_json(h.url('/', locale='default', qualified=true)) }}">
+  <div id="dataset-map-container"></div>
+  <div id="dataset-map-attribution">
+    <div>Map data CC-BY-SA by <a href="http://openstreetmap.org">OpenStreetMap</a></div>
+    <div>Tiles by <a href="http://www.mapquest.com">MapQuest</a></div>
+  </div>
+</div>
+
+{% resource 'ckanext-spatial/dataset_map' %}

@@ -1,0 +1,1249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" blockDefault="#all"
+	xmlns:sch="http://www.ascc.net/xml/schematron">
+<xsd:annotation>
+	<xsd:documentation>
+		Section 1 : Identification Information
+	</xsd:documentation>
+</xsd:annotation>
+
+<xsd:element name="idinfo" type="idinfoType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Identification Information
+		Section: 1
+		Description: basic information about the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Identification Information</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="idinfoType">
+	<xsd:sequence>
+		<xsd:element ref="citation"/>
+		<xsd:element ref="descript"/>
+		<xsd:element ref="timeperd"/>
+		<xsd:element ref="status"/>
+		<xsd:element ref="spdom"/>
+		<xsd:element ref="keywords"/>
+		<xsd:element ref="accconst"/>
+		<xsd:element ref="useconst"/>
+		<xsd:element ref="ptcontac" minOccurs="0"/>
+		<xsd:element ref="browse" minOccurs="0" maxOccurs="unbounded"/>
+		<xsd:element ref="datacred" minOccurs="0"/>
+		<xsd:element ref="secinfo" minOccurs="0"/>
+		<xsd:element ref="native" minOccurs="0"/>
+		<xsd:element ref="crossref" minOccurs="0" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="citation" type="citationType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Citation
+		Section: 1.1
+		Description: information to be used to reference the data set (see Section 8 for schema definitions).
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Citation</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="citationType">
+	<xsd:sequence>
+		<xsd:element ref="citeinfo"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="descript" type="descriptType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Description
+		Section: 1.2
+		Description: a characterization of the data set, including its intended use and limitations.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Description</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="descriptType">
+	<xsd:sequence>
+		<xsd:element ref="abstract"/>
+		<xsd:element ref="purpose"/>
+		<xsd:element ref="supplinf" minOccurs="0"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="abstract" type="abstractType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Abstract
+		Section: 1.2.1
+		Description: a brief narrative summary of the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Abstract</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="abstractType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="purpose" type="purposeType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Purpose
+		Section: 1.2.2
+		Description: a summary of the intentions with which the data set was developed.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Purpose</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="purposeType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="supplinf" type="supplinfType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Supplemental Information
+		Section: 1.2.3
+		Description: other descriptive information about the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Supplemental Information</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="supplinfType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="timeperd" type="timeperdType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Time Period of Content
+		Section: 1.3
+		Description: time period(s) for which the data set corresponds to the currentness reference.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Time Period of Content</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="timeperdType">
+	<xsd:sequence>
+		<xsd:element ref="timeinfo">
+			<xsd:annotation>
+				<xsd:documentation>See Section 9 for schema definitions.</xsd:documentation>
+			</xsd:annotation>
+		</xsd:element>
+		<xsd:element ref="current"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="current" type="currentType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Currentness Reference
+		Section: 1.3.1
+		Description: the basis on which the time period of content information is determined.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Currentness Reference</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="currentType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "ground condition" "publication date" free text
+		</xsd:documentation>
+		<xsd:documentation>
+			Enumerated values also match "free text"
+
+			<![CDATA[
+				<xsd:restriction base="xsd:token">
+					<xsd:enumeration value="ground condition"/>
+					<xsd:enumeration value="publication date"/>
+				</xsd:restriction>
+			]]>
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="status" type="statusType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Status
+		Section: 1.4
+		Description: the state of and maintenance information for the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Status</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="statusType">
+	<xsd:sequence>
+		<xsd:element ref="progress"/>
+		<xsd:element ref="update"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="progress" type="progressType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Progress
+		Section: 1.4.1
+		Description: the state of the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Progress</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="progressType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "Complete" "In work" "Planned"
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="xsd:token">
+		<xsd:enumeration value="Complete"/>
+		<xsd:enumeration value="In work"/>
+		<xsd:enumeration value="Planned"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="update" type="updateType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Maintenance and Update Frequency
+		Section: 1.4.2
+		Description: the frequency with which changes and additions are made to the data set after the initial data set is completed.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Maintenance and Update Frequency</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="updateType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "Continually" "Daily" "Weekly" "Monthly" "Annually" "Unknown" "As needed" "Irregular" "None planned" free text
+		</xsd:documentation>
+		<xsd:documentation>
+			Enumerated values also match "free text"
+
+			<![CDATA[
+				<xsd:restriction base="xsd:token">
+					<xsd:enumeration value="Continually"/>
+					<xsd:enumeration value="Daily"/>
+					<xsd:enumeration value="Weekly"/>
+					<xsd:enumeration value="Monthly"/>
+					<xsd:enumeration value="Annually"/>
+					<xsd:enumeration value="Unknown"/>
+					<xsd:enumeration value="As needed"/>
+					<xsd:enumeration value="Irregular"/>
+					<xsd:enumeration value="None planned"/>
+				</xsd:restriction>
+			]]>
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="spdom" type="spdomType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Spatial Domain
+		Section: 1.5
+		Description: the geographic areal domain of the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Spatial Domain</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="spdomType">
+	<xsd:sequence>
+		<xsd:element ref="bounding"/>
+		<xsd:element ref="dsgpoly" minOccurs="0" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="bounding" type="boundingType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Bounding Coordinates
+		Section: 1.5.1
+		Description: the limits of coverage of a data set expressed by latitude and longitude values in the order western-most, eastern-most, northern-most, and southern-most. For data sets that include a complete band of latitude around the earth, the West Bounding Coordinate shall be assigned the value -180.0, and the East Bounding Coordinate shall be assigned the value 180.0
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Bounding Coordinates</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="boundingType">
+	<xsd:sequence>
+		<xsd:element ref="westbc"/>
+		<xsd:element ref="eastbc"/>
+		<xsd:element ref="northbc"/>
+		<xsd:element ref="southbc"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="westbc" type="westbcType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: West Bounding Coordinate
+		Section: 1.5.1.1
+		Description: western-most coordinate of the limit of coverage expressed in longitude.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>West Bounding Coordinate</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="westbcType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: -180.0 &lt;= West Bounding Coordinate &lt; 180.0
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDClongitude">
+		<xsd:maxExclusive value="180.0"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="eastbc" type="eastbcType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: East Bounding Coordinate
+		Section: 1.5.1.2
+		Description: eastern-most coordinate of the limit of coverage expressed in longitude.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>East Bounding Coordinate</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="eastbcType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: -180.0 &lt;= East Bounding Coordinate &lt;= 180.0
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDClongitude"/>
+</xsd:simpleType>
+
+<xsd:element name="northbc" type="northbcType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: North Bounding Coordinate
+		Section: 1.5.1.3
+		Description: northern-most coordinate of the limit of coverage expressed in latitude.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>North Bounding Coordinate</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="northbcType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: -90.0 &lt;= North Bounding Coordinate &lt;= 90.0; North Bounding Coordinate &gt;= South Bounding Coordinate
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDClatitude"/>
+</xsd:simpleType>
+
+<xsd:element name="southbc" type="southbcType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: South Bounding Coordinate
+		Section: 1.5.1.4
+		Description: southern-most coordinate of the limit of coverage expressed in latitude.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:schema>
+			<sch:pattern name="Bounding Coordinates Latitude Restriction">
+				<sch:rule context="southbc">
+					<sch:assert test=". &lt;= parent::bounding/northbc">South_Bounding_Coordinate (<sch:emph>southbc</sch:emph>) must be less than or equal to North_Bounding_Coordinate (<sch:emph>northbc</sch:emph>).</sch:assert>
+				</sch:rule>
+			</sch:pattern>
+		</sch:schema>
+		<sch:title>South Bounding Coordinate</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="southbcType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: -90.0 &lt;= South Bounding Coordinate &lt;= 90.0; South Bounding Coordinate &lt;= North Bounding Coordinate
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDClatitude"/>
+</xsd:simpleType>
+
+<xsd:element name="dsgpoly" type="dsgpolyType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Data Set G-Polygon
+		Section: 1.5.2
+		Description: coordinates defining the outline of an area covered by a data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Data Set G-Polygon</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="dsgpolyType">
+	<xsd:sequence>
+		<xsd:element ref="dsgpolyo"/>
+		<xsd:element ref="dsgpolyx" minOccurs="0" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="dsgpolyo" type="dsgpolyoType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Data Set G-Polygon Outer G-Ring
+		Section: 1.5.2.1
+		Description: the closed nonintersecting boundary of an interior area.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Data Set G-Polygon Outer G-Ring</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="dsgpolyoType">
+	<xsd:choice>
+		<xsd:element ref="grngpoin" minOccurs="4" maxOccurs="unbounded"/>
+		<xsd:element ref="gring"/>
+	</xsd:choice>
+</xsd:complexType>
+
+<xsd:element name="grngpoin" type="grngpoinType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: G-Ring Point
+		Section: 1.5.2.1.1
+		Description: a single geographic location.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>G-Ring Point</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="grngpoinType">
+	<xsd:sequence>
+		<xsd:element ref="gringlat"/>
+		<xsd:element ref="gringlon"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="gringlat" type="gringlatType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: G-Ring Latitude
+		Section: 1.5.2.1.1.1
+		Description: the latitude of a point of the g-ring.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:schema>
+			<sch:pattern name="G-Ring Latitude Restriction">
+				<sch:rule context="gringlat">
+					<sch:assert test="(. &gt;= ancestor::spdom/bounding/southbc) and (. &lt;= ancestor::spdom/bounding/northbc)">G-Ring_Latitude (<sch:emph>gringlat</sch:emph>) must lie between the North_Bounding_Coordinate (<sch:emph>northbc</sch:emph>) and South_Bounding_Coordinate (<sch:emph>southbc</sch:emph>).</sch:assert>
+				</sch:rule>
+			</sch:pattern>
+		</sch:schema>
+		<sch:title>G-Ring Latitude</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="gringlatType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: -90.0 &lt;= G-Ring Latitude &lt;= 90.0
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDClatitude"/>
+</xsd:simpleType>
+
+<xsd:element name="gringlon" type="gringlonType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: G-Ring Longitude
+		Section: 1.5.2.1.1.2
+		Description: the longitude of a point of the g-ring.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:schema>
+			<sch:pattern name="G-Ring Longitude Restrictions">
+				<sch:rule context="gringlon[ancestor::spdom/bounding/westbc &lt;= ancestor::spdom/bounding/eastbc]">
+					<sch:assert test="(. &gt;= ancestor::spdom/bounding/westbc) and (. &lt;= ancestor::spdom/bounding/eastbc)">G-Ring_Longitude (<sch:emph>gringlon</sch:emph>) must lie between the West_Bounding_Coordinate (<sch:emph>westbc</sch:emph>) and East_Bounding_Coordinate (<sch:emph>eastbc</sch:emph>).</sch:assert>
+				</sch:rule>
+				<sch:rule context="gringlon[ancestor::spdom/bounding/westbc &gt; ancestor::spdom/bounding/eastbc]">
+					<sch:assert test="(. &gt;= ancestor::spdom/bounding/westbc) or (. &lt;= ancestor::spdom/bounding/eastbc)">G-Ring_Longitude (<sch:emph>gringlon</sch:emph>) must lie between the West_Bounding_Coordinate (<sch:emph>westbc</sch:emph>) and East_Bounding_Coordinate (<sch:emph>eastbc</sch:emph>).</sch:assert>
+				</sch:rule>
+			</sch:pattern>
+		</sch:schema>
+		<sch:title>G-Ring Longitude</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="gringlonType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: real
+			Domain: -180.0 &lt;= G-Ring Longitude &lt; 180.0
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDClongitude">
+		<xsd:maxExclusive value="180.0"/>
+	</xsd:restriction>
+</xsd:simpleType>
+
+<xsd:element name="gring" type="gringType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: G-Ring
+		Section: 1.5.2.1.2
+		Description: a set of ordered pairs of floating-point numbers, separated by commas, in which the first number in each pair is the longitude of a point and the second is the latitude of the point. Longitude and latitude are specified in decimal degrees with north latitudes positive and south negative, east longitude positive and west negative
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>G-Ring</sch:title>
+		<sch:schema>
+			<sch:pattern name="G-Ring Restrictions">
+				<sch:rule context="gring">
+					<sch:assert test="( string-length(.) - string-length(translate(., ',', '')) ) mod 2 = 1">G-Ring (<sch:emph>gring</sch:emph>) does not contain an even number of values.</sch:assert>
+					<sch:report test="( string-length(normalize-space(.)) - string-length(translate(normalize-space(.), '+-0123456789., ', '')) ) &gt; 0">G-Ring (<sch:emph>gring</sch:emph>) contains invalid characters.</sch:report>
+				</sch:rule>
+			</sch:pattern>
+		</sch:schema>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="gringType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: -90 &lt;= Latitude_elements &lt;= 90, -180 &lt;= Longitude_Elements = 180
+		</xsd:documentation>
+		<xsd:documentation>
+			XML Schema does not provide a mechanism for comma-delimited lists, so the only way to restrict this element's domain is to define a regular expression pattern for the possible value domain.  This particular pattern would be rather complex, therefore, only a simple Schematron rule is specified to count the number of value pairs.  (This is done indirectly through the number of commas, which will be an odd number.  The first pair has one comma between the two values and subsequent pairs will have a comma between the two values and a second comma to separate it from the preceding value pair.  Therefore, if there are 'n' pairs of values, the number of commas should be '2n-1', an odd number.)  A manual check (or a check with alternate software) is required to verify that the values in each pair are within the specified domains for latitudes and longitudes.
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="dsgpolyx" type="dsgpolyxType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Data Set G-Polygon Exclusion G-Ring
+		Section: 1.5.2.2
+		Description: the closed nonintersecting boundary of a void area (or "hole" in an interior area).
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Data Set G-Polygon Exclusion G-Ring</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="dsgpolyxType">
+	<xsd:choice>
+		<xsd:element ref="grngpoin" minOccurs="4" maxOccurs="unbounded"/>
+		<xsd:element ref="gring"/>
+	</xsd:choice>
+	</xsd:complexType>
+
+<xsd:element name="keywords" type="keywordsType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Keywords
+		Section: 1.6
+		Description: words or phrases summarizing an aspect of the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Keywords</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="keywordsType">
+	<xsd:sequence>
+		<xsd:element ref="theme" maxOccurs="unbounded"/>
+		<xsd:element ref="place" minOccurs="0" maxOccurs="unbounded"/>
+		<xsd:element ref="stratum" minOccurs="0" maxOccurs="unbounded"/>
+		<xsd:element ref="temporal" minOccurs="0" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="theme" type="themeType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Theme
+		Section: 1.6.1
+		Description: subjects covered by the data set (for a list of some commonly-used thesauri, see Part IV: Subject/index term sources in Network Development and MARC Standards Office, 1988, USMARC code list for relators, sources, and description conventions: Washington, Library of Congress).
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Theme</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="themeType">
+	<xsd:sequence>
+		<xsd:element ref="themekt"/>
+		<xsd:element ref="themekey" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="themekt" type="themektType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Theme Keyword Thesaurus
+		Section: 1.6.1.1
+		Description: reference to a formally registered thesaurus or a similar authoritative source of theme keywords.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Theme Keyword Thesaurus</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="themektType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "None" free text
+		</xsd:documentation>
+		<xsd:documentation>
+			Enumerated value also matches "free text"
+
+			<![CDATA[
+				<xsd:restriction base="xsd:token">
+					<xsd:enumeration value="None"/>
+				</xsd:restriction>
+			]]>
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="themekey" type="themekeyType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Theme Keyword
+		Section: 1.6.1.2
+		Description: common-use word or phrase used to describe the subject of the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Theme Keyword</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="themekeyType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="place" type="placeType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Place
+		Section: 1.6.2
+		Description: geographic locations characterized by the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Place</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="placeType">
+	<xsd:sequence>
+		<xsd:element ref="placekt"/>
+		<xsd:element ref="placekey" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="placekt" type="placektType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Place Keyword Thesaurus
+		Section: 1.6.2.1
+		Description: reference to a formally registered thesaurus or a similar authoritative source of place keywords.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Place Keyword Thesaurus</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="placektType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "None" "Geographic Names Information System" free text
+		</xsd:documentation>
+		<xsd:documentation>
+			Enumerated values also match "free text"
+
+			<![CDATA[
+				<xsd:restriction base="xsd:token">
+					<xsd:enumeration value="None"/>
+					<xsd:enumeration value="Geographic Names Information System"/>
+				</xsd:restriction>
+			]]>
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="placekey" type="placekeyType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Place Keyword
+		Section: 1.6.2.2
+		Description: the geographic name of a location covered by a data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Place Keyword</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="placekeyType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="stratum" type="stratumType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Stratum
+		Section: 1.6.3
+		Description: layered, vertical locations characterized by the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Stratum</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="stratumType">
+	<xsd:sequence>
+		<xsd:element ref="stratkt"/>
+		<xsd:element ref="stratkey" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="stratkt" type="stratktType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Stratum Keyword Thesaurus
+		Section: 1.6.3.1
+		Description: reference to a formally registered thesaurus or a similar authoritative source of stratum keywords.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Stratum Keyword Thesaurus</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="stratktType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "None" free text
+		</xsd:documentation>
+		<xsd:documentation>
+			Enumerated value also matches "free text"
+
+			<![CDATA[
+				<xsd:restriction base="xsd:token">
+					<xsd:enumeration value="None"/>
+				</xsd:restriction>
+			]]>
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="stratkey" type="stratkeyType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Stratum Keyword
+		Section: 1.6.3.2
+		Description: the name of a vertical location used to describe the locations covered by a data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Stratum Keyword</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="stratkeyType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="temporal" type="temporalType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Temporal
+		Section: 1.6.4
+		Description: time period(s) characterized by the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Temporal</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="temporalType">
+	<xsd:sequence>
+		<xsd:element ref="tempkt"/>
+		<xsd:element ref="tempkey" maxOccurs="unbounded"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="tempkt" type="tempktType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Temporal Keyword Thesaurus
+		Section: 1.6.4.1
+		Description: reference to a formally registered thesaurus or a similar authoritative source of temporal keywords.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Temporal Keyword Thesaurus</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="tempktType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "None" free text
+		</xsd:documentation>
+		<xsd:documentation>
+			Enumerated value also matches "free text"
+
+			<![CDATA[
+				<xsd:restriction base="xsd:token">
+					<xsd:enumeration value="None"/>
+				</xsd:restriction>
+			]]>
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="tempkey" type="tempkeyType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Temporal Keyword
+		Section: 1.6.4.2
+		Description: the name of a time period covered by a data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Temporal Keyword</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="tempkeyType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="accconst" type="accconstType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Access Constraints
+		Section: 1.7
+		Description: restrictions and legal prerequisites for accessing the data set. These include any access constraints applied to assure the protection of privacy or intellectual property, and any special restrictions or limitations on obtaining the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Access Constraints</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="accconstType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "None" free text
+		</xsd:documentation>
+		<xsd:documentation>
+			Enumerated value also matches "free text"
+
+			<![CDATA[
+				<xsd:restriction base="xsd:token">
+					<xsd:enumeration value="None"/>
+				</xsd:restriction>
+			]]>
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="useconst" type="useconstType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Use Constraints
+		Section: 1.8
+		Description: restrictions and legal prerequisites for using the data set after access is granted. These include any use constraints applied to assure the protection of privacy or intellectual property, and any special restrictions or limitations on using the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Use Constraints</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="useconstType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "None" free text
+		</xsd:documentation>
+		<xsd:documentation>
+			Enumerated value also matches "free text"
+
+			<![CDATA[
+				<xsd:restriction base="xsd:token">
+					<xsd:enumeration value="None"/>
+				</xsd:restriction>
+			]]>
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="ptcontac" type="ptcontacType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Point of Contact
+		Section: 1.9
+		Description: contact information for an individual or organization that is knowledgeable about the data set (see Section 10 for schema definitions).
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Point of Contact</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="ptcontacType">
+	<xsd:sequence>
+		<xsd:element ref="cntinfo"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="browse" type="browseType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Browse Graphic
+		Section: 1.10
+		Description: a graphic that provides an illustration of the data set. The graphic should include a legend for interpreting the graphic.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Browse Graphic</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="browseType">
+	<xsd:sequence>
+		<xsd:element ref="browsen"/>
+		<xsd:element ref="browsed"/>
+		<xsd:element ref="browset"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="browsen" type="browsenType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Browse Graphic File Name
+		Section: 1.10.1
+		Description: name of a related graphic file that provides an illustration of the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Browse Graphic File Name</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="browsenType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="browsed" type="browsedType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Browse Graphic File Description
+		Section: 1.10.2
+		Description: a text description of the illustration.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Browse Graphic File Description</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="browsedType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="browset" type="browsetType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Browse Graphic File Type
+		Section: 1.10.3
+		Description: graphic file type of a related graphic file.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Browse Graphic File Type</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="browsetType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: domain values in the table below; free text
+		</xsd:documentation>
+		<xsd:documentation>
+			Enumerated values also match "free text"
+
+			<![CDATA[
+				<xsd:restriction base="xsd:token">
+					<xsd:enumeration value="CGM"/>
+					<xsd:enumeration value="EPS"/>
+					<xsd:enumeration value="EMF"/>
+					<xsd:enumeration value="GIF"/>
+					<xsd:enumeration value="JPEG"/>
+					<xsd:enumeration value="PBM"/>
+					<xsd:enumeration value="PS"/>
+					<xsd:enumeration value="TIFF"/>
+					<xsd:enumeration value="WMF"/>
+					<xsd:enumeration value="XWD"/>
+				</xsd:restriction>
+			]]>
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="datacred" type="datacredType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Data Set Credit
+		Section: 1.11
+		Description: recognition of those who contributed to the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Data Set Credit</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="datacredType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="secinfo" type="secinfoType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Security Information
+		Section: 1.12
+		Description: handling restrictions imposed on the data set because of national security, privacy, or other concerns.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Security Information</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="secinfoType">
+	<xsd:sequence>
+		<xsd:element ref="secsys"/>
+		<xsd:element ref="secclass"/>
+		<xsd:element ref="sechandl"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="secsys" type="secsysType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Security Classification System
+		Section: 1.12.1
+		Description: name of the classification system.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Security Classification System</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="secsysType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="secclass" type="secclassType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Security Classification
+		Section: 1.12.2
+		Description: name of the handling restrictions on the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Security Classification</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="secclassType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: "Top secret" "Secret" "Confidential" "Restricted" "Unclassified" "Sensitive" free text
+		</xsd:documentation>
+		<xsd:documentation>
+			Enumerated values also match "free text"
+
+			<![CDATA[
+				<xsd:restriction base="xsd:token">
+					<xsd:enumeration value="Top secret"/>
+					<xsd:enumeration value="Secret"/>
+					<xsd:enumeration value="Confidential"/>
+					<xsd:enumeration value="Restricted"/>
+					<xsd:enumeration value="Unclassified"/>
+					<xsd:enumeration value="Sensitive"/>
+				</xsd:restriction>
+			]]>
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="sechandl" type="sechandlType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Security Handling Description
+		Section: 1.12.3
+		Description: additional information about the restrictions on handling the data set.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Security Handling Description</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="sechandlType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="native" type="nativeType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Native Data Set Environment
+		Section: 1.13
+		Description: a description of the data set in the producer's processing environment, including items such as the name of the software (including version), the computer operating system, file name (including host-, path-, and filenames), and the data set size.
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Native Data Set Environment</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="nativeType">
+	<xsd:annotation>
+		<xsd:documentation>
+			Type: text
+			Domain: free text
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="crossref" type="crossrefType">
+<xsd:annotation>
+	<xsd:documentation>
+		Element: Cross Reference
+		Section: 1.14
+		Description: information about other, related data sets that are likely to be of interest (see Section 8 for schema definitions).
+	</xsd:documentation>
+	<xsd:appinfo>
+		<sch:title>Cross Reference</sch:title>
+	</xsd:appinfo>
+</xsd:annotation>
+</xsd:element>
+<xsd:complexType name="crossrefType">
+	<xsd:sequence>
+		<xsd:element ref="citeinfo"/>
+	</xsd:sequence>
+</xsd:complexType>
+
+</xsd:schema>

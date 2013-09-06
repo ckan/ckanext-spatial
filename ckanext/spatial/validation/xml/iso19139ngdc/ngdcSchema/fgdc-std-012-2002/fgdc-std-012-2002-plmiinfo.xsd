@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" blockDefault="#all"
+    xmlns:sch="http://www.ascc.net/xml/schematron">
+    <xsd:include schemaLocation="fgdc-std-012-2002-missinfo.xsd"/>
+    <xsd:include schemaLocation="fgdc-std-012-2002-platinfo.xsd"/>
+    <xsd:element name="plmiinfo" type="plmiinfoType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Platform and Mission Information Description: Descriptive
+                information about the platform from which the measurements that produced the data
+                and about the program of which the data collection was a part. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Platform and Mission Information</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="plmiinfoType">
+        <xsd:sequence>
+            <xsd:element ref="missinfo" minOccurs="0"/>
+            <xsd:element ref="platinfo" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>

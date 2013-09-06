@@ -1,0 +1,2595 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:res="eml://ecoinformatics.org/resource-2.1.0"
+    xmlns="eml://ecoinformatics.org/spatialReference-2.1.0"
+    xmlns:doc="eml://ecoinformatics.org/documentation-2.1.0"
+    targetNamespace="eml://ecoinformatics.org/spatialReference-2.1.0"
+    elementFormDefault="unqualified">
+  <xs:import namespace="eml://ecoinformatics.org/documentation-2.1.0"
+  schemaLocation="eml-documentation.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/resource-2.1.0"
+  schemaLocation="eml-resource.xsd"/>
+  <xs:annotation>
+    <xs:documentation>
+       '$RCSfile: eml-spatialReference.xsd,v $'
+       Copyright: 1997-2002 Regents of the University of California,
+                            University of New Mexico, and
+                            Arizona State University
+        Sponsors: National Center for Ecological Analysis and Synthesis and
+                  Partnership for Interdisciplinary Studies of Coastal Oceans,
+                     University of California Santa Barbara
+                  Long-Term Ecological Research Network Office,
+                     University of New Mexico
+                  Center for Environmental Studies, Arizona State University
+   Other funding: National Science Foundation (see README for details)
+                  The David and Lucile Packard Foundation
+     For Details: http://knb.ecoinformatics.org/
+
+        '$Author: obrien $'
+          '$Date: 2009/02/25 23:51:54 $'
+      '$Revision: 1.41 $'
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    </xs:documentation>
+    <xs:appinfo>
+      <doc:moduleDocs>
+        <doc:moduleName>eml-spatialReference</doc:moduleName>
+        <doc:moduleDescription>
+          <section xmlns="">
+            <title>
+              Schema for validating spatial referencing descriptions.
+            </title>
+            <para>
+             This module defines both projected and unprojected coordinate systems for
+             referencing the spatial coordinates of a dataset to the earth. The schema is based on
+             that used by Environmental Systems Research Inc (ESRI) for its .prj file format. EML provides a library of
+             pre-defined coordinate systems that may be referred to by name in the horizCoordSysName element. A
+             custom projection may be defined using this schema for any projection that does not appear in this
+             dictionary.
+            </para>
+          </section>
+        </doc:moduleDescription>
+        <doc:recommendedUsage>all spatial entities</doc:recommendedUsage>
+        <doc:standAlone>yes</doc:standAlone>
+      </doc:moduleDocs>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:complexType name="SpatialReferenceType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Spatial Reference Description</doc:tooltip>
+        <doc:summary>The system used to reference spatial locations to a
+        coordinate system</doc:summary>
+        <doc:description>A spatial reference description provides the
+        information for relating the positional information in a spatial
+        dataset to real-world locations. A description typically includes
+        identification of a reference datum, a spheroid definition, and
+        projection algorithm. It also provides any constants required by that
+        algorithm.</doc:description>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:choice>
+      <xs:sequence>
+        <xs:choice>
+          <xs:element name="horizCoordSysName">
+            <xs:annotation>
+              <xs:appinfo>
+                <doc:tooltip>Horizonal Coordinate System Name</doc:tooltip>
+                <doc:summary>The name of a predefined coordinate system</doc:summary>
+                <doc:description>The name of a coordinate system for which a definition has been
+                provided in the eml-spatialReferenceDictionary.xsl file.</doc:description>
+                <doc:example>NAD_1927_StatePlane_Arizona_Central_FIPS_0202</doc:example>
+              </xs:appinfo>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:string">
+                <xs:enumeration value="GCS_Abidjan_1987"/>
+                <xs:enumeration value="GCS_Accra"/>
+                <xs:enumeration value="GCS_Adindan"/>
+                <xs:enumeration value="GCS_Afgooye"/>
+                <xs:enumeration value="GCS_Agadez"/>
+                <xs:enumeration value="GCS_Ain_el_Abd_1970"/>
+                <xs:enumeration value="GCS_Arc_1950"/>
+                <xs:enumeration value="GCS_Arc_1960"/>
+                <xs:enumeration value="GCS_Ayabelle"/>
+                <xs:enumeration value="GCS_Beduaram"/>
+                <xs:enumeration value="GCS_Bissau"/>
+                <xs:enumeration value="GCS_Camacupa"/>
+                <xs:enumeration value="GCS_Cape"/>
+                <xs:enumeration value="GCS_Carthage_Degree"/>
+                <xs:enumeration value="GCS_Carthage_Paris"/>
+                <xs:enumeration value="GCS_Carthage"/>
+                <xs:enumeration value="GCS_Conakry_1905"/>
+                <xs:enumeration value="GCS_Cote_d_Ivoire"/>
+                <xs:enumeration value="GCS_Dabola"/>
+                <xs:enumeration value="GCS_Douala"/>
+                <xs:enumeration value="GCS_Egypt_1907"/>
+                <xs:enumeration value="GCS_European_1950"/>
+                <xs:enumeration value="GCS_European_Libyan_Datum_1979"/>
+                <xs:enumeration value="GCS_Garoua"/>
+                <xs:enumeration value="GCS_Hartebeesthoek_1994"/>
+                <xs:enumeration value="GCS_Kuwait_Oil_Company"/>
+                <xs:enumeration value="GCS_KUDAMS"/>
+                <xs:enumeration value="GCS_Leigon"/>
+                <xs:enumeration value="GCS_Liberia_1964"/>
+                <xs:enumeration value="GCS_Locodjo_1965"/>
+                <xs:enumeration value="GCS_Lome"/>
+                <xs:enumeration value="GCS_Mporaloko"/>
+                <xs:enumeration value="GCS_Madzansua"/>
+                <xs:enumeration value="GCS_Mahe_1971"/>
+                <xs:enumeration value="GCS_Malongo_1987"/>
+                <xs:enumeration value="GCS_Manoca"/>
+                <xs:enumeration value="GCS_Massawa"/>
+                <xs:enumeration value="GCS_Merchich_Degree"/>
+                <xs:enumeration value="GCS_Merchich"/>
+                <xs:enumeration value="GCS_Mhast"/>
+                <xs:enumeration value="GCS_Minna"/>
+                <xs:enumeration value="GCS_Moznet"/>
+                <xs:enumeration value="GCS_Nahrwan_1967"/>
+                <xs:enumeration value="GCS_NGN"/>
+                <xs:enumeration value="GCS_Nord_Sahara_1959"/>
+                <xs:enumeration value="GCS_Observatario"/>
+                <xs:enumeration value="GCS_Oman"/>
+                <xs:enumeration value="GCS_Palestine_1923"/>
+                <xs:enumeration value="GCS_PDO_1993"/>
+                <xs:enumeration value="GCS_Point_58"/>
+                <xs:enumeration value="GCS_Pointe_Noire"/>
+                <xs:enumeration value="GCS_Qatar_1948"/>
+                <xs:enumeration value="GCS_Qatar"/>
+                <xs:enumeration value="GCS_Schwarzeck"/>
+                <xs:enumeration value="GCS_Sierra_Leone_1924"/>
+                <xs:enumeration value="GCS_Sierra_Leone_1960"/>
+                <xs:enumeration value="GCS_Sierra_Leone_1968"/>
+                <xs:enumeration value="GCS_South_Yemen"/>
+                <xs:enumeration value="GCS_Sudan"/>
+                <xs:enumeration value="GCS_Tananarive_1925_Paris"/>
+                <xs:enumeration value="GCS_Tananarive_1925"/>
+                <xs:enumeration value="GCS_Tete"/>
+                <xs:enumeration value="GCS_Trucial_Coast_1948"/>
+                <xs:enumeration value="GCS_Voirol_1875_Degree"/>
+                <xs:enumeration value="GCS_Voirol_1875_Paris"/>
+                <xs:enumeration value="GCS_Voirol_1875"/>
+                <xs:enumeration value="GCS_Voirol_Unifie_1960_Degree"/>
+                <xs:enumeration value="GCS_Voirol_Unifie_1960_Paris"/>
+                <xs:enumeration value="GCS_Voirol_Unifie_1960"/>
+                <xs:enumeration value="GCS_Yemen_NGN_1996"/>
+                <xs:enumeration value="GCS_Yoff"/>
+                <xs:enumeration value="GCS_Camp_Area"/>
+                <xs:enumeration value="GCS_Deception_Island"/>
+                <xs:enumeration value="GCS_Ain_el_Abd_1970"/>
+                <xs:enumeration value="GCS_Batavia_Jakarta"/>
+                <xs:enumeration value="GCS_Batavia"/>
+                <xs:enumeration value="GCS_Beijing_1954"/>
+                <xs:enumeration value="GCS_Bukit_Rimpah"/>
+                <xs:enumeration value="GCS_Deir_ez_Zor"/>
+                <xs:enumeration value="GCS_European_1950_ED77"/>
+                <xs:enumeration value="GCS_European_1950"/>
+                <xs:enumeration value="GCS_Everest_def_1962"/>
+                <xs:enumeration value="GCS_Everest_def_1967"/>
+                <xs:enumeration value="GCS_Everest_def_1975"/>
+                <xs:enumeration value="GCS_Everest_Bangladesh"/>
+                <xs:enumeration value="GCS_Everest_India_Nepal"/>
+                <xs:enumeration value="GCS_Everest_1830"/>
+                <xs:enumeration value="GCS_Everest_Modified"/>
+                <xs:enumeration value="GCS_Fahud"/>
+                <xs:enumeration value="GCS_FD_1958"/>
+                <xs:enumeration value="GCS_Gandajika_1970"/>
+                <xs:enumeration value="GCS_Gunung_Segara"/>
+                <xs:enumeration value="GCS_Hanoi_1972"/>
+                <xs:enumeration value="GCS_Herat_North"/>
+                <xs:enumeration value="GCS_Hong_Kong_1963"/>
+                <xs:enumeration value="GCS_Hong_Kong_1980"/>
+                <xs:enumeration value="GCS_Hu_Tzu_Shan"/>
+                <xs:enumeration value="GCS_Indian_1954"/>
+                <xs:enumeration value="GCS_Indian_1960"/>
+                <xs:enumeration value="GCS_Indian_1975"/>
+                <xs:enumeration value="GCS_Indonesian_1974"/>
+                <xs:enumeration value="GCS_Israel"/>
+                <xs:enumeration value="GCS_JGD_2000"/>
+                <xs:enumeration value="GCS_Kalianpur_1880"/>
+                <xs:enumeration value="GCS_Kalianpur_1937"/>
+                <xs:enumeration value="GCS_Kalianpur_1962"/>
+                <xs:enumeration value="GCS_Kalianpur_1975"/>
+                <xs:enumeration value="GCS_Kandawala"/>
+                <xs:enumeration value="GCS_Kertau"/>
+                <xs:enumeration value="GCS_Korean_Datum_1985"/>
+                <xs:enumeration value="GCS_Korean_Datum_1995"/>
+                <xs:enumeration value="GCS_Kuwait_Oil_Company"/>
+                <xs:enumeration value="GCS_KUDAMS"/>
+                <xs:enumeration value="GCS_Luzon_1911"/>
+                <xs:enumeration value="GCS_Makassar_Jakarta"/>
+                <xs:enumeration value="GCS_Makassar"/>
+                <xs:enumeration value="GCS_Nahrwan_1967"/>
+                <xs:enumeration value="GCS_NGN"/>
+                <xs:enumeration value="GCS_Oman"/>
+                <xs:enumeration value="GCS_Padang_1884_Jakarta"/>
+                <xs:enumeration value="GCS_Padang_1884"/>
+                <xs:enumeration value="GCS_Palestine_1923"/>
+                <xs:enumeration value="GCS_Pulkovo_1942"/>
+                <xs:enumeration value="GCS_Pulkovo_1995"/>
+                <xs:enumeration value="GCS_Qatar_1948"/>
+                <xs:enumeration value="GCS_Qatar"/>
+                <xs:enumeration value="GCS_Rassadiran"/>
+                <xs:enumeration value="GCS_Samboja"/>
+                <xs:enumeration value="GCS_Segora"/>
+                <xs:enumeration value="GCS_Serindung"/>
+                <xs:enumeration value="GCS_South_Asia_Singapore"/>
+                <xs:enumeration value="GCS_Timbalai_1948"/>
+                <xs:enumeration value="GCS_Tokyo"/>
+                <xs:enumeration value="GCS_Trucial_Coast_1948"/>
+                <xs:enumeration value="GCS_Australian_1966"/>
+                <xs:enumeration value="GCS_Australian_1984"/>
+                <xs:enumeration value="GCS_GDA_1994"/>
+                <xs:enumeration value="GCS_New_Zealand_1949"/>
+                <xs:enumeration value="GCS_NZGD_2000"/>
+                <xs:enumeration value="GCS_Amersfoort"/>
+                <xs:enumeration value="GCS_ATF_Paris"/>
+                <xs:enumeration value="GCS_Belge_1950_Brussels"/>
+                <xs:enumeration value="GCS_Belge_1972"/>
+                <xs:enumeration value="GCS_Bern_1898_Bern"/>
+                <xs:enumeration value="GCS_Bern_1898"/>
+                <xs:enumeration value="GCS_Bern_1938"/>
+                <xs:enumeration value="GCS_CH1903+"/>
+                <xs:enumeration value="GCS_CH1903"/>
+                <xs:enumeration value="GCS_Datum_73"/>
+                <xs:enumeration value="GCS_Datum_Lisboa_Bessel"/>
+                <xs:enumeration value="GCS_Datum_Lisboa_Bessel"/>
+                <xs:enumeration value="GCS_Dealul_Piscului_1933"/>
+                <xs:enumeration value="GCS_Dealul_Piscului_1970"/>
+                <xs:enumeration value="GCS_Deutsche_Hauptdreiecksnetz"/>
+                <xs:enumeration value="GCS_Estonia_1937"/>
+                <xs:enumeration value="GCS_Estonia_1992"/>
+                <xs:enumeration value="GCS_ETRF_1989"/>
+                <xs:enumeration value="GCS_European_1979"/>
+                <xs:enumeration value="GCS_European_1950"/>
+                <xs:enumeration value="GCS_European_1987"/>
+                <xs:enumeration value="GCS_Greek_Athens"/>
+                <xs:enumeration value="GCS_Greek"/>
+                <xs:enumeration value="GCS_Hermannskogel"/>
+                <xs:enumeration value="GCS_Hjorsey_1955"/>
+                <xs:enumeration value="GCS_Hungarian_1972"/>
+                <xs:enumeration value="GCS_IRENET95"/>
+                <xs:enumeration value="GCS_KKJ"/>
+                <xs:enumeration value="GCS_Lisbon_Lisbon"/>
+                <xs:enumeration value="GCS_Lisbon"/>
+                <xs:enumeration value="GCS_LKS_1994"/>
+                <xs:enumeration value="GCS_Madrid_1870_Madrid"/>
+                <xs:enumeration value="GCS_MGI_Ferro"/>
+                <xs:enumeration value="GCS_MGI"/>
+                <xs:enumeration value="GCS_Monte_Mario_Rome"/>
+                <xs:enumeration value="GCS_Monte_Mario"/>
+                <xs:enumeration value="GCS_NGO_1948_Oslo"/>
+                <xs:enumeration value="GCS_NGO_1948"/>
+                <xs:enumeration value="GCS_Nord_de_Guerre_Paris"/>
+                <xs:enumeration value="GCS_NTF"/>
+                <xs:enumeration value="GCS_NTF_Paris"/>
+                <xs:enumeration value="GCS_OS_SN_1980"/>
+                <xs:enumeration value="GCS_OSGB_1936"/>
+                <xs:enumeration value="GCS_OSGB_1970_SN"/>
+                <xs:enumeration value="GCS_Pulkovo_1942"/>
+                <xs:enumeration value="GCS_Pulkovo_1995"/>
+                <xs:enumeration value="GCS_Qornoq"/>
+                <xs:enumeration value="GCS_Belge_1950"/>
+                <xs:enumeration value="GCS_Belge_1972"/>
+                <xs:enumeration value="GCS_RGF_1993"/>
+                <xs:enumeration value="GCS_RT_1990"/>
+                <xs:enumeration value="GCS_RT38_Stockholm"/>
+                <xs:enumeration value="GCS_RT38"/>
+                <xs:enumeration value="GCS_S42_Hungary"/>
+                <xs:enumeration value="GCS_S_JTSK"/>
+                <xs:enumeration value="GCS_Swiss_TRF_1995"/>
+                <xs:enumeration value="GCS_TM65"/>
+                <xs:enumeration value="GCS_TM75"/>
+                <xs:enumeration value="GCS_Alaskan_Islands"/>
+                <xs:enumeration value="GCS_American_Samoa_1962"/>
+                <xs:enumeration value="GCS_ATS_1977"/>
+                <xs:enumeration value="GCS_Barbados"/>
+                <xs:enumeration value="GCS_Bermuda_1957"/>
+                <xs:enumeration value="GCS_Cape_Canaveral"/>
+                <xs:enumeration value="GCS_Guam_1963"/>
+                <xs:enumeration value="GCS_Jamaica_1875"/>
+                <xs:enumeration value="GCS_Jamaica_1969"/>
+                <xs:enumeration value="GCS_NAD_1927_CGQ77"/>
+                <xs:enumeration value="GCS_NAD_1927_Definition_1976"/>
+                <xs:enumeration value="GCS_North_American_Michigan"/>
+                <xs:enumeration value="GCS_North_American_1983_CSRS98"/>
+                <xs:enumeration value="GCS_North_American_1983_HARN"/>
+                <xs:enumeration value="GCS_North_American_1927"/>
+                <xs:enumeration value="GCS_North_American_1983"/>
+                <xs:enumeration value="GCS_Old_Hawaiian"/>
+                <xs:enumeration value="GCS_Puerto_Rico"/>
+                <xs:enumeration value="GCS_Qornoq"/>
+                <xs:enumeration value="GCS_St_George_Island"/>
+                <xs:enumeration value="GCS_St_Lawrence_Island"/>
+                <xs:enumeration value="GCS_St_Paul_Island"/>
+                <xs:enumeration value="GCS_Alaskan_Islands"/>
+                <xs:enumeration value="GCS_American_Samoa_1962"/>
+                <xs:enumeration value="GCS_Anguilla_1957"/>
+                <xs:enumeration value="GCS_Anna_1_1965"/>
+                <xs:enumeration value="GCS_Antigua_1943"/>
+                <xs:enumeration value="GCS_Ascension_Island_1958"/>
+                <xs:enumeration value="GCS_Beacon_E_1945"/>
+                <xs:enumeration value="GCS_DOS_71_4"/>
+                <xs:enumeration value="GCS_Astro_1952"/>
+                <xs:enumeration value="GCS_Bab_South"/>
+                <xs:enumeration value="GCS_Barbados_1938"/>
+                <xs:enumeration value="GCS_Barbados"/>
+                <xs:enumeration value="GCS_Bellevue_IGN"/>
+                <xs:enumeration value="GCS_Bermuda_1957"/>
+                <xs:enumeration value="GCS_Canton_1966"/>
+                <xs:enumeration value="GCS_Chatham_Island_1971"/>
+                <xs:enumeration value="GCS_Dominica_1945"/>
+                <xs:enumeration value="GCS_DOS_1968"/>
+                <xs:enumeration value="GCS_Easter_Island_1967"/>
+                <xs:enumeration value="GCS_Fort_Thomas_1955"/>
+                <xs:enumeration value="GCS_Gan_1970"/>
+                <xs:enumeration value="GCS_Graciosa_Base_SW_1948"/>
+                <xs:enumeration value="GCS_Grenada_1953"/>
+                <xs:enumeration value="GCS_Guam_1963"/>
+                <xs:enumeration value="GCS_GUX_1"/>
+                <xs:enumeration value="GCS_Hjorsey_1955"/>
+                <xs:enumeration value="GCS_ISTS_061_1968"/>
+                <xs:enumeration value="GCS_ISTS_073_1969"/>
+                <xs:enumeration value="GCS_Jamaica_1875"/>
+                <xs:enumeration value="GCS_Jamaica_1969"/>
+                <xs:enumeration value="GCS_Johnston_Island_1961"/>
+                <xs:enumeration value="GCS_Kerguelen_Island_1949"/>
+                <xs:enumeration value="GCS_Kusaie_1951"/>
+                <xs:enumeration value="GCS_LC5_1961"/>
+                <xs:enumeration value="GCS_Mahe_1971"/>
+                <xs:enumeration value="GCS_Majuro"/>
+                <xs:enumeration value="GCS_Midway_1961"/>
+                <xs:enumeration value="GCS_Montserrat_1958"/>
+                <xs:enumeration value="GCS_Observ_Meteorologico_1939"/>
+                <xs:enumeration value="GCS_Old_Hawaiian"/>
+                <xs:enumeration value="GCS_Pico_de_Las_Nieves"/>
+                <xs:enumeration value="GCS_Pitcairn_1967"/>
+                <xs:enumeration value="GCS_Pohnpei"/>
+                <xs:enumeration value="GCS_Porto_Santo_1936"/>
+                <xs:enumeration value="GCS_Puerto_Rico"/>
+                <xs:enumeration value="GCS_Reunion"/>
+                <xs:enumeration value="GCS_Santo_DOS_1965"/>
+                <xs:enumeration value="GCS_Sao_Braz"/>
+                <xs:enumeration value="GCS_Sapper_Hill_1943"/>
+                <xs:enumeration value="GCS_Selvagem_Grande_1938"/>
+                <xs:enumeration value="GCS_St_Kitts_1955"/>
+                <xs:enumeration value="GCS_St_Lucia_1955"/>
+                <xs:enumeration value="GCS_St_Vincent_1945"/>
+                <xs:enumeration value="GCS_Tern_Island_1961"/>
+                <xs:enumeration value="GCS_Tristan_1968"/>
+                <xs:enumeration value="GCS_Viti_Levu_1916"/>
+                <xs:enumeration value="GCS_Wake_Island_1952"/>
+                <xs:enumeration value="GCS_Wake_Eniwetok_1960"/>
+                <xs:enumeration value="GCS_Aratu"/>
+                <xs:enumeration value="GCS_Bogota_Bogota"/>
+                <xs:enumeration value="GCS_Bogota"/>
+                <xs:enumeration value="GCS_Campo_Inchauspe"/>
+                <xs:enumeration value="GCS_Chos_Malal_1914"/>
+                <xs:enumeration value="GCS_Chua"/>
+                <xs:enumeration value="GCS_Corrego_Alegre"/>
+                <xs:enumeration value="GCS_Guyane_Francaise"/>
+                <xs:enumeration value="GCS_Hito_XVIII_1963"/>
+                <xs:enumeration value="GCS_La_Canoa"/>
+                <xs:enumeration value="GCS_Lake"/>
+                <xs:enumeration value="GCS_Loma_Quintana"/>
+                <xs:enumeration value="GCS_Mount_Dillon"/>
+                <xs:enumeration value="GCS_Naparima_1955"/>
+                <xs:enumeration value="GCS_Naparima_1972"/>
+                <xs:enumeration value="GCS_Pampa_del_Castillo"/>
+                <xs:enumeration value="GCS_POSGAR"/>
+                <xs:enumeration value="GCS_REGVEN"/>
+                <xs:enumeration value="GCS_Sapper_Hill_1943"/>
+                <xs:enumeration value="GCS_SIRGAS"/>
+                <xs:enumeration value="GCS_South_American_1969"/>
+                <xs:enumeration value="GCS_Trinidad_1903"/>
+                <xs:enumeration value="GCS_Yacare"/>
+                <xs:enumeration value="GCS_Zanderij"/>
+                <xs:enumeration value="GCS_Airy_1830"/>
+                <xs:enumeration value="GCS_Airy_Modified"/>
+                <xs:enumeration value="GCS_Australian"/>
+                <xs:enumeration value="GCS_Sphere_ARC_INFO"/>
+                <xs:enumeration value="GCS_Sphere"/>
+                <xs:enumeration value="GCS_ATS_1977"/>
+                <xs:enumeration value="GCS_Bessel_1841"/>
+                <xs:enumeration value="GCS_Bessel_Modified"/>
+                <xs:enumeration value="GCS_Bessel_Namibia"/>
+                <xs:enumeration value="GCS_Clarke_1858"/>
+                <xs:enumeration value="GCS_Clarke_1866_Michigan"/>
+                <xs:enumeration value="GCS_Clarke_1866"/>
+                <xs:enumeration value="GCS_Clarke_1880_Arc"/>
+                <xs:enumeration value="GCS_Clarke_1880_Benoit"/>
+                <xs:enumeration value="GCS_Clarke_1880_IGN"/>
+                <xs:enumeration value="GCS_Clarke_1880_RGS"/>
+                <xs:enumeration value="GCS_Clarke_1880_SGA"/>
+                <xs:enumeration value="GCS_Clarke_1880"/>
+                <xs:enumeration value="GCS_Everest_def_1967"/>
+                <xs:enumeration value="GCS_Everest_def_1975"/>
+                <xs:enumeration value="GCS_Everest_1830"/>
+                <xs:enumeration value="GCS_Everest_Modified_1969"/>
+                <xs:enumeration value="GCS_Everest_Modified"/>
+                <xs:enumeration value="GCS_Fischer_1960"/>
+                <xs:enumeration value="GCS_Fischer_1968"/>
+                <xs:enumeration value="GCS_Fischer_Modified"/>
+                <xs:enumeration value="GCS_GEM_10C"/>
+                <xs:enumeration value="GCS_GRS_1967"/>
+                <xs:enumeration value="GCS_GRS_1980"/>
+                <xs:enumeration value="GCS_Helmert_1906"/>
+                <xs:enumeration value="GCS_Hough_1960"/>
+                <xs:enumeration value="GCS_Indonesian"/>
+                <xs:enumeration value="GCS_International_1924"/>
+                <xs:enumeration value="GCS_International_1967"/>
+                <xs:enumeration value="GCS_Krasovsky_1940"/>
+                <xs:enumeration value="GCS_OSU_86F"/>
+                <xs:enumeration value="GCS_OSU_91A"/>
+                <xs:enumeration value="GCS_Plessis_1817"/>
+                <xs:enumeration value="GCS_Struve_1860"/>
+                <xs:enumeration value="GCS_NWL_9D"/>
+                <xs:enumeration value="GCS_Walbeck"/>
+                <xs:enumeration value="GCS_War_Office"/>
+                <xs:enumeration value="GCS_WGS_1966"/>
+                <xs:enumeration value="GCS_NSWC_9Z_2"/>
+                <xs:enumeration value="GCS_WGS_1966"/>
+                <xs:enumeration value="GCS_WGS_1972_BE"/>
+                <xs:enumeration value="GCS_WGS_1972"/>
+                <xs:enumeration value="GCS_WGS_1984"/>
+                <xs:enumeration value="Africa_Albers_Equal_Area_Conic"/>
+                <xs:enumeration value="Africa_Equidistant_Conic"/>
+                <xs:enumeration value="Africa_Lambert_Conformal_Conic"/>
+                <xs:enumeration value="Africa_Sinusoidal"/>
+                <xs:enumeration value="Asia_Lambert_Conformal_Conic"/>
+                <xs:enumeration value="Asia_North_Albers_Equal_Area_Conic"/>
+                <xs:enumeration value="Asia_North_Equidistant_Conic"/>
+                <xs:enumeration value="Asia_North_Lambert_Conformal_Conic"/>
+                <xs:enumeration value="Asia_South_Albers_Equal_Area_Conic"/>
+                <xs:enumeration value="Asia_South_Equidistant_Conic"/>
+                <xs:enumeration value="Asia_South_Lambert_Conformal_Conic"/>
+                <xs:enumeration value="Europe_Albers_Equal_Area_Conic"/>
+                <xs:enumeration value="Europe_Equidistant_Conic"/>
+                <xs:enumeration value="Europe_Lambert_Conformal_Conic"/>
+                <xs:enumeration value="Alaska_Albers_Equal_Area_Conic"/>
+                <xs:enumeration value="Canada_Albers_Equal_Area_Conic"/>
+                <xs:enumeration value="Canada_Lambert_Conformal_Conic"/>
+                <xs:enumeration value="Hawaii_Albers_Equal_Area_Conic"/>
+                <xs:enumeration value="North_America_Albers_Equal_Area_Conic"/>
+                <xs:enumeration value="North_America_Equidistant_Conic"/>
+                <xs:enumeration value="North_America_Lambert_Conformal_Conic"/>
+                <xs:enumeration value="USA_Contiguous_Albers_Equal_Area_Conic_USGS_version"/>
+                <xs:enumeration value="USA_Contiguous_Albers_Equal_Area_Conic"/>
+                <xs:enumeration value="USA_Contiguous_Equidistant_Conic"/>
+                <xs:enumeration value="USA_Contiguous_Lambert_Conformal_Conic"/>
+                <xs:enumeration value="South_America_Albers_Equal_Area_Conic"/>
+                <xs:enumeration value="South_America_Equidistant_Conic"/>
+                <xs:enumeration value="South_America_Lambert_Conformal_Conic"/>
+                <xs:enumeration value="Beijing_1954_GK_Zone_13"/>
+                <xs:enumeration value="Beijing_1954_GK_Zone_13N"/>
+                <xs:enumeration value="Beijing_1954_GK_Zone_14"/>
+                <xs:enumeration value="Beijing_1954_GK_Zone_14N"/>
+                <xs:enumeration value="Beijing_1954_GK_Zone_15"/>
+                <xs:enumeration value="Beijing_1954_GK_Zone_15N"/>
+                <xs:enumeration value="Beijing_1954_GK_Zone_16"/>
+                <xs:enumeration value="Beijing_1954_GK_Zone_16N"/>
+                <xs:enumeration value="Beijing_1954_GK_Zone_17"/>
+                <xs:enumeration value="Beijing_1954_GK_Zone_17N"/>
+                <xs:enumeration value="Beijing_1954_GK_Zone_18"/>
+                <xs:enumeration value="Beijing_1954_GK_Zone_18N"/>
+                <xs:enumeration value="Beijing_1954_GK_Zone_19"/>
+                <xs:enumeration value="Beijing_1954_GK_Zone_19N"/>
+                <xs:enumeration value="Beijing_1954_GK_Zone_20"/>
+                <xs:enumeration value="Beijing_1954_GK_Zone_20N"/>
+                <xs:enumeration value="Beijing_1954_GK_Zone_21"/>
+                <xs:enumeration value="Beijing_1954_GK_Zone_21N"/>
+                <xs:enumeration value="Beijing_1954_GK_Zone_22"/>
+                <xs:enumeration value="Beijing_1954_GK_Zone_22N"/>
+                <xs:enumeration value="Beijing_1954_GK_Zone_23"/>
+                <xs:enumeration value="Beijing_1954_GK_Zone_23N"/>
+                <xs:enumeration value="Hanoi_1972_GK_Zone_18"/>
+                <xs:enumeration value="Hanoi_1972_GK_Zone_19"/>
+                <xs:enumeration value="South_Yemen_GK_Zone_8"/>
+                <xs:enumeration value="South_Yemen_GK_Zone_9"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_10"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_10N"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_11"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_11N"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_12"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_12N"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_13"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_13N"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_14"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_14N"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_15"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_15N"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_16"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_16N"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_17"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_17N"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_18"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_18N"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_19"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_19N"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_2"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_20"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_20N"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_21"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_21N"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_22"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_22N"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_23"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_23N"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_24"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_24N"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_25"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_25N"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_26"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_26N"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_27"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_27N"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_28"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_28N"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_29"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_29N"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_2N"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_3"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_30"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_30N"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_31"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_31N"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_32"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_32N"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_3N"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_4"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_4N"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_5"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_5N"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_6"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_6N"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_7"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_7N"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_8"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_8N"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_9"/>
+                <xs:enumeration value="Pulkovo_1942_GK_Zone_9N"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_10"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_10N"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_11"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_11N"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_12"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_12N"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_13"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_13N"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_14"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_14N"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_15"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_15N"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_16"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_16N"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_17"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_17N"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_18"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_18N"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_19"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_19N"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_2"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_20"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_20N"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_21"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_21N"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_22"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_22N"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_23"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_23N"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_24"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_24N"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_25"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_25N"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_26"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_26N"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_27"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_27N"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_28"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_28N"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_29"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_29N"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_2N"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_3"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_30"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_30N"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_31"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_31N"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_32"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_32N"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_3N"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_4"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_4N"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_5"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_5N"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_6"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_6N"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_7"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_7N"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_8"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_8N"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_9"/>
+                <xs:enumeration value="Pulkovo_1995_GK_Zone_9N"/>
+                <xs:enumeration value="Abidjan_1987_TM_5_NW"/>
+                <xs:enumeration value="Accra_Ghana_Grid"/>
+                <xs:enumeration value="Accra_TM_1_NW"/>
+                <xs:enumeration value="Samoa_1962_Samoa_Lambert"/>
+                <xs:enumeration value="Anguilla_1957_British_West_Indies_Grid"/>
+                <xs:enumeration value="Antigua_1943_British_West_Indies_Grid"/>
+                <xs:enumeration value="Argentina_Zone_1"/>
+                <xs:enumeration value="Argentina_Zone_2"/>
+                <xs:enumeration value="Argentina_Zone_3"/>
+                <xs:enumeration value="Argentina_Zone_4"/>
+                <xs:enumeration value="Argentina_Zone_5"/>
+                <xs:enumeration value="Argentina_Zone_6"/>
+                <xs:enumeration value="Argentina_Zone_7"/>
+                <xs:enumeration value="AGD_1966_AMG_Zone_48"/>
+                <xs:enumeration value="AGD_1966_AMG_Zone_49"/>
+                <xs:enumeration value="AGD_1966_AMG_Zone_50"/>
+                <xs:enumeration value="AGD_1966_AMG_Zone_51"/>
+                <xs:enumeration value="AGD_1966_AMG_Zone_52"/>
+                <xs:enumeration value="AGD_1966_AMG_Zone_53"/>
+                <xs:enumeration value="AGD_1966_AMG_Zone_54"/>
+                <xs:enumeration value="AGD_1966_AMG_Zone_55"/>
+                <xs:enumeration value="AGD_1966_AMG_Zone_56"/>
+                <xs:enumeration value="AGD_1966_AMG_Zone_57"/>
+                <xs:enumeration value="AGD_1966_AMG_Zone_58"/>
+                <xs:enumeration value="AGD_1966_VICGRID"/>
+                <xs:enumeration value="AGD_1984_AMG_Zone_48"/>
+                <xs:enumeration value="AGD_1984_AMG_Zone_49"/>
+                <xs:enumeration value="AGD_1984_AMG_Zone_50"/>
+                <xs:enumeration value="AGD_1984_AMG_Zone_51"/>
+                <xs:enumeration value="AGD_1984_AMG_Zone_52"/>
+                <xs:enumeration value="AGD_1984_AMG_Zone_53"/>
+                <xs:enumeration value="AGD_1984_AMG_Zone_54"/>
+                <xs:enumeration value="AGD_1984_AMG_Zone_55"/>
+                <xs:enumeration value="AGD_1984_AMG_Zone_56"/>
+                <xs:enumeration value="AGD_1984_AMG_Zone_57"/>
+                <xs:enumeration value="AGD_1984_AMG_Zone_58"/>
+                <xs:enumeration value="GDA_1994_MGA_Zone_48"/>
+                <xs:enumeration value="GDA_1994_MGA_Zone_49"/>
+                <xs:enumeration value="GDA_1994_MGA_Zone_50"/>
+                <xs:enumeration value="GDA_1994_MGA_Zone_51"/>
+                <xs:enumeration value="GDA_1994_MGA_Zone_52"/>
+                <xs:enumeration value="GDA_1994_MGA_Zone_53"/>
+                <xs:enumeration value="GDA_1994_MGA_Zone_54"/>
+                <xs:enumeration value="GDA_1994_MGA_Zone_55"/>
+                <xs:enumeration value="GDA_1994_MGA_Zone_56"/>
+                <xs:enumeration value="GDA_1994_MGA_Zone_57"/>
+                <xs:enumeration value="GDA_1994_MGA_Zone_58"/>
+                <xs:enumeration value="GDA_1994_South_Australia_Lambert"/>
+                <xs:enumeration value="GDA_1994_VICGRID94"/>
+                <xs:enumeration value="Austria_Central_Zone"/>
+                <xs:enumeration value="Austria_East_Zone"/>
+                <xs:enumeration value="Austria_West_Zone"/>
+                <xs:enumeration value="Bahrain_State_Grid"/>
+                <xs:enumeration value="Barbados_1938_Barbados_Grid"/>
+                <xs:enumeration value="Barbados_1938_British_West_Indies_Grid"/>
+                <xs:enumeration value="Belge_Lambert_1950"/>
+                <xs:enumeration value="Belge_Lambert_1972"/>
+                <xs:enumeration value="Bern_1898_Bern_LV03C"/>
+                <xs:enumeration value="British_National_Grid"/>
+                <xs:enumeration value="Camacupa_TM_11_30_SE"/>
+                <xs:enumeration value="Camacupa_TM_12_SE"/>
+                <xs:enumeration value="ATS_1977_MTM_4_Nova_Scotia"/>
+                <xs:enumeration value="ATS_1977_MTM_5_Nova_Scotia"/>
+                <xs:enumeration value="ATS_1977_New_Brunswick_Stereographic"/>
+                <xs:enumeration value="NAD_1927_10TM_AEP_Forest"/>
+                <xs:enumeration value="NAD_1927_10TM_AEP_Resource"/>
+                <xs:enumeration value="NAD_1927_3TM_111"/>
+                <xs:enumeration value="NAD_1927_3TM_114"/>
+                <xs:enumeration value="NAD_1927_3TM_117"/>
+                <xs:enumeration value="NAD_1927_3TM_120"/>
+                <xs:enumeration value="NAD_1927_CGQ77_MTM_10_SCoPQ"/>
+                <xs:enumeration value="NAD_1927_CGQ77_MTM_2_SCoPQ"/>
+                <xs:enumeration value="NAD_1927_CGQ77_MTM_3_SCoPQ"/>
+                <xs:enumeration value="NAD_1927_CGQ77_MTM_4_SCoPQ"/>
+                <xs:enumeration value="NAD_1927_CGQ77_MTM_5_SCoPQ"/>
+                <xs:enumeration value="NAD_1927_CGQ77_MTM_6_SCoPQ"/>
+                <xs:enumeration value="NAD_1927_CGQ77_MTM_7_SCoPQ"/>
+                <xs:enumeration value="NAD_1927_CGQ77_MTM_8_SCoPQ"/>
+                <xs:enumeration value="NAD_1927_CGQ77_MTM_9_SCoPQ"/>
+                <xs:enumeration value="NAD_1927_CGQ77_Quebec_Lambert"/>
+                <xs:enumeration value="NAD_1927_CGQ77_UTM_Zone_17N"/>
+                <xs:enumeration value="NAD_1927_CGQ77_UTM_Zone_18N"/>
+                <xs:enumeration value="NAD_1927_CGQ77_UTM_Zone_19N"/>
+                <xs:enumeration value="NAD_1927_CGQ77_UTM_Zone_20N"/>
+                <xs:enumeration value="NAD_1927_CGQ77_UTM_Zone_21N"/>
+                <xs:enumeration value="NAD_1927_DEF_1976_MTM_10"/>
+                <xs:enumeration value="NAD_1927_DEF_1976_MTM_11"/>
+                <xs:enumeration value="NAD_1927_DEF_1976_MTM_12"/>
+                <xs:enumeration value="NAD_1927_DEF_1976_MTM_13"/>
+                <xs:enumeration value="NAD_1927_DEF_1976_MTM_14"/>
+                <xs:enumeration value="NAD_1927_DEF_1976_MTM_15"/>
+                <xs:enumeration value="NAD_1927_DEF_1976_MTM_16"/>
+                <xs:enumeration value="NAD_1927_DEF_1976_MTM_17"/>
+                <xs:enumeration value="NAD_1927_DEF_1976_MTM_8"/>
+                <xs:enumeration value="NAD_1927_DEF_1976_MTM_9"/>
+                <xs:enumeration value="NAD_1927_DEF_1976_UTM_Zone_15N"/>
+                <xs:enumeration value="NAD_1927_DEF_1976_UTM_Zone_16N"/>
+                <xs:enumeration value="NAD_1927_DEF_1976_UTM_Zone_17N"/>
+                <xs:enumeration value="NAD_1927_DEF_1976_UTM_Zone_18N"/>
+                <xs:enumeration value="NAD_1927_MTM_1"/>
+                <xs:enumeration value="NAD_1927_MTM_2"/>
+                <xs:enumeration value="NAD_1927_MTM_3"/>
+                <xs:enumeration value="NAD_1927_MTM_4"/>
+                <xs:enumeration value="NAD_1927_MTM_5"/>
+                <xs:enumeration value="NAD_1927_MTM_6"/>
+                <xs:enumeration value="NAD_1927_Quebec_Lambert"/>
+                <xs:enumeration value="NAD_1983_10TM_AEP_Forest"/>
+                <xs:enumeration value="NAD_1983_10TM_AEP_Resource"/>
+                <xs:enumeration value="NAD_1983_3TM_111"/>
+                <xs:enumeration value="NAD_1983_3TM_114"/>
+                <xs:enumeration value="NAD_1983_3TM_117"/>
+                <xs:enumeration value="NAD_1983_3TM_120"/>
+                <xs:enumeration value="NAD_1983_BC_Environment_Albers"/>
+                <xs:enumeration value="NAD_1983_CRS98_MTM_10"/>
+                <xs:enumeration value="NAD_1983_CSRS98_MTM_2_SCoPQ"/>
+                <xs:enumeration value="NAD_1983_CRS98_MTM_3"/>
+                <xs:enumeration value="NAD_1983_CRS98_MTM_4"/>
+                <xs:enumeration value="NAD_1983_CRS98_MTM_5"/>
+                <xs:enumeration value="NAD_1983_CRS98_MTM_6"/>
+                <xs:enumeration value="NAD_1983_CRS98_MTM_7"/>
+                <xs:enumeration value="NAD_1983_CRS98_MTM_8"/>
+                <xs:enumeration value="NAD_1983_CRS98_MTM_9"/>
+                <xs:enumeration value="NAD_1983_CSRS98_New_Brunswick_Stereographic"/>
+                <xs:enumeration value="NAD_1983_CSRS98_Prince_Edward_Island"/>
+                <xs:enumeration value="NAD_1983_CSRS98_UTM_Zone_21N"/>
+                <xs:enumeration value="NAD_1983_CSRS98_UTM_Zone_11N"/>
+                <xs:enumeration value="NAD_1983_CSRS98_UTM_Zone_12N"/>
+                <xs:enumeration value="NAD_1983_CSRS98_UTM_Zone_13N"/>
+                <xs:enumeration value="NAD_1983_CSRS98_UTM_Zone_17N"/>
+                <xs:enumeration value="NAD_1983_CSRS98_UTM_Zone_18N"/>
+                <xs:enumeration value="NAD_1983_CSRS98_UTM_Zone_19N"/>
+                <xs:enumeration value="NAD_1983_CSRS98_UTM_Zone_20N"/>
+                <xs:enumeration value="NAD_1983_MTM_1"/>
+                <xs:enumeration value="NAD_1983_MTM_10"/>
+                <xs:enumeration value="NAD_1983_MTM_11"/>
+                <xs:enumeration value="NAD_1983_MTM_12"/>
+                <xs:enumeration value="NAD_1983_MTM_13"/>
+                <xs:enumeration value="NAD_1983_MTM_14"/>
+                <xs:enumeration value="NAD_1983_MTM_15"/>
+                <xs:enumeration value="NAD_1983_MTM_16"/>
+                <xs:enumeration value="NAD_1983_MTM_17"/>
+                <xs:enumeration value="NAD_1983_MTM_2_SCoPQ"/>
+                <xs:enumeration value="NAD_1983_MTM_2"/>
+                <xs:enumeration value="NAD_1983_MTM_3"/>
+                <xs:enumeration value="NAD_1983_MTM_4"/>
+                <xs:enumeration value="NAD_1983_MTM_5"/>
+                <xs:enumeration value="NAD_1983_MTM_6"/>
+                <xs:enumeration value="NAD_1983_MTM_7"/>
+                <xs:enumeration value="NAD_1983_MTM_8"/>
+                <xs:enumeration value="NAD_1983_MTM_9"/>
+                <xs:enumeration value="NAD_1983_Quebec_Lambert"/>
+                <xs:enumeration value="Prince_Edward_Island_Stereographic"/>
+                <xs:enumeration value="Carthage_TM_11_NE"/>
+                <xs:enumeration value="Centre_France"/>
+                <xs:enumeration value="CH1903_LV03"/>
+                <xs:enumeration value="CH1903+_LV95"/>
+                <xs:enumeration value="Chos_Malal_1914_Argentina_2"/>
+                <xs:enumeration value="Colombia_Bogota_Zone"/>
+                <xs:enumeration value="Colombia_East_Central_Zone"/>
+                <xs:enumeration value="Colombia_East_Zone"/>
+                <xs:enumeration value="Colombia_West_Zone"/>
+                <xs:enumeration value="Corse"/>
+                <xs:enumeration value="Datum_73_Hayford_Gauss_IGeoE"/>
+                <xs:enumeration value="Datum_73_Hayford_Gauss_IPCC"/>
+                <xs:enumeration value="Deir_ez_Zor_Levant_Stereographic"/>
+                <xs:enumeration value="Deir_ez_Zor_Levant_Zone"/>
+                <xs:enumeration value="Deir_ez_Zor_Syria_Lambert"/>
+                <xs:enumeration value="DHDN_3_Degree_Gauss_Zone_1"/>
+                <xs:enumeration value="DHDN_3_Degree_Gauss_Zone_2"/>
+                <xs:enumeration value="DHDN_3_Degree_Gauss_Zone_3"/>
+                <xs:enumeration value="DHDN_3_Degree_Gauss_Zone_4"/>
+                <xs:enumeration value="DHDN_3_Degree_Gauss_Zone_5"/>
+                <xs:enumeration value="Dominica_1945_British_West_Indies_Grid"/>
+                <xs:enumeration value="ED_1950_TM_0_N"/>
+                <xs:enumeration value="ED_1950_TM_5_NE"/>
+                <xs:enumeration value="Egypt_Blue_Belt"/>
+                <xs:enumeration value="Egypt_Extended_Purple_Belt"/>
+                <xs:enumeration value="Egypt_Purple_Belt"/>
+                <xs:enumeration value="Egypt_Red_Belt"/>
+                <xs:enumeration value="ELD_1979_Libya_10"/>
+                <xs:enumeration value="ELD_1979_Libya_11"/>
+                <xs:enumeration value="ELD_1979_Libya_12"/>
+                <xs:enumeration value="ELD_1979_Libya_13"/>
+                <xs:enumeration value="ELD_1979_Libya_5"/>
+                <xs:enumeration value="ELD_1979_Libya_6"/>
+                <xs:enumeration value="ELD_1979_Libya_7"/>
+                <xs:enumeration value="ELD_1979_Libya_8"/>
+                <xs:enumeration value="ELD_1979_Libya_9"/>
+                <xs:enumeration value="ELD_1979_TM_12_NE"/>
+                <xs:enumeration value="Estonian_Coordinate_System_of_1992"/>
+                <xs:enumeration value="ETRF_1989_TM_Baltic_1993"/>
+                <xs:enumeration value="FD_1958_Iraq"/>
+                <xs:enumeration value="Finland_Zone_1"/>
+                <xs:enumeration value="Finland_Zone_2"/>
+                <xs:enumeration value="Finland_Zone_3"/>
+                <xs:enumeration value="Finland_Zone_4"/>
+                <xs:enumeration value="France_I"/>
+                <xs:enumeration value="France_II"/>
+                <xs:enumeration value="France_III"/>
+                <xs:enumeration value="France_IV"/>
+                <xs:enumeration value="Germany_Zone_1"/>
+                <xs:enumeration value="Germany_Zone_2"/>
+                <xs:enumeration value="Germany_Zone_3"/>
+                <xs:enumeration value="Germany_Zone_4"/>
+                <xs:enumeration value="Germany_Zone_5"/>
+                <xs:enumeration value="Ghana_Metre_Grid"/>
+                <xs:enumeration value="Greek_Grid"/>
+                <xs:enumeration value="Grenada_1953_British_West_Indies_Grid"/>
+                <xs:enumeration value="Hanoi_1972_GK_106_NE"/>
+                <xs:enumeration value="HD_1972_Egyseges_Orszagos_Vetuleti"/>
+                <xs:enumeration value="Hito_XVIII_1963_Argentina_2"/>
+                <xs:enumeration value="Hong_Kong_1980_Grid"/>
+                <xs:enumeration value="Indian_1960_TM_106NE"/>
+                <xs:enumeration value="Kalianpur_1880_India_Zone_0"/>
+                <xs:enumeration value="Kalianpur_1880_India_Zone_I"/>
+                <xs:enumeration value="Kalianpur_1880_India_Zone_IIa"/>
+                <xs:enumeration value="Kalianpur_1880_India_Zone_IIb"/>
+                <xs:enumeration value="Kalianpur_1880_India_Zone_III"/>
+                <xs:enumeration value="Kalianpur_1880_India_Zone_IV"/>
+                <xs:enumeration value="Kalianpur_1937_India_Zone_IIb"/>
+                <xs:enumeration value="Kalianpur_1937_UTM_Zone_45N"/>
+                <xs:enumeration value="Kalianpur_1937_UTM_Zone_46N"/>
+                <xs:enumeration value="Kalianpur_1962_India_Zone_I"/>
+                <xs:enumeration value="Kalianpur_1962_India_Zone_IIa"/>
+                <xs:enumeration value="Kalianpur_1962_UTM_Zone_41N"/>
+                <xs:enumeration value="Kalianpur_1962_UTM_Zone_42N"/>
+                <xs:enumeration value="Kalianpur_1962_UTM_Zone_43N"/>
+                <xs:enumeration value="Kalianpur_1975_India_Zone_I"/>
+                <xs:enumeration value="Kalianpur_1975_India_Zone_IIa"/>
+                <xs:enumeration value="Kalianpur_1975_India_Zone_IIb"/>
+                <xs:enumeration value="Kalianpur_1975_India_Zone_III"/>
+                <xs:enumeration value="Kalianpur_1975_India_Zone_IV"/>
+                <xs:enumeration value="Kalianpur_1975_UTM_Zone_42N"/>
+                <xs:enumeration value="Kalianpur_1975_UTM_Zone_43N"/>
+                <xs:enumeration value="Kalianpur_1975_UTM_Zone_44N"/>
+                <xs:enumeration value="Kalianpur_1975_UTM_Zone_45N"/>
+                <xs:enumeration value="Kalianpur_1975_UTM_Zone_46N"/>
+                <xs:enumeration value="Kalianpur_1975_UTM_Zone_47N"/>
+                <xs:enumeration value="IRENET95_IRISH_Transverse_Mercator"/>
+                <xs:enumeration value="Irish_National_Grid"/>
+                <xs:enumeration value="Israel_TM_Grid"/>
+                <xs:enumeration value="Jamaica_1875_Old_Grid"/>
+                <xs:enumeration value="Jamaica_Grid"/>
+                <xs:enumeration value="Japan_Zone_1"/>
+                <xs:enumeration value="Japan_Zone_10"/>
+                <xs:enumeration value="Japan_Zone_11"/>
+                <xs:enumeration value="Japan_Zone_12"/>
+                <xs:enumeration value="Japan_Zone_13"/>
+                <xs:enumeration value="Japan_Zone_14"/>
+                <xs:enumeration value="Japan_Zone_15"/>
+                <xs:enumeration value="Japan_Zone_16"/>
+                <xs:enumeration value="Japan_Zone_17"/>
+                <xs:enumeration value="Japan_Zone_18"/>
+                <xs:enumeration value="Japan_Zone_19"/>
+                <xs:enumeration value="Japan_Zone_2"/>
+                <xs:enumeration value="Japan_Zone_3"/>
+                <xs:enumeration value="Japan_Zone_4"/>
+                <xs:enumeration value="Japan_Zone_5"/>
+                <xs:enumeration value="Japan_Zone_6"/>
+                <xs:enumeration value="Japan_Zone_7"/>
+                <xs:enumeration value="Japan_Zone_8"/>
+                <xs:enumeration value="Japan_Zone_9"/>
+                <xs:enumeration value="Kertau_Singapore_Grid"/>
+                <xs:enumeration value="KOC_Lambert"/>
+                <xs:enumeration value="Korean_1985_Korea_Central_Belt"/>
+                <xs:enumeration value="Korean_1985_Korea_East_Belt"/>
+                <xs:enumeration value="Korean_1985_Korea_West_Belt"/>
+                <xs:enumeration value="KUDAMS_KTM"/>
+                <xs:enumeration value="KOC_Lambert"/>
+                <xs:enumeration value="KUDAMS_KTM"/>
+                <xs:enumeration value="Lake_Maracaibo_Grid_M1"/>
+                <xs:enumeration value="Lake_Maracaibo_Grid_M3"/>
+                <xs:enumeration value="Lake_Maracaibo_Grid"/>
+                <xs:enumeration value="Lake_Maracaibo_La_Rosa_Grid"/>
+                <xs:enumeration value="Lietuvos_Koordinaciu_Sistema"/>
+                <xs:enumeration value="Lisboa_Bessel_Bonne"/>
+                <xs:enumeration value="Lisboa_Hayford_Gauss_IGeoE"/>
+                <xs:enumeration value="Lisboa_Hayford_Gauss_IPCC"/>
+                <xs:enumeration value="Locodjo_1965_TM_5_NW"/>
+                <xs:enumeration value="Madrid_1870_Madrid_Spain"/>
+                <xs:enumeration value="MGI_3_Degree_Gauss_Zone_5"/>
+                <xs:enumeration value="MGI_3_Degree_Gauss_Zone_6"/>
+                <xs:enumeration value="MGI_3_Degree_Gauss_Zone_7"/>
+                <xs:enumeration value="MGI_3_Degree_Gauss_Zone_8"/>
+                <xs:enumeration value="MGI_Austria_Lambert"/>
+                <xs:enumeration value="MGI_Balkans_5"/>
+                <xs:enumeration value="MGI_Balkans_6"/>
+                <xs:enumeration value="MGI_Balkans_8"/>
+                <xs:enumeration value="MGI_Balkans_8"/>
+                <xs:enumeration value="MGI_M28"/>
+                <xs:enumeration value="MGI_M31"/>
+                <xs:enumeration value="MGI_M34"/>
+                <xs:enumeration value="Monte_Mario_Rome_Italy_1"/>
+                <xs:enumeration value="Monte_Mario_Rome_Italy_2"/>
+                <xs:enumeration value="Monte_Mario_Italy_1"/>
+                <xs:enumeration value="Monte_Mario_Italy_2"/>
+                <xs:enumeration value="Montserrat_1958_British_West_Indies_Grid"/>
+                <xs:enumeration value="Mount_Dillon_Tobago_Grid"/>
+                <xs:enumeration value="NAD_1927_Cuba_Norte"/>
+                <xs:enumeration value="NAD_1927_Cuba_Sur"/>
+                <xs:enumeration value="NAD_1927_Guatemala_Norte"/>
+                <xs:enumeration value="NAD_1927_Guatemala_Sur"/>
+                <xs:enumeration value="NAD_1927_Michigan_GeoRef_Meters"/>
+                <xs:enumeration value="NAD_1927_Michigan_GeoRef_Feet_US"/>
+                <xs:enumeration value="NAD_1983_HARN_Guam_Map_Grid"/>
+                <xs:enumeration value="NAD_1983_Michigan_GeoRef_Meters"/>
+                <xs:enumeration value="NAD_1983_Michigan_GeoRef_Feet_US"/>
+                <xs:enumeration value="GD_1949_New_Zealand_Map_Grid"/>
+                <xs:enumeration value="New_Zealand_North_Island"/>
+                <xs:enumeration value="New_Zealand_South_Island"/>
+                <xs:enumeration value="NZGD_1949_Amuri_Circuit"/>
+                <xs:enumeration value="NZGD_1949_Bay_of_Plenty_Circuit"/>
+                <xs:enumeration value="NZGD_1949_Bluff_Circuit"/>
+                <xs:enumeration value="NZGD_1949_Buller_Circuit"/>
+                <xs:enumeration value="NZGD_1949_Collingwood_Circuit"/>
+                <xs:enumeration value="NZGD_1949_Gawler_Circuit"/>
+                <xs:enumeration value="NZGD_1949_Grey_Circuit"/>
+                <xs:enumeration value="NZGD_1949_Hawkes_Bay_Circuit"/>
+                <xs:enumeration value="NZGD_1949_Hokitika_Circuit"/>
+                <xs:enumeration value="NZGD_1949_Jacksons_Bay_Circuit"/>
+                <xs:enumeration value="NZGD_1949_Karamea_Circuit"/>
+                <xs:enumeration value="NZGD_1949_Lindis_Peak_Circuit"/>
+                <xs:enumeration value="NZGD_1949_Marlborough_Circuit"/>
+                <xs:enumeration value="NZGD_1949_Mount_Eden_Circuit"/>
+                <xs:enumeration value="NZGD_1949_Mount_Nicholas_Circuit"/>
+                <xs:enumeration value="NZGD_1949_Mount_Pleasant_Circuit"/>
+                <xs:enumeration value="NZGD_1949_Mount_York_Circuit"/>
+                <xs:enumeration value="NZGD_1949_Nelson_Circuit"/>
+                <xs:enumeration value="NZGD_1949_North_Taieri_Circuit"/>
+                <xs:enumeration value="NZGD_1949_Observation_Point_Circuit"/>
+                <xs:enumeration value="NZGD_1949_Okarito_Circuit"/>
+                <xs:enumeration value="NZGD_1949_Poverty_Bay_Circuit"/>
+                <xs:enumeration value="NZGD_1949_Taranaki_Circuit"/>
+                <xs:enumeration value="NZGD_1949_Timaru_Circuit"/>
+                <xs:enumeration value="NZGD_1949_Tuhirangi_Circuit"/>
+                <xs:enumeration value="NZGD_1949_UTM_Zone_58S"/>
+                <xs:enumeration value="NZGD_1949_UTM_Zone_59S"/>
+                <xs:enumeration value="NZGD_1949_UTM_Zone_60S"/>
+                <xs:enumeration value="NZGD_1949_Wairarapa_Circuit"/>
+                <xs:enumeration value="NZGD_1949_Wanganui_Circuit"/>
+                <xs:enumeration value="NZGD_1949_Wellington_Circuit"/>
+                <xs:enumeration value="NZGD_2000_Amuri_Circuit"/>
+                <xs:enumeration value="NZGD_2000_Bay_of_Plenty_Circuit"/>
+                <xs:enumeration value="NZGD_2000_Bluff_Circuit"/>
+                <xs:enumeration value="NZGD_2000_Buller_Circuit"/>
+                <xs:enumeration value="NZGD_2000_Collingwood_Circuit"/>
+                <xs:enumeration value="NZGD_2000_Gawler_Circuit"/>
+                <xs:enumeration value="NZGD_2000_Grey_Circuit"/>
+                <xs:enumeration value="NZGD_2000_Hawkes_Bay_Circuit"/>
+                <xs:enumeration value="NZGD_2000_Hokitika_Circuit"/>
+                <xs:enumeration value="NZGD_2000_Jacksons_Bay_Circuit"/>
+                <xs:enumeration value="NZGD_2000_Karamea_Circuit"/>
+                <xs:enumeration value="NZGD_2000_Lindis_Peak_Circuit"/>
+                <xs:enumeration value="NZGD_2000_Marlborough_Circuit"/>
+                <xs:enumeration value="NZGD_2000_Mount_Eden_Circuit"/>
+                <xs:enumeration value="NZGD_2000_Mount_Nicholas_Circuit"/>
+                <xs:enumeration value="NZGD_2000_Mount_Pleasant_Circuit"/>
+                <xs:enumeration value="NZGD_2000_Mount_York_Circuit"/>
+                <xs:enumeration value="NZGD_2000_Nelson_Circuit"/>
+                <xs:enumeration value="NZGD_2000_North_Taieri_Circuit"/>
+                <xs:enumeration value="NZGD_2000_Observation_Point_Circuit"/>
+                <xs:enumeration value="NZGD_2000_Okarito_Circuit"/>
+                <xs:enumeration value="NZGD_2000_Poverty_Bay_Circuit"/>
+                <xs:enumeration value="NZGD_2000_Taranaki_Circuit"/>
+                <xs:enumeration value="NZGD_2000_Timaru_Circuit"/>
+                <xs:enumeration value="NZGD_2000_Tuhirangi_Circuit"/>
+                <xs:enumeration value="NZGD_2000_UTM_Zone_58S"/>
+                <xs:enumeration value="NZGD_2000_UTM_Zone_59S"/>
+                <xs:enumeration value="NZGD_2000_UTM_Zone_60S"/>
+                <xs:enumeration value="NZGD_2000_Wairarapa_Circuit"/>
+                <xs:enumeration value="NZGD_2000_Wanganui_Circuit"/>
+                <xs:enumeration value="NZGD_2000_Wellington_Circuit"/>
+                <xs:enumeration value="GD_1949_New_Zealand_Map_Grid"/>
+                <xs:enumeration value="New_Zealand_North_Island"/>
+                <xs:enumeration value="New_Zealand_South_Island"/>
+                <xs:enumeration value="Nigeria_East_Belt"/>
+                <xs:enumeration value="Nigeria_Mid_Belt"/>
+                <xs:enumeration value="Nigeria_West_Belt"/>
+                <xs:enumeration value="Nord_Algerie_Degree"/>
+                <xs:enumeration value="Nord_Algerie_Ancienne_Degree"/>
+                <xs:enumeration value="Sud_Algerie_Ancienne"/>
+                <xs:enumeration value="Nord_Algerie"/>
+                <xs:enumeration value="Nord_de_Guerre"/>
+                <xs:enumeration value="Nord_France"/>
+                <xs:enumeration value="Nord_Maroc_Degree"/>
+                <xs:enumeration value="Nord_Maroc"/>
+                <xs:enumeration value="Nord_Tunisie"/>
+                <xs:enumeration value="NGO_1948_Baerum_Kommune"/>
+                <xs:enumeration value="NGO_1948_Bergenhalvoen"/>
+                <xs:enumeration value="NGO_1948_Norway_Zone_1"/>
+                <xs:enumeration value="NGO_1948_Norway_Zone_2"/>
+                <xs:enumeration value="NGO_1948_Norway_Zone_3"/>
+                <xs:enumeration value="NGO_1948_Norway_Zone_4"/>
+                <xs:enumeration value="NGO_1948_Norway_Zone_5"/>
+                <xs:enumeration value="NGO_1948_Norway_Zone_6"/>
+                <xs:enumeration value="NGO_1948_Norway_Zone_7"/>
+                <xs:enumeration value="NGO_1948_Norway_Zone_8"/>
+                <xs:enumeration value="NGO_1948_Oslo_Kommune"/>
+                <xs:enumeration value="NGO_1948_Oslo_Norway_Zone_1"/>
+                <xs:enumeration value="NGO_1948_Oslo_Norway_Zone_2"/>
+                <xs:enumeration value="NGO_1948_Oslo_Norway_Zone_3"/>
+                <xs:enumeration value="NGO_1948_Oslo_Norway_Zone_4"/>
+                <xs:enumeration value="NGO_1948_Oslo_Norway_Zone_5"/>
+                <xs:enumeration value="NGO_1948_Oslo_Norway_Zone_6"/>
+                <xs:enumeration value="NGO_1948_Oslo_Norway_Zone_7"/>
+                <xs:enumeration value="NGO_1948_Oslo_Norway_Zone_8"/>
+                <xs:enumeration value="NTF_France_I_degrees"/>
+                <xs:enumeration value="NTF_France_II_degrees"/>
+                <xs:enumeration value="NTF_France_III_degrees"/>
+                <xs:enumeration value="NTF_France_IV_degrees"/>
+                <xs:enumeration value="Palestine_1923_Israel_CS_Grid"/>
+                <xs:enumeration value="Palestine_1923_Palestine_Belt"/>
+                <xs:enumeration value="Palestine_1923_Palestine_Grid"/>
+                <xs:enumeration value="Pampa_del_Castillo_Argentina_2"/>
+                <xs:enumeration value="Peru_Central_Zone"/>
+                <xs:enumeration value="Peru_East_Zone"/>
+                <xs:enumeration value="Peru_West_Zone"/>
+                <xs:enumeration value="Philippines_Zone_I"/>
+                <xs:enumeration value="Philippines_Zone_II"/>
+                <xs:enumeration value="Philippines_Zone_III"/>
+                <xs:enumeration value="Philippines_Zone_IV"/>
+                <xs:enumeration value="Philippines_Zone_V"/>
+                <xs:enumeration value="Portuguese_National_Grid"/>
+                <xs:enumeration value="Qatar_1948_Qatar_Grid"/>
+                <xs:enumeration value="Qatar_National_Grid"/>
+                <xs:enumeration value="RD_Old"/>
+                <xs:enumeration value="RGF_1993_Lambert_93"/>
+                <xs:enumeration value="Rijksdriehoekstelsel_New"/>
+                <xs:enumeration value="RT90_25_gon_W"/>
+                <xs:enumeration value="S-JTSK_Ferro_Krovak_East_North"/>
+                <xs:enumeration value="S-JTSK_Ferro_Krovak"/>
+                <xs:enumeration value="S-JTSK_Krovak_East_North"/>
+                <xs:enumeration value="S-JTSK_Krovak"/>
+                <xs:enumeration value="SAD_1969_Brazil_Polyconic"/>
+                <xs:enumeration value="Sahara_Degree"/>
+                <xs:enumeration value="Sahara"/>
+                <xs:enumeration value="Sierra_Leone_1924_New_Colony_Grid"/>
+                <xs:enumeration value="Sierra_Leone_1924_New_War_Office_Grid"/>
+                <xs:enumeration value="St_Kitts_1955_British_West_Indies_Grid"/>
+                <xs:enumeration value="St_Lucia_1955_British_West_Indies_Grid"/>
+                <xs:enumeration value="St_Vincent_1945_British_West_Indies_Grid"/>
+                <xs:enumeration value="Stereo_33"/>
+                <xs:enumeration value="Stereo_70"/>
+                <xs:enumeration value="Sud_Algerie_Degree"/>
+                <xs:enumeration value="Sud_Algerie_Ancienne_Degree"/>
+                <xs:enumeration value="Sud_Algerie"/>
+                <xs:enumeration value="Sud_France"/>
+                <xs:enumeration value="Sud_Maroc_Degree"/>
+                <xs:enumeration value="Sud_Maroc"/>
+                <xs:enumeration value="Sud_Tunisie"/>
+                <xs:enumeration value="Swedish_National_Grid"/>
+                <xs:enumeration value="Trinidad_1903_Trinidad_Grid"/>
+                <xs:enumeration value="UWPP_1992"/>
+                <xs:enumeration value="UWPP_2000_pas_5"/>
+                <xs:enumeration value="UWPP_2000_pas_6"/>
+                <xs:enumeration value="UWPP_2000_pas_7"/>
+                <xs:enumeration value="UWPP_2000_pas_8"/>
+                <xs:enumeration value="WGS_1972_BE_TM_106_NE"/>
+                <xs:enumeration value="WGS_1984_TM_36_SE"/>
+                <xs:enumeration value="Zanderij_Suriname_Old_TM"/>
+                <xs:enumeration value="Zanderij_Suriname_TM"/>
+                <xs:enumeration value="Zanderij_TM_54_NW"/>
+                <xs:enumeration value="North_Pole_Azimuthal_Equidistant"/>
+                <xs:enumeration value="North_Pole_Gnomonic"/>
+                <xs:enumeration value="North_Pole_Lambert_Azimuthal_Equal_Area"/>
+                <xs:enumeration value="North_Pole_Orthographic"/>
+                <xs:enumeration value="North_Pole_Stereographic"/>
+                <xs:enumeration value="South_Pole_Azimuthal_Equidistant"/>
+                <xs:enumeration value="South_Pole_Gnomonic"/>
+                <xs:enumeration value="South_Pole_Lambert_Azimuthal_Equal_Area"/>
+                <xs:enumeration value="South_Pole_Orthographic"/>
+                <xs:enumeration value="South_Pole_Stereographic"/>
+                <xs:enumeration value="UPS_North"/>
+                <xs:enumeration value="UPS_South"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Alabama_East_FIPS_0101"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Alabama_West_FIPS_0102"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Alaska_1_FIPS_5001"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Alaska_10_FIPS_5010"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Alaska_2_FIPS_5002"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Alaska_3_FIPS_5003"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Alaska_4_FIPS_5004"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Alaska_5_FIPS_5005"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Alaska_6_FIPS_5006"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Alaska_7_FIPS_5007"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Alaska_8_FIPS_5008"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Alaska_9_FIPS_5009"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Arizona_Central_FIPS_0202"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Arizona_East_FIPS_0201"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Arizona_West_FIPS_0203"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Arkansas_North_FIPS_0301"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Arkansas_South_FIPS_0302"/>
+                <xs:enumeration value="NAD_1927_StatePlane_California_I_FIPS_0401"/>
+                <xs:enumeration value="NAD_1927_StatePlane_California_II_FIPS_0402"/>
+                <xs:enumeration value="NAD_1927_StatePlane_California_III_FIPS_0403"/>
+                <xs:enumeration value="NAD_1927_StatePlane_California_IV_FIPS_0404"/>
+                <xs:enumeration value="NAD_1927_StatePlane_California_V_FIPS_0405"/>
+                <xs:enumeration value="NAD_1927_StatePlane_California_VI_FIPS_0406"/>
+                <xs:enumeration value="NAD_1927_StatePlane_California_VII_FIPS_0407"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Colorado_Central_FIPS_0502"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Colorado_North_FIPS_0501"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Colorado_South_FIPS_0503"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Connecticut_FIPS_0600"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Delaware_FIPS_0700"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Florida_East_FIPS_0901"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Florida_North_FIPS_0903"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Florida_West_FIPS_0902"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Georgia_East_FIPS_1001"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Georgia_West_FIPS_1002"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Guam_FIPS_5400"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Idaho_Central_FIPS_1102"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Idaho_East_FIPS_1101"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Idaho_West_FIPS_1103"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Illinois_East_FIPS_1201"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Illinois_West_FIPS_1202"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Indiana_East_FIPS_1301"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Indiana_West_FIPS_1302"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Iowa_North_FIPS_1401"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Iowa_South_FIPS_1402"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Kansas_North_FIPS_1501"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Kansas_South_FIPS_1502"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Kentucky_North_FIPS_1601"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Kentucky_South_FIPS_1602"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Louisiana_North_FIPS_1701"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Louisiana_South_FIPS_1702"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Maine_East_FIPS_1801"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Maine_West_FIPS_1802"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Maryland_FIPS_1900"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Massachusetts_Island_FIPS_2002"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Massachusetts_Mainland_FIPS_2001"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Michigan_Central_FIPS_2112"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Michigan_North_FIPS_2111"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Michigan_South_FIPS_2113"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Minnesota_Central_FIPS_2202"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Minnesota_North_FIPS_2201"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Minnesota_South_FIPS_2203"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Mississippi_East_FIPS_2301"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Mississippi_West_FIPS_2302"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Missouri_Central_FIPS_2402"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Missouri_East_FIPS_2401"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Missouri_West_FIPS_2403"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Montana_Central_FIPS_2502"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Montana_North_FIPS_2501"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Montana_South_FIPS_2503"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Nebraska_North_FIPS_2601"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Nebraska_South_FIPS_2602"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Nevada_Central_FIPS_2702"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Nevada_East_FIPS_2701"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Nevada_West_FIPS_2703"/>
+                <xs:enumeration value="NAD_1927_StatePlane_New_Hampshire_FIPS_2800"/>
+                <xs:enumeration value="NAD_1927_StatePlane_New_Jersey_FIPS_2900"/>
+                <xs:enumeration value="NAD_1927_StatePlane_New_Mexico_Central_FIPS_3002"/>
+                <xs:enumeration value="NAD_1927_StatePlane_New_Mexico_East_FIPS_3001"/>
+                <xs:enumeration value="NAD_1927_StatePlane_New_Mexico_West_FIPS_3003"/>
+                <xs:enumeration value="NAD_1927_StatePlane_New_York_Central_FIPS_3102"/>
+                <xs:enumeration value="NAD_1927_StatePlane_New_York_East_FIPS_3101"/>
+                <xs:enumeration value="NAD_1927_StatePlane_New_York_Long_Island_FIPS_3104"/>
+                <xs:enumeration value="NAD_1927_StatePlane_New_York_West_FIPS_3103"/>
+                <xs:enumeration value="NAD_1927_StatePlane_North_Carolina_FIPS_3200"/>
+                <xs:enumeration value="NAD_1927_StatePlane_North_Dakota_North_FIPS_3301"/>
+                <xs:enumeration value="NAD_1927_StatePlane_North_Dakota_South_FIPS_3302"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Ohio_North_FIPS_3401"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Ohio_South_FIPS_3402"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Oklahoma_North_FIPS_3501"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Oklahoma_South_FIPS_3502"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Oregon_North_FIPS_3601"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Oregon_South_FIPS_3602"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Pennsylvania_North_FIPS_3701"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Pennsylvania_South_FIPS_3702"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Puerto_Rico_FIPS_5201"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Rhode_Island_FIPS_3800"/>
+                <xs:enumeration value="NAD_1927_StatePlane_South_Carolina_North_FIPS_3901"/>
+                <xs:enumeration value="NAD_1927_StatePlane_South_Carolina_South_FIPS_3902"/>
+                <xs:enumeration value="NAD_1927_StatePlane_South_Dakota_North_FIPS_4001"/>
+                <xs:enumeration value="NAD_1927_StatePlane_South_Dakota_South_FIPS_4002"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Tennessee_FIPS_4100"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Texas_Central_FIPS_4203"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Texas_North_Central_FIPS_4202"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Texas_North_FIPS_4201"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Texas_South_Central_FIPS_4204"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Texas_South_FIPS_4205"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Utah_Central_FIPS_4302"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Utah_North_FIPS_4301"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Utah_South_FIPS_4303"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Vermont_FIPS_3400"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Virginia_North_FIPS_4501"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Virginia_South_FIPS_4502"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Washington_North_FIPS_4601"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Washington_South_FIPS_4602"/>
+                <xs:enumeration value="NAD_1927_StatePlane_West_Virginia_North_FIPS_4701"/>
+                <xs:enumeration value="NAD_1927_StatePlane_West_Virginia_South_FIPS_4702"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Wisconsin_Central_FIPS_4802"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Wisconsin_North_FIPS_4801"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Wisconsin_South_FIPS_4803"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Wyoming_East_Central_FIPS_4902"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Wyoming_East_FIPS_4901"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Wyoming_West_Central_FIPS_4903"/>
+                <xs:enumeration value="NAD_1927_StatePlane_Wyoming_West_FIPS_4904"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Alabama_East_FIPS_0101"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Alabama_West_FIPS_0102"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Alaska_1_FIPS_5001"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Alaska_10_FIPS_5010"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Alaska_2_FIPS_5002"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Alaska_3_FIPS_5003"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Alaska_4_FIPS_5004"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Alaska_5_FIPS_5005"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Alaska_6_FIPS_5006"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Alaska_7_FIPS_5007"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Alaska_8_FIPS_5008"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Alaska_9_FIPS_5009"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Arizona_Central_FIPS_0202"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Arizona_East_FIPS_0201"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Arizona_West_FIPS_0203"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Arkansas_North_FIPS_0301"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Arkansas_South_FIPS_0302"/>
+                <xs:enumeration value="NAD_1983_StatePlane_California_I_FIPS_0401"/>
+                <xs:enumeration value="NAD_1983_StatePlane_California_II_FIPS_0402"/>
+                <xs:enumeration value="NAD_1983_StatePlane_California_III_FIPS_0403"/>
+                <xs:enumeration value="NAD_1983_StatePlane_California_IV_FIPS_0404"/>
+                <xs:enumeration value="NAD_1983_StatePlane_California_V_FIPS_0405"/>
+                <xs:enumeration value="NAD_1983_StatePlane_California_VI_FIPS_0406"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Colorado_Central_FIPS_0502"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Colorado_North_FIPS_0501"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Colorado_South_FIPS_0503"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Connecticut_FIPS_0600"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Delaware_FIPS_0700"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Florida_East_FIPS_0901"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Florida_North_FIPS_0903"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Florida_West_FIPS_0902"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Georgia_East_FIPS_1001"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Georgia_West_FIPS_1002"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Guam_FIPS_5400"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Hawaii_1_FIPS_5101"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Hawaii_2_FIPS_5102"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Hawaii_3_FIPS_5103"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Hawaii_4_FIPS_5104"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Hawaii_5_FIPS_5105"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Idaho_Central_FIPS_1102"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Idaho_East_FIPS_1101"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Idaho_West_FIPS_1103"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Illinois_East_FIPS_1201"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Illinois_West_FIPS_1202"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Indiana_East_FIPS_1301"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Indiana_West_FIPS_1302"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Iowa_North_FIPS_1401"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Iowa_South_FIPS_1402"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Kansas_North_FIPS_1501"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Kansas_South_FIPS_1502"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Kentucky_FIPS_1600"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Kentucky_North_FIPS_1601"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Kentucky_South_FIPS_1602"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Louisiana_North_FIPS_1701"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Louisiana_South_FIPS_1702"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Maine_East_FIPS_1801"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Maine_West_FIPS_1802"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Maryland_FIPS_1900"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Massachusetts_Island_FIPS_2002"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Massachusetts_Mainland_FIPS_2001"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Michigan_Central_FIPS_2202"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Michigan_North_FIPS_2111"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Michigan_South_FIPS_2113"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Minnesota_Central_FIPS_2202"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Minnesota_North_FIPS_2201"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Minnesota_South_FIPS_2203"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Mississippi_East_FIPS_2301"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Mississippi_West_FIPS_2302"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Missouri_Central_FIPS_2402"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Missouri_East_FIPS_2401"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Missouri_West_FIPS_2403"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Montana_FIPS_2500"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Nebraska_FIPS_2600"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Nevada_Central_FIPS_2702"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Nevada_East_FIPS_2701"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Nevada_West_FIPS_2703"/>
+                <xs:enumeration value="NAD_1983_StatePlane_New_Hampshire_FIPS_2800"/>
+                <xs:enumeration value="NAD_1983_StatePlane_New_Jersey_FIPS_2900"/>
+                <xs:enumeration value="NAD_1983_StatePlane_New_Mexico_Central_FIPS_3002"/>
+                <xs:enumeration value="NAD_1983_StatePlane_New_Mexico_East_FIPS_3001"/>
+                <xs:enumeration value="NAD_1983_StatePlane_New_Mexico_West_FIPS_3003"/>
+                <xs:enumeration value="NAD_1983_StatePlane_New_York_Central_FIPS_3102"/>
+                <xs:enumeration value="NAD_1983_StatePlane_New_York_East_FIPS_3101"/>
+                <xs:enumeration value="NAD_1983_StatePlane_New_York_Long_Island_FIPS_3104"/>
+                <xs:enumeration value="NAD_1983_StatePlane_New_York_West_FIPS_3103"/>
+                <xs:enumeration value="NAD_1983_StatePlane_North_Carolina_FIPS_3200"/>
+                <xs:enumeration value="NAD_1983_StatePlane_North_Dakota_North_FIPS_3301"/>
+                <xs:enumeration value="NAD_1983_StatePlane_North_Dakota_South_FIPS_3302"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Ohio_North_FIPS_3401"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Ohio_South_FIPS_3402"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Oklahoma_North_FIPS_3501"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Oklahoma_South_FIPS_3502"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Oregon_North_FIPS_3601"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Oregon_South_FIPS_3602"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Pennsylvania_North_FIPS_3701"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Pennsylvania_South_FIPS_3702"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Puerto_Rico_Virgin_Islands_FIPS_5200"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Rhode_Island_FIPS_3800"/>
+                <xs:enumeration value="NAD_1983_StatePlane_South_Carolina_FIPS_3900"/>
+                <xs:enumeration value="NAD_1983_StatePlane_South_Dakota_North_FIPS_4001"/>
+                <xs:enumeration value="NAD_1983_StatePlane_South_Dakota_South_FIPS_4002"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Tennessee_FIPS_4100"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Texas_Central_FIPS_4203"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Texas_North_Central_FIPS_4202"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Texas_North_FIPS_4201"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Texas_South_Central_FIPS_4204"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Texas_South_FIPS_4205"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Utah_Central_FIPS_4302"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Utah_North_FIPS_4301"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Utah_South_FIPS_4303"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Vermont_FIPS_4400"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Virginia_North_FIPS_4501"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Virginia_South_FIPS_4502"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Washington_North_FIPS_4601"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Washington_South_FIPS_4602"/>
+                <xs:enumeration value="NAD_1983_StatePlane_West_Virginia_North_FIPS_4701"/>
+                <xs:enumeration value="NAD_1983_StatePlane_West_Virginia_South_FIPS_4702"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Wisconsin_Central_FIPS_4802"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Wisconsin_North_FIPS_4801"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Wisconsin_South_FIPS_4803"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Wyoming_East_Central_FIPS_4902"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Wyoming_East_FIPS_4901"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Wyoming_West_Central_FIPS_4903"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Wyoming_West_FIPS_4904"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Alabama_East_FIPS_0101_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Alabama_West_FIPS_0102_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Alaska_1_FIPS_5001_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Alaska_10_FIPS_5010_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Alaska_2_FIPS_5002_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Alaska_3_FIPS_5003_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Alaska_4_FIPS_5004_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Alaska_5_FIPS_5005_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Alaska_6_FIPS_5006_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Alaska_7_FIPS_5007_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Alaska_8_FIPS_5008_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Alaska_9_FIPS_5009_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Arizona_Central_FIPS_0202_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Arizona_East_FIPS_0201_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Arizona_West_FIPS_0203_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Arkansas_North_FIPS_0301_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Arkansas_South_FIPS_0302_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_California_I_FIPS_0401_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_California_II_FIPS_0402_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_California_III_FIPS_0403_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_California_IV_FIPS_0404_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_California_V_FIPS_0405_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_California_VI_FIPS_0406_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Colorado_Central_FIPS_0502_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Colorado_North_FIPS_0501_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Colorado_South_FIPS_0503_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Connecticut_FIPS_0600_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Delaware_FIPS_0700_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Florida_East_FIPS_0901_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Florida_North_FIPS_0903_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Florida_West_FIPS_0902_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Georgia_East_FIPS_1001_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Georgia_West_FIPS_1002_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Guam_FIPS_5400_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Hawaii_1_FIPS_5101_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Hawaii_2_FIPS_5102_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Hawaii_3_FIPS_5103_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Hawaii_4_FIPS_5104_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Hawaii_5_FIPS_5105_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Idaho_Central_FIPS_1102_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Idaho_East_FIPS_1101_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Idaho_West_FIPS_1103_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Illinois_East_FIPS_1201_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Illinois_West_FIPS_1202_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Indiana_East_FIPS_1301_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Indiana_West_FIPS_1302_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Iowa_North_FIPS_1401_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Iowa_South_FIPS_1402_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Kansas_North_FIPS_1501_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Kansas_South_FIPS_1502_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Kentucky_FIPS_1600_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Kentucky_North_FIPS_1601_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Kentucky_South_FIPS_1602_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Louisiana_North_FIPS_1701_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Louisiana_South_FIPS_1702_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Maine_East_FIPS_1801_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Maine_West_FIPS_1802_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Maryland_FIPS_1900_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Massachusetts_Island_FIPS_2002_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Massachusetts_Mainland_FIPS_2001_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Michigan_Central_FIPS_2202_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Michigan_North_FIPS_2111_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Michigan_South_FIPS_2113_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Minnesota_Central_FIPS_2202_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Minnesota_North_FIPS_2201_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Minnesota_South_FIPS_2203_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Mississippi_East_FIPS_2301_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Mississippi_West_FIPS_2302_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Missouri_Central_FIPS_2402_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Missouri_East_FIPS_2401_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Missouri_West_FIPS_2403_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Montana_FIPS_2500_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Nebraska_FIPS_2600_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Nevada_Central_FIPS_2702_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Nevada_East_FIPS_2701_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Nevada_West_FIPS_2703_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_New_Hampshire_FIPS_2800_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_New_Jersey_FIPS_2900_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_New_Mexico_Central_FIPS_3002_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_New_Mexico_East_FIPS_3001_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_New_Mexico_West_FIPS_3003_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_New_York_Central_FIPS_3102_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_New_York_East_FIPS_3101_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_New_York_Long_Island_FIPS_3104_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_New_York_West_FIPS_3103_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_North_Carolina_FIPS_3200_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_North_Dakota_North_FIPS_3301_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_North_Dakota_South_FIPS_3302_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Ohio_North_FIPS_3401_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Ohio_South_FIPS_3402_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Oklahoma_North_FIPS_3501_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Oklahoma_South_FIPS_3502_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Oregon_North_FIPS_3601_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Oregon_South_FIPS_3602_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Pennsylvania_North_FIPS_3701_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Pennsylvania_South_FIPS_3702_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Puerto_Rico_Virgin_Islands_FIPS_5200_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Rhode_Island_FIPS_3800_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_South_Carolina_FIPS_3900_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_South_Dakota_North_FIPS_4001_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_South_Dakota_South_FIPS_4002_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Tennessee_FIPS_4100_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Texas_Central_FIPS_4203_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Texas_North_Central_FIPS_4202_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Texas_North_FIPS_4201_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Texas_South_Central_FIPS_4204_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Texas_South_FIPS_4205_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Utah_Central_FIPS_4302_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Utah_North_FIPS_4301_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Utah_South_FIPS_4303_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Vermont_FIPS_4400_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Virginia_North_FIPS_4501_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Virginia_South_FIPS_4502_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Washington_North_FIPS_4601_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Washington_South_FIPS_4602_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_West_Virginia_North_FIPS_4701_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_West_Virginia_South_FIPS_4702_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Wisconsin_Central_FIPS_4802_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Wisconsin_North_FIPS_4801_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Wisconsin_South_FIPS_4803_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Wyoming_East_Central_FIPS_4902_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Wyoming_East_FIPS_4901_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Wyoming_West_Central_FIPS_4903_Feet"/>
+                <xs:enumeration value="NAD_1983_StatePlane_Wyoming_West_FIPS_4904_Feet"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Alabama_East_FIPS_0101"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Alabama_West_FIPS_0102"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Arizona_Central_FIPS_0202"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Arizona_East_FIPS_0201"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Arizona_West_FIPS_0203"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_California_I_FIPS_0401"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_California_II_FIPS_0402"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_California_III_FIPS_0403"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_California_IV_FIPS_0404"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_California_V_FIPS_0405"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_California_VI_FIPS_0406"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Colorado_Central_FIPS_0502"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Colorado_North_FIPS_0501"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Colorado_South_FIPS_0503"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Connecticut_FIPS_0600"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Delaware_FIPS_0700"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Florida_East_FIPS_0901"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Florida_North_FIPS_0903"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Florida_West_FIPS_0902"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Georgia_East_FIPS_1001"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Georgia_West_FIPS_1002"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Hawaii_1_FIPS_5101"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Hawaii_2_FIPS_5102"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Hawaii_3_FIPS_5103"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Hawaii_4_FIPS_5104"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Hawaii_5_FIPS_5105"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Idaho_Central_FIPS_1102"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Idaho_East_FIPS_1101"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Idaho_West_FIPS_1103"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Illinois_East_FIPS_1201"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Illinois_West_FIPS_1202"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Indiana_East_FIPS_1301"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Indiana_West_FIPS_1302"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Kansas_North_FIPS_1501"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Kansas_South_FIPS_1502"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Kentucky_North_FIPS_1601"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Kentucky_South_FIPS_1602"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Louisiana_North_FIPS_1701"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Louisiana_South_FIPS_1702"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Maine_East_FIPS_1801"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Maine_West_FIPS_1802"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Maryland_FIPS_1900"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Massachusetts_Island_FIPS_2002"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Massachusetts_Mainland_FIPS_2001"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Michigan_Central_FIPS_2202"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Michigan_North_FIPS_2111"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Michigan_South_FIPS_2113"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Mississippi_East_FIPS_2301"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Mississippi_West_FIPS_2302"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Montana_FIPS_2500"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Nebraska_FIPS_2600"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Nevada_Central_FIPS_2702"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Nevada_East_FIPS_2701"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Nevada_West_FIPS_2703"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_New_Hampshire_FIPS_2800"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_New_Jersey_FIPS_2900"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_New_Mexico_Central_FIPS_3002"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_New_Mexico_East_FIPS_3001"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_New_Mexico_West_FIPS_3003"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_New_York_Central_FIPS_3102"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_New_York_East_FIPS_3101"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_New_York_Long_Island_FIPS_3104"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_New_York_West_FIPS_3103"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_North_Dakota_North_FIPS_3301"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_North_Dakota_South_FIPS_3302"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Ohio_North_FIPS_3401"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Ohio_South_FIPS_3402"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Oklahoma_North_FIPS_3501"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Oklahoma_South_FIPS_3502"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Oregon_North_FIPS_3601"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Oregon_South_FIPS_3602"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Puerto_Rico_Virgin_Islands_FIPS_5200"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Rhode_Island_FIPS_3800"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_South_Dakota_North_FIPS_4001"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_South_Dakota_South_FIPS_4002"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Tennessee_FIPS_4100"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Texas_Central_FIPS_4203"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Texas_North_Central_FIPS_4202"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Texas_North_FIPS_4201"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Texas_South_Central_FIPS_4204"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Texas_South_FIPS_4205"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Utah_Central_FIPS_4302"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Utah_North_FIPS_4301"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Utah_South_FIPS_4303"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Vermont_FIPS_4400"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Virginia_North_FIPS_4501"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Virginia_South_FIPS_4502"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Washington_North_FIPS_4601"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Washington_South_FIPS_4602"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_West_Virginia_North_FIPS_4701"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_West_Virginia_South_FIPS_4702"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Wisconsin_Central_FIPS_4802"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Wisconsin_North_FIPS_4801"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Wisconsin_South_FIPS_4803"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Wyoming_East_FIPS_4901"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Wyoming_East_Central_FIPS_4902"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Wyoming_West_Central_FIPS_4903"/>
+                <xs:enumeration value="NAD_1983_HARN_StatePlane_Wyoming_West_FIPS_4904"/>
+                <xs:enumeration value="American_Samoa_1962_StatePlane_American_Samoa_FIPS_5300"/>
+                <xs:enumeration value="NAD_1983_HARN_Guam_Map_Grid"/>
+                <xs:enumeration value="NAD_1983_HARN_UTM_Zone_2S"/>
+                <xs:enumeration value="NAD_Michigan_StatePlane_Michigan_Central_FIPS_2112"/>
+                <xs:enumeration value="NAD_Michigan_StatePlane_Michigan_Central_Old_FIPS_2102"/>
+                <xs:enumeration value="NAD_Michigan_StatePlane_Michigan_East_Old_FIPS_2101"/>
+                <xs:enumeration value="NAD_Michigan_StatePlane_Michigan_North_FIPS_2111"/>
+                <xs:enumeration value="NAD_Michigan_StatePlane_Michigan_South_FIPS_2113"/>
+                <xs:enumeration value="NAD_Michigan_StatePlane_Michigan_West_Old_FIPS_2103"/>
+                <xs:enumeration value="Old_Hawaiian_StatePlane_Hawaii_1_FIPS_5101"/>
+                <xs:enumeration value="Old_Hawaiian_StatePlane_Hawaii_2_FIPS_5102"/>
+                <xs:enumeration value="Old_Hawaiian_StatePlane_Hawaii_3_FIPS_5103"/>
+                <xs:enumeration value="Old_Hawaiian_StatePlane_Hawaii_4_FIPS_5104"/>
+                <xs:enumeration value="Old_Hawaiian_StatePlane_Hawaii_5_FIPS_5105"/>
+                <xs:enumeration value="Puerto_Rico_StatePlane_Puerto_Rico_FIPS_5201"/>
+                <xs:enumeration value="Puerto_Rico_StatePlane_Virgin_Islands_St_Croix_FIPS_5202"/>
+                <xs:enumeration value="NAD_1927_UTM_Zone_10N"/>
+                <xs:enumeration value="NAD_1927_UTM_Zone_11N"/>
+                <xs:enumeration value="NAD_1927_UTM_Zone_12N"/>
+                <xs:enumeration value="NAD_1927_UTM_Zone_13N"/>
+                <xs:enumeration value="NAD_1927_UTM_Zone_14N"/>
+                <xs:enumeration value="NAD_1927_UTM_Zone_15N"/>
+                <xs:enumeration value="NAD_1927_UTM_Zone_16N"/>
+                <xs:enumeration value="NAD_1927_UTM_Zone_17N"/>
+                <xs:enumeration value="NAD_1927_UTM_Zone_18N"/>
+                <xs:enumeration value="NAD_1927_UTM_Zone_19N"/>
+                <xs:enumeration value="NAD_1927_UTM_Zone_20N"/>
+                <xs:enumeration value="NAD_1927_UTM_Zone_21N"/>
+                <xs:enumeration value="NAD_1927_UTM_Zone_22N"/>
+                <xs:enumeration value="NAD_1927_UTM_Zone_3N"/>
+                <xs:enumeration value="NAD_1927_UTM_Zone_4N"/>
+                <xs:enumeration value="NAD_1927_UTM_Zone_5N"/>
+                <xs:enumeration value="NAD_1927_UTM_Zone_6N"/>
+                <xs:enumeration value="NAD_1927_UTM_Zone_7N"/>
+                <xs:enumeration value="NAD_1927_UTM_Zone_8N"/>
+                <xs:enumeration value="NAD_1927_UTM_Zone_9N"/>
+                <xs:enumeration value="NAD_1983_UTM_Zone_10N"/>
+                <xs:enumeration value="NAD_1983_UTM_Zone_11N"/>
+                <xs:enumeration value="NAD_1983_UTM_Zone_12N"/>
+                <xs:enumeration value="NAD_1983_UTM_Zone_13N"/>
+                <xs:enumeration value="NAD_1983_UTM_Zone_14N"/>
+                <xs:enumeration value="NAD_1983_UTM_Zone_15N"/>
+                <xs:enumeration value="NAD_1983_UTM_Zone_16N"/>
+                <xs:enumeration value="NAD_1983_UTM_Zone_17N"/>
+                <xs:enumeration value="NAD_1983_UTM_Zone_18N"/>
+                <xs:enumeration value="NAD_1983_UTM_Zone_19N"/>
+                <xs:enumeration value="NAD_1983_UTM_Zone_20N"/>
+                <xs:enumeration value="NAD_1983_UTM_Zone_21N"/>
+                <xs:enumeration value="NAD_1983_UTM_Zone_22N"/>
+                <xs:enumeration value="NAD_1983_UTM_Zone_23N"/>
+                <xs:enumeration value="NAD_1983_UTM_Zone_3N"/>
+                <xs:enumeration value="NAD_1983_UTM_Zone_4N"/>
+                <xs:enumeration value="NAD_1983_UTM_Zone_5N"/>
+                <xs:enumeration value="NAD_1983_UTM_Zone_6N"/>
+                <xs:enumeration value="NAD_1983_UTM_Zone_7N"/>
+                <xs:enumeration value="NAD_1983_UTM_Zone_8N"/>
+                <xs:enumeration value="NAD_1983_UTM_Zone_9N"/>
+                <xs:enumeration value="Abidjan_1987_UTM_Zone_29N"/>
+                <xs:enumeration value="Abidjan_1987_UTM_Zone_30N"/>
+                <xs:enumeration value="Adindan_UTM_Zone_37N"/>
+                <xs:enumeration value="Adindan_UTM_Zone_38N"/>
+                <xs:enumeration value="Afgooye_UTM_Zone_38N"/>
+                <xs:enumeration value="Afgooye_UTM_Zone_39N"/>
+                <xs:enumeration value="Ain_el_Abd_UTM_Zone_37N"/>
+                <xs:enumeration value="Ain_el_Abd_UTM_Zone_38N"/>
+                <xs:enumeration value="Ain_el_Abd_UTM_Zone_39N"/>
+                <xs:enumeration value="Aratu_UTM_Zone_22S"/>
+                <xs:enumeration value="Aratu_UTM_Zone_23S"/>
+                <xs:enumeration value="Aratu_UTM_Zone_24S"/>
+                <xs:enumeration value="Arc_1950_UTM_Zone_34S"/>
+                <xs:enumeration value="Arc_1950_UTM_Zone_35S"/>
+                <xs:enumeration value="Arc_1950_UTM_Zone_36S"/>
+                <xs:enumeration value="Arc_1960_UTM_Zone_35N"/>
+                <xs:enumeration value="Arc_1960_UTM_Zone_35S"/>
+                <xs:enumeration value="Arc_1960_UTM_Zone_36N"/>
+                <xs:enumeration value="Arc_1960_UTM_Zone_36S"/>
+                <xs:enumeration value="Arc_1960_UTM_Zone_37N"/>
+                <xs:enumeration value="Arc_1960_UTM_Zone_37S"/>
+                <xs:enumeration value="ATS_1977_UTM_Zone_19N"/>
+                <xs:enumeration value="ATS_1977_UTM_Zone_20N"/>
+                <xs:enumeration value="Batavia_UTM_Zone_48S"/>
+                <xs:enumeration value="Batavia_UTM_Zone_49S"/>
+                <xs:enumeration value="Batavia_UTM_Zone_50S"/>
+                <xs:enumeration value="Bissau_UTM_Zone_28N"/>
+                <xs:enumeration value="Bogota_UTM_Zone_17N"/>
+                <xs:enumeration value="Bogota_UTM_Zone_18N"/>
+                <xs:enumeration value="Camacupa_UTM_Zone_32S"/>
+                <xs:enumeration value="Camacupa_UTM_Zone_33S"/>
+                <xs:enumeration value="Cape_UTM_Zone_34S"/>
+                <xs:enumeration value="Cape_UTM_Zone_35S"/>
+                <xs:enumeration value="Cape_UTM_Zone_36S"/>
+                <xs:enumeration value="Carthage_UTM_Zone_32N"/>
+                <xs:enumeration value="Conakry_1905_UTM_Zone_28N"/>
+                <xs:enumeration value="Conakry_1905_UTM_Zone_29N"/>
+                <xs:enumeration value="Corrego_Alegre_UTM_Zone_23S"/>
+                <xs:enumeration value="Corrego_Alegre_UTM_Zone_24S"/>
+                <xs:enumeration value="Dabola_UTM_Zone_28N"/>
+                <xs:enumeration value="Dabola_UTM_Zone_29N"/>
+                <xs:enumeration value="Datum_73_UTM_Zone_29N"/>
+                <xs:enumeration value="Douala_UTM_Zone_32N"/>
+                <xs:enumeration value="ED_1950_ED77_UTM_Zone_38N"/>
+                <xs:enumeration value="ED_1950_ED77_UTM_Zone_39N"/>
+                <xs:enumeration value="ED_1950_ED77_UTM_Zone_40N"/>
+                <xs:enumeration value="ED_1950_ED77_UTM_Zone_41N"/>
+                <xs:enumeration value="ELD_1979_UTM_Zone_32N"/>
+                <xs:enumeration value="ELD_1979_UTM_Zone_33N"/>
+                <xs:enumeration value="ELD_1979_UTM_Zone_34N"/>
+                <xs:enumeration value="ELD_1979_UTM_Zone_35N"/>
+                <xs:enumeration value="ETRF_1989_UTM_Zone_28N"/>
+                <xs:enumeration value="ETRF_1989_UTM_Zone_29N"/>
+                <xs:enumeration value="ETRF_1989_UTM_Zone_30N"/>
+                <xs:enumeration value="ETRF_1989_UTM_Zone_31N"/>
+                <xs:enumeration value="ETRF_1989_UTM_Zone_32N"/>
+                <xs:enumeration value="ETRF_1989_UTM_Zone_33N"/>
+                <xs:enumeration value="ETRF_1989_UTM_Zone_34N"/>
+                <xs:enumeration value="ETRF_1989_UTM_Zone_35N"/>
+                <xs:enumeration value="ETRF_1989_UTM_Zone_36N"/>
+                <xs:enumeration value="ETRF_1989_UTM_Zone_37N"/>
+                <xs:enumeration value="ETRF_1989_UTM_Zone_38N"/>
+                <xs:enumeration value="ED_1950_UTM_Zone_28N"/>
+                <xs:enumeration value="ED_1950_UTM_Zone_29N"/>
+                <xs:enumeration value="ED_1950_UTM_Zone_30N"/>
+                <xs:enumeration value="ED_1950_UTM_Zone_31N"/>
+                <xs:enumeration value="ED_1950_UTM_Zone_32N"/>
+                <xs:enumeration value="ED_1950_UTM_Zone_33N"/>
+                <xs:enumeration value="ED_1950_UTM_Zone_34N"/>
+                <xs:enumeration value="ED_1950_UTM_Zone_35N"/>
+                <xs:enumeration value="ED_1950_UTM_Zone_36N"/>
+                <xs:enumeration value="ED_1950_UTM_Zone_37N"/>
+                <xs:enumeration value="ED_1950_UTM_Zone_38N"/>
+                <xs:enumeration value="Fahud_UTM_Zone_39N"/>
+                <xs:enumeration value="Fahud_UTM_Zone_40N"/>
+                <xs:enumeration value="Garoua_UTM_Zone_33N"/>
+                <xs:enumeration value="Graciosa_Base_SW_1948_UTM_Zone_26N"/>
+                <xs:enumeration value="Hito_XVIII_1963_UTM_19S"/>
+                <xs:enumeration value="Hong_Kong_1980_UTM_Zone_49N"/>
+                <xs:enumeration value="Hong_Kong_1980_UTM_Zone_50N"/>
+                <xs:enumeration value="Indian_1954_UTM_Zone_46N"/>
+                <xs:enumeration value="Indian_1954_UTM_Zone_47N"/>
+                <xs:enumeration value="Indian_1954_UTM_Zone_48N"/>
+                <xs:enumeration value="Indian_1960_UTM_Zone_48N"/>
+                <xs:enumeration value="Indian_1960_UTM_Zone_49N"/>
+                <xs:enumeration value="Indian_1975_UTM_Zone_47N"/>
+                <xs:enumeration value="Indian_1975_UTM_Zone_48N"/>
+                <xs:enumeration value="Indonesian_1974_UTM_Zone_46N"/>
+                <xs:enumeration value="Indonesian_1974_UTM_Zone_46S"/>
+                <xs:enumeration value="Indonesian_1974_UTM_Zone_47N"/>
+                <xs:enumeration value="Indonesian_1974_UTM_Zone_47S"/>
+                <xs:enumeration value="Indonesian_1974_UTM_Zone_48N"/>
+                <xs:enumeration value="Indonesian_1974_UTM_Zone_48S"/>
+                <xs:enumeration value="Indonesian_1974_UTM_Zone_49N"/>
+                <xs:enumeration value="Indonesian_1974_UTM_Zone_49S"/>
+                <xs:enumeration value="Indonesian_1974_UTM_Zone_50N"/>
+                <xs:enumeration value="Indonesian_1974_UTM_Zone_50S"/>
+                <xs:enumeration value="Indonesian_1974_UTM_Zone_51N"/>
+                <xs:enumeration value="Indonesian_1974_UTM_Zone_51S"/>
+                <xs:enumeration value="Indonesian_1974_UTM_Zone_52N"/>
+                <xs:enumeration value="Indonesian_1974_UTM_Zone_52S"/>
+                <xs:enumeration value="Indonesian_1974_UTM_Zone_53N"/>
+                <xs:enumeration value="Indonesian_1974_UTM_Zone_53S"/>
+                <xs:enumeration value="Indonesian_1974_UTM_Zone_54S"/>
+                <xs:enumeration value="IRENET95_UTM_Zone_29N"/>
+                <xs:enumeration value="Kertau_UTM_Zone_47N"/>
+                <xs:enumeration value="Kertau_UTM_Zone_48N"/>
+                <xs:enumeration value="La_Canoa_UTM_Zone_18N"/>
+                <xs:enumeration value="La_Canoa_UTM_Zone_19N"/>
+                <xs:enumeration value="La_Canoa_UTM_Zone_20N"/>
+                <xs:enumeration value="La_Canoa_UTM_Zone_21N"/>
+                <xs:enumeration value="Locodjo_1965_UTM_Zone_29N"/>
+                <xs:enumeration value="Locodjo_1965_UTM_Zone_30N"/>
+                <xs:enumeration value="Lome_UTM_Zone_31N"/>
+                <xs:enumeration value="Mporaloko_UTM_Zone_32N"/>
+                <xs:enumeration value="Mporaloko_UTM_Zone_32S"/>
+                <xs:enumeration value="Malongo_1987_UTM_Zone_32S"/>
+                <xs:enumeration value="Massawa_UTM_Zone_37N"/>
+                <xs:enumeration value="Mhast_UTM_Zone_32S"/>
+                <xs:enumeration value="Minna_UTM_Zone_31N"/>
+                <xs:enumeration value="Minna_UTM_Zone_32N"/>
+                <xs:enumeration value="Moznet_UTM_Zone_36S"/>
+                <xs:enumeration value="Moznet_UTM_Zone_37S"/>
+                <xs:enumeration value="NAD_1927_BLM_Zone_14N"/>
+                <xs:enumeration value="NAD_1927_BLM_Zone_15N"/>
+                <xs:enumeration value="NAD_1927_BLM_Zone_16N"/>
+                <xs:enumeration value="NAD_1927_BLM_Zone_17N"/>
+                <xs:enumeration value="NAD_1983_HARN_UTM_Zone_2S"/>
+                <xs:enumeration value="Nahrwan_1967_UTM_Zone_38N"/>
+                <xs:enumeration value="Nahrwan_1967_UTM_Zone_39N"/>
+                <xs:enumeration value="Nahrwan_1967_UTM_Zone_40N"/>
+                <xs:enumeration value="Naparima_1955_UTM_Zone_20N"/>
+                <xs:enumeration value="Naparima_1972_UTM_Zone_20N"/>
+                <xs:enumeration value="NGN_UTM_Zone_38N"/>
+                <xs:enumeration value="NGN_UTM_Zone_39N"/>
+                <xs:enumeration value="NGO_1948_UTM_Zone_32N"/>
+                <xs:enumeration value="NGO_1948_UTM_Zone_33N"/>
+                <xs:enumeration value="NGO_1948_UTM_Zone_34N"/>
+                <xs:enumeration value="NGO_1948_UTM_Zone_35N"/>
+                <xs:enumeration value="Nord_Sahara_1959_UTM_Zone_29N"/>
+                <xs:enumeration value="Nord_Sahara_1959_UTM_Zone_30N"/>
+                <xs:enumeration value="Nord_Sahara_1959_UTM_Zone_31N"/>
+                <xs:enumeration value="Nord_Sahara_1959_UTM_Zone_32N"/>
+                <xs:enumeration value="NZGD_1949_UTM_Zone_58S"/>
+                <xs:enumeration value="NZGD_1949_UTM_Zone_59S"/>
+                <xs:enumeration value="NZGD_1949_UTM_Zone_60S"/>
+                <xs:enumeration value="NZGD_2000_UTM_Zone_58S"/>
+                <xs:enumeration value="NZGD_2000_UTM_Zone_59S"/>
+                <xs:enumeration value="NZGD_2000_UTM_Zone_60S"/>
+                <xs:enumeration value="Observ_Meteorologico_1939_UTM_Zone_25N"/>
+                <xs:enumeration value="Old_Hawaiian_UTM_Zone_4N"/>
+                <xs:enumeration value="Old_Hawaiian_UTM_Zone_5N"/>
+                <xs:enumeration value="PDO_1993_UTM_Zone_39N"/>
+                <xs:enumeration value="PDO_1993_UTM_Zone_40N"/>
+                <xs:enumeration value="Pointe_Noire_UTM_Zone_32S"/>
+                <xs:enumeration value="Porto_Santo_1936_UTM_Zone_28N"/>
+                <xs:enumeration value="PSAD_1956_UTM_Zone_17S"/>
+                <xs:enumeration value="PSAD_1956_UTM_Zone_18N"/>
+                <xs:enumeration value="PSAD_1956_UTM_Zone_18S"/>
+                <xs:enumeration value="PSAD_1956_UTM_Zone_19N"/>
+                <xs:enumeration value="PSAD_1956_UTM_Zone_19S"/>
+                <xs:enumeration value="PSAD_1956_UTM_Zone_20N"/>
+                <xs:enumeration value="PSAD_1956_UTM_Zone_20S"/>
+                <xs:enumeration value="PSAD_1956_UTM_Zone_21N"/>
+                <xs:enumeration value="PSAD_1956_UTM_Zone_22S"/>
+                <xs:enumeration value="Puerto_Rico_UTM_Zone_20N"/>
+                <xs:enumeration value="Samboja_UTM_Zone_50S"/>
+                <xs:enumeration value="Sao_Braz_UTM_Zone_26N"/>
+                <xs:enumeration value="Sapper_Hill_1943_UTM_Zone_20S"/>
+                <xs:enumeration value="Sapper_Hill_1943_UTM_Zone_21S"/>
+                <xs:enumeration value="Schwarzeck_UTM_Zone_33S"/>
+                <xs:enumeration value="Selvagem_Grande_1938_UTM_Zone_28N"/>
+                <xs:enumeration value="Sierra_Leone_1968_UTM_Zone_28N"/>
+                <xs:enumeration value="Sierra_Leone_1968_UTM_Zone_29N"/>
+                <xs:enumeration value="SIRGAS_UTM_Zone_17N"/>
+                <xs:enumeration value="SIRGAS_UTM_Zone_17S"/>
+                <xs:enumeration value="SIRGAS_UTM_Zone_18N"/>
+                <xs:enumeration value="SIRGAS_UTM_Zone_18S"/>
+                <xs:enumeration value="SIRGAS_UTM_Zone_19N"/>
+                <xs:enumeration value="SIRGAS_UTM_Zone_19S"/>
+                <xs:enumeration value="SIRGAS_UTM_Zone_20N"/>
+                <xs:enumeration value="SIRGAS_UTM_Zone_20S"/>
+                <xs:enumeration value="SIRGAS_UTM_Zone_21N"/>
+                <xs:enumeration value="SIRGAS_UTM_Zone_21S"/>
+                <xs:enumeration value="SIRGAS_UTM_Zone_22N"/>
+                <xs:enumeration value="SIRGAS_UTM_Zone_22S"/>
+                <xs:enumeration value="SIRGAS_UTM_Zone_23S"/>
+                <xs:enumeration value="SIRGAS_UTM_Zone_24S"/>
+                <xs:enumeration value="SIRGAS_UTM_Zone_25S"/>
+                <xs:enumeration value="SAD_1969_UTM_Zone_17S"/>
+                <xs:enumeration value="SAD_1969_UTM_Zone_18N"/>
+                <xs:enumeration value="SAD_1969_UTM_Zone_18S"/>
+                <xs:enumeration value="SAD_1969_UTM_Zone_19N"/>
+                <xs:enumeration value="SAD_1969_UTM_Zone_19S"/>
+                <xs:enumeration value="SAD_1969_UTM_Zone_20N"/>
+                <xs:enumeration value="SAD_1969_UTM_Zone_20S"/>
+                <xs:enumeration value="SAD_1969_UTM_Zone_21N"/>
+                <xs:enumeration value="SAD_1969_UTM_Zone_21S"/>
+                <xs:enumeration value="SAD_1969_UTM_Zone_22N"/>
+                <xs:enumeration value="SAD_1969_UTM_Zone_22S"/>
+                <xs:enumeration value="SAD_1969_UTM_Zone_23S"/>
+                <xs:enumeration value="SAD_1969_UTM_Zone_24S"/>
+                <xs:enumeration value="SAD_1969_UTM_Zone_25S"/>
+                <xs:enumeration value="Sudan_UTM_Zone_35N"/>
+                <xs:enumeration value="Sudan_UTM_Zone_36N"/>
+                <xs:enumeration value="Tananarive_1925_UTM_Zone_38S"/>
+                <xs:enumeration value="Tananarive_1925_UTM_Zone_39S"/>
+                <xs:enumeration value="Tete_UTM_Zone_36S"/>
+                <xs:enumeration value="Tete_UTM_Zone_37S"/>
+                <xs:enumeration value="Timbalai_1948_UTM_Zone_49N"/>
+                <xs:enumeration value="Timbalai_1948_UTM_Zone_50N"/>
+                <xs:enumeration value="Tokyo_UTM_Zone_51N"/>
+                <xs:enumeration value="Tokyo_UTM_Zone_52N"/>
+                <xs:enumeration value="Tokyo_UTM_Zone_53N"/>
+                <xs:enumeration value="Tokyo_UTM_Zone_54N"/>
+                <xs:enumeration value="Tokyo_UTM_Zone_55N"/>
+                <xs:enumeration value="Tokyo_UTM_Zone_56N"/>
+                <xs:enumeration value="TC_1948_UTM_Zone_39N"/>
+                <xs:enumeration value="TC_1948_UTM_Zone_40N"/>
+                <xs:enumeration value="Yemen_NGN_1996_UTM_Zone_38N"/>
+                <xs:enumeration value="Yemen_NGN_1996_UTM_Zone_39N"/>
+                <xs:enumeration value="Yoff_1972_UTM_Zone_28N"/>
+                <xs:enumeration value="Zanderij_1972_UTM_Zone_21N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_10N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_10S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_11N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_11S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_12N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_12S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_13N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_13S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_14N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_14S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_15N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_15S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_16N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_16S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_17N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_17S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_18N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_18S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_19N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_19S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_1N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_1S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_20N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_20S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_21N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_21S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_22N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_22S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_23N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_23S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_24N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_24S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_25N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_25S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_26N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_26S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_27N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_27S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_28N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_28S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_29N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_29S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_2N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_2S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_30N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_30S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_31N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_31S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_32N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_32S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_33N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_33S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_34N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_34S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_35N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_35S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_36N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_36S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_37N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_37S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_38N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_38S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_39N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_39S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_3N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_3S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_40N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_40S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_41N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_41S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_42N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_42S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_43N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_43S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_44N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_44S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_45N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_45S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_46N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_46S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_47N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_47S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_48N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_48S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_49N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_49S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_4N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_4S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_50N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_50S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_51N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_51S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_52N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_52S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_53N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_53S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_54N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_54S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_55N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_55S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_56N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_56S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_57N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_57S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_58N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_58S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_59N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_59S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_5N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_5S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_60N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_60S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_6N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_6S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_7N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_7S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_8N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_8S"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_9N"/>
+                <xs:enumeration value="WGS_1972_UTM_Zone_9S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_10N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_10S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_11N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_11S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_12N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_12S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_13N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_13S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_14N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_14S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_15N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_15S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_16N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_16S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_17N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_17S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_18N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_18S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_19N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_19S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_1N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_1S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_20N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_20S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_21N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_21S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_22N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_22S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_23N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_23S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_24N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_24S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_25N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_25S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_26N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_26S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_27N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_27S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_28N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_28S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_29N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_29S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_2N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_2S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_30N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_30S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_31N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_31S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_32N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_32S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_33N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_33S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_34N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_34S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_35N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_35S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_36N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_36S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_37N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_37S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_38N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_38S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_39N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_39S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_3N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_3S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_40N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_40S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_41N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_41S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_42N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_42S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_43N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_43S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_44N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_44S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_45N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_45S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_46N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_46S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_47N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_47S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_48N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_48S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_49N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_49S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_4N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_4S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_50N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_50S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_51N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_51S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_52N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_52S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_53N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_53S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_54N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_54S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_55N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_55S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_56N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_56S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_57N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_57S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_58N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_58S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_59N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_59S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_5N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_5S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_60N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_60S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_6N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_6S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_7N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_7S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_8N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_8S"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_9N"/>
+                <xs:enumeration value="WGS_1984_UTM_Zone_9S"/>
+                <xs:enumeration value="World_Aitoff"/>
+                <xs:enumeration value="World_Behrmann"/>
+                <xs:enumeration value="World_Bonne"/>
+                <xs:enumeration value="World_Craster_Parabolic"/>
+                <xs:enumeration value="World_Cylindrical_Equal_Area"/>
+                <xs:enumeration value="World_Eckert_I"/>
+                <xs:enumeration value="World_Eckert_II"/>
+                <xs:enumeration value="World_Eckert_III"/>
+                <xs:enumeration value="World_Eckert_IV"/>
+                <xs:enumeration value="World_Eckert_V"/>
+                <xs:enumeration value="World_Eckert_VI"/>
+                <xs:enumeration value="World_Equidistant_Conic"/>
+                <xs:enumeration value="World_Equidistant_Cylindrical"/>
+                <xs:enumeration value="World_Flat_Polar_Quartic"/>
+                <xs:enumeration value="World_Gall_Stereographic"/>
+                <xs:enumeration value="World_Hammer_Aitoff"/>
+                <xs:enumeration value="World_Loximuthal"/>
+                <xs:enumeration value="World_Mercator"/>
+                <xs:enumeration value="World_Miller_Cylindrical"/>
+                <xs:enumeration value="World_Mollweide"/>
+                <xs:enumeration value="World_Plate_Carree"/>
+                <xs:enumeration value="World_Polyconic"/>
+                <xs:enumeration value="World_Quartic_Authalic"/>
+                <xs:enumeration value="World_Robinson"/>
+                <xs:enumeration value="World_Sinusoidal"/>
+                <xs:enumeration value="Sphere_Aitoff"/>
+                <xs:enumeration value="Sphere_Behrmann"/>
+                <xs:enumeration value="Sphere_Bonne"/>
+                <xs:enumeration value="Sphere_Craster_Parabolic"/>
+                <xs:enumeration value="Sphere_Cylindrical_Equal_Area"/>
+                <xs:enumeration value="Sphere_Eckert_I"/>
+                <xs:enumeration value="Sphere_Eckert_II"/>
+                <xs:enumeration value="Sphere_Eckert_III"/>
+                <xs:enumeration value="Sphere_Eckert_IV"/>
+                <xs:enumeration value="Sphere_Eckert_V"/>
+                <xs:enumeration value="Sphere_Eckert_VI"/>
+                <xs:enumeration value="Sphere_Equidistant_Conic"/>
+                <xs:enumeration value="Sphere_Equidistant_Cylindrical"/>
+                <xs:enumeration value="Sphere_Flat_Polar_Quartic"/>
+                <xs:enumeration value="Sphere_Gall_Stereographic"/>
+                <xs:enumeration value="Sphere_Hammer_Aitoff"/>
+                <xs:enumeration value="Sphere_Loximuthal"/>
+                <xs:enumeration value="Sphere_Mercator"/>
+                <xs:enumeration value="Sphere_Miller_Cylindrical"/>
+                <xs:enumeration value="Sphere_Mollweide"/>
+                <xs:enumeration value="Sphere_Plate_Carree"/>
+                <xs:enumeration value="Sphere_Polyconic"/>
+                <xs:enumeration value="Sphere_Quartic_Authalic"/>
+                <xs:enumeration value="Sphere_Robinson"/>
+                <xs:enumeration value="Sphere_Sinusoidal"/>
+                <xs:enumeration value="Sphere_Times"/>
+                <xs:enumeration value="Sphere_Van_der_Grinten_I"/>
+                <xs:enumeration value="Sphere_Vertical_Perspective"/>
+                <xs:enumeration value="Sphere_Winkel_I"/>
+                <xs:enumeration value="Sphere_Winkel_II"/>
+                <xs:enumeration value="Sphere_Winkel_Tripel_NGS"/>
+                <xs:enumeration value="The_World_From_Space"/>
+                <xs:enumeration value="World_Times"/>
+                <xs:enumeration value="World_Van_der_Grinten_I"/>
+                <xs:enumeration value="World_Vertical_Perspective"/>
+                <xs:enumeration value="World_Winkel_I"/>
+                <xs:enumeration value="World_Winkel_II"/>
+                <xs:enumeration value="World_Winkel_Tripel_NGS"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:element>
+          <xs:element name="horizCoordSysDef" type="horizCoordSysType">
+            <xs:annotation>
+              <xs:appinfo>
+                <doc:tooltip>Horizonal Coordinate System Definition</doc:tooltip>
+                <doc:summary>The definition of a coordinate system</doc:summary>
+                <doc:description>Terms and parameters necessary to define a geographic or projected coordinate
+                system for horizonal distances.</doc:description>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+        </xs:choice>
+        <xs:element name="vertCoordSys" minOccurs="0">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Vertical Coordinate System Definition</doc:tooltip>
+              <doc:summary>The reference frame or system from which vertical
+              distances (altitudes or depths) are measured.</doc:summary>
+              <doc:description/>
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="altitudeSysDef" minOccurs="0">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <doc:tooltip>Altitude System Definition</doc:tooltip>
+                    <doc:summary>the reference frame or system from which
+                    altitudes (elevations) are measured.</doc:summary>
+                    <doc:description>The term "altitude"' is used instead of
+                    the common term "elevation" to conform to the terminology
+                    in Federal Information Processing Standards 70-1 and
+                    173.</doc:description>
+                  </xs:appinfo>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="altitudeDatumName" type="res:NonEmptyStringType">
+                      <xs:annotation>
+                        <xs:appinfo>
+                          <doc:tooltip>Altitude Datum Name</doc:tooltip>
+                          <doc:summary>The identification given to the surface
+                          taken as the surface of reference from which
+                          altitudes are measured.</doc:summary>
+                          <doc:description/>
+                          <doc:example>WGS_datum</doc:example>
+                        </xs:appinfo>
+                      </xs:annotation>
+                    </xs:element>
+                    <xs:element name="altitudeResolution" type="res:NonEmptyStringType" maxOccurs="unbounded">
+                      <xs:annotation>
+                        <xs:appinfo>
+                          <doc:tooltip>Altitude Resolution</doc:tooltip>
+                          <doc:summary>The minimum distance possible between
+                          two adjacent altitude values, expressed in Altitude
+                          Distance Units of measure.</doc:summary>
+                          <doc:description/>
+                          <doc:example>1</doc:example>
+                        </xs:appinfo>
+                      </xs:annotation>
+                    </xs:element>
+                    <xs:element name="altitudeDistanceUnits" type="res:NonEmptyStringType">
+                      <xs:annotation>
+                        <xs:appinfo>
+                          <doc:tooltip>Altitude Distance Units</doc:tooltip>
+                          <doc:summary>Units in which altitude is
+                          measured.</doc:summary>
+                          <doc:description/>
+                          <doc:example>1</doc:example>
+                        </xs:appinfo>
+                      </xs:annotation>
+                    </xs:element>
+                    <xs:element name="altitudeEncodingMethod" type="res:NonEmptyStringType">
+                      <xs:annotation>
+                        <xs:appinfo>
+                          <doc:tooltip>Altitude Encoding Method</doc:tooltip>
+                          <doc:summary>The means used to encode the
+                          altitudes.</doc:summary>
+                          <doc:description/>
+                        </xs:appinfo>
+                      </xs:annotation>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="depthSysDef" minOccurs="0">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <doc:tooltip>Depth System Definition</doc:tooltip>
+                    <doc:summary>The reference frame or system from which
+                    depths are measured.</doc:summary>
+                    <doc:description/>
+                  </xs:appinfo>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="depthDatumName" type="res:NonEmptyStringType">
+                      <xs:annotation>
+                        <xs:appinfo>
+                          <doc:tooltip>Depth Datum Name</doc:tooltip>
+                          <doc:summary>The identification given to surface of
+                          reference from which depths are
+                          measured.</doc:summary>
+                          <doc:description/>
+                        </xs:appinfo>
+                      </xs:annotation>
+                    </xs:element>
+                    <xs:element name="depthResolution" type="res:NonEmptyStringType" maxOccurs="unbounded">
+                      <xs:annotation>
+                        <xs:appinfo>
+                          <doc:tooltip>Depth Resolution</doc:tooltip>
+                          <doc:summary>The minimum distance possible between
+                          two adjacent depth values, expressed in Depth
+                          Distance Units of measure.</doc:summary>
+                          <doc:description/>
+
+                        </xs:appinfo>
+                      </xs:annotation>
+                    </xs:element>
+                    <xs:element name="depthDistanceUnits" type="res:NonEmptyStringType">
+                      <xs:annotation>
+                        <xs:appinfo>
+                          <doc:tooltip>Depth Distance Units</doc:tooltip>
+                          <doc:summary>The units in which depths are
+                          recorded.</doc:summary>
+                          <doc:description/>
+
+                        </xs:appinfo>
+                      </xs:annotation>
+                    </xs:element>
+                    <xs:element name="depthEncodingMethod" type="res:NonEmptyStringType">
+                      <xs:annotation>
+                        <xs:appinfo>
+                          <doc:tooltip>Depth Encoding Method</doc:tooltip>
+                          <doc:summary>The means used to encode
+                          depths.</doc:summary>
+                          <doc:description/>
+
+                        </xs:appinfo>
+                      </xs:annotation>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:group ref="res:ReferencesGroup"/>
+    </xs:choice>
+    <xs:attribute name="id" type="res:IDType" use="optional"/>
+    <xs:attribute name="system" type="res:SystemType" use="optional"/>
+    <xs:attribute name="scope" type="res:ScopeType" use="optional" default="document"/>
+  </xs:complexType>
+  <xs:complexType name="geogCoordSysType">
+    <xs:sequence>
+      <xs:element name="datum">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Datum</doc:tooltip>
+            <doc:summary>The point on the earth representing the origin for the geographic
+            coordinates to which the coorinate system is related to.</doc:summary>
+            <doc:description/>
+            <doc:example>WGS_1984</doc:example>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:string"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="spheroid">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Spheroid</doc:tooltip>
+            <doc:summary>An ellipse that is used to model the earth's surface.</doc:summary>
+            <doc:description>An ellipse is used to define a idealized surface that ignores variation in elevation.</doc:description>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:string">
+            <xs:annotation>
+              <xs:appinfo>
+                <doc:tooltip>Spheroid name</doc:tooltip>
+                <doc:summary>The name of the spheroid.</doc:summary>
+                <doc:description/>
+                <doc:example>Bessel 1866</doc:example>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="semiAxisMajor" type="xs:float">
+            <xs:annotation>
+              <xs:appinfo>
+                <doc:tooltip>Semi-axis Major</doc:tooltip>
+                <doc:summary>The larger of two orthogonal axes that define the ellipse</doc:summary>
+                <doc:description/>
+                <doc:example>Meter</doc:example>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="denomFlatRatio" type="xs:float"/>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="primeMeridian">
+        <xs:complexType>
+          <xs:attribute name="name" type="xs:string">
+            <xs:annotation>
+              <xs:appinfo>
+                <doc:tooltip>Prime Meridian Name</doc:tooltip>
+                <doc:summary>The name of the Prime Meridian</doc:summary>
+                <doc:description/>
+                <doc:example>Greenwich</doc:example>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="longitude" use="required">
+            <xs:annotation>
+              <xs:appinfo>
+                <doc:tooltip>Longitude</doc:tooltip>
+                <doc:summary>The longitude of the Prime Meridian</doc:summary>
+                <doc:description/>
+                <doc:example>0.0</doc:example>
+              </xs:appinfo>
+            </xs:annotation>
+            <xs:simpleType>
+              <xs:restriction base="xs:float">
+                <xs:minInclusive value="-180"/>
+                <xs:maxInclusive value="180"/>
+              </xs:restriction>
+            </xs:simpleType>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="unit">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Unit</doc:tooltip>
+            <doc:summary>The unit of angle by which coordinates are expressed.</doc:summary>
+            <doc:description/>
+            <doc:example>degrees</doc:example>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:attribute name="name" type="angleUnits" use="required">
+            <xs:annotation>
+              <xs:appinfo>
+                <doc:tooltip>Unit Name</doc:tooltip>
+                <doc:summary>The name of the unit of measure .</doc:summary>
+                <doc:description/>
+                <doc:example>Degrees</doc:example>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute name="name" type="xs:string"/>
+  </xs:complexType>
+  <xs:complexType name="horizCoordSysType">
+    <xs:choice>
+      <xs:element name="geogCoordSys" type="geogCoordSysType">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Geographic Coordinate System</doc:tooltip>
+            <doc:summary>The coodinate system used to express the geographic
+                           coordinates.</doc:summary>
+            <doc:description/>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="projCoordSys">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Projected Coordinate System</doc:tooltip>
+            <doc:summary>The coodinate system used to express planar coordinates.</doc:summary>
+            <doc:description/>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="geogCoordSys" type="geogCoordSysType">
+              <xs:annotation>
+                <xs:appinfo>
+                  <doc:tooltip>Geographic Coordinate System</doc:tooltip>
+                  <doc:summary>The coodinate system used to express the geographic
+                           coordinates.</doc:summary>
+                  <doc:description/>
+                </xs:appinfo>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="projection">
+              <xs:annotation>
+                <xs:appinfo>
+                  <doc:tooltip>Projection</doc:tooltip>
+                  <doc:summary>The method used to tranform between geographic and planar coordinates.
+                  </doc:summary>
+                  <doc:description/>
+                </xs:appinfo>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="parameter" maxOccurs="unbounded">
+                    <xs:annotation>
+                      <xs:appinfo>
+                        <doc:tooltip>Parameter</doc:tooltip>
+                        <doc:summary>A parameter required by the projection method.</doc:summary>
+                        <doc:description>Most projections require one or more parameters to control the
+                          orientation and positon of the projected coordinate plane.</doc:description>
+                      </xs:appinfo>
+                    </xs:annotation>
+                    <xs:complexType>
+                      <xs:attribute name="name" type="xs:string" use="required">
+                        <xs:annotation>
+                          <xs:appinfo>
+                            <doc:tooltip>Parameter Name</doc:tooltip>
+                            <doc:summary>The name of the parameter.</doc:summary>
+                            <doc:description>If the paramter corresponds to one that has been
+                            defined in the existing eml-SpatialReferenceDictionary, then that name should be
+                            used to enhance recogonizability.</doc:description>
+                            <doc:example>False_Easting</doc:example>
+                          </xs:appinfo>
+                        </xs:annotation>
+                      </xs:attribute>
+                      <xs:attribute name="description" type="xs:string" use="optional">
+                        <xs:annotation>
+                          <xs:appinfo>
+                            <doc:tooltip>Parameter Description</doc:tooltip>
+                            <doc:summary>A description of the Parameter.</doc:summary>
+                            <doc:description/>
+                            <doc:example>An offset by which x origin has been adjusted,
+                            expressed in projection units</doc:example>
+                          </xs:appinfo>
+                        </xs:annotation>
+                      </xs:attribute>
+                      <xs:attribute name="value" type="xs:anySimpleType" use="required">
+                        <xs:annotation>
+                          <xs:appinfo>
+                            <doc:tooltip>Parameter Value</doc:tooltip>
+                            <doc:summary>The value supplied for the parameter</doc:summary>
+                            <doc:description/>
+                            <doc:example>500000</doc:example>
+                          </xs:appinfo>
+                        </xs:annotation>
+                      </xs:attribute>
+                    </xs:complexType>
+                  </xs:element>
+                  <xs:element name="unit">
+                    <xs:annotation>
+                      <xs:appinfo>
+                        <doc:tooltip>Projection Unit</doc:tooltip>
+                        <doc:summary>The unit of measure coordinates are expressed in.</doc:summary>
+                        <doc:description/>
+                      </xs:appinfo>
+                    </xs:annotation>
+                    <xs:complexType>
+                      <xs:attribute name="name" type="lengthUnits" use="required">
+                        <xs:annotation>
+                          <xs:appinfo>
+                            <doc:tooltip>Projection Unit Name</doc:tooltip>
+                            <doc:summary>The name of the unit of measure.</doc:summary>
+                            <doc:description/>
+                            <doc:example>Meter</doc:example>
+                          </xs:appinfo>
+                        </xs:annotation>
+                      </xs:attribute>
+                    </xs:complexType>
+                  </xs:element>
+                </xs:sequence>
+                <xs:attribute name="name" type="xs:string">
+                  <xs:annotation>
+                    <xs:appinfo>
+                      <doc:tooltip>Projection Name</doc:tooltip>
+                      <doc:summary>The name of the projection method.</doc:summary>
+                      <doc:description>EML does not attempt to document the details
+                      of the particular projection algorithm. It is incumbent on metadata provider
+                      to ensure that the meaning of the names used to identify the method and its parameters will be
+                      as clear as possible.</doc:description>
+                      <doc:example>Transverse_Mercator</doc:example>
+                    </xs:appinfo>
+                  </xs:annotation>
+                </xs:attribute>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:choice>
+    <xs:attribute name="name" type="xs:string" use="required"/>
+  </xs:complexType>
+  <xs:element name="projectionList">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="horizCoordSysDef" type="horizCoordSysType" maxOccurs="unbounded">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Horizonal Coordinate System Definition</doc:tooltip>
+              <doc:summary>The definition of a coordinate system</doc:summary>
+              <doc:description>Terms and parameters necessary to define a geographic or projected coordinate
+                system for horizonal distances.</doc:description>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="spatialReference" type="SpatialReferenceType"/>
+  <xs:simpleType name="lengthUnits">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="meter"/>
+      <xs:enumeration value="nanometer"/>
+      <xs:enumeration value="micrometer"/>
+      <xs:enumeration value="micron"/>
+      <xs:enumeration value="millimeter"/>
+      <xs:enumeration value="centimeter"/>
+      <xs:enumeration value="decimeter"/>
+      <xs:enumeration value="dekameter"/>
+      <xs:enumeration value="hectometer"/>
+      <xs:enumeration value="kilometer"/>
+      <xs:enumeration value="megameter"/>
+      <xs:enumeration value="angstrom"/>
+      <xs:enumeration value="inch"/>
+      <xs:enumeration value="Foot_US"/>
+      <xs:enumeration value="foot"/>
+      <xs:enumeration value="Foot_Gold_Coast"/>
+      <xs:enumeration value="fathom"/>
+      <xs:enumeration value="nauticalMile"/>
+      <xs:enumeration value="yard"/>
+      <xs:enumeration value="Yard_Indian"/>
+      <xs:enumeration value="Link_Clarke"/>
+      <xs:enumeration value="Yard_Sears"/>
+      <xs:enumeration value="mile"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="angleUnits">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="radian"/>
+      <xs:enumeration value="degree"/>
+      <xs:enumeration value="grad"/>
+      <xs:enumeration value="degree"/>
+      <xs:enumeration value="grad"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

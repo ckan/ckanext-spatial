@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema targetNamespace="http://class.noaa.gov/NESDIS" 
+	xmlns:gco="http://www.isotc211.org/2005/gco" 
+	elementFormDefault="qualified" 
+	xmlns:xs="http://www.w3.org/2001/XMLSchema">
+	<!-- ================================== Imports ================================== -->
+	<xs:import namespace="http://www.isotc211.org/2005/gco" schemaLocation="../schema/gco/gco.xsd"/>
+	<!-- ###########################################################################  -->
+	<!-- ================================== Classes ================================= -->
+	<!--====================================-->
+	<xs:complexType name="PhysiographicDescriptior">
+		<xs:sequence>
+			<xs:element name="measure" type="gco:Integer_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--====================================-->
+	<xs:complexType name="SpatialCovarianceXNegative">
+		<xs:sequence>
+			<xs:element name="measure" type="gco:Integer_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--====================================-->
+	<xs:complexType name="SpatialCovarianceXPositive">
+		<xs:sequence>
+			<xs:element name="measure" type="gco:Integer_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--====================================-->
+	<xs:complexType name="SpatialCovarianceYNegative">
+		<xs:sequence>
+			<xs:element name="measure" type="gco:Integer_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--====================================-->
+	<xs:complexType name="SpatialCovarianceYPositive">
+		<xs:sequence>
+			<xs:element name="measure" type="gco:Integer_PropertyType"/>
+		</xs:sequence>
+	</xs:complexType>
+	<!--=======EOF=======-->
+</xs:schema>

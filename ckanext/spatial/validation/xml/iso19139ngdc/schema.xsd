@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ 	Nov 20, 2009, AMilan
+	changed targetNamespace to gmi and changed include to gmi.xsd-->
+<xs:schema targetNamespace="http://www.isotc211.org/2005/gmi" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:gmi="http://www.isotc211.org/2005/gmi" xmlns:srv="http://www.isotc211.org/2005/srv">
+	<xs:include schemaLocation="schema/gmi/gmi.xsd"/>
+	<xs:import namespace="http://www.isotc211.org/2005/gmd" schemaLocation="schema/gmd/gmd.xsd"/>
+	<xs:import namespace="http://www.isotc211.org/2005/srv" schemaLocation="schema/srv/srv.xsd"/>    
+</xs:schema>

@@ -1,0 +1,24 @@
+ #map{
+  width: 100%;
+  height: 400px;
+}
+
+/* OpenLayers */
+.olControlLayerSwitcher .layersDiv {
+  background-color: #333333 !important;
+  -moz-border-radius: 15px;
+  border-radius: 15px;
+}
+
+.dataLbl{
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.dataLayersDiv input{
+    margin: 0 10px 10px 0;
+}
+
+.dataLayersDiv span{
+    margin: 0;
+}

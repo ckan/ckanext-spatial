@@ -1,0 +1,30 @@
+.module-narrow #dataset-map-container{
+  height: 200px;
+}
+
+.module-content #dataset-map-container{
+  height: 250px;
+}
+
+#dataset-map-attribution{
+    font-size: x-small;
+}
+
+.module-narrow #dataset-map-attribution{
+  margin-left: 3px;
+}
+
+.olControlAttribution {
+    left: 5px;
+    right: inherit;
+    bottom: 3px !important;
+}
+
+#dataset-map-container div.olControlAttribution {
+    font-size: 9px;
+    font-family: helvetica,tahoma,verdana,sans-serif;
+    line-height: 12px;
+    left: 5px;
+    bottom: 3px;
+    color: #666;
+}

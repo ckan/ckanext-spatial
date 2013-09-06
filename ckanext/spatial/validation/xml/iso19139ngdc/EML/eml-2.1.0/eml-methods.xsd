@@ -1,0 +1,428 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+  targetNamespace="eml://ecoinformatics.org/methods-2.1.0" 
+  xmlns:txt="eml://ecoinformatics.org/text-2.1.0" 
+  xmlns:doc="eml://ecoinformatics.org/documentation-2.1.0" 
+  xmlns:sw="eml://ecoinformatics.org/software-2.1.0" 
+  xmlns:pro="eml://ecoinformatics.org/protocol-2.1.0" 
+  xmlns:rp="eml://ecoinformatics.org/party-2.1.0" 
+  xmlns:cov="eml://ecoinformatics.org/coverage-2.1.0" 
+  xmlns:ds="eml://ecoinformatics.org/dataset-2.1.0" 
+  xmlns:cit="eml://ecoinformatics.org/literature-2.1.0" 
+  xmlns:res="eml://ecoinformatics.org/resource-2.1.0" 
+  xmlns="eml://ecoinformatics.org/methods-2.1.0" 
+  xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import namespace="eml://ecoinformatics.org/documentation-2.1.0" schemaLocation="eml-documentation.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/dataset-2.1.0" schemaLocation="eml-dataset.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/resource-2.1.0" schemaLocation="eml-resource.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/software-2.1.0" schemaLocation="eml-software.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/protocol-2.1.0" schemaLocation="eml-protocol.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/party-2.1.0" schemaLocation="eml-party.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/text-2.1.0" schemaLocation="eml-text.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/coverage-2.1.0" schemaLocation="eml-coverage.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/literature-2.1.0" schemaLocation="eml-literature.xsd"/>
+  <xs:annotation>
+    <xs:documentation>
+       '$RCSfile: eml-methods.xsd,v $'
+       Copyright: 1997-2002 Regents of the University of California,
+                            University of New Mexico, and
+                            Arizona State University
+        Sponsors: National Center for Ecological Analysis and Synthesis and
+                  Partnership for Interdisciplinary Studies of Coastal Oceans,
+                     University of California Santa Barbara
+                  Long-Term Ecological Research Network Office,
+                     University of New Mexico
+                  Center for Environmental Studies, Arizona State University
+   Other funding: National Science Foundation (see README for details)
+                  The David and Lucile Packard Foundation
+     For Details: http://knb.ecoinformatics.org/
+
+        '$Author: obrien $'
+          '$Date: 2009/02/25 23:51:54 $'
+      '$Revision: 1.29 $'
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+    </xs:documentation>
+    <xs:appinfo>
+      <doc:moduleDocs>
+        <doc:moduleName>eml-methods</doc:moduleName>
+        <doc:moduleDescription>
+          <section xmlns="">
+            <title>
+            The eml-methods module - Methodological information for resources
+          </title>
+            <para>
+            The eml-methods module describes the methods
+            followed in the creation of the dataset, including description of
+            field, laboratory and processing steps, sampling methods and units,
+            quality control procedures.  The eml-methods module is used
+            to describe the <emphasis>actual</emphasis>
+            procedures that are used in the creation or the subsequent
+            processing of a dataset. Likewise, eml-methods is used to describe
+            processes that have been used to define / improve the quality of a
+            data file, or to identify potential problems with the data file.
+            Note that the eml-protocol module is intended to be used to document
+            a <emphasis>prescribed</emphasis> procedure, whereas the eml-method
+            module is used to describe procedures that <emphasis>were actually
+            performed</emphasis>.  The distinction is that the use of the term
+            "protocol" is used in the "prescriptive" sense,
+            and the term "method" is used in the
+            "descriptive" sense.  This distinction allows managers to
+            build a protocol library of well-known, established protocols
+            (procedures), but also document what procedure was truly performed
+            in relation to the established protocol.  The method may have
+            diverged from the protocol purposefully, or perhaps incidentally,
+            but the procedural lineage is still preserved and understandable.
+          </para>
+          </section>
+        </doc:moduleDescription>
+        <doc:recommendedUsage>All datasets</doc:recommendedUsage>
+        <doc:standAlone>no</doc:standAlone>
+      </doc:moduleDocs>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="methods" type="MethodsType">
+    <xs:annotation>
+      <xs:documentation>Comment describing your root element</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="MethodsType">
+    <xs:sequence maxOccurs="unbounded">
+      <xs:element name="methodStep" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>method information</doc:tooltip>
+            <doc:summary>Information about the methods employed in collecting
+            or generating a data set or other resource.</doc:summary>
+            <doc:description>The methodStep field allows for repeated sets of
+            elements that document a series of procedures followed to produce a
+            data object. These include text descriptions of the procedures,
+            relevant literature, software, instrumentation, source data and any
+            quality control measures taken.</doc:description>
+            <doc:example>Please see the examples for the
+            sub-fields.</doc:example>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:complexContent>
+            <xs:extension base="ProcedureStepType">
+              <xs:sequence>
+                <xs:element name="dataSource" type="ds:DatasetType" minOccurs="0" maxOccurs="unbounded">
+                  <xs:annotation>
+                    <xs:appinfo>
+                      <doc:tooltip>data source</doc:tooltip>
+                      <doc:summary>A source of data used by this
+                      methodStep.</doc:summary>
+                      <doc:description>A source of data used by this methodStep.
+                      </doc:description>
+                    </xs:appinfo>
+                  </xs:annotation>
+                </xs:element>
+              </xs:sequence>
+            </xs:extension>
+          </xs:complexContent>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="sampling" minOccurs="0">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>sampling methods</doc:tooltip>
+            <doc:summary>Description of sampling procedures including the
+            geographic, temporal and taxonomic coverage of the
+            study.</doc:summary>
+            <doc:description>Description of sampling procedures including the
+            geographic, temporal and taxonomic coverage of the
+            study.  See individual elements for more detailed
+            descriptions.</doc:description>
+          </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="studyExtent">
+              <xs:annotation>
+                <xs:appinfo>
+                  <doc:tooltip>Geographic, temporal, taxonomic
+                  coverage</doc:tooltip>
+                  <doc:summary>A description of the geographic area sampled
+                  (geographic coverage), the sampling frequency (temporal
+                  coverage), and living organisms sampled (taxonomic
+                  coverage.</doc:summary>
+                  <doc:description>The field studyExtent represents both a
+                  specific sampling area and the sampling frequency (temporal
+                  boundaries, frequency of occurrence). The geographic
+                  studyExtent is usually a surrogate (representative area of)
+                  for the larger area documented in the "studyAreaDescription".
+                  The studyExtent can be entered either in non-structured
+                  textual form or using the structure of the coverage
+                  element.</doc:description>
+                </xs:appinfo>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:choice maxOccurs="unbounded">
+                  <xs:element name="coverage" type="cov:Coverage">
+                    <xs:annotation>
+                      <xs:appinfo>
+                        <doc:tooltip>coverage</doc:tooltip>
+                        <doc:summary>A description of the geographic area sampled
+                        (geographic coverage), the sampling frequency (temporal
+                        coverage), and living organisms sampled (taxonomic
+                        coverage.</doc:summary>
+                        <doc:description>The field studyExtent represents both a
+                        specific sampling area and the sampling frequency (temporal
+                        boundaries, frequency of occurrence). The geographic
+                        studyExtent is usually a surrogate (representative area of)
+                        for the larger area documented in the "studyAreaDescription".
+                        The studyExtent can be entered either in non-structured
+                        textual form or using the structure of the coverage
+                        element.  See eml-coverage for more
+                        information.</doc:description>
+                      </xs:appinfo>
+                    </xs:annotation>
+                  </xs:element>
+                  <xs:element name="description" type="txt:TextType">
+                    <xs:annotation>
+                      <xs:appinfo>
+                        <doc:tooltip>Text description of the
+                        coverage</doc:tooltip>
+                        <doc:summary>A textual description of the specific
+                        areas sampled (geographic coverage), the sampling
+                        frequency (temporal coverage), and groups of living
+                        organisms sampled (taxonomic coverage).</doc:summary>
+                        <doc:description>The coverage field allows for a
+                        textual description of the specific sampling area, the
+                        sampling frequency (temporal boundaries, frequency of
+                        occurrence), and groups of living organisms sampled
+                        (taxonomic coverage).</doc:description>
+                        <doc:example>The study was conducted on the North
+                        Platte River, starting 6 miles downstream and ending 9
+                        miles downstream of the route 132 bridge in Evanston,
+                        ND.</doc:example>
+                      </xs:appinfo>
+                    </xs:annotation>
+                  </xs:element>
+                </xs:choice>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="samplingDescription" type="txt:TextType">
+              <xs:annotation>
+                <xs:appinfo>
+                  <doc:tooltip>Sampling methods and procedures</doc:tooltip>
+                  <doc:summary>A description of sampling methods and
+                  procedures</doc:summary>
+                  <doc:description>The samplingDescription field allows for a
+                  text-based/human readable description of the sampling
+                  procedures used in the research project. The content of this
+                  element would be similar to a description of sampling
+                  procedures found in the methods section of a journal
+                  article.</doc:description>
+                </xs:appinfo>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="spatialSamplingUnits" minOccurs="0">
+              <xs:annotation>
+                <xs:appinfo>
+                  <doc:tooltip>Spatial sampling units</doc:tooltip>
+                  <doc:summary>Spatial sampling units represent the plots
+                  sampled.</doc:summary>
+                  <doc:description>A spatial sampling unit describes the
+                  specific geographic areas sampled. In the case of a study in
+                  which the measurements from several disbursed point
+                  collection devices are aggregated, then the sampling unit
+                  would be the area of that aggregation. Spatial sampling units
+                  can either be described by filling out the structured
+                  coverage element or by reference to the values in a data
+                  table (usually a GIS layer)</doc:description>
+                  <doc:example>If a researcher places a single light source at
+                  a specific point in a research location in order to attract
+                  insects to derive an estimate of the insect population, then
+                  the sampling unit is the area illuminated by the light source
+                  (in actual practice there might be multiple sampling units in
+                  this case since different species have different attraction
+                  rates).</doc:example>
+                  <doc:example>The bounding box of a specific 3-meter square
+                  plot.</doc:example>
+                  <doc:example>The location of a weather station.</doc:example>
+                </xs:appinfo>
+              </xs:annotation>
+              <xs:complexType>
+                <xs:choice maxOccurs="unbounded">
+                  <xs:element name="referencedEntityId">
+                    <xs:annotation>
+                      <xs:appinfo>
+                        <doc:tooltip>The identifier of a spatial sampling
+                        entity.</doc:tooltip>
+                        <doc:summary>The identifier of an entity described in
+                        the entity module. This is usually a GIS
+                        layer.</doc:summary>
+                        <doc:description>A value of a referencedEntityId
+                        element is a reference to the identifier of the entity
+                        module that provides the metadata for a data table
+                        (RDBMS, GIS or ascii text) that has the actual spatial
+                        sampling unit values. The referencedEntityId field is
+                        an indirect pointer to the actual values. The
+                        referencedEntityId can be thought of as a foreign key
+                        in a relational database.</doc:description>
+                        <doc:example>x</doc:example>
+                      </xs:appinfo>
+                    </xs:annotation>
+                  </xs:element>
+                  <xs:element name="coverage" type="cov:GeographicCoverage">
+                    <xs:annotation>
+                      <xs:appinfo>
+                        <doc:tooltip>sampling unit location</doc:tooltip>
+                        <doc:summary>Structured description of each sampling unit
+                      location</doc:summary>
+                        <doc:description>Structured description of each sampling
+                      unit location</doc:description>
+                      </xs:appinfo>
+                    </xs:annotation>
+                  </xs:element>
+                </xs:choice>
+              </xs:complexType>
+            </xs:element>
+            <xs:element name="citation" type="cit:CitationType" minOccurs="0" maxOccurs="unbounded">
+              <xs:annotation>
+                <xs:appinfo>
+                  <doc:tooltip>citation</doc:tooltip>
+                  <doc:summary>Literature citation relating to the sampling
+               procedures used.</doc:summary>
+                  <doc:description>The citation field allows to either reference
+               a literature resource or enter structured literature
+               information</doc:description>
+                </xs:appinfo>
+              </xs:annotation>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="qualityControl" type="ProcedureStepType" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Quality Control</doc:tooltip>
+            <doc:summary>Information on possible errors or on the quality of a
+            data set.</doc:summary>
+            <doc:description>The qualityControl field provides a location for
+            the description of actions taken to either control or assess the
+            quality of data resulting from the associated method step. A
+            quality control description should identify a quality goal and
+            describe prescriptive steps taken to ensure that the data meet
+            those standards and/or postscriptive steps taken to assess the
+            extent to which they are met. A quality control statement is
+            associated with the methodStep that could have affected the
+            targeted quality goal.</doc:description>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ProcedureStepType">
+    <xs:sequence>
+      <xs:sequence>
+        <xs:element name="description" type="txt:TextType">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Methods description</doc:tooltip>
+              <doc:summary>Description of the methods employed in collecting or
+              generating a data set or other resource or in quality control and
+              assurance.</doc:summary>
+              <doc:description>The description field allows for repeated text
+              that describes the methodology for a project, experiment, or
+              particular data table or to describe the steps taken to control
+              or assure the quality of the data. Likewise, a literature
+              citation may be provided that describes the methodology that was
+              employed. Or the information my be provided by either referencing
+              a protocol resource or entering the structured protocol
+              information</doc:description>
+              <doc:example>1.Collect tissues from algae of
+              interest. a. We are currently
+              collecting Egregia menziezii, Mazzaella splendens, M. flaccida,
+              Hedophyllum sessile, Postelsia palmaeformis and Fucus gardneri.We
+              stopped collecting Neorhodomela larix and Odonthalia floccosa
+              because they can be heavily fouled and we feared that would skew
+              the results. b. We collect a 7-10 cm
+              blade or branch from each plant. For Egregia, try to sample
+              small, young plants or take the base of the blade. For Postelsia,
+              take a few of the blades. The other plants are small enough so a
+              whole blade can be taken.</doc:example>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="citation" type="cit:CitationType">
+            <xs:annotation>
+              <xs:appinfo>
+                <doc:tooltip>citation</doc:tooltip>
+                <doc:summary>Literature citation relating to the methods
+              used.</doc:summary>
+                <doc:description>The citation field allows to either reference a
+              literature resource or enter structured literature
+              information</doc:description>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element name="protocol" type="pro:ProtocolType">
+            <xs:annotation>
+              <xs:appinfo>
+                <doc:tooltip>Protocol</doc:tooltip>
+                <doc:summary>Protocol description relating to the methods
+              used.</doc:summary>
+                <doc:description>The protocol field is used to either reference a
+              protocol resource or describe methods and identify the processes
+              that have been used to define / improve the quality of a data
+              file, also used to identify potential problems with the data
+              file.</doc:description>
+              </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+        </xs:choice>
+      </xs:sequence>
+      <xs:element name="instrumentation" type="res:NonEmptyStringType" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Instrumentation</doc:tooltip>
+            <doc:summary>Instruments used for measurement and recording
+            data.</doc:summary>
+            <doc:description>The Instrumentation field allows the description
+            of any instruments used in the data collection or quality control
+            and quality assurance. The description should include vendor, model
+            number, optional equipment, etc.</doc:description>
+            <doc:example>LACHAT analyzer, model XYX.</doc:example>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="software" type="sw:SoftwareType" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>Software</doc:tooltip>
+            <doc:summary>Software used in the processing of data.</doc:summary>
+            <doc:description>The software element allows reference to any
+            software used to process data.</doc:description>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="subStep" type="ProcedureStepType" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:appinfo>
+            <doc:tooltip>substep</doc:tooltip>
+            <doc:summary/>
+            <doc:description>This fields allows the nesting of additional method
+            steps within this step.  This is useful for hierarchical method
+            descriptions.</doc:description>
+          </xs:appinfo>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

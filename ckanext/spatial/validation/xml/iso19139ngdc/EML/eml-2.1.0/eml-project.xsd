@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    xmlns:doc="eml://ecoinformatics.org/documentation-2.1.0" 
+    xmlns:txt="eml://ecoinformatics.org/text-2.1.0" 
+    xmlns:prot="eml://ecoinformatics.org/protocol-2.1.0" 
+    xmlns:rp="eml://ecoinformatics.org/party-2.1.0" 
+    xmlns:cov="eml://ecoinformatics.org/coverage-2.1.0" 
+    xmlns:cit="eml://ecoinformatics.org/literature-2.1.0" 
+    xmlns:res="eml://ecoinformatics.org/resource-2.1.0" 
+    xmlns="eml://ecoinformatics.org/project-2.1.0" 
+    targetNamespace="eml://ecoinformatics.org/project-2.1.0">
+  <xs:import namespace="eml://ecoinformatics.org/documentation-2.1.0" 
+  schemaLocation="eml-documentation.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/resource-2.1.0" 
+  schemaLocation="eml-resource.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/party-2.1.0" 
+  schemaLocation="eml-party.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/coverage-2.1.0" 
+  schemaLocation="eml-coverage.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/literature-2.1.0" 
+  schemaLocation="eml-literature.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/text-2.1.0" 
+  schemaLocation="eml-text.xsd"/>
+  <xs:annotation>
+    <xs:documentation>'$RCSfile: eml-project.xsd,v $'
+       Copyright: 1997-2002 Regents of the University of California,
+                            University of New Mexico, and
+                            Arizona State University
+        Sponsors: National Center for Ecological Analysis and Synthesis and
+                  Partnership for Interdisciplinary Studies of Coastal Oceans,
+                     University of California Santa Barbara
+                  Long-Term Ecological Research Network Office,
+                     University of New Mexico
+                  Center for Environmental Studies, Arizona State University
+   Other funding: National Science Foundation (see README for details)
+                  The David and Lucile Packard Foundation
+     For Details: http://knb.ecoinformatics.org/
+
+        '$Author: obrien $'
+          '$Date: 2009/02/25 23:51:54 $'
+      '$Revision: 1.83 $'
+    </xs:documentation>
+    <xs:appinfo>
+      <doc:moduleDocs>
+        <doc:moduleName>eml-project</doc:moduleName>
+        <doc:moduleDescription>
+          <section xmlns="">
+            <title>The eml-project module - Research context information for
+            resources</title>
+            <para>The eml-project module describes the research context in
+            which the dataset was created, including descriptions of over-all
+            motivations and goals, funding, personnel, description of the study
+            area etc. This is also the module to describe the design of the
+            project: the scientific questions being asked, the architecture of
+            the design, etc. This module is used to place the dataset that is
+            being documented into its larger research context.</para>
+            <para>The eml-project module, like other modules, may be
+            "referenced" via the &lt;references&gt; tag. This allows a research
+            project to be described once, and then used as a reference in other
+            locations within the EML document via its ID.</para>
+          </section>
+        </doc:moduleDescription>
+        <doc:recommendedUsage>Use eml-project to document the research context
+        of any dataset or project.</doc:recommendedUsage>
+        <doc:standAlone>no</doc:standAlone>
+      </doc:moduleDocs>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="researchProject" type="ResearchProjectType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>research project</doc:tooltip>
+        <doc:summary>The root element of this module.</doc:summary>
+        <doc:description>The root element of this module. This is used for
+        testing or if you want to instantiate a stand-alone project
+        file.</doc:description>
+        
+      </xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="ResearchProjectType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Research project descriptor</doc:tooltip>
+        <doc:summary>Descriptor of a research context for a dataset or another
+        project.</doc:summary>
+        <doc:description>The researchProject complex type describes the
+        structure for documenting the research context of a dataset or another
+        project. It can include research goals, motivations, theory,
+        hypotheses, etc., as well as a description of research efforts that
+        form the basis for other work. (To document methods specific to a
+        dataset use eml-methods.) This field can be associated with a dataset
+        using the project field of eml-dataset, and can be associated with
+        another project using the relatedProject field of eml-project (this
+        module).</doc:description>
+        
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:choice>
+      <xs:sequence>
+        <xs:element name="title" type="res:NonEmptyStringType" maxOccurs="unbounded">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Project Title</doc:tooltip>
+              <doc:summary>Title of the project.</doc:summary>
+              <doc:description>A descriptive title for the research
+              project.</doc:description>
+              <doc:example>Species diversity in Tennessee riparian
+              habitats.</doc:example>
+              
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="personnel" maxOccurs="unbounded">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Personnel</doc:tooltip>
+              <doc:summary>Contact and role information for people involved in
+              the research project.</doc:summary>
+              <doc:description>The Personnel field extends ResponsibleParty
+              with role information and is used to document people involved in
+              a research project by providing contact information and their
+              role in the project. A project must have at least one
+              originator.</doc:description>
+              
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:complexContent>
+              <xs:extension base="rp:ResponsibleParty">
+                <xs:sequence maxOccurs="unbounded">
+                  <xs:element name="role" type="rp:RoleType">
+                    <xs:annotation>
+                      <xs:appinfo>
+                        <doc:tooltip>Role</doc:tooltip>
+                        <doc:summary>Role information for people involved in
+                        the research project.</doc:summary>
+                        <doc:description>The role field contains information
+                        about role a person plays in a research project. There
+                        are a number of suggested roles, however, it is
+                        possible to add a role if the suggested roles are not
+                        adequate.</doc:description>
+                        <doc:example>author</doc:example>
+                        <doc:example>contentProvider</doc:example>
+                        <doc:example>custodianSteward</doc:example>
+                        <doc:example>distributor</doc:example>
+                        <doc:example>editor</doc:example>
+                        <doc:example>metadataProvider</doc:example>
+                        <doc:example>originator</doc:example>
+                        <doc:example>owner</doc:example>
+                        <doc:example>pointOfContact</doc:example>
+                        <doc:example>principalInvestigator</doc:example>
+                        <doc:example>processor</doc:example>
+                        <doc:example>publisher</doc:example>
+                        <doc:example>user</doc:example>
+                        <doc:example>fieldStationManager</doc:example>
+                        <doc:example>informationManager</doc:example>
+                        
+                      </xs:appinfo>
+                    </xs:annotation>
+                  </xs:element>
+                </xs:sequence>
+              </xs:extension>
+            </xs:complexContent>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="abstract" type="txt:TextType" minOccurs="0">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Abstract</doc:tooltip>
+              <doc:summary>Project Abstract.</doc:summary>
+              <doc:description>Descriptive abstract that summarizes information
+              about the research project.</doc:description>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="funding" type="txt:TextType" minOccurs="0">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Funding</doc:tooltip>
+              <doc:summary>Funding information.</doc:summary>
+              <doc:description>The funding field is used to provide information
+              about funding sources for the project such as: grant and contract
+              numbers; names and addresses of funding sources. Other
+              funding-related information may also be
+              included.</doc:description>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="studyAreaDescription" minOccurs="0">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Description of the study area.</doc:tooltip>
+              <doc:summary>Description of the physical area associated with the
+              research project, potentially including coverage, climate,
+              geology, disturbances, etc.</doc:summary>
+              <doc:description>The studyAreaDescription field documents the
+              physical area associated with the research project. It can
+              include descriptions of the geographic, temporal, and taxonomic
+              coverage of the research location and descriptions of domains
+              (themes) of interest such as climate, geology, soils or
+              disturbances or reference to citable biological or geophysical
+              classification systems such as the Bailey Ecoregions or the
+              Holdridge Life Zones.</doc:description>
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:choice maxOccurs="unbounded">
+              <xs:element name="descriptor">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <doc:tooltip>Non-coverage characteristics of the study
+                    area</doc:tooltip>
+                    <doc:summary>Description of non-coverage characteristics of
+                    the study area such as climate, geology,
+                    disturbances</doc:summary>
+                    <doc:description>The descriptor field is used to document
+                    domains (themes) of interest such as climate, geology,
+                    soils or disturbances or references to citable biological
+                    or geophysical classification systems such as the Bailey
+                    Ecoregions or the Holdridge Life Zones.</doc:description>
+                    
+                  </xs:appinfo>
+                </xs:annotation>
+                <xs:complexType>
+                  <xs:sequence maxOccurs="unbounded">
+                    <xs:element name="descriptorValue" maxOccurs="unbounded">
+                      <xs:annotation>
+                        <xs:appinfo>
+                          <doc:tooltip>Description of some aspect of the study
+                          area.</doc:tooltip>
+                          <doc:summary>Description of some aspect of the study
+                          area.</doc:summary>
+                          <doc:description>The descriptorValue field contains
+                          the value of a descriptor, describing some aspect of
+                          the study area. This may either be a general
+                          description in textual form or the value part of a
+                          "name/value" pair where the name is entered in the
+                          attribute "name_or_id". For example, if the value of
+                          the "name" attribute" of the element "descriptor" is
+                          "climate", and the value of the attribute
+                          "name_or_id" of the element "descriptorValue" is
+                          "Annual Precipitation" then the value of this element
+                          could be "12.5 inches".</doc:description>
+                          <doc:example>12.5 inches</doc:example>
+                          <doc:example>tundra-forest</doc:example>
+                          
+                        </xs:appinfo>
+                      </xs:annotation>
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:string">
+                            <xs:attribute name="name_or_id" type="xs:string" use="optional">
+                              <xs:annotation>
+                                <xs:appinfo>
+                                  <doc:tooltip>The name or ID of a descriptor
+                                  value.</doc:tooltip>
+                                  <doc:summary>The name part of a name/value
+                                  pair of a descriptor; or ID portion of a
+                                  classification, if applicable.</doc:summary>
+                                  <doc:description>The name_or_id field is the
+                                  name part of a name/value pair of a
+                                  descriptor; or ID portion of a
+                                  classification, if applicable. The values of
+                                  biogeophysical classification systems, e.g.
+                                  Bailey-Ecoregions, often take the form of an
+                                  ID or Code along with a text representation.
+                                  For example, the ID/Code M131 refers to the
+                                  phrase "Open Woodland -Tundra". M131 is an
+                                  unambiguous reference to a more detailed
+                                  description. If one is using a published
+                                  classification system then there should be a
+                                  corresponding citation to the source, e.g.,
+                                  Bailey,R.G., 1996 "Ecosystem
+                                  Geography".</doc:description>
+                                  <doc:example>M131</doc:example>
+                                  <doc:example>Average Annual
+                                  Rainfall</doc:example>
+                                  
+                                </xs:appinfo>
+                              </xs:annotation>
+                            </xs:attribute>
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="citation" type="cit:CitationType" minOccurs="0" maxOccurs="unbounded">
+                      <xs:annotation>
+                        <xs:appinfo>
+                          <doc:tooltip>citation</doc:tooltip>
+                          <doc:summary>A citation for this
+                          descriptor.</doc:summary>
+                          <doc:description>A citation for this
+                          descriptor.</doc:description>
+                        </xs:appinfo>
+                      </xs:annotation>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="name" type="DescriptorType" use="required">
+                    <xs:annotation>
+                      <xs:appinfo>
+                        <doc:tooltip>name</doc:tooltip>
+                        <doc:summary>The name of the descriptor
+                        system.</doc:summary>
+                        <doc:description>The name of the descriptor system. The
+                        name can be either a theme such as climate or
+                        hydrology, or the name of a citable classification
+                        system.</doc:description>
+                      </xs:appinfo>
+                    </xs:annotation>
+                  </xs:attribute>
+                  <xs:attribute name="citableClassificationSystem" type="xs:boolean" use="required">
+                    <xs:annotation>
+                      <xs:appinfo>
+                        <doc:tooltip>citation classification
+                        system</doc:tooltip>
+                        <doc:summary>This boolean attribute defines whether
+                        this descriptor comes from a citable classification
+                        system or not.</doc:summary>
+                        <doc:description>This boolean attribute defines whether
+                        this descriptor comes from a citable classification
+                        system or not.</doc:description>
+                      </xs:appinfo>
+                    </xs:annotation>
+                  </xs:attribute>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="citation" type="cit:CitationType" minOccurs="0">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <doc:tooltip>citation</doc:tooltip>
+                    <doc:summary>The citation for this
+                    descriptor.</doc:summary>
+                    <doc:description>The citation for this
+                    descriptor.</doc:description>
+                  </xs:appinfo>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="coverage" type="cov:Coverage" minOccurs="0">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <doc:tooltip>coverage</doc:tooltip>
+                    <doc:summary>The coverage of this descriptor.</doc:summary>
+                    <doc:description>The coverage of this
+                    descriptor.</doc:description>
+                  </xs:appinfo>
+                </xs:annotation>
+              </xs:element>
+            </xs:choice>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="designDescription" minOccurs="0">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Description of research design</doc:tooltip>
+              <doc:summary>Description of the design of the research
+              project</doc:summary>
+              <doc:description>The field designDescription contains general
+              textual descriptions of research design. It can include detailed
+              accounts of goals, motivations, theory, hypotheses, strategy,
+              statistical design, and actual work. Literature citations may
+              also be used to describe the research design.</doc:description>
+              
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:choice maxOccurs="unbounded">
+              <xs:element name="description" type="txt:TextType">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <doc:tooltip>Description of research design</doc:tooltip>
+                    <doc:summary>Textual description of research
+                    design.</doc:summary>
+                    <doc:description>The field designDescription contains
+                    general textual descriptions of research design. It can
+                    include detailed accounts of goals, motivations, theory,
+                    hypotheses, strategy, statistical design, and actual
+                    work.</doc:description>
+                    
+                  </xs:appinfo>
+                </xs:annotation>
+              </xs:element>
+              <xs:element name="citation" type="cit:CitationType" minOccurs="0">
+                <xs:annotation>
+                  <xs:appinfo>
+                    <doc:tooltip>Citation for research design</doc:tooltip>
+                    <doc:summary>Citation that describes the research
+                    design.</doc:summary>
+                    <doc:description>The citation field is a citation to
+                    literature that describes elements of the research design,
+                    such as goals, motivations, theory, hypotheses, strategy,
+                    statistical design, and actual work.</doc:description>
+                    
+                  </xs:appinfo>
+                </xs:annotation>
+              </xs:element>
+            </xs:choice>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="relatedProject" type="ResearchProjectType" minOccurs="0" maxOccurs="unbounded">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>related project</doc:tooltip>
+              <doc:summary>This field is a recursive link to another
+              project.</doc:summary>
+              <doc:description>This field is a recursive link to another
+              project. This allows projects to be nested under one another for
+              the case where one project spawns another.</doc:description>
+              
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+      <xs:group ref="res:ReferencesGroup"/>
+    </xs:choice>
+    <xs:attribute name="id" type="res:IDType" use="optional"/>
+    <xs:attribute name="system" type="res:SystemType" use="optional"/>
+    <xs:attribute name="scope" type="res:ScopeType" use="optional" default="document"/>
+  </xs:complexType>
+  <xs:simpleType name="DescriptorType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Descriptor Theme Type</doc:tooltip>
+        <doc:summary>The type of descriptor theme or the name of a
+        classification system.</doc:summary>
+        <doc:description>The DescriptorType is used to represent either the
+        name of a citable classification system/controlled vocabulary such as
+        the Bailey classification of ecoregions or a domain of physical
+        descriptors such as climate or disturbances.</doc:description>
+        <doc:example>climate</doc:example>
+        <doc:example>soils</doc:example>
+        <doc:example>hydrology</doc:example>
+        <doc:example>"bailey"</doc:example>
+        <doc:example>biome</doc:example>
+        <doc:example>disturbance</doc:example>
+        <doc:example>geology</doc:example>
+      </xs:appinfo>
+    </xs:annotation>
+    <xs:union>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="climate"/>
+          <xs:enumeration value="hydrology"/>
+          <xs:enumeration value="soils"/>
+          <xs:enumeration value="geology"/>
+          <xs:enumeration value="disturbance"/>
+          <xs:enumeration value="bailey"/>
+          <xs:enumeration value="biome"/>
+        </xs:restriction>
+      </xs:simpleType>
+      <xs:simpleType>
+        <xs:restriction base="xs:string"/>
+      </xs:simpleType>
+    </xs:union>
+  </xs:simpleType>
+</xs:schema>

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:sch="http://www.ascc.net/xml/schematron" blockDefault="#all">
+    <xsd:element name="algoinfo" type="algoinfoType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Algorithm Information Description: Details of the
+                methodology by which geographic information was derived from the instrument
+                readings. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Algorithm Information</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="algoinfoType">
+        <xsd:sequence>
+            <xsd:element ref="algoid"/>
+            <xsd:element ref="algodesc"/>
+            <xsd:element ref="algochhi" minOccurs="1" maxOccurs="unbounded"/>
+            <xsd:element ref="algprevi" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="algoid" type="algoidType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Algorithm Identifiers Description: Information identifying
+                the algorithm and version or date. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Algorithm Identifiers</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="algoidType">
+        <xsd:sequence>
+            <xsd:element ref="citeinfo"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="algodesc" type="algodescType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Algorithm Description Description: Kinds of material
+                providing a description of the algorithm used to generate the data. Rationale: To
+                assist users in understanding what features in their data may arise as a result of
+                the properties of the processing algorithm. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Algorithm Description</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="algodescType">
+        <xsd:choice>
+            <xsd:element ref="algotexd"/>
+            <xsd:element ref="algoref"/>
+        </xsd:choice>
+    </xsd:complexType>
+    <xsd:element name="algotexd" type="algotexdType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Algorithm Text Description Description: Text description of
+                algorithm used to generate the data. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Algorithm Text Description</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:simpleType name="algotexdType">
+        <xsd:restriction base="FGDCstring"/>
+    </xsd:simpleType>
+    <xsd:element name="algoref" type="algorefType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Algorithm Reference Description: Reference to document
+                containing description of algorithm. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Algorithm Reference</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="algorefType">
+        <xsd:sequence>
+            <xsd:element ref="citeinfo"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="algochhi" type="algochhiType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Algorithm Change History Description: Description of the
+                modifications of the algorithm in its development from version to version.
+                Rationale: Allows users to understand where differences in their data from previous
+                versions may arise as a result of changes in the algorithm. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Algorithm Change History</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="algochhiType">
+        <xsd:choice>
+            <xsd:element ref="algochde"/>
+            <xsd:element ref="algochrf"/>
+        </xsd:choice>
+    </xsd:complexType>
+    <xsd:element name="algochde" type="algochdeType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Algorithm Change Description Description: Information
+                included with dataset describing modifications of the algorithm in its development
+                from version to version. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Algorithm Change Description</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="algochdeType">
+        <xsd:sequence>
+            <xsd:element ref="procstep" minOccurs="1" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="algochrf" type="algochrfType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Algorithm Change Reference Description: Reference to
+                document describing modifications of the algorithm in its development from version
+                to version. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Algorithm Change Reference</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="algochrfType">
+        <xsd:sequence>
+            <xsd:element ref="citeinfo"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="algprevi" type="algpreviType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Algorithm Peer Review Information Description: Description,
+                including dates, of peer review of the algorithm for purposes of ensuring its
+                quality. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Algorithm Peer Review Information</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="algpreviType">
+        <xsd:sequence>
+            <xsd:choice>
+                <xsd:element name="algprevd" type="algprevdType">
+                    <xsd:annotation>
+                        <xsd:documentation> Element: Algorithm Peer Review Description Description:
+                            Description accompanying dataset, including dates, of peer review of the
+                            algorithm for purposes of ensuring its quality. </xsd:documentation>
+                        <xsd:appinfo>
+                            <sch:title>Algorithm Peer Review Description</sch:title>
+                        </xsd:appinfo>
+                    </xsd:annotation>
+                </xsd:element>
+                <xsd:element ref="algprevr"/>
+            </xsd:choice>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:complexType name="algprevdType">
+        <xsd:sequence>
+            <xsd:element ref="procstep" minOccurs="1" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:complexType>
+    <xsd:element name="algprevr" type="algprevrType">
+        <xsd:annotation>
+            <xsd:documentation> Element: Algorithm Peer Review Reference Description: Reference to
+                document describing peer review of the algorithm for purposes of ensuring its
+                quality, including dates. </xsd:documentation>
+            <xsd:appinfo>
+                <sch:title>Algorithm Peer Review Reference</sch:title>
+            </xsd:appinfo>
+        </xsd:annotation>
+    </xsd:element>
+    <xsd:complexType name="algprevrType">
+        <xsd:sequence>
+            <xsd:element ref="citeinfo"/>
+        </xsd:sequence>
+    </xsd:complexType>
+</xsd:schema>

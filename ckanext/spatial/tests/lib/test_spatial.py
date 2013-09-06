@@ -4,11 +4,12 @@ import random
 from nose.tools import assert_equal
 
 from ckan import model
+from ckan import plugins
 from ckan.lib.helpers import json
 from ckan.logic.schema import default_create_package_schema
 from ckan.logic.action.create import package_create
 from ckan.lib.munge import munge_title_to_name
-from ckanext.spatial.lib import validate_bbox, bbox_query, bbox_query_ordered, bbox_query_ordered_2
+from ckanext.spatial.lib import validate_bbox, bbox_query, bbox_query_ordered
 from ckanext.spatial.tests.base import SpatialTestBase
 
 class TestValidateBbox:
@@ -54,12 +55,14 @@ class SpatialQueryTestBase(SpatialTestBase):
 
     @classmethod
     def create_package(cls, **package_dict):
+        user = plugins.toolkit.get_action('get_site_user')({'model': model, 'ignore_auth': True}, {})
         context = {'model': model,
                    'session': model.Session,
-                   'user': 'tester',
+                   'user': user['name'],
                    'extras_as_string': True,
-                   'schema': default_create_package_schema(),
-                   'api_version': 2}
+                   'api_version': 2,
+                   'ignore_auth': True,
+                  }
         package_dict = package_create(context, package_dict)
         return context.get('id')
 
@@ -71,7 +74,7 @@ class SpatialQueryTestBase(SpatialTestBase):
 class TestBboxQuery(SpatialQueryTestBase):
     # x values for the fixtures
     fixtures_x = [(0, 1), (0, 3), (0, 4), (4, 5), (6, 7)]
-  
+
     def test_query(self):
         bbox_dict = self.x_values_to_bbox((2, 5))
         package_ids = [res.package_id for res in bbox_query(bbox_dict)]
@@ -101,7 +104,6 @@ class TestBboxQueryPerformance(SpatialQueryTestBase):
     # x values for the fixtures
     fixtures_x = [(random.uniform(0, 3), random.uniform(3,9)) \
                    for x in xrange(10)] # increase the number to 1000 say
-                  
     def test_query(self):
         bbox_dict = self.x_values_to_bbox((2, 7))
         t0 = time.time()

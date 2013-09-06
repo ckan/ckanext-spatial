@@ -1,0 +1,799 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:sch="http://www.ascc.net/xml/schematron" blockDefault="#all">
+
+<xsd:include schemaLocation = "../fgdc-std-001-1998/fgdc-std-001-1998-sect01-ann.xsd" />
+
+
+<!-- redefined for RSE -->
+<xsd:complexType name="rseIdinfoType">
+	<xsd:sequence>
+		<xsd:element ref="datsetid"/> <!-- ext -->
+		<xsd:element ref="citation"/>
+		<xsd:element name="descript" type="rseDescriptType">
+		    <xsd:annotation>
+		        <xsd:documentation>
+		            Element: Description
+		            Section: 1.2
+		            Description: a characterization of the data set, including its intended use and limitations.
+		        </xsd:documentation>
+		        <xsd:appinfo>
+		            <sch:title>Description</sch:title>
+		        </xsd:appinfo>
+		    </xsd:annotation>
+		</xsd:element>
+		<xsd:element ref="timeperd"/>
+		<xsd:element ref="status"/>
+		<xsd:element ref="rseSpdom"/>
+		<xsd:element ref="proclevl" minOccurs="0" maxOccurs="unbounded"/> <!-- ext -->
+		<xsd:element ref="keywords"/>
+		<xsd:element ref="plainsid" minOccurs="0" maxOccurs="unbounded"/> <!-- ext -->
+                <xsd:choice>
+        		<xsd:element ref="bandidnt" /> <!-- ext -->
+        		<xsd:element ref="thelayid" /> <!-- ext -->
+                </xsd:choice>
+		<xsd:element ref="accconst"/>
+		<xsd:element ref="useconst"/>
+		<xsd:element ref="ptcontac" minOccurs="0"/>
+		<xsd:element ref="browse" minOccurs="0" maxOccurs="unbounded"/>
+		<xsd:element ref="datacred" minOccurs="0"/>
+		<xsd:element ref="secinfo" minOccurs="0"/>
+		<xsd:element ref="native" minOccurs="0"/>
+		<xsd:element ref="crossref" minOccurs="0" maxOccurs="unbounded"/>
+		<xsd:element ref="agginfo" minOccurs="0" maxOccurs="unbounded"/> <!-- ext -->
+	</xsd:sequence>
+</xsd:complexType>
+
+    <!-- 
+    <xsd:annotation>
+        <xsd:documentation>
+            Element:
+            Section:
+            Description:
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title></sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+    
+    -->
+
+<xsd:element name="datsetid" type="datsetidType">
+     <xsd:annotation>
+        <xsd:documentation>
+            Element: Dataset Identifier
+            Section: 1
+            Description: Unique string to identify a dataset.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>Dataset Identifier</sch:title>
+        </xsd:appinfo>
+     </xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="datsetidType">
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:complexType name="rseDescriptType">
+    <xsd:sequence>
+        <xsd:element ref="abstract"/>
+        <xsd:element ref="purpose"/>
+        <xsd:element ref="documnts" minOccurs="0" maxOccurs="unbounded" />
+        <xsd:element ref="supplinf" minOccurs="0"/>
+    </xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="documnts" type="documntsType" >
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: Documentation
+            Section: 1
+            Description: Information about or relevant to the dataset.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>Documentation</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>
+    
+<xsd:complexType name="documntsType">
+    <xsd:sequence>
+        <xsd:element ref="datdicrf" minOccurs="0" maxOccurs="unbounded" />
+        <xsd:element ref="userguid" minOccurs="0" maxOccurs="unbounded" />
+        <xsd:element ref="scipap" minOccurs="0" maxOccurs="unbounded"  />
+    </xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="datdicrf" type="datdicrfType" >
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: Data Dictionary Reference
+            Section: 1
+            Description: Reference to a list of terms and their definitions, used in describing the dataset.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>Data Dictionary Reference</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>
+<xsd:complexType name="datdicrfType">
+    <xsd:sequence>
+        <xsd:element ref="citeinfo" />
+    </xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="userguid" type="userguidType" >
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: User's Guide
+            Section: 1
+            Description: Reference to a list of terms and their definitions, used in describing the dataset.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>User's Guide</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>
+<xsd:complexType name="userguidType">
+    <xsd:sequence>
+        <xsd:element ref="citeinfo" />
+    </xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="scipap" type="scipapType" >
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: Science Paper
+            Section: 1
+            Description: Reference information for scientific papers relevant to the dataset.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>Science Paper</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>
+<xsd:complexType name="scipapType">
+    <xsd:sequence>
+        <xsd:element ref="citeinfo" />
+    </xsd:sequence>
+</xsd:complexType>
+
+
+    
+<xsd:element name="rseSpdom" type="rseSpdomType">
+    <xsd:annotation>
+    	<xsd:documentation>
+    		Element: Spatial Domain
+    		Section: 1.5
+    		Description: the geographic areal domain of the data set.
+    	</xsd:documentation>
+    	<xsd:appinfo>
+    		<sch:title>Spatial Domain</sch:title>
+    	</xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>
+    
+<xsd:complexType name="rseSpdomType">
+    <xsd:sequence>
+        <xsd:element ref="bounding"/>
+        <xsd:element ref="dsgpoly" minOccurs="0" maxOccurs="unbounded"/>
+        <xsd:element ref="frarea" minOccurs="0" maxOccurs="unbounded" />
+        <xsd:element ref="multimal" minOccurs="0" maxOccurs="unbounded" />
+        <xsd:element ref="wwrefsys" minOccurs="0" />
+    </xsd:sequence>
+</xsd:complexType>
+    
+<xsd:element name="frarea" type="frareaType">
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: Frame Area
+            Section: 1.5
+            Description: Geographical area covered by individual frame.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>Frame Area</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>
+    
+<xsd:complexType name="frareaType">
+    <xsd:sequence>
+        <xsd:element ref="frareavl" minOccurs="0" maxOccurs="unbounded" />
+        <xsd:element ref="frareaun" />
+    </xsd:sequence>
+</xsd:complexType>
+    
+<xsd:element name="frareavl" type="frareavlType">
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: Frame Area Value
+            Section: 1.5
+            Description: Area covered by frame, in units given by Frame_Area_Units.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>Frame Area Value</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>    
+    
+<xsd:simpleType name="frareavlType">
+    <xsd:restriction base="positiveDoubleType" />
+</xsd:simpleType>
+    
+<xsd:element name="frareaun" type="frareaunType">
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: Frame Area Units
+            Section: 1.5
+            Description: Units in which value given by Frame_Area_Value is expressed.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>Frame Area Units</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>
+    
+<xsd:simpleType name="frareaunType">
+    <xsd:restriction base="FGDCstring" />
+</xsd:simpleType>
+    
+<xsd:element name="multimal" type="multimalType">
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: Multiple Image Alignment
+            Section: 1.5
+            Description: Positioning of other frame imaging some areas in common.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>Multiple Image Alignment</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>
+<xsd:complexType name="multimalType">
+    <xsd:sequence>
+        <xsd:element ref="ovlpdtid" />
+        <xsd:element ref="ovlptype" />
+        <xsd:element ref="ovlppct" />
+    </xsd:sequence>
+</xsd:complexType>
+    
+<xsd:element name="ovlpdtid" type="ovlpdtidType">
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: ID Overlapping Dataset
+            Section: 1.5
+            Description: Identifier for external frame imaging some areas in common.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>ID Overlapping Dataset</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>
+    
+<xsd:complexType name="ovlpdtidType">
+    <xsd:sequence>
+        <xsd:element ref="datsetid" />
+    </xsd:sequence>
+</xsd:complexType>
+    
+<xsd:element name="ovlptype" type="ovlptypeType">
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: Type of Overlap
+            Section: 1.5
+            Description: Information as to whether external frame is along same (overlap) or parallel (sidelap) flight line.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>Type of Overlap</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>
+    
+<xsd:simpleType name="ovlptypeType">
+    <xsd:annotation>
+        <xsd:documentation>
+            Type: text
+            Domain: "overlap" "sidelap" free text
+        </xsd:documentation>
+    </xsd:annotation>
+    <xsd:union>
+        <xsd:simpleType>
+            <xsd:restriction base="FGDCstring" />
+        </xsd:simpleType>
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="overlap"/>
+                <xsd:enumeration value="sidelap"/>
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:union>
+</xsd:simpleType>
+    
+<xsd:element name="ovlppct" type="ovlppctType">
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: Percentage of Overlap
+            Section: 1.5
+            Description: Area common to two successive photos along the same flight strip, expressed as a percentage of photo area.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>Percentage of Overlap</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>
+    
+<xsd:simpleType name="ovlppctType">
+    <xsd:annotation>    
+        <xsd:documentation>
+            Type: real 
+            Domain: 0.0 &lt;= Percentage of Overlap &lt;= 100.0
+        </xsd:documentation>
+    </xsd:annotation>    
+    <xsd:restriction base="xsd:double">
+        <xsd:minInclusive value="0" />
+        <xsd:maxExclusive value="100" />
+    </xsd:restriction>
+</xsd:simpleType>
+    
+<xsd:element name="wwrefsys" type="wwrefsysType">
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: Worldwide Reference System
+            Section: 1.5
+            Description: Global notation system for Landsat data.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>Worldwide Reference System</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>
+    
+<xsd:complexType name="wwrefsysType">
+    <xsd:sequence>
+        <xsd:element ref="wwrefpat" />
+        <xsd:element ref="wwrefrow" />
+    </xsd:sequence>
+</xsd:complexType>
+    
+<xsd:element name="wwrefpat" type="wwrefpatType">
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: Path
+            Section: 1.5
+            Description: Sequential number, increasing east to west, assigned to satellite orbital track.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>Path</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>
+    
+<xsd:simpleType name="wwrefpatType">
+    <xsd:restriction base="xsd:integer">
+        <xsd:minExclusive value="0" />
+        <xsd:maxInclusive value="251" />
+    </xsd:restriction>
+</xsd:simpleType>
+    
+<xsd:element name="wwrefrow" type="wwrefrowType">
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: Row
+            Section: 1.5
+            Description: Sequential number assigned to frame latitudinal center line along a path.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>Row</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>
+    
+<xsd:simpleType name="wwrefrowType">
+    <xsd:restriction base="xsd:integer">
+        <xsd:minExclusive value="0" />
+        <xsd:maxInclusive value="248" />
+    </xsd:restriction>
+</xsd:simpleType>
+    
+
+    
+    
+<xsd:element name="proclevl" type="proclevlType" >
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: Processing Level
+            Section: 1
+            Description: Degree of data processing applied to the measurements, as exemplified in Appendixes AC.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>Processing Level</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+    
+</xsd:element>
+<xsd:complexType name="proclevlType">
+    <xsd:sequence>
+        <xsd:element ref="prolevid" />
+        <xsd:element ref="prolevau" />
+    </xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="prolevid" type="prolevidType" >
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: Processing Level Identifier
+            Section: 1
+            Description: Data distributor's code that identifies the level of data processing applied to the measurements, as defined in Processing_Level_Authority. Appendixes A-C show examples.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>Processing Level Identifier</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="prolevidType">
+    <xsd:restriction base="FGDCstring" />
+</xsd:simpleType>
+
+<xsd:element name="prolevau" type="prolevauType" >
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: Processing Level Authority
+            Section: 1
+            Description: Reference for the definition of the product level designations used.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>Processing Level Authority</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>
+<xsd:complexType name="prolevauType">
+    <xsd:sequence>
+        <xsd:element ref="citeinfo" />
+    </xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="plainsid" type="plainsidType" >
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: Platform and Instrument Identification
+            Section: 1
+            Description: Designations for the measuring instruments and their bands, the platform carrying them, and the mission to which the data contribute.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>Platform and Instrument Identification</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>
+<xsd:complexType name="plainsidType">
+    <xsd:sequence>
+        <xsd:element ref="missname" minOccurs="0"/>
+        <xsd:element ref="platflnm" />
+        <xsd:element ref="platfsnm" minOccurs="0"/>
+        <xsd:element ref="platfser" minOccurs="0"/>
+        <xsd:element ref="instflnm" />
+        <xsd:element ref="instshnm" minOccurs="0"/>
+    </xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="missname" type="missnameType" >
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: Mission Name
+            Section: 1
+            Description: Designations for the measuring instruments and their bands, the platform carrying them, and the mission to which the data contribute.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>Mission Name</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="missnameType">
+    <xsd:restriction base="FGDCstring" />
+</xsd:simpleType>
+
+<xsd:element name="platflnm" type="platflnmType" >
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: Platform Full Name
+            Section: 1
+            Description: The complete name of the platform.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>Platform Full Name</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="platflnmType">
+    <xsd:restriction base="FGDCstring" />
+</xsd:simpleType>
+
+<xsd:element name="platfsnm" type="platfsnmType" >
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: Platform Short Name
+            Section: 1
+            Description: An acronym or shorter form of the platform name, used to identify the platform.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>Platform Short Name</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="platfsnmType">
+    <xsd:restriction base="FGDCstring" />
+</xsd:simpleType>
+
+<xsd:element name="platfser" type="platfserType" >
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: Platform Serial Identifier
+            Section: 1
+            Description: The serial letters and/or numbers applied to the platform.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>Platform Serial Identifier</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="platfserType">
+    <xsd:restriction base="FGDCstring" />
+</xsd:simpleType>
+
+<xsd:element name="instflnm" type="instflnmType" >
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: Instrument Full Name
+            Section: 1
+            Description: The complete name of the instrument.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>Instrument Full Name</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="instflnmType">
+    <xsd:restriction base="FGDCstring" />
+</xsd:simpleType>
+
+<xsd:element name="instshnm" type="instshnmType" >
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: Instrument Short Name
+            Section: 1
+            Description: The short name, acronym, or other identifier by which the instrument is known.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>Instrument Short Name</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="instshnmType">
+    <xsd:restriction base="FGDCstring" />
+</xsd:simpleType>
+
+
+<xsd:element name="bandidnt" type="bandidntType" >
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: Band Identification
+            Section: 1
+            Description: Complete information to identify instrument wavelengths or other channels.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>Band Identification</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>
+<xsd:complexType name="bandidntType">
+    <xsd:sequence>
+        <xsd:element ref="numbands" />
+        <xsd:element ref="inbident" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="numbands" type="positiveIntegerType" >
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: Number of Bands
+            Section: 1
+            Description: The number of instrument bands.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>Number of Bands</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>
+
+<xsd:element name="inbident" type="inbidentType" >
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: Individual Band Identification
+            Section: 1
+            Description: Complete information to identify a single instrument band.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>Individual Band Identification</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>
+<xsd:complexType name="inbidentType">
+    <xsd:sequence>
+        <xsd:element ref="bandid" />
+        <xsd:element ref="bmmodid" />
+    </xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="bandid" type="bandidType" >
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: Band ID
+            Section: 1
+            Description: Designation for individual measurement band.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>Band ID</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="bandidType">
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="bmmodid" type="bmmodidType" >
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: Band Measurement Mode ID
+            Section: 1
+            Description: Identifier designating channel, wavelength, and/or field of view of measurement.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>Band Measurement Mode ID</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="bmmodidType">
+	<xsd:restriction base="FGDCstring"/>
+</xsd:simpleType>
+
+<xsd:element name="thelayid" type="thelayidType" >
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: Thematic Layer Identification
+            Section: 1
+            Description: Listing of the kinds of geospatial information represented by the dataset.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>Thematic Layer Identification</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>
+<xsd:complexType name="thelayidType">
+    <xsd:sequence>
+        <xsd:element ref="numthlay" />
+        <xsd:element ref="layrname" maxOccurs="unbounded"/>
+    </xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="numthlay" type="positiveIntegerType" >
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: Number of Thematic Layers
+            Section: 1
+            Description: Number of kinds of geospatial information represented by the dataset.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>Number of Thematic Layers</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>
+
+<xsd:element name="layrname" type="layrnameType" >
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: Layer Name
+            Section: 1
+            Description: Description of one kind of geospatial information represented by the dataset.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>Layer Name</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>
+<xsd:complexType name="layrnameType">
+    <xsd:sequence>
+        <xsd:element ref="theme" maxOccurs="unbounded"/>
+    </xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="agginfo" type="agginfoType" >
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: Aggregation Information
+            Section: 1
+            Description: Information relating a dataset to collections of which it is a component or relating a collection dataset to its components, as described in the section on Data Aggregation Technology.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>Aggregation Information</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>
+<xsd:complexType name="agginfoType">
+    <xsd:sequence>
+        <xsd:element ref="conpckid" minOccurs="0" maxOccurs="unbounded" />
+        <xsd:element ref="compinfo" minOccurs="0" />
+    </xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="conpckid" type="conpckidType" >
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: Container Packet ID
+            Section: 1
+            Description: Identifier of an aggregation of which the dataset is a member.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>Container Packet ID</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>
+<xsd:complexType name="conpckidType">
+    <xsd:sequence>
+        <xsd:element ref="datsetid" />
+    </xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="compinfo" type="compinfoType" >
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: Component Information
+            Section: 1
+            Description: Information about components aggregated into the dataset.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>Component Information</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>
+<xsd:complexType name="compinfoType">
+    <xsd:sequence>
+        <xsd:element ref="aggmemid" maxOccurs="unbounded" />
+        <xsd:element ref="aggcrit" maxOccurs="unbounded" />
+    </xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="aggmemid" type="aggmemidType" >
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: Aggregation Member ID
+            Section: 1
+            Description: Identifier of component of a dataset.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>Aggregation Member ID</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>
+<xsd:complexType name="aggmemidType">
+    <xsd:sequence>
+        <xsd:element ref="datsetid" />
+    </xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name="aggcrit" type="aggcritType" >
+    <xsd:annotation>
+        <xsd:documentation>
+            Element: Aggregation Criteria
+            Section: 1
+            Description: Criteria by which components of a dataset are chosen for inclusion.
+        </xsd:documentation>
+        <xsd:appinfo>
+            <sch:title>Aggregation Criteria</sch:title>
+        </xsd:appinfo>
+    </xsd:annotation>
+</xsd:element>
+<xsd:simpleType name="aggcritType">
+    <xsd:restriction base="FGDCstring" />
+</xsd:simpleType>
+
+
+
+</xsd:schema>

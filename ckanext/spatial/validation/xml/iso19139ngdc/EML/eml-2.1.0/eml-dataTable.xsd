@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    xmlns:doc="eml://ecoinformatics.org/documentation-2.1.0" 
+    xmlns:res="eml://ecoinformatics.org/resource-2.1.0" 
+    xmlns:ent="eml://ecoinformatics.org/entity-2.1.0" 
+    xmlns:att="eml://ecoinformatics.org/attribute-2.1.0" 
+    xmlns:con="eml://ecoinformatics.org/constraint-2.1.0" 
+    xmlns="eml://ecoinformatics.org/dataTable-2.1.0" 
+    targetNamespace="eml://ecoinformatics.org/dataTable-2.1.0">
+  <xs:import namespace="eml://ecoinformatics.org/documentation-2.1.0" 
+  schemaLocation="eml-documentation.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/resource-2.1.0" 
+  schemaLocation="eml-resource.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/entity-2.1.0" 
+  schemaLocation="eml-entity.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/attribute-2.1.0" 
+  schemaLocation="eml-attribute.xsd"/>
+  <xs:import namespace="eml://ecoinformatics.org/constraint-2.1.0" 
+  schemaLocation="eml-constraint.xsd"/>
+  <xs:annotation>
+    <xs:documentation>
+       '$RCSfile: eml-dataTable.xsd,v $'
+       Copyright: 1997-2002 Regents of the University of California,
+                            University of New Mexico, and
+                            Arizona State University
+        Sponsors: National Center for Ecological Analysis and Synthesis and
+                  Partnership for Interdisciplinary Studies of Coastal Oceans,
+                     University of California Santa Barbara
+                  Long-Term Ecological Research Network Office,
+                     University of New Mexico
+                  Center for Environmental Studies, Arizona State University
+   Other funding: National Science Foundation (see README for details)
+                  The David and Lucile Packard Foundation
+     For Details: http://knb.ecoinformatics.org/
+
+        '$Author: obrien $'
+          '$Date: 2009/02/25 23:51:54 $'
+      '$Revision: 1.47 $'
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA    
+    </xs:documentation>
+    <xs:appinfo>
+      <doc:moduleDocs>
+        <doc:moduleName>eml-dataTable</doc:moduleName>
+        <doc:moduleDescription>
+        <section xmlns="">
+          <title>
+            The eml-dataTable module - Logical information
+            about data table entities
+          </title>
+          <para>
+            The eml-dataTable module is used to describe the logical
+            characteristics of each tabular set of information in a dataset. A
+            series of comma-separated text files may be considered a dataset,
+            and each file would subsequently be considered a dataTable entity
+            within the dataset.  Since the eml-dataTable module extends the
+            eml-entity module, it uses all of the common entity elements to
+            describe the table, along with a few elements specific to just data
+            table entities.  The eml-dataTable module allows for the
+            description of each attribute (column/field/variable) within the
+            data table through the use of the eml-attribute module.  Likewise,
+            there are fields used to describe the physical distribution of the
+            data table, its overall coverage, the methodology used in creating
+            the data, and other logical structure information such as its
+            orientation, case sensitivity, etc.
+          </para>
+        </section>
+        </doc:moduleDescription>
+        <doc:recommendedUsage>The EML dataTable Module is used to document
+        datasets with one or more data tables.</doc:recommendedUsage>
+        <doc:standAlone>yes</doc:standAlone>
+      </doc:moduleDocs>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="dataTable" type="DataTableType">
+    <xs:annotation>
+      <xs:appinfo>
+        <doc:tooltip>Table Entity descriptor</doc:tooltip>
+        <doc:summary>Descriptor of one table entity in the
+        dataset.</doc:summary>
+        <doc:description>The dataTable element is a descriptor of one entity in
+        the dataset identified by its name. This element can contain
+        information about the dataTable's orientation, number of records, case
+        sensitivity, and temporal, geographic and taxonomic coverage. Because
+        the dataTable element refers to the complex type 'DataTableType', it
+        must contain all the elements defined for the type. 
+        description for DataTableType to review component element
+        rules.</doc:description>
+        
+      </xs:appinfo>
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="DataTableType">
+    <xs:choice>
+      <xs:sequence>
+        <xs:group ref="ent:EntityGroup"/>
+        <xs:element name="attributeList" type="att:AttributeListType">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Attribute List</doc:tooltip>
+              <doc:summary>The list of attributes associated with this
+              entity.</doc:summary>
+              <doc:description>The list of attributes associated with this
+              entity.  For more information see the eml-attribute
+              module.</doc:description>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="constraint" type="con:ConstraintType" minOccurs="0" maxOccurs="unbounded">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Constraint</doc:tooltip>
+              <doc:summary/>
+              <doc:description>Description of any relational constraints on '
+              this entity.  For more information see the eml-constraint
+              module.</doc:description>
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="caseSensitive" minOccurs="0">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Case sensitivity</doc:tooltip>
+              <doc:summary>Specification of text case sensitivity in the
+              dataTable.</doc:summary>
+              <doc:description>The caseSensitive element
+              specifies text case sensitivity of the data in the
+              dataTable. The valid values are yes or no. If it is set to
+              yes, then values of attributes that differ only in case (e.g.,
+              LOW, low) represent distinct values.  If set to no, then values 
+              of attributes that differ only in case represent the same value.
+              </doc:description>
+              <doc:example>yes</doc:example>
+              <doc:example>no</doc:example>
+              
+            </xs:appinfo>
+          </xs:annotation>
+          <xs:simpleType>
+            <xs:restriction base="xs:string">
+              <xs:enumeration value="yes"/>
+              <xs:enumeration value="no"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element name="numberOfRecords" type="res:NonEmptyStringType" minOccurs="0">
+          <xs:annotation>
+            <xs:appinfo>
+              <doc:tooltip>Number of records</doc:tooltip>
+              <doc:summary>The integer count of the number of records in the
+              dataTable.</doc:summary>
+              <doc:description>The numberOfRecords element contains a count
+              of the number of records in the dataTable. This is typically an
+              integer value, and only includes records that represent
+              observations. It would not include any details of physical
+              formatting such as the number of header lines (see eml-physical
+              for that information).</doc:description>
+              <doc:example>975</doc:example>
+              
+            </xs:appinfo>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+      <xs:group ref="res:ReferencesGroup"/>
+    </xs:choice>
+    <xs:attribute name="id" type="res:IDType" use="optional"/>
+    <xs:attribute name="system" type="res:SystemType" use="optional"/>
+    <xs:attribute name="scope" type="res:ScopeType" use="optional" default="document"/>
+  </xs:complexType>
+</xs:schema>
