@@ -14,9 +14,9 @@ including:
 * Commands to support the CSW standard.
 * Plugins to preview spatial formats such as GeoJSON_.
 
-Full documentation, including installation instructions can be found at:
+Full documentation, including installation instructions, can be found at:
     
-    http://docs.ckan.org/projects/ckanext-spatial
+http://docs.ckan.org/projects/ckanext-spatial
 
 
 Community
