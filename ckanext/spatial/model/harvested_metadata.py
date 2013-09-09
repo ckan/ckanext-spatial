@@ -489,7 +489,7 @@ class ISODocument(MappedXmlDocument):
                 "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:status/gmd:MD_ProgressCode/text()",
                 "gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:status/gmd:MD_ProgressCode/text()",
             ],
-            multiplicity="0..1",
+            multiplicity="*",
         ),
         ISOElement(
             name="keyword-inspire-theme",
