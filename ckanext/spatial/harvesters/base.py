@@ -238,6 +238,10 @@ class SpatialHarvester(HarvesterBase):
         ]:
             extras[name] = iso_values[name]
 
+        if len(iso_values.get('progress', [])):
+            extras['progress'] = iso_values['progress'][0]
+        else:
+            extras['progress'] = ''
 
         if len(iso_values.get('resource-type', [])):
             extras['resource-type'] = iso_values['resource-type'][0]
