@@ -204,6 +204,11 @@ class GeminiHarvester(SpatialHarvester):
         ]:
             extras[name] = gemini_values[name]
 
+        if len(iso_values.get('progress', [])):
+            extras['progress'] = iso_values['progress'][0]
+        else:
+            extras['progress'] = ''
+
         extras['resource-type'] = gemini_values['resource-type'][0]
 
         # Use-constraints can contain values which are:

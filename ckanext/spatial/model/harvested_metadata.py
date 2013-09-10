@@ -482,6 +482,16 @@ class ISODocument(MappedXmlDocument):
             multiplicity="0..1",
         ),
         ISOElement(
+            name="progress",
+            search_paths=[
+                "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:status/gmd:MD_ProgressCode/@codeListValue",
+                "gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:status/gmd:MD_ProgressCode/@codeListValue",
+                "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:status/gmd:MD_ProgressCode/text()",
+                "gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:status/gmd:MD_ProgressCode/text()",
+            ],
+            multiplicity="*",
+        ),
+        ISOElement(
             name="keyword-inspire-theme",
             search_paths=[
                 "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString/text()",
