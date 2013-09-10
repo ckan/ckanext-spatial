@@ -329,7 +329,6 @@ class TestHarvest(HarvestFixtureBase):
             'spatial': u'{"type": "Polygon", "coordinates": [[[0.205857204, 54.529947158], [0.205857204, 61.06066944], [-8.97114288, 61.06066944], [-8.97114288, 54.529947158], [0.205857204, 54.529947158]]]}',
             # Other
             'coupled-resource': u'[]',
-            'progress': u'["completed"]',
             'dataset-reference-date': u'[{"type": "creation", "value": "2004-02"}, {"type": "revision", "value": "2006-07-03"}]',
             'frequency-of-update': u'irregular',
             'licence': u'["Reference and PSMA Only", "http://www.test.gov.uk/licenseurl"]',
