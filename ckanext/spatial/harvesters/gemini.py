@@ -195,8 +195,8 @@ class GeminiHarvester(SpatialHarvester):
         ]:
             extras[name] = gemini_values[name]
 
-        if len(iso_values.get('progress', [])):
-            extras['progress'] = iso_values['progress'][0]
+        if len(gemini_values.get('progress', [])):
+            extras['progress'] = gemini_values['progress'][0]
         else:
             extras['progress'] = ''
 
