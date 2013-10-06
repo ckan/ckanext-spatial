@@ -25,6 +25,7 @@ Contents:
    harvesters
    csw
    previews
+   map-widgets
 
 .. _CKAN: http://ckan.org
 .. _CKAN Documentation: http://docs.ckan.org
