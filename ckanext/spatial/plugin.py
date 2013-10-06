@@ -114,6 +114,7 @@ class SpatialMetadata(p.SingletonPlugin):
         return {
                 'get_reference_date' : spatial_helpers.get_reference_date,
                 'get_responsible_party': spatial_helpers.get_responsible_party,
+                'get_common_map_config' : spatial_helpers.get_common_map_config,
                 }
 
 class SpatialQuery(p.SingletonPlugin):

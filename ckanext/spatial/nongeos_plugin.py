@@ -55,6 +55,7 @@ class WMSPreview(p.SingletonPlugin):
 class GeoJSONPreview(p.SingletonPlugin):
     p.implements(p.IConfigurer, inherit=True)
     p.implements(p.IResourcePreview, inherit=True)
+    p.implements(p.ITemplateHelpers, inherit=True)
 
     GeoJSON = ['gjson', 'geojson']
 
@@ -100,3 +101,15 @@ class GeoJSONPreview(p.SingletonPlugin):
 
     def preview_template(self, context, data_dict):
         return 'dataviewer/geojson.html'
+
+    ## ITemplateHelpers
+
+    def get_helpers(self):
+        from ckanext.spatial import helpers as spatial_helpers
+
+        # CKAN does not allow to define two helpers with the same name
+        # As this plugin can be loaded independently of the main spatial one
+        # We define a different helper pointing to the same function
+        return {
+                'get_common_map_config_geojson' : spatial_helpers.get_common_map_config,
+                }
