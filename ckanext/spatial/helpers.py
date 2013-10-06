@@ -1,4 +1,6 @@
 import logging
+from pylons import config
+
 from ckan import plugins as p
 from ckan.lib import helpers as h
 
@@ -56,3 +58,11 @@ def get_responsible_party(value):
         return '; '.join(out)
     except (ValueError, TypeError):
         return value
+
+def get_common_map_config():
+    '''
+        Returns a dict with all configuration options related to the common
+        base map (ie those starting with 'ckanext.spatial.common_map.')
+    '''
+    namespace = 'ckanext.spatial.common_map.'
+    return dict([(k.replace(namespace, ''), v) for k, v in config.iteritems() if k.startswith(namespace)])
