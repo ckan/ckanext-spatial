@@ -35,7 +35,7 @@ it explicitly though, use the following setting::
 MapBox
 ++++++
 
-MapBox`_ allows to define your custom maps based on OpenStreetMap data, using
+`MapBox`_ allows to define your custom maps based on OpenStreetMap data, using
 their online editor or the more advanced `TileMill`_ desktop tool. You will
 need to provide a map id with the ``[account].[handle]`` form (Check `here`_
 for more details)::
