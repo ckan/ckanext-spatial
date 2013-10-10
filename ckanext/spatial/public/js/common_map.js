@@ -45,7 +45,7 @@
           baseLayerUrl = '//{s}.tiles.mapbox.com/v3/{handle}/{z}/{x}/{y}.png';
           leafletBaseLayerOptions.handle = mapConfig['mapbox.map_id'];
           leafletBaseLayerOptions.subdomains = mapConfig.subdomains || 'abcd';
-          leafletBaseLayerOptions.attribution = mapConfig.attribution || 'Map data &copy; OpenStreetMap contributors, Tiles Courtesy of <a href="http://www.mapbox.com/about/maps/" target="_blank">MapBox</a>';
+          leafletBaseLayerOptions.attribution = mapConfig.attribution || 'Data: <a href="http://osm.org/copyright" target="_blank">OpenStreetMap</a>, Design: <a href="http://mapbox.com/about/maps" target="_blank">MapBox</a>';
       } else if (mapConfig.type == 'custom') {
           // Custom XYZ layer
           baseLayerUrl = mapConfig['custom.url'];
