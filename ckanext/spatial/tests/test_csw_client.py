@@ -4,6 +4,7 @@ from urllib2 import urlopen
 import os
 
 from owslib.csw import CatalogueServiceWeb
+from owslib.fes import PropertyIsEqualTo
 from owslib.iso import MD_Metadata
 from pylons import config
 from nose.plugins.skip import SkipTest
@@ -137,7 +138,7 @@ class TestCswClient(CkanProcess):
         # NB: This test fails because no records have been setup...
         raise SkipTest() # therefore skip
         csw = CatalogueServiceWeb(service)
-        csw.getrecords(outputschema=GMD, startposition=1, maxrecords=5)
+        csw.getrecords2(outputschema=GMD, startposition=1, maxrecords=5)
         nrecords = len(csw.records)
         #print csw.response[:1024]
         assert nrecords == 5, nrecords
@@ -147,19 +148,20 @@ class TestCswClient(CkanProcess):
 
     def test_GetRecords_dataset(self):
         csw = CatalogueServiceWeb(service)
-        csw.getrecords(qtype="dataset", outputschema=GMD, startposition=1, maxrecords=5)
+        constraints = [PropertyIsEqualTo("dc:type", "dataset")]
+        csw.getrecords2(constraints=constraints, outputschema=GMD, startposition=1, maxrecords=5)
         nrecords = len(csw.records)
         # TODO
 
     def test_GetRecords_brief(self):
         csw = CatalogueServiceWeb(service)
-        csw.getrecords(outputschema=GMD, startposition=1, maxrecords=5, esn="brief")
+        csw.getrecords2(outputschema=GMD, startposition=1, maxrecords=5, esn="brief")
         nrecords = len(csw.records)
         # TODO
 
     def test_GetRecords_summary(self):
         csw = CatalogueServiceWeb(service)
-        csw.getrecords(outputschema=GMD, startposition=1, maxrecords=5, esn="summary")
+        csw.getrecords2(outputschema=GMD, startposition=1, maxrecords=5, esn="summary")
         nrecords = len(csw.records)
         # TODO
 
