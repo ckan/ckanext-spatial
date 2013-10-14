@@ -1,8 +1,6 @@
 GeoAlchemy>=0.6
 Shapely>=1.2.13
-# Temporal requirement until there is an OWSLib release
-# that requires python-dateutil<2.0
--e git+https://github.com/geopython/OWSLib.git@4b0a62cd37a5a03aafc5c0cd9606e0658d5ac664#egg=owslib
+OWSLib==0.8.2
 lxml>=2.3
 argparse
 pyparsing==1.5.6
