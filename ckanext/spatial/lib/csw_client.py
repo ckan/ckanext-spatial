@@ -65,13 +65,19 @@ class CswService(OwsService):
     Perform various operations on a CSW service
     """
     from owslib.csw import CatalogueServiceWeb as _Implementation
+    from owslib.fes import PropertyIsEqualTo 
     def getrecords(self, qtype=None, keywords=[],
                    typenames="csw:Record", esn="brief",
                    skip=0, count=10, outputschema="gmd", **kw):
         from owslib.csw import namespaces
+        constraints = []
         csw = self._ows(**kw)
+
+        if qtype is not None:
+           constraints.append(PropertyIsEqualTo("dc:type", qtype))
+
         kwa = {
-            "qtype": qtype,
+            "constraints": constraints,
             "keywords": keywords,
             "typenames": typenames,
             "esn": esn,
@@ -79,8 +85,8 @@ class CswService(OwsService):
             "maxrecords": count,
             "outputschema": namespaces[outputschema],
             }
-        log.info('Making CSW request: getrecords %r', kwa)
-        csw.getrecords(**kwa)
+        log.info('Making CSW request: getrecords2 %r', kwa)
+        csw.getrecords2(**kwa)
         if csw.exceptionreport:
             err = 'Error getting records: %r' % \
                   csw.exceptionreport.exceptions
@@ -92,9 +98,14 @@ class CswService(OwsService):
                        keywords=[], limit=None, page=10, outputschema="gmd",
                        startposition=0, **kw):
         from owslib.csw import namespaces
+        constraints = []
         csw = self._ows(**kw)
+
+        if qtype is not None:
+           constraints.append(PropertyIsEqualTo("dc:type", qtype))
+
         kwa = {
-            "qtype": qtype,
+            "constraints": constraints,
             "keywords": keywords,
             "typenames": typenames,
             "esn": esn,
@@ -105,9 +116,9 @@ class CswService(OwsService):
         i = 0
         matches = 0
         while True:
-            log.info('Making CSW request: getrecords %r', kwa)
+            log.info('Making CSW request: getrecords2 %r', kwa)
 
-            csw.getrecords(**kwa)
+            csw.getrecords2(**kwa)
             if csw.exceptionreport:
                 err = 'Error getting identifiers: %r' % \
                       csw.exceptionreport.exceptions
