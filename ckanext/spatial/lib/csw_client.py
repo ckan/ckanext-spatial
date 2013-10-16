@@ -6,6 +6,7 @@ for convenience.
 import logging
 
 from owslib.etree import etree
+from owslib.fes import PropertyIsEqualTo
 
 log = logging.getLogger(__name__)
 
@@ -64,8 +65,6 @@ class CswService(OwsService):
     """
     Perform various operations on a CSW service
     """
-    from owslib.csw import CatalogueServiceWeb as _Implementation
-    from owslib.fes import PropertyIsEqualTo 
     def getrecords(self, qtype=None, keywords=[],
                    typenames="csw:Record", esn="brief",
                    skip=0, count=10, outputschema="gmd", **kw):
@@ -78,7 +77,6 @@ class CswService(OwsService):
 
         kwa = {
             "constraints": constraints,
-            "keywords": keywords,
             "typenames": typenames,
             "esn": esn,
             "startposition": skip,
@@ -106,7 +104,6 @@ class CswService(OwsService):
 
         kwa = {
             "constraints": constraints,
-            "keywords": keywords,
             "typenames": typenames,
             "esn": esn,
             "startposition": startposition,
