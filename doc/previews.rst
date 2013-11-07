@@ -15,7 +15,7 @@ GeoJSON Preview
 
 The GeoJSON previewer is based on Leaflet_. It will render GeoJSON_ files on a
 map and add a popup showing the features properties, for those resources that
-have a format of ``geojson`` or ``gjosn``.
+have a format of ``geojson`` or ``gjson``.
 
 To enable the GeoJSON previewer you need to add the ``geojson_preview`` plugin
 to your ini file. This plugin also requires the `resource_proxy`_
