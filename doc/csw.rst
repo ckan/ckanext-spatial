@@ -10,8 +10,8 @@ This support consists of:
 * Ability to import records from CSW servers with the CSW harvester. See
   :doc:`harvesters` for more details.
 
-* Integration with pycsw_ to provide a fully compliat CSW interface for
-  harvested records. This integration is described on the following sections.
+* Integration with pycsw_ to provide a fully compliant CSW interface for
+  harvested records. This integration is described in the following sections.
 
 
 ckan-pycsw
@@ -172,7 +172,7 @@ keep CKAN and pycsw in sync, and serve pycsw with Apache + mod_wsgi like CKAN.
   has a good overview of the crontab syntax.
 
 * To run pycsw under Apache check the pycsw `installation documentation <http://pycsw.org/docs/latest/installation.html#running-on-wsgi>`_
-  or follow this quick steps (they assume the paths used on the previous steps):
+  or follow these quick steps (they assume the paths used in previous steps):
 
   - Edit ``/etc/apache2/sites-available/ckan_default`` and add the following
     line just before the existing ``WSGIScriptAlias`` directive::
