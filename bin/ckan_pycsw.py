@@ -104,7 +104,6 @@ def load(pycsw_config, ckan_url):
     deleted = set(existing_records) - set(gathered_records)
     changed = set()
 
-    sys.exit(1)
     for key in set(gathered_records) & set(existing_records):
         if gathered_records[key]['metadata_modified'] > existing_records[key]:
             changed.add(key)
