@@ -154,6 +154,17 @@ Setup
    datasets will be synchronized and deleted datasets from CKAN will be removed
    from pycsw as well.
 
+Setting Service Metadata Keywords
++++++++++++++++++++++++++++++++++
+
+The CSW standard allows for administrators to set CSW service metadata. These
+values can be set in the pycsw configuration ``metadata:main`` section.  If you
+would like the CSW service metadata keywords to be reflective of the CKAN
+tags, run the following: 
+
+    paster ckan-pycsw set_keywords -p /etc/ckan/default/pycsw.cfg
+
+
 Running it on production site
 +++++++++++++++++++++++++++++
 
@@ -165,6 +176,7 @@ keep CKAN and pycsw in sync, and serve pycsw with Apache + mod_wsgi like CKAN.
 
     # m h  dom mon dow   command
     0 *  *   *   *     /usr/lib/ckan/default/bin/paster --plugin=ckanext-spatial ckan-pycsw load -p /etc/ckan/default/pycsw.cfg
+    0 0  *   *   *     /usr/lib/ckan/default/bin/paster --plugin=ckanext-spatial ckan-pycsw set_keywords -p /etc/ckan/default/pycsw.cfg
 
   This particular example will run the load command every hour. You can of
   course modify this periodicity, for instance reducing it for huge instances.
