@@ -33,6 +33,26 @@ def setup_db(pycsw_config):
         extra_columns=ckan_columns)
 
 
+def set_keywords(pycsw_config_file, pycsw_config, ckan_url, limit=20):
+    """set pycsw service metadata keywords from top limit CKAN tags"""
+
+    log.info('Fetching tags from %s', ckan_url)
+    url = ckan_url + 'api/tag_counts'
+    response = requests.get(url)
+    tags = response.json()
+
+    log.info('Deriving top %d tags', limit)
+    # uniquify and sort by top limit
+    tags_unique = [list(x) for x in set(tuple(x) for x in tags)]
+    tags_sorted = sorted(tags_unique, key=lambda x: x[1], reverse=1)[0:limit]
+    keywords = ','.join('%s' % tn[0] for tn in tags_sorted)
+
+    log.info('Setting tags in pycsw configuration file %s', pycsw_config_file)
+    pycsw_config.set('metadata:main', 'identification_keywords', keywords)
+    with open(pycsw_config_file, 'wb') as configfile:
+        pycsw_config.write(configfile)
+
+
 def load(pycsw_config, ckan_url):
 
     database = pycsw_config.get('repository', 'database')
@@ -40,7 +60,6 @@ def load(pycsw_config, ckan_url):
 
     context = pycsw.config.StaticContext()
     repo = repository.Repository(database, context, table=table_name)
-    ckan_url = ckan_url.lstrip('/') + '/'
 
     log.info('Started gathering CKAN datasets identifiers: {0}'.format(str(datetime.datetime.now())))
 
@@ -179,6 +198,9 @@ Manages the CKAN-pycsw integration
     python ckan-pycsw.py setup [-p]
         Setups the necessary pycsw table on the db.
 
+    python ckan-pycsw.py set_keywords [-p] -u
+        Sets pycsw server metadata keywords from CKAN site tag list.
+
     python ckan-pycsw.py load [-p] -u
         Loads CKAN datasets as records into the pycsw db.
 
@@ -237,10 +259,14 @@ if __name__ == '__main__':
 
     if arg.command == 'setup':
         setup_db(pycsw_config)
-    elif arg.command == 'load':
+    elif arg.command in ['load', 'set_keywords']:
         if not arg.ckan_url:
             raise AssertionError('You need to provide a CKAN URL with -u or --ckan_url')
-        load(pycsw_config, arg.ckan_url)
+        ckan_url = arg.ckan_url.rstrip('/') + '/'
+        if arg.command == 'load':
+            load(pycsw_config, ckan_url)
+        else:
+            set_keywords(arg.pycsw_config, pycsw_config, ckan_url)
     elif arg.command == 'clear':
         clear(pycsw_config)
     else:
