@@ -34,7 +34,7 @@ def setup_db(pycsw_config):
 
 
 def set_keywords(pycsw_config_file, pycsw_config, ckan_url, limit=20):
-    """set pycsw service metadata keywords from top 10 CKAN tags"""
+    """set pycsw service metadata keywords from top limit CKAN tags"""
 
     log.info('Fetching tags from %s', ckan_url)
     url = ckan_url + 'api/tag_counts'
