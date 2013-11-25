@@ -165,4 +165,4 @@ class OpenlayersPreview(p.SingletonPlugin):
         return correct_format and can_preview_from_domain
 
     def preview_template(self, context, data_dict):
-        return 'dataviewer/openlayers.html'
+        return 'dataviewer/openlayers2.html'

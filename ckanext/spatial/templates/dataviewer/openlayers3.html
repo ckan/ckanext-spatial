@@ -1,0 +1,26 @@
+{% extends "dataviewer/base.html" %}
+
+{% block page %}
+    <div data-module="olpreview" id="data-preview">
+        <h4 class="loading-dialog">
+          <div class="loading-spinner"></div>
+          <div class="left">{{ _('Loading...') }}</div>
+        </h4>
+    </div>
+
+    {% resource 'ckanext-spatial/openlayers3' %}
+    {% resource 'vendor/bootstrap' %}
+{% endblock %}
+
+{# remove any scripts #}
+{% block scripts %}
+    {{ super() }}
+    <script src="http://ol3js.org/en/master/build/ol-whitespace.js"></script>
+{% endblock %}
+
+{# remove any ckan styles #}
+{% block styles %}
+    <link rel="stylesheet" href="{{ h.url_for_static('/css/bootstrap.min.css') }}" type="text/css" media="screen, projection" />
+    <link rel="stylesheet" href="http://ol3js.org/en/master/build/ol.css" type="text/css" />
+{% endblock %}
+
