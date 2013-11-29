@@ -1,6 +1,6 @@
  #map{
   width: 100%;
-  height: 400px;
+  height: 600px;
 }
 
  #info {
@@ -18,4 +18,17 @@
  }
  .tooltip-inner {
      border: 2px solid white;
+ }
+
+ .tooltip-inner>table {
+     font-size: 80%;
+ }
+
+ .tooltip-inner td {
+     text-align: left;
+     line-height: 90%;
+ }
+
+ .tooltip-inner>div:first-child {
+     font-weight: bold;
  }

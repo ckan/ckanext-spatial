@@ -2,6 +2,7 @@ import mimetypes, urlparse, os
 from logging import getLogger
 
 from ckan import plugins as p
+import ckan.lib.helpers as h
 
 
 log = getLogger(__name__)
@@ -116,10 +117,24 @@ class GeoJSONPreview(p.SingletonPlugin):
                 }
 
 
+def get_proxified_service_url(data_dict):
+    '''
+    :param data_dict: contains a resource and package dict
+    :type data_dict: dictionary
+    '''
+    url = h.url_for(
+        action='proxy_service',
+        controller='ckanext.spatial.controllers.service_proxy:ServiceProxyController',
+        id=data_dict['package']['name'],
+        resource_id=data_dict['resource']['id'])
+    log.info('Proxified url is {0}'.format(url))
+    return url
+
 class OpenlayersPreview(p.SingletonPlugin):
 
     p.implements(p.IConfigurer, inherit=True)
     p.implements(p.IResourcePreview, inherit=True)
+    p.implements(p.IRoutes, inherit=True)
 
     FORMATS = ['kml','geojson','gml','wms','wfs','shp']
 
@@ -135,6 +150,7 @@ class OpenlayersPreview(p.SingletonPlugin):
         import ckanext.resourceproxy.plugin as proxy
         if self.proxy_enabled and not data_dict['resource']['on_same_domain']:
             p.toolkit.c.resource['proxy_url'] = proxy.get_proxified_resource_url(data_dict)
+            p.toolkit.c.resource['proxy_service_url'] = get_proxified_service_url(data_dict)
         else:
             p.toolkit.c.resource['proxy_url'] = data_dict['resource']['url']
 
@@ -166,3 +182,9 @@ class OpenlayersPreview(p.SingletonPlugin):
 
     def preview_template(self, context, data_dict):
         return 'dataviewer/openlayers2.html'
+
+    def before_map(self, m):
+        m.connect('/dataset/{id}/resource/{resource_id}/service_proxy',
+                  controller='ckanext.spatial.controllers.service_proxy:ServiceProxyController',
+                  action='proxy_service')
+        return m
