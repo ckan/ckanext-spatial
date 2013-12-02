@@ -32,3 +32,42 @@
  .tooltip-inner>div:first-child {
      font-weight: bold;
  }
+
+
+
+ #data-preview .olControlLayerSwitcher {
+     color: #085871;
+
+     border: 1px solid #464646;
+     border-right: none;
+     -webkit-border-radius: 3px 3px 0 0;
+     -moz-border-radius: 3px 3px 0 0;
+     border-radius: 3px 3px 0 0;
+
+     -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2);
+     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2);
+ }
+
+ #data-preview .olControlLayerSwitcher label {
+     display: inline;
+     margin-bottom: 5px;
+     color: black;
+ }
+
+ #data-preview .olControlLayerSwitcher label:before {
+     content:" ";
+ }
+
+ #data-preview .olControlLayerSwitcher .layersDiv {
+
+
+     padding-top: 5px;
+     padding-left: 10px;
+     padding-bottom: 5px;
+     padding-right: 10px;
+     background-color: #ededed;
+ }
+
+ #data-preview .olControlAttribution {
+     bottom: 5px;
+ }

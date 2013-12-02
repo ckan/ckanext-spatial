@@ -1,5 +1,9 @@
 // Openlayers preview module
 
+var EPSG4326 = new OpenLayers.Projection("EPSG:4326")
+var Mercator = new OpenLayers.Projection("EPSG:3857")
+var CRS84 = new OpenLayers.Projection("urn:x-ogc:def:crs:EPSG:4326")
+
 OpenLayers.Strategy.BBOXWithMax = OpenLayers.Class(OpenLayers.Strategy.BBOX, {
     update: function(options) {
         var mapBounds = this.getMapBounds();
@@ -20,12 +24,22 @@ OpenLayers.Layer.WFSLayer = OpenLayers.Class(OpenLayers.Layer.Vector,
         getDataExtent: function () {
             return (this.ftDescr &&
                     this.ftDescr.bounds &&
-                    this.ftDescr.bounds.transform(new OpenLayers.Projection("EPSG:4326"),this.map.getProjectionObject()))
+                    this.ftDescr.bounds.transform(EPSG4326,this.map.getProjectionObject()))
                    || OpenLayers.Layer.Vector.prototype.getDataExtent.call(this, arguments)
         }
     }
 )
 
+OpenLayers.Layer.WMSLayer = OpenLayers.Class(OpenLayers.Layer.WMS,
+    {
+        getDataExtent: function () {
+            return (this.mlDescr &&
+                this.mlDescr.llbbox &&
+                new OpenLayers.Bounds(this.mlDescr.llbbox).transform(EPSG4326,this.map.getProjectionObject()))
+                || OpenLayers.Layer.WMS.prototype.getDataExtent.call(this, arguments)
+        }
+    }
+)
 
 OpenLayers.Control.CKANLayerSwitcher = OpenLayers.Class(OpenLayers.Control.LayerSwitcher,
     {
@@ -72,11 +86,9 @@ OpenLayers.Control.CKANLayerSwitcher = OpenLayers.Class(OpenLayers.Control.Layer
 
                 // create input element
                 var inputElem = document.createElement("input"),
-                // The input shall have an id attribute so we can use
-                // labels to interact with them.
-                    inputId = OpenLayers.Util.createUniqueID(
-                        this.id + "_input_"
-                    );
+                    // The input shall have an id attribute so we can use
+                    // labels to interact with them.
+                    inputId = OpenLayers.Util.createUniqueID(this.id + "_input_");
 
                 inputElem.id = inputId;
                 inputElem.name = (baseLayer) ? this.id + "_baseLayers" : layer.name;
@@ -87,10 +99,7 @@ OpenLayers.Control.CKANLayerSwitcher = OpenLayers.Class(OpenLayers.Control.Layer
                 inputElem.className = "olButton";
                 inputElem._layer = layer.id;
                 inputElem._layerSwitcher = this.id;
-
-                if (!baseLayer && !layer.inRange) {
-                    inputElem.disabled = true;
-                }
+                inputElem.disabled = !baseLayer && !layer.inRange;
 
                 // create span
                 var labelSpan = document.createElement("label");
@@ -106,8 +115,6 @@ OpenLayers.Control.CKANLayerSwitcher = OpenLayers.Class(OpenLayers.Control.Layer
                 labelSpan.innerHTML = layer.name;
                 labelSpan.style.verticalAlign = (baseLayer) ? "bottom"
                     : "baseline";
-                // create line break
-                var br = document.createElement("br");
 
 
                 var groupArray = (baseLayer) ? this.baseLayers
@@ -123,7 +130,6 @@ OpenLayers.Control.CKANLayerSwitcher = OpenLayers.Class(OpenLayers.Control.Layer
                     : this.dataLayersDiv;
                 groupDiv.appendChild(inputElem);
                 groupDiv.appendChild(labelSpan);
-                groupDiv.appendChild(br);
             }
 
             // if no overlays, dont display the overlay label
@@ -143,7 +149,7 @@ this.ckan.module('olpreview', function (jQuery, _) {
     var proxy = false;
 
     var parseWFSCapas = function(url, callback, failCallback) {
-        wfsFormat = new OpenLayers.Format.WFSCapabilities();
+        var wfsFormat = new OpenLayers.Format.WFSCapabilities();
 
         OpenLayers.Request.GET({
             url: url,
@@ -166,11 +172,61 @@ this.ckan.module('olpreview', function (jQuery, _) {
         });
     }
 
+
+    var parseWFSFeatureTypeDescr = function(url, ftName, callback, failCallback) {
+        var format = new OpenLayers.Format.WFSDescribeFeatureType()
+
+        OpenLayers.Request.GET({
+            url: url,
+            params: {
+                SERVICE: "WFS",
+                REQUEST: "DescribeFeatureType",
+                TYPENAME: ftName
+            },
+            success: function(request) {
+                var doc = request.responseXML;
+                if (!doc || !doc.documentElement) {
+                    doc = request.responseText;
+                }
+                var descr = format.read(doc)
+                callback(descr)
+            },
+            failure: failCallback || function() {
+                alert("Trouble getting ft decription doc");
+                OpenLayers.Console.error.apply(OpenLayers.Console, arguments);
+            }
+        });
+    }
+
+    var parseWMSCapas = function(url, callback, failCallback) {
+        var wmsFormat = new OpenLayers.Format.WMSCapabilities();
+
+        OpenLayers.Request.GET({
+            url: url,
+            params: {
+                SERVICE: "WMS",
+                REQUEST: "GetCapabilities"
+            },
+            success: function(request) {
+                var doc = request.responseXML;
+                if (!doc || !doc.documentElement) {
+                    doc = request.responseText;
+                }
+                var capabilities = wmsFormat.read(doc)
+                callback(capabilities)
+            },
+            failure: failCallback || function() {
+                alert("Trouble getting capabilities doc");
+                OpenLayers.Console.error.apply(OpenLayers.Console, arguments);
+            }
+        });
+    }
+
     var createKMLLayer = function (resource) {
         var url = resource.proxy_url || resource.url
 
         var kml = new OpenLayers.Layer.Vector("KML", {
-            projection: "EPSG:4326",
+            projection: EPSG4326,
             strategies: [new OpenLayers.Strategy.Fixed()],
             protocol: new OpenLayers.Protocol.HTTP({
                 url: url,
@@ -215,22 +271,75 @@ this.ckan.module('olpreview', function (jQuery, _) {
 
                 var candidate = capas.featureTypeList.featureTypes.filter(function(ft) {return ft.name == ftName})
 
+                //var ver = capas.version
+                //if (ver == "2.0.0") ver = "1.1.0"  // 2.0.0 causes failures in some cases (e.g. Geoserver TOPP States WFS)
+
+                var ver = "1.0.0" // force WFS 1.0.0 to ensure lon/lat encoding
+
+                parseWFSFeatureTypeDescr(
+                    url,
+                    candidate[0].name,
+                    function(descr) {
+
+                        var geomProps = descr.featureTypes[0].properties.filter(function(prop) {return prop.type.startsWith("gml")})
+
+                        var ftLayer = new OpenLayers.Layer.WFSLayer(ftName, {
+                            ftDescr: candidate[0],
+                            strategies: [new OpenLayers.Strategy.BBOXWithMax({maxFeatures: 300, ratio: 1})],
+                            protocol: new OpenLayers.Protocol.WFS({
+                                //headers:{"Accept-Charset":"utf-8"}, // (failed) attempt at dealing with accentuated chars in some feature types
+                                version: ver,
+                                url: url,
+                                featureType: candidate[0].name,
+                                srsName: "EPSG:4326",
+                                featureNS: undefined,
+                                maxFeatures: 300,
+                                geometryName: (geomProps && geomProps.length>0)?geomProps[0].name:undefined
+                            })
+                        })
+
+                        dfd.resolve(ftLayer)
+                    },
+                    function(args) {dfd.reject(args)})
+            },
+            function(args) {dfd.reject(args)})
+
+
+
+        return dfd.promise()
+    }
+
+
+    var createWMSLayer = function (resource) {
+        var parsedUrl = resource.url.split('#')
+        var url = resource.proxy_service_url || parsedUrl[0]
+
+        var layerName = parsedUrl.length>1 && parsedUrl[1]
+
+        var dfd = $.Deferred()
+
+        parseWMSCapas(
+            url,
+            function(capas) {
+
+                var candidate = capas.capability.layers.filter(function(layer) {return layer.name == layerName})
+
                 var ver = capas.version
-                if (ver == "2.0.0") ver = "1.1.0"  // 2.0.0 causes failures in some cases (e.g. Geoserver TOPP States WFS)
 
-                var ftLayer = new OpenLayers.Layer.WFSLayer(ftName, {
-                    ftDescr: candidate[0],
-                    strategies: [new OpenLayers.Strategy.BBOXWithMax({maxFeatures: 300, ratio: 1})],
-                    protocol: new OpenLayers.Protocol.WFS({
-                        version: ver,
-                        url: url,
-                        featureType: candidate[0].name,
-                        featureNS: undefined,
-                        maxFeatures: 300
-                    })
-                })
+                var mapLayer = new OpenLayers.Layer.WMSLayer(
+                    layerName,
+                    parsedUrl[0], // use the original URL for the getMap, as there's no need for a proxy for image requests
+                    {layers: layerName,
+                     transparent: true},
+                    {mlDescr: candidate[0],
+                     baseLayer: false,
+                     singleTile: true,
+                     projection: Mercator, // force SRS to 3857 if using OSM baselayer
+                     ratio: 1
+                    }
+                )
 
-                dfd.resolve(ftLayer)},
+                dfd.resolve(mapLayer)},
             function(args) {dfd.reject(args)})
 
 
@@ -244,7 +353,7 @@ this.ckan.module('olpreview', function (jQuery, _) {
         var geojson = new OpenLayers.Layer.Vector(
             "GeoJSON",
             {
-                projection: "EPSG:4326",
+                projection: EPSG4326,
                 strategies: [new OpenLayers.Strategy.Fixed()],
                 protocol: new OpenLayers.Protocol.HTTP({
                     url: url,
@@ -261,7 +370,8 @@ this.ckan.module('olpreview', function (jQuery, _) {
         'kml': createKMLLayer,
         'gml': createGMLLayer,
         'geojson': createGeoJSONLayer,
-        'wfs': createFeatureTypeLayer
+        'wfs': createFeatureTypeLayer,
+        'wms': createWMSLayer
     }
 
     var createLayer = function (resource) {
@@ -323,11 +433,12 @@ this.ckan.module('olpreview', function (jQuery, _) {
                 html: true
             });
 
-
             var map = new OpenLayers.Map(
                 {
                     div: "map",
                     layers: [basemapLayer, resourceLayer],
+                    maxExtent: basemapLayer.getMaxExtent(),
+                    //projection: Mercator, // this is needed for WMS layers (most only accept 3857), but causes WFS to fail
                     eventListeners: {
                         featureover: function(e) {
                             e.feature.renderIntent = "select";
@@ -364,6 +475,7 @@ this.ckan.module('olpreview', function (jQuery, _) {
 
             map.addControl(new OpenLayers.Control.CKANLayerSwitcher());
 
+
             var bbox = resourceLayer.getDataExtent && resourceLayer.getDataExtent()
             if (bbox) map.zoomToExtent(bbox)
             else {
@@ -372,12 +484,14 @@ this.ckan.module('olpreview', function (jQuery, _) {
                     "loadend",
                     resourceLayer,
                     function(e) {
-                        var bbox = e && e.object && e.object.getDataExtent && e.object.getDataExtent()
-                        if (!firstExtent && bbox) {
-                            map.zoomToExtent(bbox)
+                        if (!firstExtent) {
+                            var bbox = e && e.object && e.object.getDataExtent && e.object.getDataExtent()
+                            if (bbox)
+                                map.zoomToExtent(bbox)
+                            else
+                                map.zoomToMaxExtent()
                             firstExtent = true
                         }
-                        else map.zoomToMaxExtent()
                     })
             }
         },
