@@ -11,7 +11,6 @@ log = getLogger(__name__)
 MAX_FILE_SIZE = 1024 * 1024  # 1MB
 CHUNK_SIZE = 512
 
-
 def proxy_service(self, context, data_dict):
     ''' Chunked proxy for resources. To make sure that the file is not too
     large, first, we try to get the content length from the headers.
@@ -40,6 +39,9 @@ def proxy_service(self, context, data_dict):
             r = requests.post(url, data=body, headers=headers, stream=True)
         else:
             r = requests.get(url, params=req.query_string, stream=True)
+
+        log.info('Request: {req}'.format(req=r.request.url))
+        log.info('Request Headers: {h}'.format(h=r.request.headers))
 
         cl = r.headers['content-length']
         if cl and int(cl) > MAX_FILE_SIZE:
