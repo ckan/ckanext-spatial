@@ -474,8 +474,16 @@ this.ckan.module('olpreview', function (jQuery, _) {
 
             map.addControl(new OpenLayers.Control.CKANLayerSwitcher());
 
+            var bboxFrag
+            var frags = ((window.parent || window).location.hash && (window.parent || window).location.hash.substring(1).split("&")) || []
+            var fragMap = {}
+            for (var idx in  frags) {
+                var kv = frags[idx].split('=')
+                fragMap[kv[0].toLowerCase()] = kv[1]
+            }
 
-            var bbox = resourceLayer.getDataExtent && resourceLayer.getDataExtent()
+            var bbox = (fragMap.bbox && new OpenLayers.Bounds(fragMap.bbox.split(',')).transform(EPSG4326,map.getProjectionObject())) ||
+                       (resourceLayer.getDataExtent && resourceLayer.getDataExtent())
             if (bbox) map.zoomToExtent(bbox)
             else {
                 var firstExtent = false

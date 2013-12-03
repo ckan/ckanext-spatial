@@ -40,8 +40,8 @@ def proxy_service(self, context, data_dict):
         else:
             r = requests.get(url, params=req.query_string, stream=True)
 
-        log.info('Request: {req}'.format(req=r.request.url))
-        log.info('Request Headers: {h}'.format(h=r.request.headers))
+        #log.info('Request: {req}'.format(req=r.request.url))
+        #log.info('Request Headers: {h}'.format(h=r.request.headers))
 
         cl = r.headers['content-length']
         if cl and int(cl) > MAX_FILE_SIZE:
