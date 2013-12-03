@@ -271,10 +271,8 @@ this.ckan.module('olpreview', function (jQuery, _) {
 
                 var candidate = capas.featureTypeList.featureTypes.filter(function(ft) {return ft.name == ftName})
 
-                //var ver = capas.version
-                //if (ver == "2.0.0") ver = "1.1.0"  // 2.0.0 causes failures in some cases (e.g. Geoserver TOPP States WFS)
-
-                var ver = "1.0.0" // force WFS 1.0.0 to ensure lon/lat encoding
+                var ver = capas.version
+                if (ver == "2.0.0") ver = "1.1.0"  // 2.0.0 causes failures in some cases (e.g. Geoserver TOPP States WFS)
 
                 parseWFSFeatureTypeDescr(
                     url,
@@ -286,12 +284,13 @@ this.ckan.module('olpreview', function (jQuery, _) {
                         var ftLayer = new OpenLayers.Layer.WFSLayer(ftName, {
                             ftDescr: candidate[0],
                             strategies: [new OpenLayers.Strategy.BBOXWithMax({maxFeatures: 300, ratio: 1})],
+                            projection: Mercator,
                             protocol: new OpenLayers.Protocol.WFS({
                                 //headers:{"Accept-Charset":"utf-8"}, // (failed) attempt at dealing with accentuated chars in some feature types
                                 version: ver,
                                 url: url,
                                 featureType: candidate[0].name,
-                                srsName: "EPSG:4326",
+                                srsName: Mercator,
                                 featureNS: undefined,
                                 maxFeatures: 300,
                                 geometryName: (geomProps && geomProps.length>0)?geomProps[0].name:undefined
