@@ -136,7 +136,7 @@ class OpenlayersPreview(p.SingletonPlugin):
     p.implements(p.IResourcePreview, inherit=True)
     p.implements(p.IRoutes, inherit=True)
 
-    FORMATS = ['kml','geojson','gml','wms','wfs','shp']
+    FORMATS = ['kml','geojson','gml','wms','wfs','shp', 'esrigeojson']
 
     def update_config(self, config):
 

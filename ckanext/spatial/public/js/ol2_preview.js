@@ -365,12 +365,34 @@ this.ckan.module('olpreview', function (jQuery, _) {
         return geojson
     }
 
+
+    var createEsriGeoJSONLayer = function (resource) {
+        var url = resource.url
+
+        var geojson = new OpenLayers.Layer.Vector(
+            "Esri GeoJSON",
+            {
+                projection: EPSG4326,
+                strategies: [new OpenLayers.Strategy.Fixed()],
+                protocol: new OpenLayers.Protocol.Script({
+                    url: url, //ArcGIS Server REST GeoJSON output url
+                    format: new OpenLayers.Format.EsriGeoJSON(),
+                    parseFeatures: function(data) {
+                        return this.format.read(data);
+                    }
+                })
+        });
+
+        return geojson
+    }
+
     layerConstructors = {
         'kml': createKMLLayer,
         'gml': createGMLLayer,
         'geojson': createGeoJSONLayer,
         'wfs': createFeatureTypeLayer,
-        'wms': createWMSLayer
+        'wms': createWMSLayer,
+        'esrigeojson': createEsriGeoJSONLayer
     }
 
     var createLayer = function (resource) {
