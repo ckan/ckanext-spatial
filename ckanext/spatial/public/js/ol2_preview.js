@@ -1,8 +1,22 @@
 // Openlayers preview module
 
+var $_ = _ // keep pointer to underscore, as '_' will be overridden by a closure variable when down the stack
+
 var EPSG4326 = new OpenLayers.Projection("EPSG:4326")
 var Mercator = new OpenLayers.Projection("EPSG:3857")
 var CRS84 = new OpenLayers.Projection("urn:x-ogc:def:crs:EPSG:4326")
+
+
+// override the XMLHttpRequest to enforce UTF-8 decoding
+// because some WFS respond with UTF-8 answers while advertising ISO encoding in the headers
+var originalXHR = OpenLayers.Request.XMLHttpRequest
+OpenLayers.Request.XMLHttpRequest = function() {
+    var newXHR = new originalXHR()
+    if (newXHR._object && newXHR._object.overrideMimeType) newXHR._object.overrideMimeType('text/xml; charset=UTF-8')
+    return newXHR
+}
+$_.each(Object.keys(originalXHR), function(key) {OpenLayers.Request.XMLHttpRequest[key] = originalXHR[key]})
+
 
 OpenLayers.Strategy.BBOXWithMax = OpenLayers.Class(OpenLayers.Strategy.BBOX, {
     update: function(options) {
@@ -112,7 +126,7 @@ OpenLayers.Control.CKANLayerSwitcher = OpenLayers.Class(OpenLayers.Control.Layer
                 if (!baseLayer && !layer.inRange) {
                     labelSpan.style.color = "gray";
                 }
-                labelSpan.innerHTML = layer.name;
+                labelSpan.innerHTML = layer.title || layer.name;
                 labelSpan.style.verticalAlign = (baseLayer) ? "bottom"
                     : "baseline";
 
@@ -126,10 +140,9 @@ OpenLayers.Control.CKANLayerSwitcher = OpenLayers.Class(OpenLayers.Control.Layer
                 });
 
 
-                var groupDiv = (baseLayer) ? this.baseLayersDiv
-                    : this.dataLayersDiv;
-                groupDiv.appendChild(inputElem);
-                groupDiv.appendChild(labelSpan);
+                var groupDiv = $((baseLayer) ? this.baseLayersDiv
+                    : this.dataLayersDiv);
+                groupDiv.append($("<div></div>").append($(inputElem)).append($(labelSpan)));
             }
 
             // if no overlays, dont display the overlay label
@@ -173,7 +186,7 @@ this.ckan.module('olpreview', function (jQuery, _) {
     }
 
 
-    var parseWFSFeatureTypeDescr = function(url, ftName, callback, failCallback) {
+    var parseWFSFeatureTypeDescr = function(url, ftName, ver, callback, failCallback) {
         var format = new OpenLayers.Format.WFSDescribeFeatureType()
 
         OpenLayers.Request.GET({
@@ -181,7 +194,8 @@ this.ckan.module('olpreview', function (jQuery, _) {
             params: {
                 SERVICE: "WFS",
                 REQUEST: "DescribeFeatureType",
-                TYPENAME: ftName
+                TYPENAME: ftName,
+                VERSION: ver
             },
             success: function(request) {
                 var doc = request.responseXML;
@@ -257,93 +271,102 @@ this.ckan.module('olpreview', function (jQuery, _) {
         return gml
     }
 
-    var createFeatureTypeLayer = function (resource) {
+    var withFeatureTypesLayers = function (resource, layerProcessor) {
         var parsedUrl = resource.url.split('#')
         var url = resource.proxy_service_url || parsedUrl[0]
 
         var ftName = parsedUrl.length>1 && parsedUrl[1]
 
-        var dfd = $.Deferred()
-
         parseWFSCapas(
             url,
             function(capas) {
 
-                var candidate = capas.featureTypeList.featureTypes.filter(function(ft) {return ft.name == ftName})
-
                 var ver = capas.version
                 if (ver == "2.0.0") ver = "1.1.0"  // 2.0.0 causes failures in some cases (e.g. Geoserver TOPP States WFS)
 
-                parseWFSFeatureTypeDescr(
-                    url,
-                    candidate[0].name,
-                    function(descr) {
+                var candidates = capas.featureTypeList.featureTypes
+                if (ftName) candidates = candidates.filter(function(ft) {return ft.name == ftName})
 
-                        var geomProps = descr.featureTypes[0].properties.filter(function(prop) {return prop.type.startsWith("gml")})
+                $_.each(candidates, function(candidate, idx) {
+                    parseWFSFeatureTypeDescr(
+                        url,
+                        candidate.name,
+                        ver,
+                        function(descr) {
+                            if (descr.featureTypes) {
+                                var geomProps = descr.featureTypes[0].properties.filter(function(prop) {return prop.type.startsWith("gml")})
 
-                        var ftLayer = new OpenLayers.Layer.WFSLayer(ftName, {
-                            ftDescr: candidate[0],
-                            strategies: [new OpenLayers.Strategy.BBOXWithMax({maxFeatures: 300, ratio: 1})],
-                            projection: Mercator,
-                            protocol: new OpenLayers.Protocol.WFS({
-                                //headers:{"Accept-Charset":"utf-8"}, // (failed) attempt at dealing with accentuated chars in some feature types
-                                version: ver,
-                                url: url,
-                                featureType: candidate[0].name,
-                                srsName: Mercator,
-                                featureNS: undefined,
-                                maxFeatures: 300,
-                                geometryName: (geomProps && geomProps.length>0)?geomProps[0].name:undefined
-                            })
-                        })
+                                // ignore feature types with no gml prop. Correct ?
+                                if (geomProps && geomProps.length > 0) {
 
-                        dfd.resolve(ftLayer)
-                    },
-                    function(args) {dfd.reject(args)})
-            },
-            function(args) {dfd.reject(args)})
+                                    var ftLayer = new OpenLayers.Layer.WFSLayer(
+                                        candidate.name, {
+                                        ftDescr: candidate,
+                                        title: candidate.title,
+                                        strategies: [new OpenLayers.Strategy.BBOXWithMax({maxFeatures: 300, ratio: 1})],
+                                        projection: Mercator,
+                                        visibility: idx==0,
+                                        protocol: new OpenLayers.Protocol.WFS({
+                                            headers:{"Content-Type":"application/xml; charset=UTF-8"}, // (failed) attempt at dealing with accentuated chars in some feature types
+                                            version: ver,
+                                            url: url,
+                                            featureType: candidate.name,
+                                            srsName: Mercator,
+                                            featureNS: undefined,
+                                            maxFeatures: 300,
+                                            geometryName: geomProps[0].name
+                                        })
+                                    })
 
+                                    layerProcessor(ftLayer)
+                                }
+                            }
+                        }
+                    )
+                })
 
-
-        return dfd.promise()
+            }
+        )
     }
 
 
-    var createWMSLayer = function (resource) {
+    var withWMSLayers = function (resource, layerProcessor) {
         var parsedUrl = resource.url.split('#')
         var url = resource.proxy_service_url || parsedUrl[0]
 
         var layerName = parsedUrl.length>1 && parsedUrl[1]
 
-        var dfd = $.Deferred()
-
         parseWMSCapas(
             url,
             function(capas) {
 
-                var candidate = capas.capability.layers.filter(function(layer) {return layer.name == layerName})
+                var candidates = capas.capability.layers
+                if (layerName) candidates = candidates.filter(function(layer) {return layer.name == layerName})
 
                 var ver = capas.version
 
-                var mapLayer = new OpenLayers.Layer.WMSLayer(
-                    layerName,
-                    parsedUrl[0], // use the original URL for the getMap, as there's no need for a proxy for image requests
-                    {layers: layerName,
-                     transparent: true},
-                    {mlDescr: candidate[0],
-                     baseLayer: false,
-                     singleTile: true,
-                     projection: Mercator, // force SRS to 3857 if using OSM baselayer
-                     ratio: 1
-                    }
-                )
+                $_.each(candidates, function(candidate, idx) {
+                    var mapLayer = new OpenLayers.Layer.WMSLayer(
+                        candidate.name,
+                        parsedUrl[0], // use the original URL for the getMap, as there's no need for a proxy for image requests
+                        {layers: candidate.name,
+                            transparent: true},
+                        {mlDescr: candidate,
+                            title: candidate.title,
+                            baseLayer: false,
+                            singleTile: true,
+                            visibility: idx==0,
+                            projection: Mercator, // force SRS to 3857 if using OSM baselayer
+                            ratio: 1
+                        }
+                    )
 
-                dfd.resolve(mapLayer)},
-            function(args) {dfd.reject(args)})
+                    layerProcessor(mapLayer)
+                })
 
+                }
+            )
 
-
-        return dfd.promise()
     }
 
     var createGeoJSONLayer = function (resource) {
@@ -386,22 +409,33 @@ this.ckan.module('olpreview', function (jQuery, _) {
         return geojson
     }
 
-    layerConstructors = {
-        'kml': createKMLLayer,
-        'gml': createGMLLayer,
-        'geojson': createGeoJSONLayer,
-        'wfs': createFeatureTypeLayer,
-        'wms': createWMSLayer,
-        'esrigeojson': createEsriGeoJSONLayer
+    var layerExtractors = {
+        'kml': function(resource, layerProcessor) {layerProcessor(createKMLLayer(resource))},
+        'gml': function(resource, layerProcessor) {layerProcessor(createGMLLayer(resource))},
+        'geojson': function(resource, layerProcessor) {layerProcessor(createGeoJSONLayer(resource))},
+        'wfs': withFeatureTypesLayers,
+        'wms': withWMSLayers,
+        'esrigeojson': function(resource, layerProcessor) {layerProcessor(createEsriGeoJSONLayer(resource))}
     }
 
-    var createLayer = function (resource) {
+    /*
+    var createLayers = function (resource) {
         var resourceUrl = resource.url
         var proxiedResourceUrl = resource.proxy_url
         var proxiedServiceUrl = resource.proxy_service_url
 
-        var cons = layerConstructors[resource.format && resource.format.toLocaleLowerCase()]
+        var cons = layerExtractors[resource.format && resource.format.toLocaleLowerCase()]
         return cons && cons(resource)
+    }
+    */
+
+    var withLayers = function(resource, layerProcessor) {
+        var resourceUrl = resource.url
+        var proxiedResourceUrl = resource.proxy_url
+        var proxiedServiceUrl = resource.proxy_service_url
+
+        var withLayers = layerExtractors[resource.format && resource.format.toLocaleLowerCase()]
+        withLayers && withLayers(resource, layerProcessor)
     }
 
 
@@ -439,6 +473,34 @@ this.ckan.module('olpreview', function (jQuery, _) {
         },
 
         addLayer: function(resourceLayer) {
+            this.map.addLayer(resourceLayer)
+
+            var bbox = resourceLayer.getDataExtent && resourceLayer.getDataExtent()
+            if (bbox) {
+                if (this.map.getExtent()) this.map.getExtent().extend(bbox)
+                else this.map.zoomToExtent(bbox)
+            }
+            else {
+                var firstExtent = false
+                resourceLayer.events.register(
+                    "loadend",
+                    resourceLayer,
+                    function(e) {
+                        if (!firstExtent) {
+                            var bbox = e && e.object && e.object.getDataExtent && e.object.getDataExtent()
+                            if (bbox)
+                                if (this.map.getExtent()) this.map.getExtent().extend(bbox)
+                                else this.map.zoomToExtent(bbox)
+                            else
+                                this.map.zoomToMaxExtent()
+                            firstExtent = true
+                        }
+                    })
+            }
+
+        },
+
+        _onReady: function () {
             var basemapLayer = new OpenLayers.Layer.OSM( "Simple OSM Map")
 
             var mapDiv = $("<div></div>").attr("id", "map").addClass("map")
@@ -454,10 +516,10 @@ this.ckan.module('olpreview', function (jQuery, _) {
                 html: true
             });
 
-            var map = new OpenLayers.Map(
+            this.map = new OpenLayers.Map(
                 {
                     div: "map",
-                    layers: [basemapLayer, resourceLayer],
+                    layers: [basemapLayer],
                     maxExtent: basemapLayer.getMaxExtent(),
                     //projection: Mercator, // this is needed for WMS layers (most only accept 3857), but causes WFS to fail
                     eventListeners: {
@@ -494,7 +556,7 @@ this.ckan.module('olpreview', function (jQuery, _) {
                     }
                 });
 
-            map.addControl(new OpenLayers.Control.CKANLayerSwitcher());
+            this.map.addControl(new OpenLayers.Control.CKANLayerSwitcher());
 
             var bboxFrag
             var frags = ((window.parent || window).location.hash && (window.parent || window).location.hash.substring(1).split("&")) || []
@@ -504,32 +566,22 @@ this.ckan.module('olpreview', function (jQuery, _) {
                 fragMap[kv[0].toLowerCase()] = kv[1]
             }
 
-            var bbox = (fragMap.bbox && new OpenLayers.Bounds(fragMap.bbox.split(',')).transform(EPSG4326,map.getProjectionObject())) ||
-                       (resourceLayer.getDataExtent && resourceLayer.getDataExtent())
-            if (bbox) map.zoomToExtent(bbox)
-            else {
-                var firstExtent = false
-                resourceLayer.events.register(
-                    "loadend",
-                    resourceLayer,
-                    function(e) {
-                        if (!firstExtent) {
-                            var bbox = e && e.object && e.object.getDataExtent && e.object.getDataExtent()
-                            if (bbox)
-                                map.zoomToExtent(bbox)
-                            else
-                                map.zoomToMaxExtent()
-                            firstExtent = true
-                        }
-                    })
-            }
-        },
+            var bbox = (fragMap.bbox && new OpenLayers.Bounds(fragMap.bbox.split(',')).transform(EPSG4326,this.map.getProjectionObject()))
+            if (bbox) this.map.zoomToExtent(bbox)
 
-        _onReady: function () {
-            var resourceLayer = createLayer(preload_resource)
+            withLayers(preload_resource, $_.bind(this.addLayer, this))
+
+            /*
+            var resourceLayers = createLayers(preload_resource)
             var $this = this;
-            if (resourceLayer.done) resourceLayer.done(function(layer) {$this.addLayer(layer)})
-            else this.addLayer(resourceLayer)
+
+            if (! (resourceLayers instanceof Array)) resourceLayers = [resourceLayers]
+            $_.each(resourceLayers, function(resourceLayer) {
+                if (resourceLayer.done) resourceLayer.done(function(layer) {$this.addLayer(layer)})
+                else $this.addLayer(resourceLayer)
+            })
+            */
+
 
 
         }

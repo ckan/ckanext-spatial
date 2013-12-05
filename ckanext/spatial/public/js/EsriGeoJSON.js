@@ -75,7 +75,7 @@ OpenLayers.Format.EsriGeoJSON = OpenLayers.Class(OpenLayers.Format.GeoJSON, {
 				var feat = esri_geojson.features[i];
 				var feature_property = '{';
 				for(var prop in feat.attributes) {
-					feature_property += '"' + prop + '":"' + feat.attributes[prop] + '",';
+					feature_property += '"' + prop + '":' + JSON.stringify(feat.attributes[prop]) + ',';
 				}
 				if(feature_property.length > 1) {
 					feature_property = feature_property.substring(0, feature_property.length - 1);
@@ -88,7 +88,7 @@ OpenLayers.Format.EsriGeoJSON = OpenLayers.Class(OpenLayers.Format.GeoJSON, {
 				var ring_count = o.rings.length;
 				if(ring_count === 1) {
 					//create geojson start & end - i know i'm getting polygons	        
-					var geojsonstart = '{"type":"Feature", "properties":' + feature_property + ', "geometry":{"type":"Polygon", "coordinates":[['	                
+					var geojsonstart = '{"type":"Feature", "properties":' + feature_property + ', "geometry":{"type":"Polygon", "coordinates":[['
 					var geojsonend = ']]}, "crs":{"type":"EPSG", "properties":{"code":' + epsg_code + '}}}';
 
 					//the coordinates for this ring
@@ -154,7 +154,7 @@ OpenLayers.Format.EsriGeoJSON = OpenLayers.Class(OpenLayers.Format.GeoJSON, {
 				var feat = esri_geojson.features[i];
 				var feature_property = '{';
 				for(var prop in feat.attributes) {
-					feature_property += '"' + prop + '":"' + feat.attributes[prop] + '",';
+					feature_property += '"' + prop + '":' + JSON.stringify(feat.attributes[prop]) + ',';
 				}
 				if(feature_property.length > 1) {
 					feature_property = feature_property.substring(0, feature_property.length - 1);
@@ -229,7 +229,7 @@ OpenLayers.Format.EsriGeoJSON = OpenLayers.Class(OpenLayers.Format.GeoJSON, {
 				var feat = esri_geojson.features[i];
 				var feature_property = '{';
 				for(var prop in feat.attributes) {
-					feature_property += '"' + prop + '":"' + feat.attributes[prop] + '",';
+					feature_property += '"' + prop + '":' + JSON.stringify(feat.attributes[prop]) + ',';
 				}
 				if(feature_property.length > 1) {
 					feature_property = feature_property.substring(0, feature_property.length - 1);
@@ -272,7 +272,7 @@ OpenLayers.Format.EsriGeoJSON = OpenLayers.Class(OpenLayers.Format.GeoJSON, {
 				var feat = esri_geojson.features[i];
 				var feature_property = '{';
 				for(var prop in feat.attributes) {
-					feature_property += '"' + prop + '":"' + feat.attributes[prop] + '",';
+					feature_property += '"' + prop + '":' + JSON.stringify(feat.attributes[prop]) + ',';
 				}
 				if(feature_property.length > 1) {
 					feature_property = feature_property.substring(0, feature_property.length - 1);

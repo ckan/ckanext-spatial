@@ -48,6 +48,10 @@
      box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.2);
  }
 
+ #data-preview .olControlLayerSwitcher {
+     max-height: 90%;
+ }
+
  #data-preview .olControlLayerSwitcher label {
      display: inline;
      margin-bottom: 5px;
@@ -59,8 +63,6 @@
  }
 
  #data-preview .olControlLayerSwitcher .layersDiv {
-
-
      padding-top: 5px;
      padding-left: 10px;
      padding-bottom: 5px;
@@ -68,6 +70,16 @@
      background-color: #ededed;
  }
 
+ #data-preview .olControlLayerSwitcher .dataLayersDiv {
+     max-height: 350px; /* this must be coherent with the map height */
+     overflow-y: auto;
+ }
+
  #data-preview .olControlAttribution {
      bottom: 5px;
+ }
+
+
+ #data-preview .dataLayersDiv .labelSpan {
+     font-size: 80%;
  }

@@ -78,7 +78,7 @@ this.ckan.module('olpreview', function (jQuery, _) {
         return geojson
     }
 
-    layerConstructors = {
+    layerExtractors = {
         'kml': createKMLLayer,
         'gml': createGMLLayer,
         'geojson': createGeoJSONLayer
@@ -88,7 +88,7 @@ this.ckan.module('olpreview', function (jQuery, _) {
         var resourceUrl = resource.url
         var proxiedResourceUrl = resource.proxy_url
 
-        var cons = layerConstructors[resource.format && resource.format.toLocaleLowerCase()]
+        var cons = layerExtractors[resource.format && resource.format.toLocaleLowerCase()]
         return cons && cons(proxiedResourceUrl || resourceUrl)
     }
 
