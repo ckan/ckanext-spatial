@@ -17,6 +17,9 @@
     {{ super() }}
     <script src="{{ h.urls_for_resource('ckanext-reclinepreview/vendor/underscore/1.4.2/underscore.js')[-1] }}"></script>
     <script src="http://openlayers.org/dev/OpenLayers.debug.js"></script>
+    <script>
+       var CKAN_GAPI_KEY = "{{ c.gapi_key }}"
+    </script>
 {% endblock %}
 
 {# remove any ckan styles #}

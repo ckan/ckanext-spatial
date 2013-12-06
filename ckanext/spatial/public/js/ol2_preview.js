@@ -6,6 +6,13 @@ var EPSG4326 = new OpenLayers.Projection("EPSG:4326")
 var Mercator = new OpenLayers.Projection("EPSG:3857")
 var CRS84 = new OpenLayers.Projection("urn:x-ogc:def:crs:EPSG:4326")
 
+/*
+var default_style = OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default']);
+default_style.fillOpacity = 0.2;
+default_style.graphicOpacity = 1;
+default_style.strokeWidth = "2";
+*/
+
 
 // override the XMLHttpRequest to enforce UTF-8 decoding
 // because some WFS respond with UTF-8 answers while advertising ISO encoding in the headers
@@ -255,6 +262,54 @@ this.ckan.module('olpreview', function (jQuery, _) {
         return kml
     }
 
+    // test with https://www.google.com/fusiontables/DataSource?docid=1Q4fLrHtTXNJmw3X5u9RlB7VxKcHMw00UcscHAYg
+    var createGFTLayer = function (resource) {
+        return new OpenLayers.Layer.Vector(
+            "GFT", {
+            projection: EPSG4326,
+            strategies: [new OpenLayers.Strategy.Fixed()],
+            protocol: new OpenLayers.Protocol.Script({
+                url: "https://www.googleapis.com/fusiontables/v1/query",
+                params: {
+                    sql: "select * from 1Q4fLrHtTXNJmw3X5u9RlB7VxKcHMw00UcscHAYg",
+                    key: CKAN_GAPI_KEY
+                },
+                format: new OpenLayers.Format.GeoJSON({
+                    ignoreExtraDims: true,
+                    read: function(json) {
+                        var row, feature, atts = {}, features = [];
+                        var cols = json.columns; // column names
+                        for (var i = 0; i < json.rows.length; i++) {
+                            row = json.rows[i];
+                            feature = new OpenLayers.Feature.Vector();
+                            atts = {};
+                            for (var j = 0; j < row.length; j++) {
+                                // 'location's are json objects, other types are strings
+                                if (typeof row[j] === "object" && row[j].geometry) {
+                                    feature.geometry = this.parseGeometry(row[j].geometry);
+                                } else {
+                                    atts[cols[j]] = row[j];
+                                }
+                            }
+                            feature.data = atts;
+                            // if no geometry, not much point in continuing with this row
+                            if (feature.geometry) {
+                                features.push(feature);
+                            }
+                        }
+                        return features;
+                    }
+                }),
+                callbackKey: "callback"
+            }),
+            eventListeners: {
+                "featuresadded": function () {
+                    this.map.zoomToExtent(this.getDataExtent());
+                }
+            }
+        })
+    }
+
     var createGMLLayer = function (resource) {
         var url = resource.proxy_url || resource.url
 
@@ -301,6 +356,7 @@ this.ckan.module('olpreview', function (jQuery, _) {
 
                                     var ftLayer = new OpenLayers.Layer.WFSLayer(
                                         candidate.name, {
+                                        //style: default_style,
                                         ftDescr: candidate,
                                         title: candidate.title,
                                         strategies: [new OpenLayers.Strategy.BBOXWithMax({maxFeatures: 300, ratio: 1})],
@@ -415,7 +471,8 @@ this.ckan.module('olpreview', function (jQuery, _) {
         'geojson': function(resource, layerProcessor) {layerProcessor(createGeoJSONLayer(resource))},
         'wfs': withFeatureTypesLayers,
         'wms': withWMSLayers,
-        'esrigeojson': function(resource, layerProcessor) {layerProcessor(createEsriGeoJSONLayer(resource))}
+        'esrigeojson': function(resource, layerProcessor) {layerProcessor(createEsriGeoJSONLayer(resource))},
+        'gft': function(resource, layerProcessor) {layerProcessor(createGFTLayer(resource))}
     }
 
     /*
@@ -513,6 +570,7 @@ this.ckan.module('olpreview', function (jQuery, _) {
             info.tooltip({
                 animation: false,
                 trigger: 'manual',
+                //placement: "auto left bottom",
                 html: true
             });
 

@@ -136,7 +136,7 @@ class OpenlayersPreview(p.SingletonPlugin):
     p.implements(p.IResourcePreview, inherit=True)
     p.implements(p.IRoutes, inherit=True)
 
-    FORMATS = ['kml','geojson','gml','wms','wfs','shp', 'esrigeojson']
+    FORMATS = ['kml','geojson','gml','wms','wfs','shp', 'esrigeojson', 'gft']
 
     def update_config(self, config):
 
@@ -148,6 +148,9 @@ class OpenlayersPreview(p.SingletonPlugin):
 
     def setup_template_variables(self, context, data_dict):
         import ckanext.resourceproxy.plugin as proxy
+
+        p.toolkit.c.gapi_key = h.config.get('ckanext.spatial.gapi.key')
+
         if self.proxy_enabled and not data_dict['resource']['on_same_domain']:
             p.toolkit.c.resource['proxy_url'] = proxy.get_proxified_resource_url(data_dict)
             p.toolkit.c.resource['proxy_service_url'] = get_proxified_service_url(data_dict)
