@@ -163,6 +163,47 @@ OpenLayers.Control.CKANLayerSwitcher = OpenLayers.Class(OpenLayers.Control.Layer
     }
 )
 
+/**
+ * Parse a comma-separated set of KVP, typically for URL query or fragments
+ * @param url
+ */
+var parseKVP = function(kvpString) {
+    var kvps = (kvpString && kvpString.split("&")) || []
+    var kvpMap = {}
+    for (var idx in  kvps) {
+        var kv = kvps[idx].split('=')
+        kvpMap[kv[0].toLowerCase()] = kv[1]
+    }
+
+    return kvpMap
+}
+
+/**
+ * Parse a comma-separated set of KVP, typically for URL query or fragments
+ * @param url
+ */
+var parseURL = function(url) {
+    var parts = url.split('?',2)
+    var path = parts[0]
+    var query = parts.length>1 && parts[1]
+    var hash
+    if (!query) {
+        parts = path.split('#', 2)
+        path = parts[0]
+        hash = parts.length>1 && parts[1]
+    } else {
+        parts = query.split('#', 2)
+        query = parts[0]
+        hash = parts.length>1 && parts[1]
+    }
+
+    return {
+        path: path,
+        query: parseKVP(query),
+        hash: parseKVP(hash)
+    }
+}
+
 
 this.ckan.module('olpreview', function (jQuery, _) {
 
@@ -262,8 +303,9 @@ this.ckan.module('olpreview', function (jQuery, _) {
         return kml
     }
 
-    // test with https://www.google.com/fusiontables/DataSource?docid=1Q4fLrHtTXNJmw3X5u9RlB7VxKcHMw00UcscHAYg
     var createGFTLayer = function (resource) {
+
+        var tableId = parseURL(resource.url).query.docid
         return new OpenLayers.Layer.Vector(
             "GFT", {
             projection: EPSG4326,
@@ -271,7 +313,7 @@ this.ckan.module('olpreview', function (jQuery, _) {
             protocol: new OpenLayers.Protocol.Script({
                 url: "https://www.googleapis.com/fusiontables/v1/query",
                 params: {
-                    sql: "select * from 1Q4fLrHtTXNJmw3X5u9RlB7VxKcHMw00UcscHAYg",
+                    sql: "select * from "+tableId,
                     key: CKAN_GAPI_KEY
                 },
                 format: new OpenLayers.Format.GeoJSON({
@@ -570,7 +612,7 @@ this.ckan.module('olpreview', function (jQuery, _) {
             info.tooltip({
                 animation: false,
                 trigger: 'manual',
-                //placement: "auto left bottom",
+                placement: "right",
                 html: true
             });
 
@@ -586,7 +628,7 @@ this.ckan.module('olpreview', function (jQuery, _) {
                             e.feature.layer.drawFeature(e.feature);
                             var pixel = event.xy
                             info.css({
-                                left: pixel.x + 'px',
+                                left: (pixel.x + 10) + 'px',
                                 top: (pixel.y - 15) + 'px'
                             });
                             info.currentFeature = e.feature
@@ -617,12 +659,7 @@ this.ckan.module('olpreview', function (jQuery, _) {
             this.map.addControl(new OpenLayers.Control.CKANLayerSwitcher());
 
             var bboxFrag
-            var frags = ((window.parent || window).location.hash && (window.parent || window).location.hash.substring(1).split("&")) || []
-            var fragMap = {}
-            for (var idx in  frags) {
-                var kv = frags[idx].split('=')
-                fragMap[kv[0].toLowerCase()] = kv[1]
-            }
+            var fragMap = parseKVP((window.parent || window).location.hash && (window.parent || window).location.hash.substring(1))
 
             var bbox = (fragMap.bbox && new OpenLayers.Bounds(fragMap.bbox.split(',')).transform(EPSG4326,this.map.getProjectionObject()))
             if (bbox) this.map.zoomToExtent(bbox)
