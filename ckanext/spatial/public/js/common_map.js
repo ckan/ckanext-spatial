@@ -51,6 +51,24 @@
           baseLayerUrl = mapConfig['custom.url'];
           if (mapConfig.subdomains) leafletBaseLayerOptions.subdomains = mapConfig.subdomains;
           leafletBaseLayerOptions.attribution = mapConfig.attribution;
+      } else if (mapConfig.type == 'cloudmade') {
+          // Cloudmade base map
+          if (!mapConfig['cloudmade.style_id']) {
+            throw '[CKAN Map Widgets] You need to provide a map ID ([account].[handle]) when using a MapBox layer. ' +
+                  'See http://www.mapbox.com/developers/api-overview/ for details';
+          }
+          if (!mapConfig['cloudmade.api_key']) {
+            throw '[CKAN Map Widgets] You need to provide a map ID ([account].[handle]) when using a MapBox layer. ' +
+                  'See http://www.mapbox.com/developers/api-overview/ for details';
+          }
+	 leafletBaseLayerOptions.handle = mapConfig['cloudmade.api_key'] + "/" + mapConfig['cloudmade.style_id'];
+	  baseLayerUrl = '//{s}.cloudmade.com/{handle}/256/{z}/{x}/{y}.png';
+          if (window.location.protocol != "https:") {
+		leafletBaseLayerOptions.subdomains = 'abcd';
+	 } else {
+		leafletBaseLayerOptions.subdomains = ['ssl_tiles'];
+	 }
+          leafletBaseLayerOptions.attribution = mapConfig.attribution;
       } else {
           // MapQuest OpenStreetMap base map
           baseLayerUrl = '//otile{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png';

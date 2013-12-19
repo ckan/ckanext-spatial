@@ -1,3 +1,4 @@
+
 // WMS preview module
 this.ckan.module('wmspreview', function (jQuery, _) {
 
@@ -134,21 +135,33 @@ this.ckan.module('wmspreview', function (jQuery, _) {
 
           var dummyLayer = new OpenLayers.Layer("Dummy",{
             "maxExtent": maxExtent,
-            "displayInLayerSwitcher":false,
+            "displayInLayerSwitcher":true,
             "isBaseLayer":true,
             "visibility":false,
             "minScale": (minScale) ? minScale : null,
             "maxScale": (maxScale) ? maxScale : null
           });
-          olLayers.push(dummyLayer);
+//          olLayers.push(dummyLayer);
 
+var cloudmade_url = '.cloudmade.com/98a0ce317ad942cea786ded25271f410/116858/256/${z}/${x}/${y}.png';
+if (window.location.protocol != "https:") {
+var base_urls = ['http://a.tiles'+cloudmade_url,'http://b.tiles'+cloudmade_url,'http://c.tiles'+cloudmade_url];
+} else {
+var base_urls = ['https://ssl_tiles'+cloudmade_url];
+        }          
+
+          var baseLayer = new OpenLayers.Layer.OSM("OSM",base_urls,{
+tileOptions: {crossOriginKeyword: null}
+          });
+ olLayers.push(baseLayer);
           $("#data-preview").empty();
           $("#data-preview").append($("<div></div>").attr("id","map"));
-
+    var geographic = new OpenLayers.Projection("EPSG:4326");
+    var mercator = new OpenLayers.Projection("EPSG:900913");
           // Create a new map
           self.map = new OpenLayers.Map("map" ,
             {
-              "projection": new OpenLayers.Projection("EPSG:4326"),
+              "projection": mercator,
               "maxResolution":"auto",
               "controls":[
                   new OpenLayers.Control.PanZoomBar(),
@@ -165,10 +178,29 @@ this.ckan.module('wmspreview', function (jQuery, _) {
               "theme":"/js/vendor/openlayers/theme/default/style.css"
             });
 
-          self.map.maxExtent = maxExtent;
+          self.map.maxExtent = maxExtent.transform(geographic,mercator);
           self.map.addLayers(olLayers);
+info = new OpenLayers.Control.WMSGetFeatureInfo({
+            url: wmsUrl, 
+            title: 'Identify features by clicking',
+            queryVisible: true,
+            eventListeners: {
+                getfeatureinfo: function(event) {
+                    self.map.addPopup(new OpenLayers.Popup.FramedCloud(
+                        "info", 
+                        self.map.getLonLatFromPixel(event.xy),
+                        null,
+                        event.text,
+                        null,
+                        true
+                    ));
+                }
+            }
+        });
+        self.map.addControl(info);
+        info.activate();
 
-          self.map.zoomTo(1);
+          self.map.zoomTo(11);
       });
     }
   }
