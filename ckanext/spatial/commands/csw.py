@@ -55,7 +55,7 @@ option:
         if cmd == 'setup':
             ckan_pycsw.setup_db(config)
         elif cmd in ['load', 'set_keywords']:
-            ckan_url = self.options.ckan_url
+            ckan_url = self.options.ckan_url.rstrip('/') + '/'
             if cmd == 'load':
                 ckan_pycsw.load(config, ckan_url)
             else:
