@@ -27,7 +27,7 @@ $_.each(Object.keys(originalXHR), function(key) {OpenLayers.Request.XMLHttpReque
 
 OpenLayers.Strategy.BBOXWithMax = OpenLayers.Class(OpenLayers.Strategy.BBOX, {
     update: function(options) {
-        var mapBounds = this.getMapBounds();
+        var mapBounds = this.getMapBounds() || new OpenLayers.Bounds(-180, -90, 180, 90);
 
         var maxFeatures = this.layer.protocol && this.layer.protocol.maxFeatures
 
@@ -208,6 +208,21 @@ var parseURL = function(url) {
 this.ckan.module('olpreview', function (jQuery, _) {
 
     var proxy = false;
+
+    var parseArcGisDescriptor = function(url, callback, failCallback) {
+
+        OpenLayers.Request.GET({
+            url: url,
+            params: {f: "pjson"},
+            success: function(request) {
+                callback(JSON.parse(request.responseText))
+            },
+            failure: failCallback || function() {
+                alert("Trouble getting ArcGIS descriptor");
+                OpenLayers.Console.error.apply(OpenLayers.Console, arguments);
+            }
+        });
+    }
 
     var parseWFSCapas = function(url, callback, failCallback) {
         var wfsFormat = new OpenLayers.Format.WFSCapabilities();
@@ -490,7 +505,7 @@ this.ckan.module('olpreview', function (jQuery, _) {
     var createEsriGeoJSONLayer = function (resource) {
         var url = resource.url
 
-        var geojson = new OpenLayers.Layer.Vector(
+        var esrijson = new OpenLayers.Layer.Vector(
             "Esri GeoJSON",
             {
                 projection: EPSG4326,
@@ -504,7 +519,93 @@ this.ckan.module('olpreview', function (jQuery, _) {
                 })
         });
 
-        return geojson
+        return esrijson
+    }
+
+    var withArcGisLayers = function (resource, layerProcessor) {
+        var parsedUrl = resource.url.split('#')
+        var url = resource.proxy_service_url || parsedUrl[0]
+
+        var ftName = parsedUrl.length>1 && parsedUrl[1]
+
+        parseArcGisDescriptor(
+            url,
+            function(descriptor) {
+
+                if (descriptor.type == "Feature Layer") {
+                    var newLayer = createArcgisFeatureLayer(parsedUrl[0], descriptor, true)
+                    layerProcessor(newLayer)
+                } else if (descriptor.type == "Group Layer") {
+                    // TODO intermediate layer
+                } else if (!descriptor.type && descriptor.layers) {
+                    var isFirst = true
+                    $_.each(descriptor.layers, function(layer, idx) {
+                        if (!layer.subLayerIds) {
+                            var newLayer = createArcgisFeatureLayer(parsedUrl[0]+"/"+layer.id, layer, isFirst)
+                            layerProcessor(newLayer)
+                            isFirst = false
+                        }})
+                }
+
+            }
+        )
+    }
+
+
+    var createArcgisFeatureLayer = function (url, descriptor, visible) {
+
+        var esrijson = new OpenLayers.Layer.Vector(
+            descriptor.name,
+            {
+                projection: EPSG4326,
+                strategies: [new OpenLayers.Strategy.BBOXWithMax({maxFeatures: 300, ratio: 1})],
+                visibility: visible,
+                protocol: new OpenLayers.Protocol.Script({
+                    url: url +   //build ArcGIS Server query string
+                        "/query?" +
+                        //"geometry=-180%2C-90%2C180%2C90&" +
+                        "geometryType=esriGeometryEnvelope&" +
+                        "inSR=4326&" +
+                        "spatialRel=esriSpatialRelIntersects&" +
+                        "outFields=*&" +
+                        "outSR=4326&" +
+                        "returnGeometry=true&" +
+                        "returnIdsOnly=false&" +
+                        "returnCountOnly=false&" +
+                        "returnZ=false&" +
+                        "returnM=false&" +
+                        "returnDistinctValues=false&" +
+                        /*
+                        "where=&" +
+                        "text=&" +
+                        "objectIds=&" +
+                        "time=&" +
+                        "relationParam=&" +
+                        "maxAllowableOffset=&" +
+                        "geometryPrecision=&" +
+                        "orderByFields=&" +
+                        "groupByFieldsForStatistics=&" +
+                        "outStatistics=&" +
+                        "gdbVersion=&" +
+                        */
+                        "f=pjson",
+                    format: new OpenLayers.Format.EsriGeoJSON(),
+                    maxFeatures: 1000,
+                    parseFeatures: function(data) {
+                        return this.format.read(data);
+                    },
+                    filterToParams: function(filter, params) {
+                        var format = new OpenLayers.Format.QueryStringFilter({srsInBBOX: this.srsInBBOX})
+                        var params = format.write(filter, params)
+                        params.geometry = params.bbox
+                        delete params.bbox
+
+                        return params
+                    }
+                })
+            });
+
+        return esrijson
     }
 
     var layerExtractors = {
@@ -514,6 +615,7 @@ this.ckan.module('olpreview', function (jQuery, _) {
         'wfs': withFeatureTypesLayers,
         'wms': withWMSLayers,
         'esrigeojson': function(resource, layerProcessor) {layerProcessor(createEsriGeoJSONLayer(resource))},
+        'arcgis': withArcGisLayers,
         'gft': function(resource, layerProcessor) {layerProcessor(createGFTLayer(resource))}
     }
 
