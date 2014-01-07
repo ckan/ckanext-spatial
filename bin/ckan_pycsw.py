@@ -6,6 +6,8 @@ import io
 import requests
 from lxml import etree
 
+from ckan.lib.base import render
+
 from pycsw import metadata, repository, util
 import pycsw.config
 import pycsw.admin
@@ -170,15 +172,25 @@ def clear(pycsw_config):
 
 
 def get_record(context, repo, ckan_url, ckan_id, ckan_info):
-    query = ckan_url + 'harvest/object/%s'
-    url = query % ckan_info['harvest_object_id']
-    response = requests.get(url)
 
-    if ckan_info['source'] == 'arcgis':
-        return
+    if ckan_info['source'] == 'arcgis': # get ckan json and transform to ISO
+        url = ckan_url + 'api/search/dataset'
+        response = requests.get(url, params={'all_fields': 1, 'id': ckan_id})
+        # get the JSON for the 0th result (always 1 result)
+        result = response.json()['results'][0]
 
+        content = render('ckanext/spatial/json2iso.xml', method='xml',
+                         extra_vars={'json': result})
+
+    else: # harvested ISO XML
+        query = ckan_url + 'harvest/object/%s'
+        url = query % ckan_info['harvest_object_id']
+        response = requests.get(url)
+        content = response.content
+
+    # from here we have an ISO document no matter what
     try:
-        xml = etree.parse(io.BytesIO(response.content))
+        xml = etree.parse(io.BytesIO(content))
     except Exception, err:
         log.error('Could not pass xml doc from %s, Error: %s' % (ckan_id, err))
         return
