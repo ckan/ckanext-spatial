@@ -84,7 +84,7 @@ def load(pycsw_config, ckan_url):
             gathered_records[result['id']] = {
                 'metadata_modified': result['metadata_modified'],
                 'harvest_object_id': result['extras']['harvest_object_id'],
-                'source': result['extras'].get('metadata_source'),
+                'source': result['extras'].get('metadata_source')
             }
             is_collection = True
             if 'collection_package_id' in result['extras']:
