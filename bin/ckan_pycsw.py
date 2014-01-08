@@ -5,6 +5,7 @@ import io
 
 import requests
 from lxml import etree
+from jinja2 import Template
 
 from pycsw import metadata, repository, util
 import pycsw.config
@@ -177,8 +178,7 @@ def get_record(context, repo, ckan_url, ckan_id, ckan_info):
         response = requests.get(url, params={'all_fields': 1, 'id': ckan_id})
         # get the JSON for the 0th result (always 1 result)
         result = response.json()['results'][0]
-        tmpl = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'ckanext/spatial/templates/ckanext/spatial/json2xml.xml')
-        from jinja2 import Template
+        tmpl = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'ckanext/spatial/templates/ckanext/spatial/json2iso.xml')
         template = Template(open(tmpl).read())
         content = template.render(d=result)
         
