@@ -6,8 +6,6 @@ import io
 import requests
 from lxml import etree
 
-from ckan.plugins import toolkit
-
 from pycsw import metadata, repository, util
 import pycsw.config
 import pycsw.admin
@@ -174,14 +172,16 @@ def clear(pycsw_config):
 def get_record(context, repo, ckan_url, ckan_id, ckan_info):
 
     if ckan_info['source'] == 'arcgis': # get ckan json and transform to ISO
+        log.info('ArcGIS detected. Converting CKAN JSON to ISO XML'
         url = ckan_url + 'api/search/dataset'
         response = requests.get(url, params={'all_fields': 1, 'id': ckan_id})
         # get the JSON for the 0th result (always 1 result)
         result = response.json()['results'][0]
-
-        content = toolkit.render('ckanext/spatial/json2iso.xml', method='xml',
-                         extra_vars={'json': result})
-
+        tmpl = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'ckanext/spatial/templates/ckanext/spatial/json2xml.xml')
+        from jinja2 import Template
+        template = Template(open(tmpl).read())
+        content = template.render(d=result)
+        
     else: # harvested ISO XML
         query = ckan_url + 'harvest/object/%s'
         url = query % ckan_info['harvest_object_id']
