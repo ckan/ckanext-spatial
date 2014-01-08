@@ -6,7 +6,7 @@ import io
 import requests
 from lxml import etree
 
-from ckan.lib.base import render
+from ckan.plugins import toolkit
 
 from pycsw import metadata, repository, util
 import pycsw.config
@@ -179,7 +179,7 @@ def get_record(context, repo, ckan_url, ckan_id, ckan_info):
         # get the JSON for the 0th result (always 1 result)
         result = response.json()['results'][0]
 
-        content = render('ckanext/spatial/json2iso.xml', method='xml',
+        content = toolkit.render('ckanext/spatial/json2iso.xml', method='xml',
                          extra_vars={'json': result})
 
     else: # harvested ISO XML
