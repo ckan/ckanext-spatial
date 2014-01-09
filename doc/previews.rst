@@ -30,10 +30,14 @@ WMS Preview
 
 .. image:: _static/preview-wms.png
 
-The WMS previewer is based o OpenLayers_. When the plugin is enabled, if
+The WMS previewer is based on OpenLayers_. When the plugin is enabled, if
 datasets contain a resource that has ``wms`` format, the resource page will
 load a simple map viewer that will attempt to load the remote service layers,
-based on the GetCapabilities response.
+based on the GetCapabilities response. In order for the proxy to get correct
+response, the URL of the resource must be a full GetCapabilities request, not
+just the main WMS service endpoint, for example:
+
+http://vmap0.tiles.osgeo.org/wms/vmap0?SERVICE=WMS&REQUEST=GetCapabilities&VERSION=1.1.1
 
 To enable the WMS previewer you need to add the ``wms_preview`` plugin to your
 ini file. This plugin also requires the `resource_proxy`_
