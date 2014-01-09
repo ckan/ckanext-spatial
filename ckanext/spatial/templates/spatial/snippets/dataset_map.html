@@ -12,9 +12,8 @@ extent
   {% endif %}
 
 #}
-<article class="module prose">
-  <section class="module-content">
-    <h3>{{ _('Dataset extent') }}</h3>
-    {% snippet "spatial/snippets/dataset_map_base.html", extent=extent %}
-  </section>
-</article>
+
+<section class="dataset-map-section {% if g.ckan_base_version.startswith('2.0') %}dataset-map-section-20x{% endif %}">
+  <h3>{{ _('Dataset extent') }}</h3>
+  {% snippet "spatial/snippets/dataset_map_base.html", extent=extent %}
+</section>
