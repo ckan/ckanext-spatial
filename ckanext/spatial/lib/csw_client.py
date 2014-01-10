@@ -6,7 +6,7 @@ for convenience.
 import logging
 
 from owslib.etree import etree
-from owslib.fes import PropertyIsEqualTo
+from owslib.fes import PropertyIsEqualTo, PropertyIsLike
 
 log = logging.getLogger(__name__)
 
@@ -94,7 +94,7 @@ class CswService(OwsService):
         return [self._xmd(r) for r in csw.records.values()]
 
     def getidentifiers(self, qtype=None, typenames="csw:Record", esn="brief",
-                       keywords=[], limit=None, page=10, outputschema="gmd",
+                       keywords=None, limit=None, page=10, outputschema="gmd",
                        startposition=0, **kw):
         from owslib.csw import namespaces
         constraints = []
@@ -102,6 +102,9 @@ class CswService(OwsService):
 
         if qtype is not None:
            constraints.append(PropertyIsEqualTo("dc:type", qtype))
+
+        if keywords is not None:
+            constraints.append(PropertyIsLike("csw:AnyText", keywords))
 
         kwa = {
             "constraints": constraints,
