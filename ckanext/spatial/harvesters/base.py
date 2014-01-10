@@ -71,25 +71,40 @@ def guess_resource_format(url, use_mimetypes=True):
     '''
     url = url.lower().strip()
 
-    resource_types = {
+    # split query and location part, as some declared resources may actually be a viewer with a service as argument
+    baseurl = url.split('?')[0] if '?' in url else url
+    query = url.split('?')[1] if '?' in url else ''
+
+    base_resource_types = {
         # OGC
-        'wms': ('service=wms', 'geoserver/wms', 'mapserver/wmsserver', 'com.esri.wms.Esrimap'),
-        'wfs': ('service=wfs', 'geoserver/wfs', 'mapserver/wfsserver', 'com.esri.wfs.Esrimap'),
-        'wcs': ('service=wcs', 'geoserver/wcs', 'imageserver/wcsserver', 'mapserver/wcsserver'),
-        'sos': ('service=sos',),
-        'csw': ('service=csw',),
+        'wms': ('geoserver/wms', 'mapserver/wmsserver', 'com.esri.wms.Esrimap'),
+        'wfs': ('geoserver/wfs', 'mapserver/wfsserver', 'com.esri.wfs.Esrimap'),
+        'wcs': ('geoserver/wcs', 'imageserver/wcsserver', 'mapserver/wcsserver'),
         # ESRI
         'kml': ('mapserver/generatekml',),
         'arcims': ('com.esri.esrimap.esrimap',),
         'arcgis_rest': ('arcgis/rest/services',),
     }
 
-    for resource_type, parts in resource_types.iteritems():
-        if any(part in url for part in parts):
+    query_resource_types = {
+        # OGC
+        'wms': ('service=wms'),
+        'wfs': ('service=wfs'),
+        'wcs': ('service=wcs'),
+        'sos': ('service=sos'),
+        'csw': ('service=csw'),
+        }
+
+    for resource_type, parts in base_resource_types.iteritems():
+        if any(part in baseurl for part in parts):
+            return resource_type
+
+    for resource_type, parts in query_resource_types.iteritems():
+        if any(part in query for part in parts):
             return resource_type
 
     file_types = {
-        'kml' : ('kml',),
+        'kml': ('kml',),
         'kmz': ('kmz',),
         'gml': ('gml',),
     }
