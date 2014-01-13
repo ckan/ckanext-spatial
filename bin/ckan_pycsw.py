@@ -188,12 +188,11 @@ def get_record(context, repo, ckan_url, ckan_id, ckan_info):
 
     if ckan_info['source'] in ['arcgis', 'odjson']:  # convert json to iso
         result = response.json()
-        env = Environment(loader=FileSystemLoader(tmpldir))
-
         tmpldir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
                                '..',
                                'ckanext/spatial/templates/ckanext/spatial')
-
+        env = Environment(loader=FileSystemLoader(tmpldir))
+ 
         if ckan_info['source'] == 'arcgis':
             log.info('ArcGIS detected. Converting ArcGIS JSON to ISO XML')
             env.filters['to_date'] = to_date
