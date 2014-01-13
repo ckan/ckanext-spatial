@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Open Data JSON transformed using ckanext-spatial/ckanext/spatial/templates/ckanext/spatial/odjson2iso.xml -->
+{#
+
+Open Data Common Core Metadata JSON to ISO 19115:2003 XML (ISO 19139:2007) Transformation
+
+Open Data Common Core Metadata: http://project-open-data.github.io/schema/
+
+Notes:
+- supports "Common Core" Required Fields: http://project-open-data.github.io/schema/#common-core-required-fields
+ - mappings to ISO 19115:2003: http://project-open-data.github.io/metadata-resources/#iso-191152003
+- produces valid XML against http://www.isotc211.org/2005/gmd/gmd.xsd
+- operates on a single dataset record
+
+Additions:
+- //gmd:hierarchyLevel is always 'dataset'
+- //gmd:MD_KeywordTypeCode is always 'theme'
+- //gmd:MD_DataIdentification/gmd:language is specified (required by ISO MD_DataIdentification). Since
+ it is not required by "Common Core" Required Fields, if missing, gco:nilReason is used, else the the
+ language value is displayed
+
+Sample implementation (Python)
+
+>>> import json
+>>> from jinja2 import Template
+>>> json_metadata = json.load(open('od-metadata.json'))
+>>> template = Template(open('odjson2iso.xml').read())
+>>> # process each metadata record in the JSON
+>>> # skip first record (catalogue identification/header entry)
+>>> for record in json_metadata[1:]:
+...     print template.render(json=record)
+
+#}
+<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://www.isotc211.org/2005/gmd/gmd.xsd">
+  <gmd:fileIdentifier>
+    <gco:CharacterString>{{ json['identifier'] }}</gco:CharacterString>
+  </gmd:fileIdentifier>
+  <gmd:hierarchyLevel>
+    <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" codeSpace="ISOTC211/19115">dataset</gmd:MD_ScopeCode>
+  </gmd:hierarchyLevel>
+  <gmd:contact>
+    <gmd:CI_ResponsibleParty>
+      <gmd:role>
+        <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="publisher" codeSpace="ISOTC211/19115">publisher</gmd:CI_RoleCode>
+      </gmd:role>
+    </gmd:CI_ResponsibleParty>
+  </gmd:contact>
+  <gmd:dateStamp>
+    <gco:DateTime>{{ json['modified'] }}</gco:DateTime>
+  </gmd:dateStamp>
+  <gmd:metadataStandardName>
+    <gco:CharacterString>ISO 19115:2003 - Geographic information - Metadata</gco:CharacterString>
+  </gmd:metadataStandardName>
+  <gmd:metadataStandardVersion>
+    <gco:CharacterString>ISO 19115:2003</gco:CharacterString>
+  </gmd:metadataStandardVersion>
+  <gmd:identificationInfo>
+    <gmd:MD_DataIdentification>
+      <gmd:citation>
+        <gmd:CI_Citation>
+          <gmd:title>
+            <gco:CharacterString>{{ json['title'] }}</gco:CharacterString>
+          </gmd:title>
+          <gmd:date>
+            <gmd:CI_Date>
+              <gmd:date>
+                {% if json['modified']|length > 11 %}
+                <gco:DateTime>{{ json['modified'] }}</gco:DateTime>
+                {% else %}
+                <gco:Date>{{ json['modified'] }}</gco:Date>
+                {% endif %}
+              </gmd:date>
+              <gmd:dateType>
+                <gmd:CI_DateTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="revision" codeSpace="ISOTC211/19115">revision</gmd:CI_DateTypeCode>
+              </gmd:dateType>
+            </gmd:CI_Date>
+          </gmd:date>
+        </gmd:CI_Citation>
+      </gmd:citation>
+      <gmd:abstract>
+        <gco:CharacterString>{{ json['description'] }}</gco:CharacterString>
+      </gmd:abstract>
+      <gmd:pointOfContact>
+        <gmd:CI_ResponsibleParty>
+          <gmd:individualName>
+            <gco:CharacterString>{{ json['contactPoint'] }}</gco:CharacterString>
+          </gmd:individualName>
+          <gmd:organisationName>
+            <gco:CharacterString>{{ json['publisher'] }}</gco:CharacterString>
+          </gmd:organisationName>
+          <gmd:contactInfo>
+            <gmd:CI_Contact>
+              <gmd:address>
+                <gmd:CI_Address>
+                  <gmd:electronicMailAddress>
+                    <gco:CharacterString>{{ json['mbox'] }}</gco:CharacterString>
+                  </gmd:electronicMailAddress>
+                </gmd:CI_Address>
+              </gmd:address>
+            </gmd:CI_Contact>
+          </gmd:contactInfo>
+          <gmd:role>
+            <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="publisher" codeSpace="ISOTC211/19115">publisher</gmd:CI_RoleCode>
+          </gmd:role>
+        </gmd:CI_ResponsibleParty>
+      </gmd:pointOfContact>
+      <gmd:descriptiveKeywords>
+        <gmd:MD_Keywords>
+          {% for kw in json['keyword'] %}
+          <gmd:keyword>
+            <gco:CharacterString>{{ kw }}</gco:CharacterString>
+          </gmd:keyword>
+          {% endfor %}
+          <gmd:type>
+            <gmd:MD_KeywordTypeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_KeywordTypeCode" codeListValue="theme" codeSpace="ISOTC211/19115">theme</gmd:MD_KeywordTypeCode>
+          </gmd:type>
+        </gmd:MD_Keywords>
+      </gmd:descriptiveKeywords>
+      <gmd:resourceConstraints>
+        <gmd:MD_Constraints>
+          <gmd:useLimitation>
+            <gco:CharacterString>{{ json['accessLevel'] }}</gco:CharacterString>
+          </gmd:useLimitation>
+        </gmd:MD_Constraints>
+      </gmd:resourceConstraints>
+      {% if json['language'] %}
+      <gmd:language>
+        <gco:CharacterString>{{ json['language'] }}</gco:CharacterString>
+      </gmd:language>
+      {% else %}
+      <gmd:language gco:nilReason="missing"/>
+      {% endif %}
+    </gmd:MD_DataIdentification>
+  </gmd:identificationInfo>
+</gmd:MD_Metadata>

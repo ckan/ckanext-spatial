@@ -5,7 +5,7 @@ import io
 
 import requests
 from lxml import etree
-from jinja2 import Template
+from jinja2 import Environment, FileSystemLoader
 
 from pycsw import metadata, repository, util
 import pycsw.config
@@ -14,6 +14,11 @@ import pycsw.admin
 logging.basicConfig(format='%(message)s', level=logging.INFO)
 
 log = logging.getLogger(__name__)
+
+def to_date(unixtime):
+    """Convert unix time to YYYY-MM-DD"""
+    return datetime.datetime.fromtimestamp(unixtime).strftime('%Y-%m-%d')
+
 
 def setup_db(pycsw_config):
     """Setup database tables and indexes"""
@@ -172,20 +177,35 @@ def clear(pycsw_config):
 
 def get_record(context, repo, ckan_url, ckan_id, ckan_info):
 
-    if ckan_info['source'] == 'arcgis': # get ckan json and transform to ISO
-        log.info('ArcGIS detected. Converting CKAN JSON to ISO XML'
-        url = ckan_url + 'api/search/dataset'
-        response = requests.get(url, params={'all_fields': 1, 'id': ckan_id})
-        # get the JSON for the 0th result (always 1 result)
-        result = response.json()['results'][0]
-        tmpl = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'ckanext/spatial/templates/ckanext/spatial/json2iso.xml')
-        template = Template(open(tmpl).read())
+    query = ckan_url + 'harvest/object/%s'
+    url = query % ckan_info['harvest_object_id']
+    response = requests.get(url)
+
+    if not response.ok:
+        log.error('Could not get Harvest object for id %s (%d: %s)',
+                  ckan_id, response.status_code, response.reason)
+        return
+
+    if ckan_info['source'] in ['arcgis', 'odjson']:  # convert json to iso
+        result = response.json()
+        env = Environment(loader=FileSystemLoader(tmpldir))
+
+        tmpldir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+                               '..',
+                               'ckanext/spatial/templates/ckanext/spatial')
+
+        if ckan_info['source'] == 'arcgis':
+            log.info('ArcGIS detected. Converting ArcGIS JSON to ISO XML')
+            env.filters['to_date'] = to_date
+            tmpl = 'arcgisjson2iso.xml'
+        else:
+            log.info('Open Data JSON detected. Converting to ISO XML')
+            tmpl = 'odjson2iso.xml'
+
+        template = env.get_template(tmpl)
         content = template.render(d=result)
-        
-    else: # harvested ISO XML
-        query = ckan_url + 'harvest/object/%s'
-        url = query % ckan_info['harvest_object_id']
-        response = requests.get(url)
+
+    else:  # harvested ISO XML
         content = response.content
 
     # from here we have an ISO document no matter what
@@ -290,3 +310,4 @@ if __name__ == '__main__':
     else:
         print 'Unknown command {0}'.format(arg.command)
         sys.exit(1)
+
