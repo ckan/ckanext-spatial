@@ -202,7 +202,7 @@ def get_record(context, repo, ckan_url, ckan_id, ckan_info):
             tmpl = 'arcgisjson2iso.xml'
         else:
             log.info('Open Data JSON detected. Converting to ISO XML')
-            tmpl = 'odjson2iso.xml'
+            tmpl = 'datajson2iso.xml'
 
         template = env.get_template(tmpl)
         content = template.render(json=result)
