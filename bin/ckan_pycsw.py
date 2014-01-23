@@ -17,7 +17,10 @@ log = logging.getLogger(__name__)
 
 def to_date(unixtime):
     """Convert unix time to YYYY-MM-DD"""
-    return datetime.datetime.fromtimestamp(unixtime).strftime('%Y-%m-%d')
+    try:
+        return datetime.datetime.fromtimestamp(unixtime).strftime('%Y-%m-%d')
+    except ValueError:
+        return '-1'
 
 
 def setup_db(pycsw_config):
