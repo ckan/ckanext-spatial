@@ -202,7 +202,7 @@ def get_record(context, repo, ckan_url, ckan_id, ckan_info):
             tmpl = 'odjson2iso.xml'
 
         template = env.get_template(tmpl)
-        content = template.render(d=result)
+        content = template.render(json=result)
 
     else:  # harvested ISO XML
         content = response.content
