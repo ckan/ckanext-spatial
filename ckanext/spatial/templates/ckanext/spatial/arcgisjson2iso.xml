@@ -57,6 +57,7 @@ Sample implementation (Python)
           <gmd:title>
             <gco:CharacterString>{{ json['title'] }}</gco:CharacterString>
           </gmd:title>
+          {% if json['created'] %}
           <gmd:date>
             <gmd:CI_Date>
               <gmd:date>
@@ -67,6 +68,8 @@ Sample implementation (Python)
               </gmd:dateType>
             </gmd:CI_Date>
           </gmd:date>
+          {% endif %}
+          {% if json['modified'] %}
           <gmd:date>
             <gmd:CI_Date>
               <gmd:date>
@@ -77,6 +80,7 @@ Sample implementation (Python)
               </gmd:dateType>
             </gmd:CI_Date>
           </gmd:date>
+          {% endif %}
         </gmd:CI_Citation>
       </gmd:citation>
       <gmd:abstract>
