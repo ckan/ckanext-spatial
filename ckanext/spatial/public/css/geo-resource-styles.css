@@ -1,0 +1,49 @@
+.label[data-format=wfs] {
+    background-color: #7aae3d;
+}
+.format-label[data-format=wfs],
+.format-label[data-format*=wfs] {
+    background: url("../img/gis-resources-sprite-icons.png") no-repeat 0 0;
+    background-position: 0px -62px;
+}
+
+.label[data-format=wms] {
+    background-color: #adc717;
+}
+.format-label[data-format=wms],
+.format-label[data-format*=wms] {
+    background: url("../img/gis-resources-sprite-icons.png") no-repeat 0 0;
+    background-position: -32px -62px;
+}
+
+.label[data-format=gml] {
+    background-color: #7aae3d;
+}
+.format-label[data-format=gml],
+.format-label[data-format*=gml] {
+    background: url("../img/gis-resources-sprite-icons.png") no-repeat 0 0;
+    background-position: -64px -62px;
+}
+
+.label[data-format=kml] {
+    background-color: #7aae3d;
+}
+.format-label[data-format=kml],
+.format-label[data-format*=kml] {
+    background: url("../img/gis-resources-sprite-icons.png") no-repeat 0 0;
+    background-position: -96px -62px;
+}
+
+.label[data-format=geojson] {
+    background-color: #9855e0;
+}
+.format-label[data-format=geojson],
+.format-label[data-format*=geojson] {
+    background: url("../img/gis-resources-sprite-icons.png") no-repeat 0 0;
+    background-position: -128px -62px;
+}
+
+.label[data-format=arcgis_rest] {
+    background-color: #5c3ee0;
+}
+
