@@ -24,6 +24,12 @@ def to_date(unixtime):
     except ValueError:
         return '-1'
 
+def keyword_list(value):
+    """Ensure keywords are treated as lists"""
+    if isinstance(value, list):  # list already
+        return value
+    else:  # csv string
+        return value.split(',')
 
 def setup_db(pycsw_config):
     """Setup database tables and indexes"""
@@ -206,6 +212,7 @@ def get_record(context, repo, ckan_url, ckan_id, ckan_info):
             tmpl = 'arcgisjson2iso.xml'
         else:
             log.info('Open Data JSON detected. Converting to ISO XML')
+            env.filters['keyword_list'] = keyword_list
             tmpl = 'datajson2iso.xml'
 
         template = env.get_template(tmpl)

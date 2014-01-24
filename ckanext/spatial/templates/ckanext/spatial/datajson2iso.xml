@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Open Data JSON transformed using ckanext-spatial/ckanext/spatial/templates/ckanext/spatial/odjson2iso.xml -->
+<!-- Open Data JSON transformed using ckanext-spatial/ckanext/spatial/templates/ckanext/spatial/datajson2iso.xml -->
 {#
 
 Open Data Common Core Metadata JSON to ISO 19115:2003 XML (ISO 19139:2007) Transformation
@@ -22,9 +22,16 @@ Additions:
 Sample implementation (Python)
 
 >>> import json
->>> from jinja2 import Template
->>> json_metadata = json.load(open('od-metadata.json'))
->>> template = Template(open('odjson2iso.xml').read())
+>>> from jinja2 import Environment, FileSystemLoader
+>>> def keyword_list(value):
+...     if isinstance(value, list):
+...         return value
+...     else:
+...         return value.split(',')
+>>> env = Environment(loader=FileSystemLoader('.'))
+>>> env.filters['keyword_list'] = keyword_list
+>>> json_metadata = json.load(open('datajson-metadata.json'))
+>>> template = env.get_template('datajson2iso.xml')
 >>> # process each metadata record in the JSON
 >>> # skip first record (catalogue identification/header entry)
 >>> for record in json_metadata[1:]:
@@ -64,7 +71,7 @@ Sample implementation (Python)
           <gmd:date>
             <gmd:CI_Date>
               <gmd:date>
-                {% if json['modified']|length > 11 %}
+                {% if json['modified'] and json['modified']|length > 11 %}
                 <gco:DateTime>{{ json['modified'] }}</gco:DateTime>
                 {% else %}
                 <gco:Date>{{ json['modified'] }}</gco:Date>
@@ -106,7 +113,7 @@ Sample implementation (Python)
       </gmd:pointOfContact>
       <gmd:descriptiveKeywords>
         <gmd:MD_Keywords>
-          {% for kw in json['keyword'] %}
+          {% for kw in json['keyword']|keyword_list %}
           <gmd:keyword>
             <gco:CharacterString>{{ kw }}</gco:CharacterString>
           </gmd:keyword>
