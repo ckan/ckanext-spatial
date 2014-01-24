@@ -615,7 +615,7 @@ this.ckan.module('olpreview', function (jQuery, _) {
         'wfs': withFeatureTypesLayers,
         'wms': withWMSLayers,
         'esrigeojson': function(resource, layerProcessor) {layerProcessor(createEsriGeoJSONLayer(resource))},
-        'arcgis': withArcGisLayers,
+        'arcgis_rest': withArcGisLayers,
         'gft': function(resource, layerProcessor) {layerProcessor(createGFTLayer(resource))}
     }
 
