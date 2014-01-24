@@ -2,6 +2,8 @@ import sys
 import logging
 import datetime
 import io
+##Needed for the debugging code bellow
+#import codecs
 
 import requests
 from lxml import etree
@@ -99,6 +101,8 @@ def load(pycsw_config, ckan_url):
             if 'collection_package_id' in result['extras']:
                 is_collection = False
             gathered_records[result['id']]['ckan_collection'] = is_collection
+            if 'source_datajson_identifier' in result['extras']:
+                gathered_records[result['id']]['source'] = 'datajson'
 
         start = start + 1000
         log.debug('Gathered %s' % start)
@@ -189,7 +193,7 @@ def get_record(context, repo, ckan_url, ckan_id, ckan_info):
                   ckan_id, response.status_code, response.reason)
         return
 
-    if ckan_info['source'] in ['arcgis', 'odjson']:  # convert json to iso
+    if ckan_info['source'] in ['arcgis', 'datajson']:  # convert json to iso
         result = response.json()
         tmpldir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
                                '..',
@@ -206,6 +210,12 @@ def get_record(context, repo, ckan_url, ckan_id, ckan_info):
 
         template = env.get_template(tmpl)
         content = template.render(json=result)
+        
+        ##Some debugging code to test by writing xml to a hardcoded folder
+        #outfile = codecs.open("/root/json_xml/%s.xml" % ckan_id, "w", "utf-8")
+        #outfile.write(content)
+        #outfile.close()
+        #return
 
     else:  # harvested ISO XML
         content = response.content
