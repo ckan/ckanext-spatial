@@ -11,7 +11,7 @@ including:
   dataset extent on the frontend.
 * Harvesters to import geospatial metadata into CKAN from other sources
   in ISO 19139 format and others.
-* Commands to support the CSW standard.
+* Commands to support the CSW standard using pycsw_.
 * Plugins to preview spatial formats such as GeoJSON_.
 
 Full documentation, including installation instructions, can be found at:
@@ -47,5 +47,6 @@ http://www.fsf.org/licensing/licenses/agpl-3.0.html
 
 .. _CKAN: http://ckan.org
 .. _PostGIS: http://postgis.org
+.. _pycsw: http://pycsw.org
 .. _GeoJSON: http://geojson.org
 

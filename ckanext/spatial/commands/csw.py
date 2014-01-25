@@ -11,6 +11,9 @@ class Pycsw(script.command.Command):
     ckan-pycsw setup [-p]
         Setups the necessary pycsw table on the db.
 
+    ckan-pycsw set_keywords [-p] [-u]
+        Sets pycsw server metadata keywords from CKAN site tag list.
+
     ckan-pycsw load [-p] [-u]
         Loads CKAN datasets as records into the pycsw db.
 
@@ -51,9 +54,12 @@ option:
         cmd = self.args[0]
         if cmd == 'setup':
             ckan_pycsw.setup_db(config)
-        elif cmd == 'load':
-            ckan_url = self.options.ckan_url
-            ckan_pycsw.load(config, ckan_url)
+        elif cmd in ['load', 'set_keywords']:
+            ckan_url = self.options.ckan_url.rstrip('/') + '/'
+            if cmd == 'load':
+                ckan_pycsw.load(config, ckan_url)
+            else:
+                ckan_pycsw.set_keywords(self.options.pycsw_config, config, ckan_url)
         elif cmd == 'clear':
             ckan_pycsw.clear(config)
         else:

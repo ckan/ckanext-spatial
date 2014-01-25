@@ -154,6 +154,19 @@ Setup
    datasets will be synchronized and deleted datasets from CKAN will be removed
    from pycsw as well.
 
+Setting Service Metadata Keywords
++++++++++++++++++++++++++++++++++
+
+The CSW standard allows for administrators to set CSW service metadata. These
+values can be set in the pycsw configuration ``metadata:main`` section.  If you
+would like the CSW service metadata keywords to be reflective of the CKAN
+tags, run the following convenience command::
+
+    paster ckan-pycsw set_keywords -p /etc/ckan/default/pycsw.cfg
+
+Note that you must have privileges to write to the pycsw configuration file.
+
+
 Running it on production site
 +++++++++++++++++++++++++++++
 
