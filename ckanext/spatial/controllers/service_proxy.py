@@ -30,7 +30,7 @@ def proxy_service(self, context, data_dict):
         req = self._py_object.request
         method = req.environ["REQUEST_METHOD"]
 
-        url = url.split('#')[0] # remove potential fragment
+        url = url.split('?')[0] # remove potential query and fragment
 
         if method == "POST":
             length = int(req.environ["CONTENT_LENGTH"])

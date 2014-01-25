@@ -445,7 +445,8 @@ this.ckan.module('olpreview', function (jQuery, _) {
 
     var withWMSLayers = function (resource, layerProcessor) {
         var parsedUrl = resource.url.split('#')
-        var url = resource.proxy_service_url || parsedUrl[0]
+        var urlBody = parsedUrl[0].split('?')[0] // remove query if any
+        var url = resource.proxy_service_url || urlBody
 
         var layerName = parsedUrl.length>1 && parsedUrl[1]
 
@@ -461,7 +462,7 @@ this.ckan.module('olpreview', function (jQuery, _) {
                 $_.each(candidates, function(candidate, idx) {
                     var mapLayer = new OpenLayers.Layer.WMSLayer(
                         candidate.name,
-                        parsedUrl[0], // use the original URL for the getMap, as there's no need for a proxy for image requests
+                        urlBody, // use the original URL for the getMap, as there's no need for a proxy for image requests
                         {layers: candidate.name,
                             transparent: true},
                         {mlDescr: candidate,
