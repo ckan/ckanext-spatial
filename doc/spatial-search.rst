@@ -197,7 +197,7 @@ the main body of the dataset details page, but these can be easily modified to
 suit your project needs
 
 To add a map to the sidebar, add this to the dataset details page template (eg
-``myproj/ckanext/myproj/templates/package/read.html``)::
+``ckanext-myproj/ckanext/myproj/templates/package/read.html``)::
 
     {% block secondary_content %}
       {{ super() }}
@@ -211,22 +211,16 @@ To add a map to the sidebar, add this to the dataset details page template (eg
 
 For adding the map to the main body, add this::
 
-    {% block primary_content %}
+    {% block primary_content_inner %}
 
-      <!-- ... -->
+      {{ super() }}
 
-      <article class="module prose">
+      {% set dataset_extent = h.get_pkg_dict_extra(c.pkg_dict, 'spatial', '') %}
+      {% if dataset_extent %}
+        {% snippet "spatial/snippets/dataset_map.html", extent=dataset_extent %}
+      {% endif %}
 
-        <!-- ... -->
-
-        {% set dataset_extent = h.get_pkg_dict_extra(c.pkg_dict, 'spatial', '') %}
-        {% if dataset_extent %}
-          {% snippet "spatial/snippets/dataset_map.html", extent=dataset_extent %}
-        {% endif %}
-
-      </article>
     {% endblock %}
-
 
 You need to load the ``spatial_metadata`` plugin to use these snippets.
 

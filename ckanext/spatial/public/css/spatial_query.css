@@ -8,6 +8,13 @@
   font-size: 11px;
   line-height: 1.5;
 }
+.module-heading .action {
+  float: right;
+  color: #888888;
+  font-size: 12px;
+  line-height: 20px;
+  text-decoration: underline;
+}
 .module-narrow #dataset-map-attribution {
   margin: 5px 8px;
   color: #666;
