@@ -155,6 +155,21 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
         identifier = harvest_object.guid
         try:
             record = self.csw.getrecordbyid([identifier], outputschema=self.output_schema())
+
+            from owslib.util import bind_url
+            from owslib import csw
+
+            data = {
+                'service': 'CSW', # self.csw.service,
+                'version': '2.0.2', #self.csw.version,
+                'request': 'GetRecordById',
+                'outputFormat': 'application/xml',
+                'outputSchema': csw.get_namespaces()[self.output_schema()],
+                'elementsetname': "full",
+                'id': '',
+                }
+
+            original_request = '%s%s%s' % (bind_url(url), urllib.urlencode(data), identifier)
         except Exception, e:
             self._save_object_error('Error getting the CSW record with GUID %s' % identifier, harvest_object)
             return False
@@ -171,6 +186,7 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
             content = re.sub('<\?xml(.*)\?>', '', record['xml'])
 
             harvest_object.content = content.strip()
+            harvest_object.raw_metadata_request = original_request
             harvest_object.save()
         except Exception,e:
             self._save_object_error('Error saving the harvest object for GUID %s [%r]' % \

@@ -88,19 +88,19 @@ def guess_resource_format(url, use_mimetypes=True):
 
     query_resource_types = {
         # OGC
-        'wms': ('service=wms'),
-        'wfs': ('service=wfs'),
-        'wcs': ('service=wcs'),
-        'sos': ('service=sos'),
-        'csw': ('service=csw'),
-        }
-
-    for resource_type, parts in base_resource_types.iteritems():
-        if any(part in baseurl for part in parts):
-            return resource_type
+        'wms': ('service=wms',),
+        'wfs': ('service=wfs',),
+        'wcs': ('service=wcs',),
+        'sos': ('service=sos',),
+        'csw': ('service=csw',),
+    }
 
     for resource_type, parts in query_resource_types.iteritems():
         if any(part in query for part in parts):
+            return resource_type
+
+    for resource_type, parts in base_resource_types.iteritems():
+        if any(part in baseurl for part in parts):
             return resource_type
 
     file_types = {
@@ -340,13 +340,31 @@ class SpatialHarvester(HarvesterBase):
         else:
             log.debug('No spatial extent defined for this object')
 
+        if (harvest_object.raw_metadata_request):
+            resource = {}
+            resource['format'] = 'xml' # assume the original request is a GetCap and yields XML
+            resource.update(
+                {
+                    'url': harvest_object.raw_metadata_request,
+                    'name': 'Original Metadata request'
+                    })
+            package_dict['resources'].append(resource)
+
+        operations = iso_values.get('resource-operations', [])
+
+
         resource_locators = iso_values.get('resource-locator', []) +\
             iso_values.get('resource-locator-identification', [])
+
+        if (operations.get('GetCapabilities')):
+            resource_locators.append(operations.get('GetCapabilities').get('connectPoint')[0])
+
+        processedUrls = []
 
         if len(resource_locators):
             for resource_locator in resource_locators:
                 url = resource_locator.get('url', '').strip()
-                if url:
+                if url and url not in processedUrls:
                     resource = {}
                     resource['format'] = guess_resource_format(url)
                     if resource['format'] == 'wms' and config.get('ckanext.spatial.harvest.validate_wms', False):
@@ -356,6 +374,7 @@ class SpatialHarvester(HarvesterBase):
                             resource['verified'] = True
                             resource['verified_date'] = datetime.now().isoformat()
 
+                    processedUrls.append(url)
                     resource.update(
                         {
                             'url': url,
