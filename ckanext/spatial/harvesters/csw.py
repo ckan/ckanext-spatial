@@ -90,7 +90,7 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
         guids_in_harvest = set()
 
         try:
-            for identifier in self.csw.getidentifiers(page=10, outputschema=self.output_schema(), keywords=self.source_config.get('constraint_keyword')):
+            for identifier in self.csw.getidentifiers(page=10, outputschema=self.output_schema(), cswconstraints=self.source_config.get('csw_constraints')):
                 try:
                     log.info('Got identifier %s from the CSW', identifier)
                     if identifier is None:

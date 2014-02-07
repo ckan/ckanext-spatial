@@ -94,7 +94,7 @@ class CswService(OwsService):
         return [self._xmd(r) for r in csw.records.values()]
 
     def getidentifiers(self, qtype=None, typenames="csw:Record", esn="brief",
-                       keywords=None, limit=None, page=10, outputschema="gmd",
+                       cswconstraints={}, limit=None, page=10, outputschema="gmd",
                        startposition=0, **kw):
         from owslib.csw import namespaces
         constraints = []
@@ -103,8 +103,8 @@ class CswService(OwsService):
         if qtype is not None:
            constraints.append(PropertyIsEqualTo("dc:type", qtype))
 
-        if keywords is not None:
-            constraints.append(PropertyIsLike("csw:AnyText", keywords))
+        for constraintName, constraintValue in cswconstraints.iteritems():
+            constraints.append(PropertyIsLike(constraintName, constraintValue))
 
         kwa = {
             "constraints": constraints,
