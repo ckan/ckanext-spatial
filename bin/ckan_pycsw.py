@@ -229,7 +229,7 @@ def get_record(context, repo, ckan_url, ckan_id, ckan_info):
 
     # from here we have an ISO document no matter what
     try:
-        xml = etree.parse(io.BytesIO(content))
+        xml = etree.parse(io.BytesIO(content.encode("utf8")))
     except Exception, err:
         log.error('Could not pass xml doc from %s, Error: %s' % (ckan_id, err))
         return
