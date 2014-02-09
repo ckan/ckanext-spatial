@@ -207,11 +207,11 @@ def get_record(context, repo, ckan_url, ckan_id, ckan_info):
         env = Environment(loader=FileSystemLoader(tmpldir))
  
         if ckan_info['source'] == 'arcgis':
-            log.info('ArcGIS detected. Converting ArcGIS JSON to ISO XML')
+            log.info('ArcGIS detected. Converting ArcGIS JSON to ISO XML: %s' % ckan_id)
             env.filters['to_date'] = to_date
             tmpl = 'arcgisjson2iso.xml'
         else:
-            log.info('Open Data JSON detected. Converting to ISO XML')
+            log.info('Open Data JSON detected. Converting to ISO XML: %s' % ckan_id)
             env.filters['keyword_list'] = keyword_list
             tmpl = 'datajson2iso.xml'
 
