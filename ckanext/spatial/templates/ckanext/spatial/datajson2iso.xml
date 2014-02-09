@@ -66,7 +66,7 @@ Sample implementation (Python)
       <gmd:citation>
         <gmd:CI_Citation>
           <gmd:title>
-            <gco:CharacterString>{{ json['title'] }}</gco:CharacterString>
+            <gco:CharacterString>{{ json['title']|e }}</gco:CharacterString>
           </gmd:title>
           <gmd:date>
             <gmd:CI_Date>
@@ -85,15 +85,15 @@ Sample implementation (Python)
         </gmd:CI_Citation>
       </gmd:citation>
       <gmd:abstract>
-        <gco:CharacterString>{{ json['description'] }}</gco:CharacterString>
+        <gco:CharacterString>{{ json['description']|e }}</gco:CharacterString>
       </gmd:abstract>
       <gmd:pointOfContact>
         <gmd:CI_ResponsibleParty>
           <gmd:individualName>
-            <gco:CharacterString>{{ json['contactPoint'] }}</gco:CharacterString>
+            <gco:CharacterString>{{ json['contactPoint']|e }}</gco:CharacterString>
           </gmd:individualName>
           <gmd:organisationName>
-            <gco:CharacterString>{{ json['publisher'] }}</gco:CharacterString>
+            <gco:CharacterString>{{ json['publisher']|e }}</gco:CharacterString>
           </gmd:organisationName>
           <gmd:contactInfo>
             <gmd:CI_Contact>
@@ -115,7 +115,7 @@ Sample implementation (Python)
         <gmd:MD_Keywords>
           {% for kw in json['keyword']|keyword_list %}
           <gmd:keyword>
-            <gco:CharacterString>{{ kw }}</gco:CharacterString>
+            <gco:CharacterString>{{ kw|e }}</gco:CharacterString>
           </gmd:keyword>
           {% endfor %}
           <gmd:type>
@@ -126,7 +126,7 @@ Sample implementation (Python)
       <gmd:resourceConstraints>
         <gmd:MD_Constraints>
           <gmd:useLimitation>
-            <gco:CharacterString>{{ json['accessLevel'] }}</gco:CharacterString>
+            <gco:CharacterString>{{ json['accessLevel']|e }}</gco:CharacterString>
           </gmd:useLimitation>
         </gmd:MD_Constraints>
       </gmd:resourceConstraints>

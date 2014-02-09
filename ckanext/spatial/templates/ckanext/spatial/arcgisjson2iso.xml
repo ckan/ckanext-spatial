@@ -55,7 +55,7 @@ Sample implementation (Python)
       <gmd:citation>
         <gmd:CI_Citation>
           <gmd:title>
-            <gco:CharacterString>{{ json['title'] }}</gco:CharacterString>
+            <gco:CharacterString>{{ json['title']|e }}</gco:CharacterString>
           </gmd:title>
           {% if json['created'] %}
           <gmd:date>
@@ -84,12 +84,12 @@ Sample implementation (Python)
         </gmd:CI_Citation>
       </gmd:citation>
       <gmd:abstract>
-        <gco:CharacterString>{{ json['description'] }}</gco:CharacterString>
+        <gco:CharacterString>{{ json['description']|e }}</gco:CharacterString>
       </gmd:abstract>
       <gmd:pointOfContact>
         <gmd:CI_ResponsibleParty>
           <gmd:individualName>
-            <gco:CharacterString>{{ json['owner'] }}</gco:CharacterString>
+            <gco:CharacterString>{{ json['owner']|e }}</gco:CharacterString>
           </gmd:individualName>
           <gmd:contactInfo>
             <gmd:CI_Contact>
@@ -111,7 +111,7 @@ Sample implementation (Python)
         <gmd:MD_Keywords>
           {% for kw in json['tags'] %}
           <gmd:keyword>
-            <gco:CharacterString>{{ kw }}</gco:CharacterString>
+            <gco:CharacterString>{{ kw|e }}</gco:CharacterString>
           </gmd:keyword>
           {% endfor %}
           <gmd:type>
@@ -123,7 +123,7 @@ Sample implementation (Python)
         <gmd:MD_Keywords>
           {% for kw in json['typeKeywords'] %}
           <gmd:keyword>
-            <gco:CharacterString>{{ kw }}</gco:CharacterString>
+            <gco:CharacterString>{{ kw|e }}</gco:CharacterString>
           </gmd:keyword>
           {% endfor %}
           <gmd:type>
@@ -134,10 +134,10 @@ Sample implementation (Python)
       <gmd:resourceConstraints>
         <gmd:MD_Constraints>
           <gmd:useLimitation>
-            <gco:CharacterString>{{ json['accessInformation'] }}</gco:CharacterString>
+            <gco:CharacterString>{{ json['accessInformation']|e }}</gco:CharacterString>
           </gmd:useLimitation>
           <gmd:useLimitation>
-            <gco:CharacterString>{{ json['licenseInfo'] }}</gco:CharacterString>
+            <gco:CharacterString>{{ json['licenseInfo']|e }}</gco:CharacterString>
           </gmd:useLimitation>
         </gmd:MD_Constraints>
       </gmd:resourceConstraints>
@@ -171,7 +171,7 @@ Sample implementation (Python)
       </gmd:extent>
       {% endif %}
       <gmd:supplementalInformation>
-        <gco:CharacterString>{{ json['snippet'] }}</gco:CharacterString>
+        <gco:CharacterString>{{ json['snippet']|e }}</gco:CharacterString>
       </gmd:supplementalInformation>
     </gmd:MD_DataIdentification>
   </gmd:identificationInfo>
