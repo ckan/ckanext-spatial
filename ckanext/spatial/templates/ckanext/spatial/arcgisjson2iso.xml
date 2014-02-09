@@ -148,6 +148,7 @@ Sample implementation (Python)
       {% else %}
       <gmd:language gco:nilReason="missing"/>
       {% endif %}
+      {% if json['extent'] is defined and json['extent'] is not None %}
       <gmd:extent>
         <gmd:EX_Extent>
           <gmd:geographicElement>
@@ -168,6 +169,7 @@ Sample implementation (Python)
           </gmd:geographicElement>
         </gmd:EX_Extent>
       </gmd:extent>
+      {% endif %}
       <gmd:supplementalInformation>
         <gco:CharacterString>{{ json['snippet'] }}</gco:CharacterString>
       </gmd:supplementalInformation>
