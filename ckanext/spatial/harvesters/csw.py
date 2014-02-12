@@ -84,10 +84,13 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
 
         guids_in_db = set(guid_to_package_id.keys())
 
+	# extract cql filter if any
+        cql_filter = self.source_config.get('cql')
+
         log.debug('Starting gathering for %s' % url)
         guids_in_harvest = set()
         try:
-            for identifier in self.csw.getidentifiers(page=10):
+            for identifier in self.csw.getidentifiers(page=10, cql=cql_filter):
                 try:
                     log.info('Got identifier %s from the CSW', identifier)
                     if identifier is None:
