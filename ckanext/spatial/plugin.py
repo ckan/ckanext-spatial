@@ -1,5 +1,6 @@
 import os
 import re
+import mimetypes
 from logging import getLogger
 
 from pylons import config
@@ -55,6 +56,11 @@ class SpatialMetadata(p.SingletonPlugin):
         p.toolkit.add_public_directory(config, 'public')
         p.toolkit.add_template_directory(config, 'templates')
         p.toolkit.add_resource('public', 'ckanext-spatial')
+
+        # Add media types for common extensions not included in the mimetypes
+        # module
+        mimetypes.add_type('application/json', '.geojson')
+        mimetypes.add_type('application/gml+xml', '.gml')
 
     def create(self, package):
         self.check_spatial_extra(package)
