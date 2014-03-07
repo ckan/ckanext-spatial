@@ -1,3 +1,4 @@
+import mimetypes
 from logging import getLogger
 
 from ckan import plugins as p
@@ -70,6 +71,8 @@ class GeoJSONPreview(p.SingletonPlugin):
 
         self.proxy_enabled = config.get(
             'ckan.resource_proxy_enabled', False)
+
+        mimetypes.add_type('application/json', '.geojson')
 
     def can_preview(self, data_dict):
         format_lower = data_dict['resource']['format'].lower()
