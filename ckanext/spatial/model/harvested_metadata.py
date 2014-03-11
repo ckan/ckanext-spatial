@@ -379,6 +379,29 @@ class ISOBrowseGraphic(ISOElement):
     ]
 
 
+class ISOKeyword(ISOElement):
+
+    elements = [
+        ISOElement(
+            name="keyword",
+            search_paths=[
+                "gmd:keyword/gco:CharacterString/text()",
+            ],
+            multiplicity="*",
+        ),
+        ISOElement(
+            name="type",
+            search_paths=[
+                "gmd:type/gmd:MD_KeywordTypeCode/@codeListValue",
+                "gmd:type/gmd:MD_KeywordTypeCode/text()",
+            ],
+            multiplicity="0..1",
+        ),
+        # If Thesaurus information is needed at some point, this is the
+        # place to add it
+   ]
+
+
 class ISODocument(MappedXmlDocument):
 
     # Attribute specifications from "XPaths for GEMINI" by Peter Parslow.
@@ -499,6 +522,14 @@ class ISODocument(MappedXmlDocument):
             ],
             multiplicity="*",
         ),
+        ISOKeyword(
+            name="keywords",
+            search_paths=[
+                "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords",
+                "gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords",
+            ],
+            multiplicity="*"
+        ),
         ISOElement(
             name="keyword-inspire-theme",
             search_paths=[
@@ -507,18 +538,11 @@ class ISODocument(MappedXmlDocument):
             ],
             multiplicity="*",
         ),
+        # Deprecated: kept for backwards compatibilty
         ISOElement(
             name="keyword-controlled-other",
             search_paths=[
-                "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString/text()",
-                "gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString/text()",
                 "gmd:identificationInfo/srv:SV_ServiceIdentification/srv:keywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString/text()",
-            ],
-            multiplicity="*",
-        ),
-        ISOElement(
-            name="keyword-free-text",
-            search_paths=[
             ],
             multiplicity="*",
         ),
@@ -762,7 +786,7 @@ class ISODocument(MappedXmlDocument):
 
     def infer_tags(self, values):
         tags = []
-        for key in ['keyword-inspire-theme', 'keyword-controlled-other', 'keyword-free-text']:
+        for key in ['keyword-inspire-theme', 'keyword-controlled-other']:
             for item in values[key]:
                 if item not in tags:
                     tags.append(item)
