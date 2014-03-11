@@ -158,49 +158,6 @@ class ISOElement(MappedXmlElement):
     }
 
 
-class ISOResponsibleParty(ISOElement):
-
-    elements = [
-        ISOElement(
-            name="organisation-name",
-            search_paths=[
-                "gmd:organisationName/gco:CharacterString/text()",
-            ],
-            multiplicity="0..1",
-        ),
-        ISOElement(
-            name="position-name",
-            search_paths=[
-                "gmd:positionName/gco:CharacterString/text()",
-            ],
-            multiplicity="0..1",
-        ),
-        ISOElement(
-            name="contact-info",
-            search_paths=[
-                "gmd:contactInfo/gmd:CI_Contact",
-            ],
-            multiplicity="0..1",
-            elements = [
-                ISOElement(
-                    name="email",
-                    search_paths=[
-                        "gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString/text()",
-                    ],
-                    multiplicity="0..1",
-                ),
-            ]
-        ),
-        ISOElement(
-            name="role",
-            search_paths=[
-                "gmd:role/gmd:CI_RoleCode/@codeListValue",
-            ],
-            multiplicity="0..1",
-        ),
-    ]
-
-
 class ISOResourceLocator(ISOElement):
 
     elements = [
@@ -240,6 +197,57 @@ class ISOResourceLocator(ISOElement):
             multiplicity="0..1",
         ),
         ]
+
+
+class ISOResponsibleParty(ISOElement):
+
+    elements = [
+        ISOElement(
+            name="organisation-name",
+            search_paths=[
+                "gmd:organisationName/gco:CharacterString/text()",
+            ],
+            multiplicity="0..1",
+        ),
+        ISOElement(
+            name="position-name",
+            search_paths=[
+                "gmd:positionName/gco:CharacterString/text()",
+            ],
+            multiplicity="0..1",
+        ),
+        ISOElement(
+            name="contact-info",
+            search_paths=[
+                "gmd:contactInfo/gmd:CI_Contact",
+            ],
+            multiplicity="0..1",
+            elements = [
+                ISOElement(
+                    name="email",
+                    search_paths=[
+                        "gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString/text()",
+                    ],
+                    multiplicity="0..1",
+                ),
+                ISOResourceLocator(
+                    name="online-resource",
+                    search_paths=[
+                        "gmd:onlineResource/gmd:CI_OnlineResource",
+                    ],
+                    multiplicity="0..1",
+                ),
+
+            ]
+        ),
+        ISOElement(
+            name="role",
+            search_paths=[
+                "gmd:role/gmd:CI_RoleCode/@codeListValue",
+            ],
+            multiplicity="0..1",
+        ),
+    ]
 
 
 class ISODataFormat(ISOElement):
