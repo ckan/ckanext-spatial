@@ -54,19 +54,53 @@ hardcoded 'harvest' user::
 Customizing the harvesters
 --------------------------
 
-The default harvesters provided in this extension can be overriden from
-extensions to customize to your needs. You can either extend ``CswHarvester``,
-``WAFfHarverster`` or the main ``SpatialHarvester`` class. There are some
-extension points that can be safely overriden from your extension. Probably the
-most useful is ``get_package_dict``, which allows to tweak the dataset fields
-before creating or updating them. ``transform_to_iso`` allows to hook into
-transformation mechanisms to transform other formats into ISO1939, the only one
-directly supported byt he spatial harvesters. Finally, the whole
-``import_stage`` can be overriden if the default logic does not suit your
-needs.
+The default harvesters provided in this extension can be extended from
+extensions implementing the ``ISpatialHarvester`` interface.
 
-Check the source code of ``ckanext/spatial/harvesters/base.py`` for more
-details on these functions.
+Probably the most useful extension point is ``get_package_dict``, which
+allows to tweak the dataset fields before creating or updating them::
+
+    import ckan.plugins as p
+    from ckanext.spatial.interfaces import ISpatialHarvester
+
+    class MyPlugin(p.SingletonPlugin):
+
+        p.implements(ISpatialHarvester, inherit=True)
+
+        def get_package_dict(self, context, data_dict):
+
+            # Check the reference below to see all that's included on data_dict
+
+            package_dict = data_dict['package_dict']
+            iso_values = data_dict['iso_values']
+
+            package_dict['extras'].append(
+                {'key': 'topic-category', 'value': iso_values.get('topic-category')}
+            )
+
+            package_dict['extras'].append(
+                {'key': 'my-custom-extra', 'value': 'my-custom-value'}
+            )
+
+            return package_dict
+
+
+
+
+``transform_to_iso`` allows to hook into transformation mechanisms to
+transform other formats into ISO1939, the only one directly supported by
+the spatial harvesters.
+
+Here is the full reference for the provided extension points:
+
+.. autoclass:: ckanext.spatial.interfaces.ISpatialHarvester
+   :members:
+
+If you need to further customize the default behaviour of the harvesters, you
+can either extend ``CswHarvester``, ``WAFfHarverster`` or the main
+``SpatialHarvester`` class., for instance to override the whole
+``import_stage`` if the default logic does not suit your
+needs.
 
 The `ckanext-geodatagov`_ extension contains live examples on how to extend
 the default spatial harvesters and create new ones for other spatial services
