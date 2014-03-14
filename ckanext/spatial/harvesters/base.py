@@ -613,6 +613,8 @@ class SpatialHarvester(HarvesterBase):
         if config_str:
             self.source_config = json.loads(config_str)
             log.debug('Using config: %r', self.source_config)
+        else:
+            self.source_config = {}
 
     def _get_validator(self):
         '''
