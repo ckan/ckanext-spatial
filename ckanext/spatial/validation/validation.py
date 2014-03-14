@@ -120,7 +120,13 @@ class ISO19139EdenSchema(XsdValidator):
         xml - etree of the ISO19139 XML record
         '''
         iso_parser = ISODocument(xml_tree=xml)
-        return iso_parser.read_value('resource-type')[0]
+        record_types = iso_parser.read_value('resource-type')
+        if len(record_types):
+            return record_types[0]
+        else:
+            return 'dataset'
+
+
 
 class ISO19139NGDCSchema(XsdValidator):
     '''

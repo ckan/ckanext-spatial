@@ -410,14 +410,14 @@ class ISOUsage(ISOElement):
             search_paths=[
                 "gmd:specificUsage/gco:CharacterString/text()",
             ],
-            multiplicity="1",
+            multiplicity="0..1",
         ),
         ISOResponsibleParty(
             name="contact-info",
             search_paths=[
                 "gmd:userContactInfo/gmd:CI_ResponsibleParty",
             ],
-            multiplicity="1",
+            multiplicity="0..1",
         ),
 
    ]
@@ -575,7 +575,7 @@ class ISODocument(MappedXmlDocument):
                 "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:purpose/gco:CharacterString/text()",
                 "gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:purpose/gco:CharacterString/text()",
             ],
-            multiplicity="1",
+            multiplicity="0..1",
         ),
         ISOResponsibleParty(
             name="responsible-organisation",
