@@ -95,7 +95,7 @@ class CswService(OwsService):
 
     def getidentifiers(self, qtype=None, typenames="csw:Record", esn="brief",
                        keywords=[], limit=None, page=10, outputschema="gmd",
-                       startposition=0, **kw):
+                       startposition=0, cql=None, **kw):
         from owslib.csw import namespaces
         constraints = []
         csw = self._ows(**kw)
@@ -110,6 +110,7 @@ class CswService(OwsService):
             "startposition": startposition,
             "maxrecords": page,
             "outputschema": namespaces[outputschema],
+            "cql":cql,
             }
         i = 0
         matches = 0
