@@ -203,6 +203,13 @@ class ISOResponsibleParty(ISOElement):
 
     elements = [
         ISOElement(
+            name="individual-name",
+            search_paths=[
+                "gmd:individualName/gco:CharacterString/text()",
+            ],
+            multiplicity="0..1",
+        ),
+        ISOElement(
             name="organisation-name",
             search_paths=[
                 "gmd:organisationName/gco:CharacterString/text()",
