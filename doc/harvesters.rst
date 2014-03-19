@@ -58,7 +58,7 @@ The default harvesters provided in this extension can be extended from
 extensions implementing the ``ISpatialHarvester`` interface.
 
 Probably the most useful extension point is ``get_package_dict``, which
-allows to tweak the dataset fields before creating or updating them::
+allows to tweak the dataset fields before creating or updating it::
 
     import ckan.plugins as p
     from ckanext.spatial.interfaces import ISpatialHarvester

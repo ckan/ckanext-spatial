@@ -15,9 +15,15 @@ class ISpatialHarvester(Interface):
         unlikely in a particular instance, this method could be implemented by
         more than one plugin.
 
+        If a dict is not returned by this function, the import stage will be
+        cancelled.
+
+        .. note:: Make sure to run ``model.Session.flush()`` if you perform
+                  queries using the model included in the ``context`` object.
+
 
         :param context: Contains a reference to the model, eg to
-                        perform DB queries
+                        perform DB queries.
         :type context: dict
         :param data_dict: Available data. Contains three keys:
 
