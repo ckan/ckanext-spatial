@@ -39,6 +39,16 @@ All commands assume an existing CKAN database named ``ckan_default``.
 
 #. Change the owner to spatial tables to the CKAN user to avoid errors later
    on::
+   
+   Open the Postgres console::
+   
+        $ sudo -u postgres psql
+        
+   Connect to the ``ckan_default`` database::
+        
+        postgres=# \c ckan_default
+        
+   Change the ownership for two spatial tables::
 
         ALTER TABLE spatial_ref_sys OWNER TO ckan_default;
         ALTER TABLE geometry_columns OWNER TO ckan_default;
