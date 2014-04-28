@@ -39,6 +39,16 @@ All commands assume an existing CKAN database named ``ckan_default``.
 
 #. Change the owner to spatial tables to the CKAN user to avoid errors later
    on::
+   
+   Open the Postgres console::
+   
+        $ sudo -u postgres psql
+        
+   Connect to the ``ckan_default`` database::
+        
+        postgres=# \c ckan_default
+        
+   Change the ownership for two spatial tables::
 
         ALTER TABLE spatial_ref_sys OWNER TO ckan_default;
         ALTER TABLE geometry_columns OWNER TO ckan_default;
@@ -75,17 +85,17 @@ Install the extension
 
    To target the latest CKAN core release::
 
-     (pyenv) $ pip install -e git+https://github.com/okfn/ckanext-spatial.git@stable#egg=ckanext-spatial
+     (pyenv) $ pip install -e "git+https://github.com/okfn/ckanext-spatial.git@stable#egg=ckanext-spatial"
 
    To target an old release (if a release branch exists, otherwise use
    ``stable``)::
 
-     (pyenv) $ pip install -e git+https://github.com/okfn/ckanext-spatial.git@release-v1.8#egg=ckanext-spatial
+     (pyenv) $ pip install -e "git+https://github.com/okfn/ckanext-spatial.git@release-v1.8#egg=ckanext-spatial"
 
    To target CKAN ``master``, use the extension ``master`` branch (ie no
    branch defined)::
 
-    (pyenv) $ pip install -e git+https://github.com/okfn/ckanext-spatial.git#egg=ckanext-spatial
+    (pyenv) $ pip install -e "git+https://github.com/okfn/ckanext-spatial.git#egg=ckanext-spatial"
 
 
 2. Install the rest of python modules required by the extension::
