@@ -64,7 +64,7 @@ Setup
 1. Install pycsw. There are several options for this, depending on your
    server setup, check the `pycsw documentation`_.
 
-   .. note:: CKAN integration requires at least pycsw version 1.6.1. Make sure
+   .. note:: CKAN integration requires at least pycsw version 1.8.0. Make sure
              to install at least this version.
 
    The following instructions assume that you have installed CKAN via a
@@ -78,8 +78,8 @@ Setup
 
     git clone https://github.com/geopython/pycsw.git
     cd pycsw
-    # Remember to use at least pycsw 1.6.1
-    git checkout 1.6.1
+    # Remember to use at least pycsw 1.8.0
+    git checkout 1.8.0
     pip install -e .
     python setup.py build
     python setup.py install
@@ -136,13 +136,6 @@ Setup
 
     cd /usr/lib/ckan/default/src/ckanext-spatial
     paster ckan-pycsw load -p /etc/ckan/default/pycsw.cfg
-
-   .. note:: If you get errors similar to this one, this is caused by
-        limitations on the pycsw model definition. This should be fixed in
-        future versions of pycsw::
-
-            ERROR: not inserted f8d48eaf-780b-40b8-a502-7a903fde5b1c Error:ERROR: value too long for type character varying(256)
-
 
    When the loading is finished, check that results are returned when visiting
    this link:
