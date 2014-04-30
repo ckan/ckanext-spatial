@@ -5,6 +5,7 @@ import urlparse
 import logging
 
 from ckan import model
+from ckan.lib.helpers import json
 
 from ckan.plugins.core import SingletonPlugin, implements
 
@@ -61,6 +62,27 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
 
     def output_schema(self):
         return 'gmd'
+
+    def validate_config(self, source_config):
+        source_config = super(CSWHarvester, self).validate_config(source_config)
+        if not source_config:
+            return source_config
+
+        try:
+            source_config_obj = json.loads(source_config)
+
+            require_keywords = source_config_obj.get('require_keywords', None)
+            if require_keywords is not None:
+                if not isinstance(require_keywords, list):
+                    raise ValueError('require_keywords must be a list')
+                for keyword in require_keywords:
+                    if not isinstance(keyword, basestring):
+                        raise ValueError('require_keyword values must be strings')
+
+        except ValueError, e:
+            raise e
+
+        return source_config
 
     def gather_stage(self, harvest_job):
         log = logging.getLogger(__name__ + '.CSW.gather')
@@ -142,7 +164,13 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
 
         return ids
 
-    def fetch_stage(self,harvest_object):
+    def _get_extra(self, harvest_object, key):
+        for extra in harvest_object.extras:
+            if extra.key == key:
+                return extra
+        return None
+
+    def fetch_stage(self, harvest_object):
         log = logging.getLogger(__name__ + '.CSW.fetch')
         log.debug('CswHarvester fetch_stage for object: %s', harvest_object.id)
 
@@ -165,6 +193,24 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
             self._save_object_error('Empty record for GUID %s' % identifier,
                                     harvest_object)
             return False
+
+        source_config = json.loads(harvest_object.source.config) if harvest_object.source.config else {}
+        require_keywords = source_config.get('require_keywords', None)
+        if require_keywords:
+            record_keywords = set()
+            for keyword_container in record.get('identification', {}).get('keywords', []):
+                keywords = keyword_container.get('keywords', None)
+                if keywords and isinstance(keywords, list):
+                    record_keywords.update(keywords)
+
+            if not set(require_keywords).issubset(record_keywords):
+                status_extra = self._get_extra(harvest_object, 'status')
+                if status_extra is None:
+                    self._save_object_error('No status set for object with GUID %s' % identifier,
+                                            harvest_object)
+                    return False
+                status_extra.value = 'delete'
+                status_extra.save()
 
         try:
             # Save the fetch contents in the HarvestObject

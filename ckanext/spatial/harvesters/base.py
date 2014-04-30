@@ -137,6 +137,10 @@ class SpatialHarvester(HarvesterBase):
                 if len(unknown_profiles) > 0:
                     raise ValueError('Unknown validation profile(s): %s' % ','.join(unknown_profiles))
 
+            if 'default_extras' in source_config_obj:
+                if not isinstance(source_config_obj['default_extras'], dict):
+                    raise ValueError('default_extras must be a dictionary')
+
         except ValueError, e:
             raise e
 
@@ -416,9 +420,9 @@ class SpatialHarvester(HarvesterBase):
         if status == 'delete':
             # Delete package
             context = {'model': model, 'session': model.Session, 'user': self._get_user_name()}
-
-            p.toolkit.get_action('package_delete')(context, {'id': harvest_object.package_id})
-            log.info('Deleted package {0} with guid {1}'.format(harvest_object.package_id, harvest_object.guid))
+            if harvest_object.package_id:
+                p.toolkit.get_action('package_delete')(context, {'id': harvest_object.package_id})
+                log.info('Deleted package {0} with guid {1}'.format(harvest_object.package_id, harvest_object.guid))
 
             return True
 
@@ -500,6 +504,20 @@ class SpatialHarvester(HarvesterBase):
         if not package_dict:
             log.error('No package dict returned, aborting import for object {0}'.format(harvest_object.id))
             return False
+
+        default_extras = self.source_config.get('default_extras', {})
+        if default_extras:
+            if not 'extras' in package_dict:
+                package_dict['extras'] = []
+            for key, value in default_extras.iteritems():
+                if isinstance(value, basestring):
+                    value = value.format(harvest_source_id=harvest_object.job.source.id,
+                                         harvest_source_url=harvest_object.job.source.url.strip('/'),
+                                         harvest_source_title=harvest_object.job.source.title,
+                                         harvest_job_id=harvest_object.job.id,
+                                         harvest_object_id=harvest_object.id)
+
+                    package_dict['extras'].append({'key': key, 'value': value})
 
         # Create / update the package
 
