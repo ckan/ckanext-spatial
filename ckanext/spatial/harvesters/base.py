@@ -23,6 +23,7 @@ from ckan import model
 from ckan.lib.helpers import json
 from ckan import logic
 from ckan.lib.navl.validators import not_empty
+from ckan.lib.search.index import PackageSearchIndex
 
 from ckanext.harvest.harvesters.base import HarvesterBase
 from ckanext.harvest.model import HarvestObject
@@ -559,6 +560,23 @@ class SpatialHarvester(HarvesterBase):
 
                 # Delete the previous object to avoid cluttering the object table
                 previous_object.delete()
+
+                # Reindex the corresponding package to update the reference to the
+                # harvest object
+                if harvest_object.package_id:
+                    context.update({'validate': False, 'ignore_auth': True})
+                    try:
+                        package_dict = logic.get_action('package_show')(context,
+                            {'id': harvest_object.package_id})
+                    except p.toolkit.ObjectNotFound:
+                        pass
+                    else:
+                        for extra in package_dict.get('extras', []):
+                            if extra['key'] == 'harvest_object_id':
+                                extra['value'] = harvest_object.id
+                        if package_dict:
+                            package_index = PackageSearchIndex()
+                            package_index.index_package(package_dict)
 
                 log.info('Document with GUID %s unchanged, skipping...' % (harvest_object.guid))
             else:
