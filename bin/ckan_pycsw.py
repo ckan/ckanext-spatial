@@ -106,6 +106,9 @@ def load(pycsw_config, ckan_url):
             is_collection = True
             if 'collection_package_id' in result['extras']:
                 is_collection = False
+                gathered_records[result['id']]['collection_package_id'] = \
+                    result['extras']['collection_package_id']
+
             gathered_records[result['id']]['ckan_collection'] = is_collection
             if 'source_datajson_identifier' in result['extras']:
                 gathered_records[result['id']]['source'] = 'datajson'
@@ -254,6 +257,8 @@ def get_record(context, repo, ckan_url, ckan_id, ckan_info):
     record.ckan_id = ckan_id
     record.ckan_modified = ckan_info['metadata_modified']
     record.ckan_collection = ckan_info['ckan_collection']
+    if 'collection_package_id' in ckan_info:
+        record.parentidentifier = ckan_info['collection_package_id']
 
     return record
 
