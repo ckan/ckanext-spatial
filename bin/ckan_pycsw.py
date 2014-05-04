@@ -159,6 +159,7 @@ def load(pycsw_config, ckan_url):
         ckan_info = gathered_records[ckan_id]
         record = get_record(context, repo, ckan_url, ckan_id, ckan_info)
         if not record:
+            log.info('Skipped record %s' % ckan_id)
             continue
         update_dict = dict([(getattr(repo.dataset, key),
         getattr(record, key)) \
@@ -192,6 +193,7 @@ def get_record(context, repo, ckan_url, ckan_id, ckan_info):
 
     query = ckan_url + 'harvest/object/%s'
     url = query % ckan_info['harvest_object_id']
+    log.info('Fetching %s' % url)
     response = requests.get(url)
 
     if not response.ok:
@@ -230,17 +232,19 @@ def get_record(context, repo, ckan_url, ckan_id, ckan_info):
     # from here we have an ISO document no matter what
     try:
         try:
-            #log.debug('parsing XML as is')
+            log.debug('parsing XML as is')
             xml = etree.parse(io.BytesIO(content))
         except:
-            #log.debug('parsing XML with .encode("utf8")')
+            log.debug('parsing XML with .encode("utf8")')
             xml = etree.parse(io.BytesIO(content.encode("utf8")))
     except Exception, err:
         log.error('Could not pass xml doc from %s, Error: %s' % (ckan_id, err))
         return
 
     try:
+        log.debug('Parsing ISO XML')
         record = metadata.parse_record(context, xml, repo)[0]
+
     except Exception, err:
         log.error('Could not extract metadata from %s, Error: %s' % (ckan_id, err))
         return
