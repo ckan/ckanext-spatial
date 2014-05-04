@@ -157,10 +157,10 @@ Sample implementation (Python)
                 <gco:Decimal>{{ json['extent'][0][0] }}</gco:Decimal>
               </gmd:westBoundLongitude>
               <gmd:eastBoundLongitude>
-                <gco:Decimal>{{ json['extent'][0][1] }}</gco:Decimal>
+                <gco:Decimal>{{ json['extent'][1][0] }}</gco:Decimal>
               </gmd:eastBoundLongitude>
               <gmd:southBoundLatitude>
-                <gco:Decimal>{{ json['extent'][1][0] }}</gco:Decimal>
+                <gco:Decimal>{{ json['extent'][0][1] }}</gco:Decimal>
               </gmd:southBoundLatitude>
               <gmd:northBoundLatitude>
                 <gco:Decimal>{{ json['extent'][1][1] }}</gco:Decimal>
