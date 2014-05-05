@@ -247,13 +247,35 @@ def get_record(context, repo, ckan_url, ckan_id, ckan_info):
     try:
         log.debug('Parsing ISO XML')
         record = metadata.parse_record(context, xml, repo)[0]
+        if not record.identifier:  # force id into ISO XML
+            log.info('gmd:fileIdentifier is empty. Inserting id %s' % ckan_id)
+
+            record.identifier = ckan_id
+
+            gmd_ns = 'http://www.isotc211.org/2005/gmd'
+            gco_ns = 'http://www.isotc211.org/2005/gco'
+
+            xname = xml.find('{%s}fileIdentifier' % gmd_ns)
+            if xname is None:  # doesn't exist, insert it
+                log.debug('Inserting new gmd:fileIdentifier')
+                fileid = etree.Element('{%s}fileIdentifier' % gmd_ns)
+                etree.SubElement(fileid, '{%s}CharacterString' % gco_ns).text = ckan_id
+                xml.insert(0, fileid)
+            else:  # gmd:fileIdentifier exists, check for gco:CharacterString
+                log.debug('Updating')
+                value = xname.find('{%s}CharacterString' % gco_ns)
+                if value is None:
+                    log.debug('missing gco:CharacterString')
+                    etree.SubElement(xname, '{%s}CharacterString' % gco_ns).text = ckan_id
+                else:
+                    log.debug('empty gco:CharacterString')
+                    value.text = ckan_id
+            record.xml = etree.tostring(xml)
 
     except Exception, err:
         log.error('Could not extract metadata from %s, Error: %s' % (ckan_id, err))
         return
 
-    if not record.identifier:
-        record.identifier = ckan_id
     record.ckan_id = ckan_id
     record.ckan_modified = ckan_info['metadata_modified']
     record.ckan_collection = ckan_info['ckan_collection']
