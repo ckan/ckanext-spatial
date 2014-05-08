@@ -111,6 +111,7 @@ Sample implementation (Python)
           </gmd:role>
         </gmd:CI_ResponsibleParty>
       </gmd:pointOfContact>
+      {% if json['keyword']|keyword_list %}
       <gmd:descriptiveKeywords>
         <gmd:MD_Keywords>
           {% for kw in json['keyword']|keyword_list %}
@@ -123,6 +124,9 @@ Sample implementation (Python)
           </gmd:type>
         </gmd:MD_Keywords>
       </gmd:descriptiveKeywords>
+      {% else %}
+      <gmd:descriptiveKeywords gco:nilReason="missing"/>
+      {% endif %}
       <gmd:resourceConstraints>
         <gmd:MD_Constraints>
           <gmd:useLimitation>
