@@ -23,7 +23,8 @@ class ISpatialHarvester(Interface):
 
 
         :param context: Contains a reference to the model, eg to
-                        perform DB queries.
+                        perform DB queries, and the user name used for
+                        authorization.
         :type context: dict
         :param data_dict: Available data. Contains three keys:
 
@@ -33,6 +34,9 @@ class ISpatialHarvester(Interface):
             * `iso_values`
                The parsed ISO XML document values. These contain more fields
                that are not added by default to the ``package_dict``.
+            * `xml_tree`
+               The full XML etree object. If some values not present in
+               ``iso_values`` are needed, these can be extracted via xpath.
             * `harvest_object`
                A ``HarvestObject`` domain object which contains a reference
                to the original metadata document (``harvest_object.content``)

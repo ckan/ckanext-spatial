@@ -111,6 +111,8 @@ class SpatialHarvester(HarvesterBase):
 
     _user_name = None
 
+    _site_user = None
+
     source_config = {}
 
     force_import = False
@@ -376,6 +378,7 @@ class SpatialHarvester(HarvesterBase):
         context = {
             'model': model,
             'session': model.Session,
+            'user': self._get_user_name(),
         }
 
         log = logging.getLogger(__name__ + '.import')
@@ -402,7 +405,6 @@ class SpatialHarvester(HarvesterBase):
             # Delete package
             context.update({
                 'ignore_auth': True,
-                'user': self._get_user_name(),
             })
             p.toolkit.get_action('package_delete')(context, {'id': harvest_object.package_id})
             log.info('Deleted package {0} with guid {1}'.format(harvest_object.package_id, harvest_object.guid))
@@ -445,7 +447,9 @@ class SpatialHarvester(HarvesterBase):
 
         # Parse ISO document
         try:
-            iso_values = ISODocument(harvest_object.content).read_values()
+
+            iso_parser = ISODocument(harvest_object.content)
+            iso_values = iso_parser.read_values()
         except Exception, e:
             self._save_object_error('Error parsing ISO document for object {0}: {1}'.format(harvest_object.id, str(e)),
                                     harvest_object, 'Import')
@@ -498,6 +502,7 @@ class SpatialHarvester(HarvesterBase):
             package_dict = harvester.get_package_dict(context, {
                 'package_dict': package_dict,
                 'iso_values': iso_values,
+                'xml_tree': iso_parser.xml_tree,
                 'harvest_object': harvest_object,
             })
         if not package_dict:
@@ -506,12 +511,11 @@ class SpatialHarvester(HarvesterBase):
 
         # Create / update the package
         context.update({
-                   'user': self._get_user_name(),
-                   'extras_as_string': True,
-                   'api_version': '2',
-                   'return_id_only': True})
+           'extras_as_string': True,
+           'api_version': '2',
+           'return_id_only': True})
 
-        if context['user'] == self._site_user['name']:
+        if self._site_user and context['user'] == self._site_user['name']:
             context['ignore_auth'] = True
 
 
