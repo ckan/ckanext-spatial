@@ -50,6 +50,20 @@ class ISpatialHarvester(Interface):
         '''
         return data_dict['package_dict']
 
+    def get_validators(self):
+        '''
+        Allows to register custom Validators that can be applied to harvested
+        metadata documents.
+
+        Validators are classes that implement the ``is_valid`` method. Check
+        the `Writing custom validators`_ section in the docs to know more
+        about writing custom validators.
+
+        :returns: A list of Validator classes
+        :rtype: list
+        '''
+        return []
+
     def transform_to_iso(self, original_document, original_format, harvest_object):
         '''
         Transforms an XML document to ISO 19139

@@ -31,7 +31,8 @@ separate stages:
   content into a CKAN dataset: validates the document, parses it, converts it
   to a CKAN dataset dict and saves it in the database.
 
-The extension provides different XSD and schematron based validators. You can
+The extension provides different XSD and schematron based validators, and you
+can also write your own (see `Writing custom validators`_). You can
 specify which validators to use for the remote documents with the following
 configuration option::
 
@@ -84,7 +85,32 @@ allows to tweak the dataset fields before creating or updating it::
 
             return package_dict
 
+``get_validators`` allows to register custom validation classes that can be
+applied to the harvested documents. Check the `Writing custom validators`_
+section to know more about how to write your custom validators::
 
+    import ckan.plugins as p
+    from ckanext.spatial.interfaces import ISpatialHarvester
+    from ckanext.spatial.validation.validation import BaseValidator
+
+    class MyPlugin(p.SingletonPlugin):
+
+        p.implements(ISpatialHarvester, inherit=True)
+
+        def get_validators(self):
+            return [MyValidator]
+
+
+    class MyValidator(BaseValidator):
+
+        name = 'my-validator'
+
+        title= 'My very own validator'
+
+        @classmethod
+        def is_valid(cls, xml):
+
+            return True, []
 
 
 ``transform_to_iso`` allows to hook into transformation mechanisms to
@@ -106,6 +132,101 @@ The `ckanext-geodatagov`_ extension contains live examples on how to extend
 the default spatial harvesters and create new ones for other spatial services
 like ArcGIS REST APIs.
 
+Writing custom validators
+-------------------------
+
+
+Validator classes extend the ``BaseValidator`` class:
+
+.. autoclass:: ckanext.spatial.validation.validation.BaseValidator
+   :members:
+
+Helper classes are provided for XSD and schematron based validation, and
+completely custom logic can be also implemented. Here are some examples of
+the most common types:
+
+* XSD based validators::
+
+    class ISO19139NGDCSchema(XsdValidator):
+        '''
+        XSD based validation for ISO 19139 documents.
+
+        Uses XSD schema from the NOAA National Geophysical Data Center:
+
+        http://ngdc.noaa.gov/metadata/published/xsd/
+
+        '''
+        name = 'iso19139ngdc'
+        title = 'ISO19139 XSD Schema (NGDC)'
+
+        @classmethod
+        def is_valid(cls, xml):
+            xsd_path = 'xml/iso19139ngdc'
+
+            xsd_filepath = os.path.join(os.path.dirname(__file__),
+                                            xsd_path, 'schema.xsd')
+            return cls._is_valid(xml, xsd_filepath, 'NGDC Schema (schema.xsd)')
+
+
+
+* Schematron validators::
+
+    class Gemini2Schematron(SchematronValidator):
+        name = 'gemini2'
+        title = 'GEMINI 2.1 Schematron 1.2'
+
+        @classmethod
+        def get_schematrons(cls):
+            with resource_stream("ckanext.spatial",
+                                 "validation/xml/gemini2/gemini2-schematron-20110906-v1.2.sch") as schema:
+                return [cls.schematron(schema)]
+
+
+* Custom validators::
+
+    class MinimalFGDCValidator(BaseValidator):
+
+        name = 'fgdc_minimal'
+        title = 'FGDC Minimal Validation'
+
+        _elements = [
+            ('Identification Citation Title', '/metadata/idinfo/citation/citeinfo/title'),
+            ('Identification Citation Originator', '/metadata/idinfo/citation/citeinfo/origin'),
+            ('Identification Citation Publication Date', '/metadata/idinfo/citation/citeinfo/pubdate'),
+            ('Identification Description Abstract', '/metadata/idinfo/descript/abstract'),
+            ('Identification Spatial Domain West Bounding Coordinate', '/metadata/idinfo/spdom/bounding/westbc'),
+            ('Identification Spatial Domain East Bounding Coordinate', '/metadata/idinfo/spdom/bounding/eastbc'),
+            ('Identification Spatial Domain North Bounding Coordinate', '/metadata/idinfo/spdom/bounding/northbc'),
+            ('Identification Spatial Domain South Bounding Coordinate', '/metadata/idinfo/spdom/bounding/southbc'),
+            ('Metadata Reference Information Contact Address Type', '/metadata/metainfo/metc/cntinfo/cntaddr/addrtype'),
+            ('Metadata Reference Information Contact Address State', '/metadata/metainfo/metc/cntinfo/cntaddr/state'),
+            ]
+
+        @classmethod
+        def is_valid(cls, xml):
+
+            errors = []
+
+            for title, xpath in cls._elements:
+                element = xml.xpath(xpath)
+                if len(element) == 0 or not element[0].text:
+                    errors.append(('Element not found: {0}'.format(title), None))
+            if len(errors):
+                return False, errors
+
+            return True, []
+
+
+The `validation.py`_ file included in the ckanext-spatial extension contains
+more examples of the different types.
+
+Remember that after registering your own validators you must specify them on
+the following configuration option::
+
+    ckan.spatial.validator.profiles = iso19193eden,my-validator
+
+
+.. _validation.py: https://github.com/ckan/ckanext-spatial/blob/master/ckanext/spatial/validation/validation.py
 
 Harvest Metadata API
 --------------------

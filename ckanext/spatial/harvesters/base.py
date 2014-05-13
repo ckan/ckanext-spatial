@@ -660,6 +660,15 @@ class SpatialHarvester(HarvesterBase):
             else:
                 profiles = DEFAULT_VALIDATOR_PROFILES
             self._validator = Validators(profiles=profiles)
+
+            # Add any custom validators from extensions
+            for plugin_with_validators in p.PluginImplementations(ISpatialHarvester):
+                custom_validators = plugin_with_validators.get_validators()
+                for custom_validator in custom_validators:
+                    if custom_validator not in all_validators:
+                        self._validator.add_validator(custom_validator)
+
+
         return self._validator
 
     def _get_user_name(self):
