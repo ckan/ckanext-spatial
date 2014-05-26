@@ -211,6 +211,8 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
                     return False
                 status_extra.value = 'delete'
                 status_extra.save()
+            else:
+                log.info("Found tagged record with guid %s" % identifier)
 
         try:
             # Save the fetch contents in the HarvestObject
