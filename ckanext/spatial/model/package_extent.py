@@ -1,11 +1,13 @@
 from logging import getLogger
 
 from sqlalchemy import types, Column, Table
-
-from geoalchemy import Geometry, GeometryColumn, GeometryDDL, GeometryExtensionColumn
-from geoalchemy.postgis import PGComparator
-
-
+try:
+    from geoalchemy import Geometry, GeometryColumn, GeometryDDL, GeometryExtensionColumn
+    from geoalchemy.postgis import PGComparator
+    legacy_geoalchemy = True
+except ImportError:
+    from geoalchemy2 import Geometry
+    legacy_geoalchemy = False
 from ckan.lib.base import config
 from ckan import model
 from ckan.model import Session
@@ -67,18 +69,21 @@ def define_spatial_tables(db_srid=None):
     else:
         db_srid = int(db_srid)
 
-    package_extent_table = Table('package_extent', meta.metadata,
-                    Column('package_id', types.UnicodeText, primary_key=True),
-                    GeometryExtensionColumn('the_geom', Geometry(2,srid=db_srid)))
+    if legacy_geoalchemy: 
+        package_extent_table = Table('package_extent', meta.metadata,
+                        Column('package_id', types.UnicodeText, primary_key=True),
+                        GeometryExtensionColumn('the_geom', Geometry(2,srid=db_srid)))
 
 
-    meta.mapper(PackageExtent, package_extent_table, properties={
-            'the_geom': GeometryColumn(package_extent_table.c.the_geom,
-                                            comparator=PGComparator)})
+        meta.mapper(PackageExtent, package_extent_table, properties={
+                'the_geom': GeometryColumn(package_extent_table.c.the_geom,
+                                                comparator=PGComparator)})
+        # enable the DDL extension
+        GeometryDDL(package_extent_table)
+    else:
+        package_extent_table = Table('package_extent', meta.metadata,
+                        Column('package_id', types.UnicodeText, primary_key=True),
+                        Column('the_geom', Geometry('GEOMETRY', srid=db_srid)),
+                        )
 
-    # enable the DDL extension
-    GeometryDDL(package_extent_table)
-
-
-
-
+        meta.mapper(PackageExtent, package_extent_table)

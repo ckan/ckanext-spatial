@@ -1,7 +1,12 @@
 import logging
 from pprint import pprint
-
-from geoalchemy import WKTSpatialElement
+try:
+    from geoalchemy import WKTSpatialElement
+    legacy_geoalchemy = True
+except ImportError:
+    from sqlalchemy import func
+    from geoalchemy2.elements import WKTElement
+    legacy_geoalchemy = False
 
 from shapely.geometry import asShape
 from ckan.model import Session, Package
@@ -30,10 +35,15 @@ class TestPackageExtent(SpatialTestBase):
         geojson = json.loads(self.geojson_examples['point'])
 
         shape = asShape(geojson)
-        package_extent = PackageExtent(package_id=package.id,the_geom=WKTSpatialElement(shape.wkt, self.db_srid))
+        if legacy_geoalchemy:
+            package_extent = PackageExtent(package_id=package.id,the_geom=WKTSpatialElement(shape.wkt, self.db_srid))
+        else:
+            package_extent = PackageExtent(package_id=package.id,the_geom=WKTElement(shape.wkt, self.db_srid))
+
         package_extent.save()
 
         assert package_extent.package_id == package.id
+        # TODO: replace with Session.scalar(func.ST_X(package_extent.the_geom))
         assert Session.scalar(package_extent.the_geom.x) == geojson['coordinates'][0]
         assert Session.scalar(package_extent.the_geom.y) == geojson['coordinates'][1]
         assert Session.scalar(package_extent.the_geom.srid) == self.db_srid
@@ -45,7 +55,11 @@ class TestPackageExtent(SpatialTestBase):
         geojson = json.loads(self.geojson_examples['point'])
 
         shape = asShape(geojson)
-        package_extent = PackageExtent(package_id=package.id,the_geom=WKTSpatialElement(shape.wkt, self.db_srid))
+        if legacy_geoalchemy:
+            package_extent = PackageExtent(package_id=package.id,the_geom=WKTSpatialElement(shape.wkt, self.db_srid))
+        else:
+            package_extent = PackageExtent(package_id=package.id,the_geom=WKTElement(shape.wkt, self.db_srid))
+
         package_extent.save()
         assert Session.scalar(package_extent.the_geom.geometry_type) == 'ST_Point'
 
@@ -53,7 +67,10 @@ class TestPackageExtent(SpatialTestBase):
         geojson = json.loads(self.geojson_examples['polygon'])
 
         shape = asShape(geojson)
-        package_extent.the_geom=WKTSpatialElement(shape.wkt, self.db_srid)
+        if legacy_geoalchemy:
+            package_extent = PackageExtent(package_id=package.id,the_geom=WKTSpatialElement(shape.wkt, self.db_srid))
+        else:
+            package_extent = PackageExtent(package_id=package.id,the_geom=WKTElement(shape.wkt, self.db_srid))
         package_extent.save()
 
         assert package_extent.package_id == package.id
