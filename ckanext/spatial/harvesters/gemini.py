@@ -81,6 +81,14 @@ class GeminiHarvester(SpatialHarvester):
                 raise
 
     def import_gemini_object(self, gemini_string):
+        '''Imports the Gemini metadata into CKAN.
+
+        The harvest_source_reference is an ID that the harvest_source uses
+        for the metadata document. It is the same ID the Coupled Resources
+        use to link dataset and service records.
+
+        Some errors raise Exceptions.
+        '''
         log = logging.getLogger(__name__ + '.import')
         xml = etree.fromstring(gemini_string)
         valid, profile, errors = self._get_validator().is_valid(xml)
@@ -91,7 +99,8 @@ class GeminiHarvester(SpatialHarvester):
 
         unicode_gemini_string = etree.tostring(xml, encoding=unicode, pretty_print=True)
 
-        package = self.write_package_from_gemini_string(unicode_gemini_string)
+        # may raise Exception for errors
+        package_dict = self.write_package_from_gemini_string(unicode_gemini_string)
 
 
     def write_package_from_gemini_string(self, content):
@@ -367,7 +376,6 @@ class GeminiHarvester(SpatialHarvester):
         parties = {}
         owners = []
         publishers = []
-        from nose.tools import set_trace; set_trace()
         for responsible_party in responsible_organisations:
             if responsible_party['role'] == 'owner':
                 owners.append(responsible_party['organisation-name'])

@@ -104,7 +104,6 @@ class TestBboxQueryPerformance(SpatialQueryTestBase):
     # x values for the fixtures
     fixtures_x = [(random.uniform(0, 3), random.uniform(3,9)) \
                    for x in xrange(10)] # increase the number to 1000 say
-
     def test_query(self):
         bbox_dict = self.x_values_to_bbox((2, 7))
         t0 = time.time()
