@@ -568,7 +568,9 @@ class SpatialHarvester(HarvesterBase):
 
                 # Reindex the corresponding package to update the reference to the
                 # harvest object
-                if harvest_object.package_id:
+                if ((config.get('ckanext.spatial.harvest.reindex_unchanged', True) != 'False'
+                    or self.source_config.get('reindex_unchanged') != 'False')
+                    and harvest_object.package_id):
                     context.update({'validate': False, 'ignore_auth': True})
                     try:
                         package_dict = logic.get_action('package_show')(context,

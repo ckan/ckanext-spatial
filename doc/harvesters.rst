@@ -52,6 +52,16 @@ hardcoded 'harvest' user::
 
     ckanext.spatial.harvest.user_name = harvest
 
+When a document has not been updated remotely, the previous harvest object is
+replaced by the current one rather than keeping it, to avoid cluttering the
+``harvest_object`` table. This means that the ``harvest_object_id`` reference
+on the linked dataset needs to be updated, by reindexing it. This will happen
+by default, but if you want to turn it off (eg if you are doing separate
+reindexing) it can be turn off with the following option::
+
+    ckanext.spatial.harvest.reindex_unchanged = False
+
+
 Customizing the harvesters
 --------------------------
 
