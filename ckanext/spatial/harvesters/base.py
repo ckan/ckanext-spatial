@@ -23,12 +23,14 @@ from ckan import model
 from ckan.lib.helpers import json
 from ckan import logic
 from ckan.lib.navl.validators import not_empty
+from ckan.lib.search.index import PackageSearchIndex
 
 from ckanext.harvest.harvesters.base import HarvesterBase
 from ckanext.harvest.model import HarvestObject
 
 from ckanext.spatial.validation import Validators, all_validators
 from ckanext.spatial.model import ISODocument
+from ckanext.spatial.interfaces import ISpatialHarvester
 
 log = logging.getLogger(__name__)
 
@@ -109,6 +111,8 @@ class SpatialHarvester(HarvesterBase):
 
     _user_name = None
 
+    _site_user = None
+
     source_config = {}
 
     force_import = False
@@ -146,10 +150,6 @@ class SpatialHarvester(HarvesterBase):
 
     ## SpatialHarvester
 
-    '''
-    These methods can be safely overridden by classes extending
-    SpatialHarvester
-    '''
 
     def get_package_dict(self, iso_values, harvest_object):
         '''
@@ -157,19 +157,23 @@ class SpatialHarvester(HarvesterBase):
         package_update. See documentation on
         ckan.logic.action.create.package_create for more details
 
-        Tipically, custom harvesters would only want to add or modify the
-        extras, but the whole method can be replaced if necessary. Note that
-        if only minor modifications need to be made you can call the parent
-        method from your custom harvester and modify the output, eg:
+        Extensions willing to modify the dict should do so implementing the
+        ISpatialHarvester interface
 
-            class MyHarvester(SpatialHarvester):
+            import ckan.plugins as p
+            from ckanext.spatial.interfaces import ISpatialHarvester
 
-                def get_package_dict(self, iso_values, harvest_object):
+            class MyHarvester(p.SingletonPlugin):
 
-                    package_dict = super(MyHarvester, self).get_package_dict(iso_values, harvest_object)
+                p.implements(ISpatialHarvester, inherit=True)
 
-                    package_dict['extras']['my-custom-extra-1'] = 'value1'
-                    package_dict['extras']['my-custom-extra-2'] = 'value2'
+                def get_package_dict(self, context, data_dict):
+
+                    package_dict = data_dict['package_dict']
+
+                    package_dict['extras'].append(
+                        {'key': 'my-custom-extra', 'value': 'my-custom-value'}
+                    )
 
                     return package_dict
 
@@ -364,34 +368,18 @@ class SpatialHarvester(HarvesterBase):
 
     def transform_to_iso(self, original_document, original_format, harvest_object):
         '''
-        Transforms an XML document to ISO 19139
-
-        This method will be only called from the import stage if the
-        harvest_object content is null and original_document and
-        original_format harvest object extras exist (eg if an FGDC document
-        was harvested).
-
-        In that case, this method should do the necessary to provide an
-        ISO 1939 like document, otherwise the import process will stop.
-
-
-        :param original_document: Original XML document
-        :type original_document: string
-        :param original_format: Original format (eg 'fgdc')
-        :type original_format: string
-        :param harvest_object: HarvestObject domain object (with access to
-            job and source objects)
-        :type harvest_object: HarvestObject
-
-        :returns: An ISO 19139 document or None if the transformation was not
-            successful
-        :rtype: string
-
+        DEPRECATED: Use the transform_to_iso method of the ISpatialHarvester
+        interface
         '''
-
+        self.__base_transform_to_iso_called = True
         return None
 
     def import_stage(self, harvest_object):
+        context = {
+            'model': model,
+            'session': model.Session,
+            'user': self._get_user_name(),
+        }
 
         log = logging.getLogger(__name__ + '.import')
         log.debug('Import stage for harvest object: %s', harvest_object.id)
@@ -415,8 +403,9 @@ class SpatialHarvester(HarvesterBase):
 
         if status == 'delete':
             # Delete package
-            context = {'model': model, 'session': model.Session, 'user': self._get_user_name()}
-
+            context.update({
+                'ignore_auth': True,
+            })
             p.toolkit.get_action('package_delete')(context, {'id': harvest_object.package_id})
             log.info('Deleted package {0} with guid {1}'.format(harvest_object.package_id, harvest_object.guid))
 
@@ -426,7 +415,16 @@ class SpatialHarvester(HarvesterBase):
         original_document = self._get_object_extra(harvest_object, 'original_document')
         original_format = self._get_object_extra(harvest_object, 'original_format')
         if original_document and original_format:
+            #DEPRECATED use the ISpatialHarvester interface method
+            self.__base_transform_to_iso_called = False
             content = self.transform_to_iso(original_document, original_format, harvest_object)
+            if not self.__base_transform_to_iso_called:
+                log.warn('Deprecation warning: calling transform_to_iso directly is deprecated. ' +
+                         'Please use the ISpatialHarvester interface method instead.')
+
+            for harvester in p.PluginImplementations(ISpatialHarvester):
+                content = harvester.transform_to_iso(original_document, original_format, harvest_object)
+
             if content:
                 harvest_object.content = content
             else:
@@ -449,7 +447,9 @@ class SpatialHarvester(HarvesterBase):
 
         # Parse ISO document
         try:
-            iso_values = ISODocument(harvest_object.content).read_values()
+
+            iso_parser = ISODocument(harvest_object.content)
+            iso_values = iso_parser.read_values()
         except Exception, e:
             self._save_object_error('Error parsing ISO document for object {0}: {1}'.format(harvest_object.id, str(e)),
                                     harvest_object, 'Import')
@@ -495,21 +495,27 @@ class SpatialHarvester(HarvesterBase):
         harvest_object.metadata_modified_date = metadata_modified_date
         harvest_object.add()
 
+
         # Build the package dict
         package_dict = self.get_package_dict(iso_values, harvest_object)
+        for harvester in p.PluginImplementations(ISpatialHarvester):
+            package_dict = harvester.get_package_dict(context, {
+                'package_dict': package_dict,
+                'iso_values': iso_values,
+                'xml_tree': iso_parser.xml_tree,
+                'harvest_object': harvest_object,
+            })
         if not package_dict:
             log.error('No package dict returned, aborting import for object {0}'.format(harvest_object.id))
             return False
 
         # Create / update the package
+        context.update({
+           'extras_as_string': True,
+           'api_version': '2',
+           'return_id_only': True})
 
-        context = {'model': model,
-                   'session': model.Session,
-                   'user': self._get_user_name(),
-                   'extras_as_string': True,
-                   'api_version': '2',
-                   'return_id_only': True}
-        if context['user'] == self._site_user['name']:
+        if self._site_user and context['user'] == self._site_user['name']:
             context['ignore_auth'] = True
 
 
@@ -550,7 +556,7 @@ class SpatialHarvester(HarvesterBase):
         elif status == 'change':
 
             # Check if the modified date is more recent
-            if not self.force_import and harvest_object.metadata_modified_date <= previous_object.metadata_modified_date:
+            if not self.force_import and previous_object and harvest_object.metadata_modified_date <= previous_object.metadata_modified_date:
 
                 # Assign the previous job id to the new object to
                 # avoid losing history
@@ -559,6 +565,25 @@ class SpatialHarvester(HarvesterBase):
 
                 # Delete the previous object to avoid cluttering the object table
                 previous_object.delete()
+
+                # Reindex the corresponding package to update the reference to the
+                # harvest object
+                if ((config.get('ckanext.spatial.harvest.reindex_unchanged', True) != 'False'
+                    or self.source_config.get('reindex_unchanged') != 'False')
+                    and harvest_object.package_id):
+                    context.update({'validate': False, 'ignore_auth': True})
+                    try:
+                        package_dict = logic.get_action('package_show')(context,
+                            {'id': harvest_object.package_id})
+                    except p.toolkit.ObjectNotFound:
+                        pass
+                    else:
+                        for extra in package_dict.get('extras', []):
+                            if extra['key'] == 'harvest_object_id':
+                                extra['value'] = harvest_object.id
+                        if package_dict:
+                            package_index = PackageSearchIndex()
+                            package_index.index_package(package_dict)
 
                 log.info('Document with GUID %s unchanged, skipping...' % (harvest_object.guid))
             else:
@@ -637,6 +662,15 @@ class SpatialHarvester(HarvesterBase):
             else:
                 profiles = DEFAULT_VALIDATOR_PROFILES
             self._validator = Validators(profiles=profiles)
+
+            # Add any custom validators from extensions
+            for plugin_with_validators in p.PluginImplementations(ISpatialHarvester):
+                custom_validators = plugin_with_validators.get_validators()
+                for custom_validator in custom_validators:
+                    if custom_validator not in all_validators:
+                        self._validator.add_validator(custom_validator)
+
+
         return self._validator
 
     def _get_user_name(self):
