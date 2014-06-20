@@ -86,7 +86,7 @@ class CatalogueServiceWebController(BaseController):
             req["maxRecords"] = int(maxRecords)
         except:
             err = self._exception(exceptionCode="InvalidParameterValue", locator="maxRecords",
-                                  text=unicode(startPosition))
+                                  text=unicode(maxRecords))
             return self._render_xml(err)
         req["id"] = [req["id"]] if "id" in req else []
         return ops[req["request"]](req)
