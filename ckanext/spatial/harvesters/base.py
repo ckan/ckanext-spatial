@@ -75,7 +75,7 @@ def guess_resource_format(url, use_mimetypes=True):
 
     resource_types = {
         # OGC
-        'wms': ('service=wms', 'geoserver/wms', 'mapserver/wmsserver', 'com.esri.wms.Esrimap'),
+        'wms': ('service=wms', 'geoserver/wms', 'mapserver/wmsserver', 'com.esri.wms.Esrimap', 'service/wms'),
         'wfs': ('service=wfs', 'geoserver/wfs', 'mapserver/wfsserver', 'com.esri.wfs.Esrimap'),
         'wcs': ('service=wcs', 'geoserver/wcs', 'imageserver/wcsserver', 'mapserver/wcsserver'),
         'sos': ('service=sos',),
@@ -141,6 +141,19 @@ class SpatialHarvester(HarvesterBase):
                 if len(unknown_profiles) > 0:
                     raise ValueError('Unknown validation profile(s): %s' % ','.join(unknown_profiles))
 
+            if 'default_tags' in source_config_obj:
+                if not isinstance(source_config_obj['default_tags'],list):
+                    raise ValueError('default_tags must be a list')
+
+            if 'default_extras' in source_config_obj:
+                if not isinstance(source_config_obj['default_extras'],dict):
+                    raise ValueError('default_extras must be a dictionary')
+
+            for key in ('override_extras'):
+                if key in source_config_obj:
+                    if not isinstance(source_config_obj[key],bool):
+                        raise ValueError('%s must be boolean' % key)
+
         except ValueError, e:
             raise e
 
@@ -195,6 +208,12 @@ class SpatialHarvester(HarvesterBase):
             for tag in iso_values['tags']:
                 tag = tag[:50] if len(tag) > 50 else tag
                 tags.append({'name': tag})
+
+        # Add default_tags from config
+        default_tags = self.source_config.get('default_tags',[])
+        if default_tags:
+           for tag in default_tags:
+              tags.append({'name': tag})
 
         package_dict = {
             'title': iso_values['title'],
@@ -354,6 +373,23 @@ class SpatialHarvester(HarvesterBase):
                             'resource_locator_function': resource_locator.get('function') or '',
                         })
                     package_dict['resources'].append(resource)
+
+
+        # Add default_extras from config
+        default_extras = self.source_config.get('default_extras',{})
+        if default_extras:
+           override_extras = self.source_config.get('override_extras',False)
+           for key,value in default_extras.iteritems():
+              log.debug('Processing extra %s', key)
+              if not key in extras or override_extras:
+                 # Look for replacement strings
+                 if isinstance(value,basestring):
+                    value = value.format(harvest_source_id=harvest_object.job.source.id,
+                             harvest_source_url=harvest_object.job.source.url.strip('/'),
+                             harvest_source_title=harvest_object.job.source.title,
+                             harvest_job_id=harvest_object.job.id,
+                             harvest_object_id=harvest_object.id)
+                 extras[key] = value
 
         extras_as_dict = []
         for key, value in extras.iteritems():
