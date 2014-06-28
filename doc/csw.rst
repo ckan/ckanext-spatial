@@ -112,7 +112,7 @@ Setup
     [repository]
     database=postgresql://ckan_default:pass@localhost/pycsw
 
-   The rest of the options are described `here <http://pycsw.org/docs/latest/configuration.html>`_.
+   The rest of the options are described `here <http://docs.pycsw.org/en/latest/configuration.html>`_.
 
 4. Setup the pycsw table. This is done with the ``ckan-pycsw`` paster command
    (Remember to have the virtualenv activated when running it)::
@@ -177,7 +177,7 @@ keep CKAN and pycsw in sync, and serve pycsw with Apache + mod_wsgi like CKAN.
   This `Wikipedia page <http://en.wikipedia.org/wiki/Cron#CRON_expression>`_
   has a good overview of the crontab syntax.
 
-* To run pycsw under Apache check the pycsw `installation documentation <http://pycsw.org/docs/latest/installation.html#running-on-wsgi>`_
+* To run pycsw under Apache check the pycsw `installation documentation <http://docs.pycsw.org/en/latest/installation.html#running-on-wsgi>`_
   or follow these quick steps (they assume the paths used in previous steps):
 
   - Edit ``/etc/apache2/sites-available/ckan_default`` and add the following
@@ -260,7 +260,7 @@ The equivalent example to the one above for asking the cabailities is::
 OWSLib is the library used to actually perform the queries.
 
 .. _pycsw: http://pycsw.org 
-.. _pycsw documentation: http://pycsw.org/docs/latest/installation.html
+.. _pycsw documentation: http://docs.pycsw.org/en/latest/installation.html
 .. _package install: http://docs.ckan.org/en/latest/install-from-package.html
 .. _CSW: http://www.opengeospatial.org/standards/cat
 
