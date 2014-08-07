@@ -356,7 +356,8 @@ class SpatialHarvester(HarvesterBase):
                 url = resource_locator.get('url', '').strip()
                 if url:
                     resource = {}
-                    resource['format'] = guess_resource_format(url)
+                    format_from_url = guess_resource_format(url)
+                    resource['format'] = format_from_url if format_from_url else iso_values.get('format', '')
                     if resource['format'] == 'wms' and config.get('ckanext.spatial.harvest.validate_wms', False):
                         # Check if the service is a view service
                         test_url = url.split('?')[0] if '?' in url else url
