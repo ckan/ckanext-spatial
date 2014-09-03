@@ -168,7 +168,7 @@ class CswService(OwsService):
         ## strip off the enclosing results container, we only want the metadata
         #md = csw._exml.find("/gmd:MD_Metadata")#, namespaces=namespaces)
         # Ordinary Python version's don't support the metadata argument
-        md = csw._exml.find("/{http://www.isotc211.org/2005/gmd}MD_Metadata")
+        md = csw._exml.find("/{http://www.isotc211.org/2005/gmd}MD_Metadata") or csw._exml.find("/{http://www.isotc211.org/2005/gmi}MI_Metadata")
         mdtree = etree.ElementTree(md)
         try:
             record["xml"] = etree.tostring(mdtree, pretty_print=True, encoding=unicode)
