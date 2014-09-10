@@ -11,7 +11,7 @@ The extension adds a spatial field to the default CKAN dataset schema,
 using PostGIS_ as the backend. This allows to perform spatial queries and
 display the dataset extent on the frontend. It also provides harvesters to
 import geospatial metadata into CKAN from other sources, as well as commands
-to support the CSW standard. Finally, it also includes plugins to preview
+to support the OGC CSW standard via pycsw_. Finally, it also includes plugins to preview
 spatial formats such as GeoJSON_.
 
 
@@ -31,4 +31,4 @@ Contents:
 .. _CKAN Documentation: http://docs.ckan.org
 .. _PostGIS: http://postgis.org
 .. _GeoJSON: http://geojson.org
-
+.. _pycsw: http://pycsw.org
