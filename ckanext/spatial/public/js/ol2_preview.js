@@ -6,6 +6,8 @@ var EPSG4326 = new OpenLayers.Projection("EPSG:4326")
 var Mercator = new OpenLayers.Projection("EPSG:3857")
 var CRS84 = new OpenLayers.Projection("urn:x-ogc:def:crs:EPSG:4326")
 
+var MAX_FEATURES = 300
+
 /*
 var default_style = OpenLayers.Util.extend({}, OpenLayers.Feature.Vector.style['default']);
 default_style.fillOpacity = 0.2;
@@ -416,7 +418,7 @@ this.ckan.module('olpreview', function (jQuery, _) {
                                         //style: default_style,
                                         ftDescr: candidate,
                                         title: candidate.title,
-                                        strategies: [new OpenLayers.Strategy.BBOXWithMax({maxFeatures: 300, ratio: 1})],
+                                        strategies: [new OpenLayers.Strategy.BBOXWithMax({maxFeatures: MAX_FEATURES, ratio: 1})],
                                         projection: Mercator,
                                         visibility: idx==0,
                                         protocol: new OpenLayers.Protocol.WFS({
@@ -426,7 +428,7 @@ this.ckan.module('olpreview', function (jQuery, _) {
                                             featureType: candidate.name,
                                             srsName: Mercator,
                                             featureNS: undefined,
-                                            maxFeatures: 300,
+                                            maxFeatures: MAX_FEATURES,
                                             geometryName: geomProps[0].name
                                         })
                                     })
@@ -559,7 +561,7 @@ this.ckan.module('olpreview', function (jQuery, _) {
             descriptor.name,
             {
                 projection: EPSG4326,
-                strategies: [new OpenLayers.Strategy.BBOXWithMax({maxFeatures: 300, ratio: 1})],
+                strategies: [new OpenLayers.Strategy.BBOXWithMax({maxFeatures: MAX_FEATURES, ratio: 1})],
                 visibility: visible,
                 protocol: new OpenLayers.Protocol.Script({
                     url: url +   //build ArcGIS Server query string
