@@ -45,8 +45,8 @@ def proxy_service(self, context, data_dict):
 
         cl = r.headers['content-length']
         if cl and int(cl) > MAX_FILE_SIZE:
-            base.abort(409, '''Content is too large to be proxied. Allowed
-                file size: {allowed}, Content-Length: {actual}.'''.format(
+            base.abort(409, ('''Content is too large to be proxied. Allowed
+                file size: {allowed}, Content-Length: {actual}. Url: '''+url).format(
                 allowed=MAX_FILE_SIZE, actual=cl))
 
         base.response.content_type = r.headers['content-type']
@@ -58,8 +58,9 @@ def proxy_service(self, context, data_dict):
             length += len(chunk)
 
             if length >= MAX_FILE_SIZE:
-                base.abort(409, headers={'content-encoding': ''},
-                           detail='Content is too large to be proxied.')
+                base.abort(409, ('''Content is too large to be proxied. Allowed
+                file size: {allowed}, Content-Length: {actual}. Url: '''+url).format(
+                    allowed=MAX_FILE_SIZE, actual=length))
 
     except requests.exceptions.HTTPError, error:
         details = 'Could not proxy resource. Server responded with %s %s' % (
