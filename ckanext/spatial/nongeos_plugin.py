@@ -165,7 +165,6 @@ class OpenlayersPreview(p.SingletonPlugin):
             #mimetype = mimetypes.guess_type(data_dict['resource']['url'])
             parsedUrl = urlparse.urlparse(data_dict['resource']['url'])
             format_lower = os.path.splitext(parsedUrl.path)[1][1:].encode('ascii','ignore').lower()
-
         correct_format = format_lower in self.FORMATS
         can_preview_from_domain = self.proxy_enabled or data_dict['resource']['on_same_domain']
         quality = 2
@@ -180,11 +179,10 @@ class OpenlayersPreview(p.SingletonPlugin):
                             'quality': quality}
             else:
                 return {'can_preview': False, 'quality': quality}
-
         return correct_format and can_preview_from_domain
 
     def preview_template(self, context, data_dict):
-        return 'dataviewer/openlayers2.html'
+            return 'dataviewer/publica.html'
 
     def before_map(self, m):
         m.connect('/dataset/{id}/resource/{resource_id}/service_proxy',

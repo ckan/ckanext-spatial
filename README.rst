@@ -2,8 +2,6 @@
 ckanext-spatial - Geo related plugins for CKAN
 ==============================================
 
-test change
-
 
 This extension contains plugins that add geospatial capabilities to CKAN_,
 including:
