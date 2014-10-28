@@ -6,8 +6,14 @@ from ckan.lib.base import config
 
 from ckanext.spatial.model import PackageExtent
 from shapely.geometry import asShape
+try:
+    from geoalchemy import WKTSpatialElement
+    legacy_geoalchemy = True
+except ImportError:
+    from sqlalchemy import func
+    from geoalchemy2.elements import WKTElement
+    legacy_geoalchemy = False
 
-from geoalchemy import WKTSpatialElement
 
 log = logging.getLogger(__name__)
 
@@ -47,12 +53,16 @@ def save_package_extent(package_id, geometry = None, srid = None):
     existing_package_extent = Session.query(PackageExtent).filter(PackageExtent.package_id==package_id).first()
 
     if geometry:
+        #TODO: use geoalchemy2 to_shape
         shape = asShape(geometry)
 
         if not srid:
             srid = db_srid
+        if legacy_geoalchemy:
+            package_extent = PackageExtent(package_id=package_id,the_geom=WKTSpatialElement(shape.wkt, srid))
+        else:
+            package_extent = PackageExtent(package_id=package_id,the_geom=WKTElement(shape.wkt, srid))
 
-        package_extent = PackageExtent(package_id=package_id,the_geom=WKTSpatialElement(shape.wkt, srid))
 
     # Check if extent exists
     if existing_package_extent:
@@ -125,11 +135,20 @@ def _bbox_2_wkt(bbox, srid):
                                         maxx=bbox['maxx'],
                                         maxy=bbox['maxy'])
 
-    if srid and srid != db_srid:
-        # Input geometry needs to be transformed to the one used on the database
-        input_geometry = functions.transform(WKTSpatialElement(wkt,srid),db_srid)
+    if legacy_geoalchemy:
+        if srid and srid != db_srid:
+            # Input geometry needs to be transformed to the one used on the database
+            input_geometry = functions.transform(WKTSpatialElement(wkt, srid), db_srid)
+        else:
+            input_geometry = WKTSpatialElement(wkt, db_srid)
     else:
-        input_geometry = WKTSpatialElement(wkt,db_srid)
+        if srid and srid != db_srid:
+            # Input geometry needs to be transformed to the one used on the database
+            input_geometry = func.ST_Transform(WKTElement(wkt, srid), db_srid)
+        else:
+            input_geometry = WKTElement(wkt, db_srid)
+
+
     return input_geometry
 
 def bbox_query(bbox,srid=None):
