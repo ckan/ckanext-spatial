@@ -97,7 +97,7 @@ this.ckan.module('olpreview2', function (jQuery, _) {
                     bbox: bboxfloat,
 
                 // layer: 'osm:water_areas&bbox=-190000,-190000,200000,200000,EPSG:3857',
-                    url: url+ '?service=WFS&version=1.1.0&request=GetFeature&typename='+name+'&srsname=EPSG:4326&outputFormat=json&maxFeatures=1',
+                    url: url+ '?service=WFS&version=1.1.0&request=GetFeature&typename='+name+'&srsname=EPSG:4326&outputFormat=json&maxFeatures=1000',
             //&outputFormat=json
                     //&bbox=-8932736.873518838,5381166.791276408,-8922952.933898335,5390950.730896911,EPSG:3857
                 };
