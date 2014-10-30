@@ -21,49 +21,8 @@
 
 {# publicamundi #}    
     <script src="{{ h.urls_for_resource('ckanext-reclinepreview/vendor/underscore/1.4.2/underscore.js')[-1] }}"></script>
-    <!-- <script src="http://dev.openlayers.org/OpenLayers.js"></script> -->
      <script src="{{ h.url_for_static('/js/lib/jQuery/jquery-2.1.0.min.js') }}" ></script>
-     {#   <script src="{{ h.url_for_static('/js/lib/OpenLayers/build/ol-whitespace.js') }}"></script> 
-    <script src="{{ h.url_for_static('/js/lib/PublicaMundi/PublicaMundi.js') }}"></script> 
-    <script src="{{ h.url_for_static('/js/lib/PublicaMundi/PublicaMundi.OpenLayers.js') }}"></script> 
-    <script src="{{ h.url_for_static('/js/lib/PublicaMundi/map/Map.js') }}"></script> 
-    <script src="{{ h.url_for_static('/js/lib/PublicaMundi/map/ol/Map.js') }}"></script> 
-    <script src="{{ h.url_for_static('/js/lib/PublicaMundi/layer/Layer.js') }}"></script> 
-    <script src="{{ h.url_for_static('/js/lib/PublicaMundi/layer/ol/Layer.Tile.js') }}"></script> 
-    <script src="{{ h.url_for_static('/js/lib/PublicaMundi/layer/ol/Layer.WMS.js') }}"></script> 
-    <script src="{{ h.url_for_static('/js/lib/PublicaMundi/layer/ol/Layer.GeoJson.js') }}"></script> 
-    <script src="{{ h.url_for_static('/js/lib/PublicaMundi/layer/ol/Layer.KML.js') }}"></script> 
-    #}
-    {# 
-    js/lib/OpenLayers/build/ol-whitespace.js
-    js/lib/PublicaMundi/PublicaMundi.js
-    js/lib/PublicaMundi/PublicaMundi.OpenLayers.js
-    js/lib/PublicaMundi/map/Map.js
-    js/lib/PublicaMundi/map/ol/Map.js
-    js/lib/PublicaMundi/layer/Layer.js
-    js/lib/PublicaMundi/layer/ol/Layer.Tile.js
-    js/lib/PublicaMundi/layer/ol/Layer.WMS.js
-    js/lib/PublicaMundi/layer/ol/Layer.GeoJson.js
-    js/lib/PublicaMundi/layer/ol/Layer.KML.js
-
-    js/lib/azgs-leaflet/js/azgs-leaflet/GeoJSON.WFS.ClickResponder.js
-    js/lib/azgs-leaflet/js/lib/jade.js
-    js/lib/azgs-leaflet/js/lib/less-1.2.2.min.js
-    #}
-
-    {#   <!-- TODO : use local version of OL 2.0 -->
-     <script src="http://dev.openlayers.org/OpenLayers.js"></script> 
-      <script src="{{ h.url_for_static('/js/lib/OpenLayers/build/ol-whitespace.js') }}"></script> 
-      <script src="{{ h.url_for_static('/js/lib/PublicaMundi/PublicaMundi.js') }}"></script> 
-      <script src="{{ h.url_for_static('/js/lib/PublicaMundi/map/Map.js') }}"></script> 
-      <script src="{{ h.url_for_static('/js/lib/PublicaMundi/map/ol/Map.js') }}"></script> 
-      <script src="{{ h.url_for_static('/js/lib/PublicaMundi/layer/ol/Layer.WMS.js') }}"></script> 
-      <script src="{{ h.url_for_static('/js/lib/PublicaMundi/layer/ol/Layer.GeoJson.js') }}"></script> 
-      <script src="{{ h.url_for_static('/js/lib/PublicaMundi/layer/ol/Layer.KML.js') }}"></script> #}
-        
-    <!-- <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script> -->
-
-
+   
     <script>
        var CKAN_GAPI_KEY = "{{ c.gapi_key }}"
    </script>
@@ -74,10 +33,10 @@
 {# remove any ckan styles #}
 {% block styles %}
     <link rel="stylesheet" href="{{ h.url_for_static('/css/bootstrap.min.css') }}" type="text/css" media="screen, projection" />
-    <!--  <link rel="stylesheet" href="http://dev.openlayers.org/releases/OpenLayers-2.13.1/theme/default/style.css" type="text/css" /> -->
     <link rel="stylesheet" href="{{ h.url_for_static('/css/publica.css')}}"/>
-    <link rel="stylesheet" href="{{ h.url_for_static('/js/lib/OpenLayers/css/ol.css')}}"/>
-    <link rel="stylesheet" href="{{ h.url_for_static('/js/lib/Leaflet/leaflet.css')}}"/>
+
+    <link rel="stylesheet" href="{{ h.url_for_static('/js/lib/PublicaMundi/OpenLayers/css/ol.css')}}"/>
+    <link rel="stylesheet" href="{{ h.url_for_static('/js/lib/PublicaMundi/Leaflet/leaflet.css')}}"/>
     <link rel="stylesheet" href="{{ h.url_for_static('/js/lib/ol3-layerswitcher/src/ol3-layerswitcher.css')}}"/>
   
 {% endblock %}
