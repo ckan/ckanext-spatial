@@ -97,9 +97,8 @@ this.ckan.module('olpreview2', function (jQuery, _) {
                     bbox: bboxfloat,
 
                 // layer: 'osm:water_areas&bbox=-190000,-190000,200000,200000,EPSG:3857',
-                    url: url+ '?service=WFS&version=1.1.0&request=GetFeature&typename='+name+'&srsname=EPSG:4326&outputFormat=json&maxFeatures=1000',
-            //&outputFormat=json
-                    //&bbox=-8932736.873518838,5381166.791276408,-8922952.933898335,5390950.730896911,EPSG:3857
+                    url: url+ '?service=WFS&version=1.1.0&request=GetFeature&typename='+name+'&srsname=EPSG:4326&outputFormat=json'
+                        //&maxFeatures=1000',
                 };
             
                 layerProcessor(ftLayer)
@@ -217,7 +216,6 @@ var withWMSLayers = function (resource, layerProcessor) {
         'gft': function(resource, layerProcessor) {layerProcessor(createGFTLayer(resource))}
     }
 
- 
     var withLayers = function(resource, layerProcessor) {
         var resourceUrl = resource.url
         var proxiedResourceUrl = resource.proxy_url
@@ -226,7 +224,7 @@ var withWMSLayers = function (resource, layerProcessor) {
         var withLayers = layerExtractors[resource.format && resource.format.toLocaleLowerCase()]
         withLayers && withLayers(resource, layerProcessor)
     }
-    
+    var info; 
     // TODO: handle click with overlay
     var onFeatureClick = function (features) {
             alert(JSON.stringify(features));
@@ -253,9 +251,19 @@ var withWMSLayers = function (resource, layerProcessor) {
         _onReady: function () {
 
             var mapDiv = $("<div></div>").attr("id", "map-ol").addClass("map")
-            var info = $("<div></div>").attr("id", "info2")
-            mapDiv.append(info)
+            info = $("<div></div>").attr("id", "info")
+            info.css({
+                    //left: pixel[0] + 'px',
+                    //top: (pixel[1] - 15) + 'px'
+                    left: '20px',
+                    top: '50px'
+                  });
 
+            mapDiv.append(info)
+            info.tooltip({
+                  animation: true,
+                  trigger: 'manual'
+            });
             $("#data-preview2").empty()
             $("#data-preview2").append(mapDiv)
 

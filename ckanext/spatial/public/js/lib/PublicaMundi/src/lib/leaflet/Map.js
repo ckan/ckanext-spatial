@@ -18,7 +18,7 @@
                 var projected = L.point(location[0], location[1]).divideBy(6378137);
                 return L.CRS.EPSG3857.projection.unproject(projected);
             };
-
+    
     PublicaMundi.Leaflet.Map = PublicaMundi.Class(PublicaMundi.Map, {
         initialize: function (options) {
             PublicaMundi.Map.prototype.initialize.call(this, options);
@@ -100,7 +100,9 @@
                 $_.each(layers, function(layer, idx) {
                     layer.update(); 
                 });
+
             });
+
         },
 
 
