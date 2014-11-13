@@ -29,7 +29,14 @@
                     params: options.params
                 })
             });
-        }
+            
+        },
+        setLayerExtent: function() {
+            var layer = this;
+            this._layer.once('postcompose', function() {
+                layer.getMap().setExtent(layer._extent, 'EPSG:4326');
+            });
+        },
     });
 
     PublicaMundi.registry.registerLayerType({

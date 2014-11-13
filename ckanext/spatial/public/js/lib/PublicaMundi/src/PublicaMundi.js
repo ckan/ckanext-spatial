@@ -23,6 +23,7 @@
         TILE: 'Tile',
         GeoJSON: 'GeoJSON',
         KML: 'KML',
+        GML: 'GML',
         GPX: 'GPX',
         CSV: 'CSV',
         WCS: 'WCS',

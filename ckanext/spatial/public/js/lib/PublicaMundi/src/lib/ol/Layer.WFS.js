@@ -33,26 +33,25 @@
                             //'&format_options=callback:loadFeatures',
                             //dataType: 'jsonp',
                             dataType: 'json',
-                            //dataType: 'xml',
+                            //dataType: 'gml',
                             context: this,
                             success: function(response) {
-                                console.log('SUCCESS');
-                                console.log(response);
+                                //console.log('SUCCESS');
+                                //console.log(response);
                                 loadFeatures(response);
                             },
                             failure: function(response) {
-                                console.log('FAILURE');
-                                console.log(response);
+                                //console.log('FAILURE');
+                                //console.log(response);
                             }
                         } )
 
                      },
             });
-            
+
             var loadFeatures = function(response) {
                 vectorSource.addFeatures(vectorSource.readFeatures(response));
                 }
-
 
             this._layer = new ol.layer.Vector({
                 title: options.title,
@@ -65,9 +64,16 @@
                 //projection: 'EPSG:4326'
                // })
             });
+        
+        
             
-            
-        }
+        },
+        setLayerExtent: function() {
+            var layer = this;
+            this._layer.once('postcompose', function() {
+                layer.getMap().setExtent(layer._extent, 'EPSG:4326');
+            });
+        },
     });
 
     PublicaMundi.registry.registerLayerType({

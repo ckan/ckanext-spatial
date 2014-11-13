@@ -16,16 +16,13 @@
 
     PublicaMundi.OpenLayers.Layer.KML = PublicaMundi.Class(PublicaMundi.Layer, {
         
-        getLayerExtent: function () {
-            return this._layer.source_.getExtent();
-        },
-
         initialize: function (options) {
             PublicaMundi.Layer.prototype.initialize.call(this, options);
 
             this._layer = new ol.layer.Vector({
                 title: options.title,
                 source: new ol.source.KML({
+                    extractStyles: false,
                     projection: options.projection,
                     url: options.url
                 }),
@@ -40,8 +37,15 @@
                         })
                 })
             });
+        },
+        setLayerExtent: function() {
+            var layer = this;
+            this._layer.once('postcompose', function() {
+                layer._extent = this.getSource().getExtent();
+                layer.getMap().setExtent(layer._extent, 'EPSG:3857');
+            });
+        },
 
-        }
     });
 
     PublicaMundi.registry.registerLayerType({

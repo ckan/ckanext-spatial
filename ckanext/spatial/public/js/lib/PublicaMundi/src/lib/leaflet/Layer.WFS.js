@@ -18,41 +18,34 @@
         addToControl: function() {
             var map = this._map;
             var title = this._options.title;
-            this._map._map.on('layeradd', function(e) {
-
-                map.getLayerControl().addOverlay(e.layer, title);
-            });
+            map._getLayerControl().addOverlay(this._layer, title);
         },
-        
-        getLayerExtent: function () {
-            return this._layer.getBounds();
+        setLayerExtent: function() {
+            var layer = this;
+            this._map.setExtent(layer._extent, 'EPSG:4326');
         },
         update: function() { 
-            var bbox = this._map.getViewBox();
+            var bbox = this._map._getViewBox();
             $.ajax({
                 type: "GET",
                 url: this._options.url+ '&bbox=' + bbox + ',EPSG:3857',
                 dataType: 'json',
                 context: this,
                 success: function (response) {
-                    console.log('SUCCESS');
-                    console.log('response');
+                    //console.log('SUCCESS');
                     //console.log(response);
                     this._layer.clearLayers();
                     this._layer.addData(response);
-                    console.log('layer');
-                    console.log(this._layer);
                 }
             });
         },
         initialize: function (options) {
             PublicaMundi.Layer.prototype.initialize.call(this, options);
             
-            this._bbox = options.bbox;
             var onClick = null;
             if (PublicaMundi.isFunction(options.click)) {
                 onClick = function (e) {
-                    options.click([e.target.feature.properties]);
+                    options.click([e.target.feature.properties], [e.latlng.lat * (6378137), e.latlng.lng* (6378137)]);
                 };
             };
             this._layer = L.geoJson(null, {
@@ -74,7 +67,6 @@
                     });
                 }, 
 
-                visible: options.visible,
                 onEachFeature: function onEachFeature(feature, layer) {
                     if (PublicaMundi.isFunction(onClick)) {
                         layer.on({

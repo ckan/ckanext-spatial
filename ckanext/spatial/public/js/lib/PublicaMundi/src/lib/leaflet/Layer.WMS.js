@@ -18,18 +18,18 @@
         addToControl: function() { 
             var map = this._map;
             var title = this._options.title;
-            this._map._map.on('layeradd', function(e) {
-                map.getLayerControl().addOverlay(e.layer, title);
-            });
+                map._getLayerControl().addOverlay(this._layer, title);
             },
         
-        getLayerExtent: function () {
-            return this._layer.getBounds();
+        setLayerExtent: function() {
+            var layer = this;
+            this._layer.once('load', function() {
+                layer.getMap().setExtent(layer._extent, 'EPSG:4326');
+            });
         },
 
         initialize: function (options) {
             PublicaMundi.Layer.prototype.initialize.call(this, options);
-            this._bbox = options.bbox;
             this._layer = L.tileLayer.wms(options.url, {
                 layers: options.params.LAYERS,
                 format: 'image/png',

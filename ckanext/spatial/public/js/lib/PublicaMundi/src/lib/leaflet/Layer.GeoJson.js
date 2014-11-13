@@ -12,16 +12,46 @@
     if (typeof L === 'undefined') {
         return;
     }
+    
 
     PublicaMundi.define('PublicaMundi.Leaflet.Layer');
-
+    var popup;
     PublicaMundi.Leaflet.Layer.GeoJson = PublicaMundi.Class(PublicaMundi.Layer, {
         addToControl: function() { 
-            this._map.getLayerControl().addOverlay(this._layer, this._options.title);
+            this._map._getLayerControl().addOverlay(this._layer, this._options.title);
             },
-        getLayerExtent: function () {
-            return this._layer.getBounds();
+        setLayerExtent: function() {
+            var layer = this;
+            console.log('in layr extent');
+            var extent = [-180,-90,180,90];
+            this._layer.on('layeradd', function() {
+                var currextent = this.getBounds();
+                var southWest = currextent.getSouthWest();
+                var northEast = currextent.getNorthEast();
+                
+                var minx = extent[0];
+                var miny = extent[1];
+                var maxx = extent[2];
+                var maxy = extent[3];
+                
+                if (southWest.lng > extent[0]) {
+                    minx = southWest.lng;
+                }
+                if (southWest.lat > extent[1]) {
+                    miny = southWest.lat;
+                }
+                if (northEast.lng < extent[2]) {
+                    maxx = northEast.lng;
+                }
+                if (northEast.lat < extent[3]) {
+                    maxy = northEast.lat;
+                }
+                layer._extent = [minx, miny, maxx, maxy];
+
+                layer._map.setExtent(layer._extent, 'EPSG:4326');
+            });
         },
+
 
         initialize: function (options) {
             PublicaMundi.Layer.prototype.initialize.call(this, options);
@@ -33,9 +63,10 @@
             var onClick = null;
             if (PublicaMundi.isFunction(options.click)) {
                 onClick = function (e) {
-                    options.click([e.target.feature.properties]);
+                    options.click([e.target.feature.properties], [e.latlng.lat * (6378137), e.latlng.lng* (6378137)]);
+                    }
                 };
-            }
+            
             this._layer = L.geoJson(null, {
 
                 style: {
@@ -59,14 +90,13 @@
                             click: onClick
                         });
                     }
-                }
+                },
+                
             });
 
             $.ajax({                
                 type: "GET",
                 url: options.url,
-                //url: 'http://83.212.98.90:5000/dataset/hello-foo-2/resource/5c77af59-f964-4f25-8685-fd2e4b853867/service_proxy?service=WFS&version=1.1.0&request=GetFeature&typename=osm:water_areas&outputFormat=json&srsname=EPSG:3857&bbox=-8901397.691921914,5403868.588677103,-8833521.610804677,5434443.399991176 ,EPSG:3857',
-                //url: 'http://83.212.98.90:5000/dataset/hello-foo-2/resource/5c77af59-f964-4f25-8685-fd2e4b853867/service_proxy?service=WFS&version=1.1.0&request=GetFeature&typename=osm:polygon_barrier&outputFormat=json&srsname=EPSG:3857&bbox=-8904760.921166463,5403639.277592248,-8836884.840049226,5434214.088906321,EPSG:3857',
                 dataType: 'json',
                 context: this,
                 success: function (response) {

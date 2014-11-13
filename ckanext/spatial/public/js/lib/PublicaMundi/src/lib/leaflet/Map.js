@@ -20,6 +20,21 @@
             };
     
     PublicaMundi.Leaflet.Map = PublicaMundi.Class(PublicaMundi.Map, {
+        // Attempt to unify adding overlays
+        addOverlay: function(element) {
+            //console.log('in add overlay');
+            //});
+            //this._map.addOverlay(popup);
+            //return popup;
+            return null;
+
+            //popup = this.map.addOverlay(document.getElementById('popup'))
+
+            //popup = new ol.Overlay({
+            //   element: document.getElementById('popup')
+            //   });
+            //   this.map._map.addOverlay(popup);
+        },
         initialize: function (options) {
             PublicaMundi.Map.prototype.initialize.call(this, options);
 
@@ -32,10 +47,12 @@
                     // TODO : Add projection
                     center: _unproject(options.center),
                     zoom: options.zoom,
+                    maxZoom: options.maxZoom,
+                    minZoom: options.minZoom,
                     attributionControl: false
                 });
             }
-            this.listen();
+            this._listen();
 
             if ((typeof options.layers !== 'undefined') && (PublicaMundi.isArray(options.layers))) {
                 for (var index = 0; index < options.layers.length; index++) {
@@ -71,30 +88,34 @@
         addLayer: function (layer) {
             this._map.addLayer(layer.getLayer());
             layer.addToControl();
-            if (layer.getOptions().bbox) {
-                this.setExtent(layer.getOptions().bbox);
+        },
+        setExtent: function (extent, proj){
+            if (extent == null) {
+                return;
             }
-        },
-        setExtent: function (extent){
-            var southWest =  new L.LatLng(extent[1], extent[0]);
-            var northEast = new L.LatLng(extent[3], extent[2]);
-            this._map.fitBounds(new L.LatLngBounds(southWest,northEast )); 
-        },
-        // TODO: not functional
-        uncheckLayers: function() {
-            //console.log('uncheck layers');
-           // console.log($('.leaflet-control-layers-overlays label'));
-            $('.leaflet-control-layers-overlays label').each(function () { console.log($(this).find('input')); $(this).find('input').attr('checked', false);}); // Unchecks it
-        },
+            var transformation;    
+            if (proj == 'EPSG:4326') {
+                    transformation = extent;
+            }
+            else if (proj == 'EPSG:3857'){
+                transformation = _unproject(extent);
+            }
+            else {
+                transformation = null;
+            }
 
-        listen: function() { 
+            var southWest =  new L.LatLng(transformation[1], transformation[0]);
+            var northEast = new L.LatLng(transformation[3], transformation[2]);
+            this._map.fitBounds(new L.LatLngBounds(southWest,northEast)); 
+        },
+        _listen: function() { 
             var map = this;
             var idx = 0;
-            this.setLayerControl();
+            this._setLayerControl();
 
 
             this._map.on('moveend', function() {
-                map.setViewBox();
+                map._setViewBox();
                 var layers = map.getLayers();
                 //update each layer on mouse pan or zoom
                 $_.each(layers, function(layer, idx) {
@@ -106,13 +127,13 @@
         },
 
 
-        setViewBox: function() {
+        _setViewBox: function() {
                 var southWest = _project(this._map.getBounds().getSouthWest());
                 var northEast = _project(this._map.getBounds().getNorthEast());
                 this._viewbox = southWest.x+','+southWest.y+','+northEast.x+','+northEast.y;
 
         },
-        setLayerControl: function(base) {
+        _setLayerControl: function(base) {
             this._control = new L.control.layers();
             this._control.addTo(this._map);
             

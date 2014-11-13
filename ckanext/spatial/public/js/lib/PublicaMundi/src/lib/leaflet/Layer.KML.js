@@ -12,20 +12,44 @@
     if (typeof L === 'undefined') {
         return;
     }
-
+    
     PublicaMundi.define('PublicaMundi.Leaflet.Layer');
 
     PublicaMundi.Leaflet.Layer.KML = PublicaMundi.Class(PublicaMundi.Layer, {
-        addToControl: function() { 
-            this._map.getLayerControl().addOverlay(this._layer, this._options.title);
-            },
-        
-        getLayerExtent: function () {
-            return this._layer.getBounds();
+        setLayerExtent: function() {
+            var layer = this;
+            var extent = [-180,-90,180,90];
+            this._layer.on('layeradd', function() {
+                var currextent = this.getBounds();
+                var southWest = currextent.getSouthWest();
+                var northEast = currextent.getNorthEast();
+                
+                var minx = extent[0];
+                var miny = extent[1];
+                var maxx = extent[2];
+                var maxy = extent[3];
+                
+                if (southWest.lng > extent[0]) {
+                    minx = southWest.lng;
+                }
+                if (southWest.lat > extent[1]) {
+                    miny = southWest.lat;
+                }
+                if (northEast.lng < extent[2]) {
+                    maxx = northEast.lng;
+                }
+                if (northEast.lat < extent[3]) {
+                    maxy = northEast.lat;
+                }
+                layer._extent = [minx, miny, maxx, maxy];
+
+                layer._map.setExtent(layer._extent, 'EPSG:4326');
+            });
         },
+
         addToControl: function() { 
 
-            this._map.getLayerControl().addOverlay(this._layer, this._options.title);
+            this.getMap()._getLayerControl().addOverlay(this._layer, this._options.title);
             },
  
         initialize: function (options) {
@@ -38,12 +62,11 @@
             var onClick = null;
             if (PublicaMundi.isFunction(options.click)) {
                 onClick = function (e) {
-                    options.click([e.target.feature.properties]);
+                    options.click([e.target.feature.properties], [e.latlng.lat * (6378137), e.latlng.lng* (6378137)]);
                 };
             }
 
             this._layer = L.geoJson(null, {
-            //this._layer = omnivore.kml(options.url, {
                 style: {
                     color: '#3399CC',
                     weight: 1.25,
