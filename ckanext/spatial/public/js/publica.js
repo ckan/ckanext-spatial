@@ -21,11 +21,29 @@ this.ckan.module('olpreview2', function (jQuery, _) {
     }
 
     var parseWFSCapas = function(url, callback, failCallback) {
-        $.ajax(url+"?request=GetCapabilities").then(function(response) {
-            
+        
+        $.ajax(url+"?service=WFS&request=GetCapabilities").then(function(response) {
             
             //console.log('wfs capas');
-            var capabilities = response.firstChild.getElementsByTagName("FeatureType");
+            //var capabilities = response.firstChild.getElementsByTagName("FeatureType");
+            //if (capabilities == null){
+            //    capabilities = response.firstChild.getElementsByTagName("wfs:FeatureType");
+            //}
+            //var response = parser.read(response);
+            response = xmlToJson(response);
+            //console.log(response);
+            //console.log(response_json);
+            var capabilities = response["wfs:WFS_Capabilities"]["FeatureTypeList"];
+            //console.log(capabilities);
+            if (typeof capabilities === "undefined") {
+                capabilities = response["wfs:WFS_Capabilities"]["wfs:FeatureTypeList"]["wfs:FeatureType"];
+            }
+            else{ 
+                capabilities = capabilities["FeatureType"];
+            }
+            
+            //console.log(capabilities);
+            //json = xmlToJson(candidate);
             callback(capabilities);
 
         });
@@ -79,56 +97,104 @@ this.ckan.module('olpreview2', function (jQuery, _) {
 
                 $_.each(candidates, function(candidate, idx) {
                     // TODO: Need to implement this in a better way
-                    var title = candidate.getElementsByTagName('Title')[0].innerHTML;
-                    var name = candidate.getElementsByTagName('Name')[0].innerHTML;
-                    var bbox = candidate.getElementsByTagName('WGS84BoundingBox')[0];
-                    var lc = bbox.getElementsByTagName('LowerCorner')[0].innerHTML;
-                    var uc = bbox.getElementsByTagName('UpperCorner')[0].innerHTML;
-                    lc = lc.split(' ');
-                    uc = uc.split(' ');
-                    var bboxfloat = [ parseFloat(lc[0]), parseFloat(lc[1]), parseFloat(uc[0]), parseFloat(uc[1]) ];
-                //console.log(bboxfloat);
-                var ftLayer = { 
-                    name: name,
-                    title: title,
-                    visible: false,
-                    type: PublicaMundi.LayerType.WFS,
-                    click: onFeatureClick,
-                    bbox: bboxfloat,
+                    //console.log('wfs item');
+                    //console.log(candidate);
 
-                // layer: 'osm:water_areas&bbox=-190000,-190000,200000,200000,EPSG:3857',
-                    url: url+ '?service=WFS&version=1.1.0&request=GetFeature&typename='+name+'&srsname=EPSG:4326&outputFormat=json'
-                        //&maxFeatures=1000',
-                };
+                    //json = xmlToJson(candidate);
+                    //console.log(json);
+                    var title = candidate["Title"];
+                    if (typeof title === "undefined") {
+                        title = candidate["wfs:Title"];
+                    }
+                    title = title["#text"];
+                    //console.log(title);
+                    
+                    var name = candidate["Name"];
+                    if (typeof name === "undefined") {
+                        name = candidate["wfs:Name"];
+                    }
+                    name = name["#text"];
+                    //console.log(name);
+                    
+                    var bbox = candidate["WGS84BoundingBox"];
+                    var lc = null;
+                    var uc = null;
+                    if (typeof bbox === "undefined") {
+                        bbox = candidate["ows:WGS84BoundingBox"];
+                        lc = bbox['ows:LowerCorner']["#text"];
+                        uc = bbox['ows:UpperCorner']["#text"];
+                    }
+                    else {
+                        lc = bbox['LowerCorner']["#text"];
+                        uc = bbox['UpperCorner']["#text"];
+                    }
+                    //console.log(bbox);
+                    
+                    //[0].innerHTML;
+                        //[0].innerHTML;
+                     //   console.log(lc);
+                     //   console.log(uc);
+
+                        lc = lc.split(' ');
+                        uc = uc.split(' ');
+                        bboxfloat = [ parseFloat(lc[0]), parseFloat(lc[1]), parseFloat(uc[0]), parseFloat(uc[1]) ];
+                    
+                        //var title = candidate.getElementsByTagName('Title')[0].innerHTML;
+                    //console.log('in wfs');
+                    //console.log('xml');
+                    //console.log(candidate);
+                    //dom = parseXml(candidate);
+                    //json = xmlToJson(candidate);
+                    //console.log('json');
+                    //console.log(json);
+                    //["ows:LowerCorner"]["#text"]);
+                    //var name = candidate.getElementsByTagName('Name')[0].innerHTML;
+                    //var bbox = candidate.getElementsByTagName('WGS84BoundingBox');
+                    //if (bbox.length==0) {
+                    //    bbox = candidate.getElementsByTagName('ows:WGS84BoundingBox');
+                if (bboxfloat) {
+                    var ftLayer = { 
+                        name: name,
+                        title: title,
+                        visible: false,
+                        type: PublicaMundi.LayerType.WFS,
+                        click: onFeatureClick,
+                        bbox: bboxfloat,
+
+                        url: url+ '?service=WFS&version=1.1.0&request=GetFeature&typename='+name+'&srsname=EPSG:4326&outputFormat=json'
+                            //&maxFeatures=10'
+                            //&maxFeatures=1000',
+                    };
+                    }
+                else {
+                    var ftLayer = { 
+                        name: name,
+                        title: title,
+                        visible: false,
+                        type: PublicaMundi.LayerType.WFS,
+                        click: onFeatureClick,
+                        url: url+ '?service=WFS&version=1.1.0&request=GetFeature&typename='+name+'&srsname=EPSG:4326&outputFormat=json'
+                    };
+                }
+
             
                 layerProcessor(ftLayer)
         
-
-    
                     })
         
                                 })
 }
 
 var parseWMSCapas = function(url, callback, failCallback) {
-        
-        $.ajax(url+"?request=GetCapabilities").then(function(response) {
-            
-            //console.log('response');
+       
+        var parser = new ol.format.WMSCapabilities();
+        $.ajax(url+"?service=WMS&request=GetCapabilities").then(function(response) {
+            var response = parser.read(response);
             //console.log(response);
-            var capabilities = response.firstChild.getElementsByTagName("Layer");
-            var bboxres = response.firstChild.getElementsByTagName("EX_GeographicBoundingBox")[0];
-            
-            var wblng = bboxres.getElementsByTagName('westBoundLongitude')[0].innerHTML;
-            var eblng = bboxres.getElementsByTagName('eastBoundLongitude')[0].innerHTML;
-            var sblat = bboxres.getElementsByTagName('southBoundLatitude')[0].innerHTML;
-            var nblat = bboxres.getElementsByTagName('northBoundLatitude')[0].innerHTML;
-            
-            var bboxfloat = [ parseFloat(wblng), parseFloat(sblat), parseFloat(eblng), parseFloat(nblat) ];
-
-            //console.log('capabilities');
+            var capabilities = response["Capability"]["Layer"]["Layer"];
             //console.log(capabilities);
-            callback(capabilities, bboxfloat);
+
+            callback(capabilities);
 
         });
     }
@@ -142,26 +208,71 @@ var withWMSLayers = function (resource, layerProcessor) {
 
     parseWMSCapas(
         url,
-        function(candidates, bbox) {
+        function(candidates) {
             if (layerName) candidates = candidates.filter(function(layer) {return layer.name == layerName})
-
-            var ver = candidates.version
+            //console.log('candidates');
+            //if (!(candidates instanceof Array)){
+            //    console.log('not array');
+            //    candidates = [ candidates ];
+            //}
+            //
+            //if (candidates["Layer"]) {
+            //    console.log('has layer field');
+            //    if (candidates["Layer"] instanceof Array){
+            //        candidates = candidates ["Layer"];
+            //    }
+            //    else {
+            //        candidates = [ candidates ["Layer"] ];
+            //    }
+            //}
+            //console.log(candidates);
+            //var ver = candidates.version
             $_.each(candidates, function(candidate, idx) {
                 // TODO: Need to implement this in a better way
-                var title = candidate.getElementsByTagName('Title')[0].innerHTML;
-                var name = candidate.getElementsByTagName('Name')[0].innerHTML;
+                //var title = candidate.getElementsByTagName('Title')[0].innerHTML;
+                //var name = candidate.getElementsByTagName('Name')[0].innerHTML;
+                //console.log('candidate');
+                //console.log(candidate);
+                var title = candidate["Title"];
+                var name = candidate["Name"];
+                var bbox = candidate["BoundingBox"];
+                var bboxfloat=null;
+                    $_.each(bbox, function(entry, idx) {
+                        //console.log('entry=');
+                        //console.log(entry);
+                            var at = entry;
+                            if (extractBbox(at) != null) {
+                                bboxfloat = extractBbox(at);
+                            }
+                            });
+                if (bboxfloat){
+                    var mapLayer = {
+                        type: PublicaMundi.LayerType.WMS,
+                        url: urlBody, // use the original URL for the getMap, as there's no need for a proxy for image request
+                        transparent: true,
+                        name: name,
+                        title: title,
+                        bbox: bboxfloat,
+                        visible: false,
+                        params: {'LAYERS': name},
+                    };
 
-                var mapLayer = {
-                    type: PublicaMundi.LayerType.WMS,
-                    url: urlBody, // use the original URL for the getMap, as there's no need for a proxy for image request
-                    transparent: true,
-                    name: name,
-                    title: title,
-                    bbox: bbox,
-                    visible: false,
-                    params: {'LAYERS': name},
-                };
+                }
+                else{
+                    var mapLayer = {
+                        type: PublicaMundi.LayerType.WMS,
+                        url: urlBody, // use the original URL for the getMap, as there's no need for a proxy for image request
+                        transparent: true,
+                        name: name,
+                        title: title,
+                        visible: false,
+                        params: {'LAYERS': name},
+                    };
 
+                }
+                //console.log('mapLayer');
+                //console.log(mapLayer);
+                
                 layerProcessor(mapLayer)
                 })
 
@@ -170,6 +281,19 @@ var withWMSLayers = function (resource, layerProcessor) {
 
     }
     
+    var extractBbox = function (at) {
+        if (at["crs"] == "CRS:84") {
+            bboxfloat = [ at["extent"][0], at["extent"][1], at["extent"][2], at["extent"][3] ];
+            return bboxfloat;
+        }
+        else if(at["crs"] == "EPSG:4326") {
+            bboxfloat = [ at["extent"][1], at["extent"][0], at["extent"][3], at["extent"][2] ];
+            return bboxfloat;
+        }
+        else {
+            return null;
+        }
+    }
     var createGeoJSONLayer = function (resource) {
         
         var url = resource.proxy_url || resource.url
@@ -179,6 +303,7 @@ var withWMSLayers = function (resource, layerProcessor) {
                // projection: ol.proj.get("EPSG:3857"), 
                 type: PublicaMundi.LayerType.GeoJSON,
                 url: url,
+                visible: false,
                 click: onFeatureClick
 
         };
@@ -224,10 +349,39 @@ var withWMSLayers = function (resource, layerProcessor) {
         var withLayers = layerExtractors[resource.format && resource.format.toLocaleLowerCase()]
         withLayers && withLayers(resource, layerProcessor)
     }
-    var info; 
+    var info;
+    var popup;
     // TODO: handle click with overlay
-    var onFeatureClick = function (features) {
-            alert(JSON.stringify(features));
+    var onFeatureClick = function (features, pixel) {
+            //console.log('feature');
+            if (features) {
+                feature = features [0];
+            }
+
+            var element = popup.getElement();
+            //var element = popup;
+              var coordinate = pixel;
+
+                $(document.getElementById('popup')).popover('destroy');
+                  popup.setPosition(coordinate);
+                  //popup.setLatLng([0, 0]);
+                    // the keys are quoted to prevent renaming in ADVANCED_OPTIMIZATIONS mode.
+                    var text;
+                    if (feature['name']) { 
+                        text =feature['name'];
+                    }
+                    else {
+                        text = JSON.stringify(feature);
+                    }
+                       $(element).popover({
+                            'placement': 'top',
+                            'animation': false,
+                            'html': true,
+                            'content': text
+                        }).attr('data-original-title');
+
+                    $(element).popover('show');
+
         };
 
 
@@ -245,6 +399,8 @@ var withWMSLayers = function (resource, layerProcessor) {
         addLayer: function(resourceLayer) {
             
             var layer = this.map.createLayer(resourceLayer);
+            // set map extent on layer bounds
+            layer.setLayerExtent();
         
         },
 
@@ -252,18 +408,10 @@ var withWMSLayers = function (resource, layerProcessor) {
 
             var mapDiv = $("<div></div>").attr("id", "map-ol").addClass("map")
             info = $("<div></div>").attr("id", "info")
-            info.css({
-                    //left: pixel[0] + 'px',
-                    //top: (pixel[1] - 15) + 'px'
-                    left: '20px',
-                    top: '50px'
-                  });
-
+            popup = $("<div></div>").attr("id", "popup")
+            
             mapDiv.append(info)
-            info.tooltip({
-                  animation: true,
-                  trigger: 'manual'
-            });
+            mapDiv.append(popup)
             $("#data-preview2").empty()
             $("#data-preview2").append(mapDiv)
 
@@ -277,13 +425,28 @@ var withWMSLayers = function (resource, layerProcessor) {
 
             var options = {
                 target: 'map-ol',
-                center: [50, 100],
-                zoom: 2,
+                center: [-985774, 4016449],
+                zoom: 1.6,
                 layers: baseLayers,
-                minZoom: 2,
-                maxZoom: 17,
+                minZoom: 1,
+                maxZoom: 18,
             };
             this.map = PublicaMundi.map(options);
+
+            // Popup showing the position the user clicked
+            // Need to make this by using the API
+            //popup = this.map.addOverlay(document.getElementById('popup'))
+
+            popup = new ol.Overlay({
+               element: document.getElementById('popup')
+               });
+               this.map._map.addOverlay(popup);
+                
+               $(document.getElementById('map-ol')).click(function() {
+                    $(document.getElementById('popup')).popover('destroy');
+            });
+            //console.log('map');
+            //console.log(this.map);
             withLayers(preload_resource, $_.bind(this.addLayer, this))
         }
     }

@@ -17,14 +17,37 @@
      z-index: 100;
  }
  .tooltip.in {
-     opacity: 0.7;
+     opacity: 0.8;
      filter: alpha(opacity=100);
  }
+ #popup { 
+ }
+ .popover {
+     color: white;
+     font-size: 12px;
+     line-height: 15px;
+ }
+ .popover-title{
+     display: none;
+ }
+ .popover-content{
+     opacity: 0.8;
+     padding: 8px;
+     background: #4E59A4;
+     border-radius: 3px 3px 3px 3px;
+     -webkit-border-radius:3px 3px 3px 3px;
+     -moz-border-radius: 3px 3px 3px 3px; 
+
+ }
+ .popover .arrow { 
+     border-top: 5px solid #4E59A4 !important;
+ }
  .tooltip.top .tooltip-arrow {
-     border-top-color: white;
+     border-top-color: #4E59A4;
  }
  .tooltip-inner {
-     border: 2px solid white;
+     border: 2px solid #4E59A4;
+     background: #4E59A4;
  }
 
  .tooltip-inner>table {

@@ -26,6 +26,13 @@
                 }),
             });
            },
+        setLayerExtent: function() {
+            var layer = this;
+            this._layer.once('postcompose', function() {
+                layer._extent = this.getSource().getExtent();
+                layer.getMap().setExtent(layer._extent, 'EPSG:3857');
+            });
+        },
         
     });
 

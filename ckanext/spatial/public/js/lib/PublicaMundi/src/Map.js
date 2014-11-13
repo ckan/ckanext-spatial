@@ -22,16 +22,16 @@
         setExtent: function(extent) {
             return this;
         },
-        setViewBox: function() {
+        _setViewBox: function() {
             return this;
         },
-        getViewBox: function() { 
+        _getViewBox: function() { 
             return this._viewbox;
         },
-        setLayerControl: function(c) {
+        _setLayerControl: function(c) {
             return this;
         },
-        getLayerControl: function() {
+        _getLayerControl: function() {
             return this._control;
         },
         getMap: function () {
@@ -58,7 +58,7 @@
         getLayers: function() {
             return this._layers;
         },
-        listen: function() { 
+        _listen: function() { 
             return null;
         },
 
