@@ -28,14 +28,19 @@ this.ckan.module('dataset-map', function (jQuery, _) {
       // fix bbox when w-long is positive while e-long is negative.
       if (this.extent.type == 'Polygon'
         && this.extent.coordinates[0].length == 5) {
-        _coordinates = this.extent.coordinates
-        s = _coordinates[0][0][1];
-        w = _coordinates[0][0][0];
-        n = _coordinates[0][2][1];
-        e = _coordinates[0][1][0];
-        while (w > e) w -=360
-
-        this.extent.coordinates = [[[w,s],[e,s],[e,n],[w,n],[w,s]]]
+        _coordinates = this.extent.coordinates[0]
+        w = _coordinates[0][0];
+        e = _coordinates[2][0];
+        if (w > e) {
+          w_new = w
+          while (w_new > e) w_new -=360
+          for (var i = 0; i < _coordinates.length; i++) {
+            if (_coordinates[i][0] == w) {
+              _coordinates[i][0] = w_new
+            };
+          };
+          this.extent.coordinates[0] = _coordinates
+        };
       };
 
       // hack to make leaflet use a particular location to look for images
