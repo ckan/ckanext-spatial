@@ -61,10 +61,40 @@ this.ckan.module('spatial-form', function (jQuery, _) {
           map.fitBounds(extentLayer.getBounds());
       }
 
+
       var ckanIcon = L.Icon.extend({options: this.options.styles.point});
 
     /* add draw polygon controls */
+    // Initialize the FeatureGroup to store editable layers
+    var drawnItems = new L.FeatureGroup();
+    map.addLayer(drawnItems);
+
+    // Initialize the draw control and pass it the FeatureGroup of editable layers
+    var drawControl = new L.Control.Draw({
+        edit: { featureGroup: drawnItems },
+        marker: false,
+        polyline: false,
+        polygon: true,
+        rectangle: true,
+        circle: false
+    });
+    map.addControl(drawControl);
+
     /* add event listener on polygon drawn to update input_id with geometry */
+    map.on('draw:created', function (e) {
+        var type = e.layerType,
+        layer = e.layer;
+
+        if (type === 'polygon') {
+            // Do marker specific actions
+            alert("pretend we're updating the textarea")
+        }
+
+        // Do whatever else you need to. (save to db, add to map etc)
+        drawnItems.addLayer(layer);
+    });
+
+
     }
   }
 });
