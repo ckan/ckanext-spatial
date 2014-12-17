@@ -1,0 +1,45 @@
+{#
+Displays a map form widget to capture a polygon and update an input
+field with a given id with the polygon's geometry
+
+input_id
+  The element id of a text input accepting a GeoJSON polygon geometry
+
+default_extent
+  Initial map extent (Optional, defaults to the whole world). It can be defined
+  either as a pair of coordinates or as a GeoJSON bounding box.
+
+e.g.
+  {% snippet "spatial/snippets/spatial_form.html", 
+    input_id="field-spatial",
+    default_extent=[[15.62, -139.21], [64.92, -61.87]] %}
+
+  {% snippet "spatial/snippets/spatial_form.html", 
+    input_id="field-spatial",
+    default_extent="{ \"type\": \"Polygon\", \"coordinates\": 
+    [[[74.89, 29.39],[74.89, 38.45], [60.50, 38.45], [60.50, 29.39], [74.89, 29.39]]]}" %}
+
+#}
+<!-- spatial form for {{input_id}} begin -->
+<section id="dataset-map" class="module module-narrow module-shallow">
+  <h2 class="module-heading">
+    <i class="icon-medium icon-globe"></i>
+    {{ _('Filter by location') }}
+    <a href="{{ h.remove_url_param(['ext_bbox','ext_prev_extent', 'ext_location']) }}" 
+        class="action">{{ _('Clear') }}</a>
+  </h2>
+  {% set map_config = h.get_common_map_config() %}
+  <div class="dataset-map" data-module="spatial-form"
+    data-input_id="{{ input_id }}"
+    data-default_extent="{{ default_extent }}" 
+    data-module-map_config="{{ h.dump_json(map_config) }}">
+    <div id="dataset-map-container"></div>
+  </div>
+  <div id="dataset-map-attribution">
+    {% snippet "spatial/snippets/map_attribution.html", map_config=map_config %}
+  </div>
+</section>
+<!-- spatial form for {{input_id}} end -->
+
+{% resource 'ckanext-spatial/spatial_form' %}
+
