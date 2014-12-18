@@ -5,6 +5,21 @@
  * In your form snippet / template, embed a map as follows above an input {{ id }} which
  * accepts a GeoJSON geometry (e.g. the field "spatial" for the dataset extent):
 
+{% import 'macros/form.html' as form %}
+
+    {% with 
+    name=field.field_name, 
+    id='field-' + field.field_name,
+    label=h.scheming_language_text(field.label),
+    placeholder=h.scheming_language_text(field.form_placeholder),
+    value=data[field.field_name],
+    error=errors[field.field_name],
+    classes=['control-medium'],
+    is_required=h.scheming_field_required(field)
+    %}
+
+    {% call form.input_block(id, label, error, classes, is_required=is_required) %}
+
     {% set map_config = h.get_common_map_config() %}
     <div class="dataset-map" 
         data-module="spatial-form"
@@ -16,6 +31,17 @@
     </div>
 
     {% resource 'ckanext-spatial/spatial_form' %}
+
+    {{ form.info(text="Draw the dataset extent on the map,
+       or paste a GeoJSON Polygon or Multipolygon geometry below", inline=false) }}
+
+    <textarea id="{{ id }}" type="{{ type }}" name="{{ name }}" 
+        placeholder="{{ placeholder }}" rows=10 style="width:100%;">
+      {{ value | empty_and_escape }}
+    </textarea>
+
+    {% endcall %}
+{% endwith %}
 
  * {{ id }} is the id of the form input to be updated with what you draw on the map
  * {{ value }} is an existing GeoJSON geometry to be shown (editable, deletable) on the map
@@ -54,9 +80,6 @@ this.ckan.module('spatial-form', function (jQuery, _) {
       this.extent = this.el.data('extent');
       this.map_id = 'dataset-map-container'; //-' + this.input_id;
 
-      // hack to make leaflet use a particular location to look for images
-      L.Icon.Default.imagePath = this.options.site_url + 'js/vendor/leaflet/images';
-
       jQuery.proxyAll(this, /_on/);
       this.el.ready(this._onReady);
 
@@ -64,7 +87,7 @@ this.ckan.module('spatial-form', function (jQuery, _) {
 
     _onReady: function(){
 
-        var map, backgroundLayer, extentLayer, ckanIcon;
+        var map, backgroundLayer, oldExtent, drawnItems, ckanIcon;
         var ckanIcon = L.Icon.extend({options: this.options.styles.point});
 
         /* Initialise basic map */
@@ -74,44 +97,76 @@ this.ckan.module('spatial-form', function (jQuery, _) {
             {attributionControl: false}
         );
 
+        /* Add an empty layer for newly drawn items */
+        var drawnItems = new L.FeatureGroup();
+        map.addLayer(drawnItems);
+
+        /* TODO add GeoJSON layers for all GeoJSON resources of the dataset */
+
         /* Add existing extent or new layer */
         if (!this.extent) {
             /* create = no polygon defined yet  */
-            var drawnItems = new L.FeatureGroup();
-            map.addLayer(drawnItems);
         } else {
             /* update = show existing polygon */
-            var drawnItems = L.geoJson(this.extent, {
+            oldExtent = L.geoJson(this.extent, {
             style: this.options.styles.default_,
             pointToLayer: function (feature, latLng) {
                 return new L.Marker(latLng, {icon: new ckanIcon})
             }});
-            drawnItems.addTo(map);
-            map.fitBounds(drawnItems.getBounds());
+            //oldExtent.addTo(drawnItems);
+            oldExtent.addTo(map);
+            map.fitBounds(oldExtent.getBounds());
         }
 
         /* Leaflet.draw: add drawing controls for drawnItems */
         var drawControl = new L.Control.Draw({
-            edit: { featureGroup: drawnItems },
-            marker: false,
-            polyline: false,
-            polygon: true,
-            rectangle: true,
-            circle: false
+            draw: {
+                polyline: false,
+                circle: false,
+                marker: false,
+                rectangle: {repeatMode: false}
+
+            },
+            edit: { featureGroup: drawnItems }
         });
         map.addControl(drawControl);
 
+        /* Merge all features in FeatureGroup into one MultiPolygon, update inputid
+         * with that Multipolygon's geometry on draw:created, draw:deletestop, draw:editstop
+         */
+        var featureGroupToInput = function(fg, inputid){
+            var gj = drawnItems.toGeoJSON().features;
+            var mp = [];
+            $.each(gj, function(index, value){ mp.push(value.geometry.coordinates); });
+            m = { "type": "MultiPolygon", "coordinates": mp};
+            $("#" + inputid)[0].value = JSON.stringify(m);
+        };
+
+        /* Update input field #inputid with the GeoJSON geometry of a given feature */
+        var layerToInput = function(el, inputid){
+            var type = el.layerType,
+            layer = el.layer;
+            var geojson_geometry = JSON.stringify(layer.toGeoJSON().geometry);
+            $("#field-spatial")[0].value = geojson_geometry; 
+        };
+
         /* add event listener on polygon drawn to update input_id with geometry */
+        var inputid = this.input_id;
         map.on('draw:created', function (e) {
             var type = e.layerType,
             layer = e.layer;
-
-            alert("pretend we're updating the textarea")
-
-            // Do whatever else you need to. (save to db, add to map etc)
             drawnItems.addLayer(layer);
+            //$("#field-spatial")[0].value = JSON.stringify(e.layer.toGeoJSON().geometry);
+            featureGroupToInput(drawnItems, 'field-spatial');
         });
 
+        map.on('draw:editstop', function(e){
+            featureGroupToInput(drawnItems, 'field-spatial');
+        });
+
+        map.on('draw:deletestop', function(e){
+            featureGroupToInput(drawnItems, 'field-spatial');
+        });
 
     }
   }
