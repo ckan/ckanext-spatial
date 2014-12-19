@@ -70,9 +70,11 @@ this.ckan.module('spatial-form', function (jQuery, _) {
           opacity: 1,
           fillColor: '#FCF6CF',
           fillOpacity: 0.4
-        }
-      }
+        },
+      },
+      default_extent: [[-10, 130], [-40, 110]]
     },
+
 
     initialize: function () {
 
@@ -85,38 +87,42 @@ this.ckan.module('spatial-form', function (jQuery, _) {
 
     },
 
+
     _onReady: function(){
 
         var map, backgroundLayer, oldExtent, drawnItems, ckanIcon;
         var ckanIcon = L.Icon.extend({options: this.options.styles.point});
 
+
         /* Initialise basic map */
         map = ckan.commonLeafletMap(
             this.map_id,
-            this.options.map_config, 
+            this.options.map_config,
             {attributionControl: false}
         );
+        map.fitBounds(this.options.default_extent);
+
 
         /* Add an empty layer for newly drawn items */
         var drawnItems = new L.FeatureGroup();
         map.addLayer(drawnItems);
 
+
         /* TODO add GeoJSON layers for all GeoJSON resources of the dataset */
 
+
         /* Add existing extent or new layer */
-        if (!this.extent) {
-            /* create = no polygon defined yet  */
-        } else {
+        if (this.extent) {
             /* update = show existing polygon */
             oldExtent = L.geoJson(this.extent, {
             style: this.options.styles.default_,
             pointToLayer: function (feature, latLng) {
                 return new L.Marker(latLng, {icon: new ckanIcon})
             }});
-            //oldExtent.addTo(drawnItems);
             oldExtent.addTo(map);
             map.fitBounds(oldExtent.getBounds());
         }
+
 
         /* Leaflet.draw: add drawing controls for drawnItems */
         var drawControl = new L.Control.Draw({
@@ -131,8 +137,9 @@ this.ckan.module('spatial-form', function (jQuery, _) {
         });
         map.addControl(drawControl);
 
-        /* Merge all features in FeatureGroup into one MultiPolygon, update inputid
-         * with that Multipolygon's geometry on draw:created, draw:deletestop, draw:editstop
+
+        /* Aggregate all features in a FeatureGroup into one MultiPolygon, 
+         * update inputid with that Multipolygon's geometry 
          */
         var featureGroupToInput = function(fg, inputid){
             var gj = drawnItems.toGeoJSON().features;
@@ -142,20 +149,13 @@ this.ckan.module('spatial-form', function (jQuery, _) {
             $("#" + inputid)[0].value = JSON.stringify(m);
         };
 
-        /* Update input field #inputid with the GeoJSON geometry of a given feature */
-        var layerToInput = function(el, inputid){
-            var type = el.layerType,
-            layer = el.layer;
-            var geojson_geometry = JSON.stringify(layer.toGeoJSON().geometry);
-            $("#field-spatial")[0].value = geojson_geometry; 
-        };
 
-        /* add event listener on polygon drawn to update input_id with geometry */
-        var inputid = this.input_id;
+        /* When one shape is drawn/edited/deleted, update input_id with all drawn shapes */
         map.on('draw:created', function (e) {
             var type = e.layerType,
-            layer = e.layer;
+                layer = e.layer;
             drawnItems.addLayer(layer);
+            // To only add the latest drawn element to input #field-spatial:
             //$("#field-spatial")[0].value = JSON.stringify(e.layer.toGeoJSON().geometry);
             featureGroupToInput(drawnItems, 'field-spatial');
         });
