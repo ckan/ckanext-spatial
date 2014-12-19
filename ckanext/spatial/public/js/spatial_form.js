@@ -78,7 +78,7 @@ this.ckan.module('spatial-form', function (jQuery, _) {
 
     initialize: function () {
 
-      this.input_id = this.el.data('input_id');
+      this.input = $('#' + this.el.data('input_id'))[0];
       this.extent = this.el.data('extent');
       this.map_id = 'dataset-map-container'; //-' + this.input_id;
 
@@ -141,12 +141,14 @@ this.ckan.module('spatial-form', function (jQuery, _) {
         /* Aggregate all features in a FeatureGroup into one MultiPolygon, 
          * update inputid with that Multipolygon's geometry 
          */
-        var featureGroupToInput = function(fg, inputid){
+        var featureGroupToInput = function(fg, input){
             var gj = drawnItems.toGeoJSON().features;
-            var mp = [];
-            $.each(gj, function(index, value){ mp.push(value.geometry.coordinates); });
-            m = { "type": "MultiPolygon", "coordinates": mp};
-            $("#" + inputid)[0].value = JSON.stringify(m);
+            var polyarray = [];
+            $.each(gj, function(index, value){ polyarray.push(value.geometry.coordinates); });
+            mp = {"type": "MultiPolygon", "coordinates": polyarray};
+            // TODO
+            //input.val(JSON.stringify(mp)); // input is undefined
+            $('#field-spatial').val(JSON.stringify(mp));
         };
 
 
@@ -157,15 +159,15 @@ this.ckan.module('spatial-form', function (jQuery, _) {
             drawnItems.addLayer(layer);
             // To only add the latest drawn element to input #field-spatial:
             //$("#field-spatial")[0].value = JSON.stringify(e.layer.toGeoJSON().geometry);
-            featureGroupToInput(drawnItems, 'field-spatial');
+            featureGroupToInput(drawnItems, this.input);
         });
 
         map.on('draw:editstop', function(e){
-            featureGroupToInput(drawnItems, 'field-spatial');
+            featureGroupToInput(drawnItems, this.input);
         });
 
         map.on('draw:deletestop', function(e){
-            featureGroupToInput(drawnItems, 'field-spatial');
+            featureGroupToInput(drawnItems, this.input);
         });
 
     }
