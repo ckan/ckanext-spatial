@@ -80,7 +80,7 @@ this.ckan.module('spatial-form', function (jQuery, _) {
 
       this.input = $('#' + this.el.data('input_id'))[0];
       this.extent = this.el.data('extent');
-      this.map_id = 'dataset-map-container'; //-' + this.input_id;
+      this.map_id = 'dataset-map-container'; //-' + this.input;
 
       jQuery.proxyAll(this, /_on/);
       this.el.ready(this._onReady);
@@ -102,14 +102,12 @@ this.ckan.module('spatial-form', function (jQuery, _) {
         );
         map.fitBounds(this.options.default_extent);
 
-
         /* Add an empty layer for newly drawn items */
         var drawnItems = new L.FeatureGroup();
         map.addLayer(drawnItems);
 
 
         /* TODO add GeoJSON layers for all GeoJSON resources of the dataset */
-
 
         /* Add existing extent or new layer */
         if (this.extent) {
@@ -146,9 +144,9 @@ this.ckan.module('spatial-form', function (jQuery, _) {
             var polyarray = [];
             $.each(gj, function(index, value){ polyarray.push(value.geometry.coordinates); });
             mp = {"type": "MultiPolygon", "coordinates": polyarray};
-            // TODO
-            //input.val(JSON.stringify(mp)); // input is undefined
+            // TODO use input for element id
             $('#field-spatial').val(JSON.stringify(mp));
+            //$("#" + input).val(JSON.stringify(mp)); // doesn't work
         };
 
 
