@@ -107,7 +107,39 @@ this.ckan.module('spatial-form', function (jQuery, _) {
         map.addLayer(drawnItems);
 
 
-        /* TODO add GeoJSON layers for all GeoJSON resources of the dataset */
+        /* Add GeoJSON layers for any GeoJSON resources of the dataset */
+        //var existingLayers = {};
+        var url = window.location.href.split('dataset/edit/');
+        $.ajax({
+         url: url[0] + 'api/3/action/package_show',
+         data: {id : url[1]},
+         dataType: 'jsonp',
+         success: function(data) {
+           //console.log('Got resources: ' + JSON.stringify(data.result.resources));
+           var r = data.result.resources;
+           for (i in r){
+            if (r[i].format == 'GeoJSON'){
+             //console.log('Found GeoJSON for ' + r[i].name + ' with id ' + r[i].id);   
+             
+             /* Option 1: Load GeoJSON using leaflet.ajax */
+             //var geojsonLayer = L.geoJson.ajax(r[id].url);
+             //geojsonLayer.addTo(map);
+
+             /* Option 2: Load GeoJSON using JQuery */
+             $.getJSON(r[i].url, function(data) {
+                var gj = L.geoJson(data, {
+                    onEachFeature: function (feature, layer) {
+                        layer.bindPopup(feature.properties.name);
+                    }
+                });
+                gj.addTo(map);
+                //existingLayers[r[i].name] = gj;
+             }); // end getJSON
+            } // end if
+           } // end for
+           //L.control.layers(existingLayers).addTo(map); // or similar
+         }
+         });
 
         /* Add existing extent or new layer */
         if (this.extent) {
