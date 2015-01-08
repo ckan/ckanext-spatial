@@ -624,11 +624,21 @@ class SpatialHarvester(HarvesterBase):
 
                 log.info('Document with GUID %s unchanged, skipping...' % (harvest_object.guid))
             else:
+                # make package name sticky
+                try:
+                    existing_package_dict = logic.get_action('package_show')(context,
+                        {'id': harvest_object.package_id})
+                except p.toolkit.ObjectNotFound:
+                    pass
+                else:
+                    package_dict['name'] = existing_package_dict['name']
+
                 package_schema = logic.schema.default_update_package_schema()
                 package_schema['tags'] = tag_schema
                 context['schema'] = package_schema
 
                 package_dict['id'] = harvest_object.package_id
+
                 try:
                     package_id = p.toolkit.get_action('package_update')(context, package_dict)
                     log.info('Updated package %s with guid %s', package_id, harvest_object.guid)
