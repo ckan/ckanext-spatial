@@ -56,11 +56,13 @@ this.ckan.module('spatial-form', function (jQuery, _) {
 
   return {
     options: {
+      table: '<table class="table table-striped table-bordered table-condensed"><tbody>{body}</tbody></table>',
+      row: '<tr><th>{key}</th><td>{value}</td></tr>',
       i18n: {
       },
       styles: {
         point:{
-          iconUrl: '/img/marker.png',
+          iconUrl: '/js/vendor/leaflet/images/marker-icon.png',
           iconSize: [14, 25],
           iconAnchor: [7, 25]
         },
@@ -128,8 +130,21 @@ this.ckan.module('spatial-form', function (jQuery, _) {
              /* Option 2: Load GeoJSON using JQuery */
              $.getJSON(r[i].url, function(data) {
                 var gj = L.geoJson(data, {
-                    onEachFeature: function (feature, layer) {
-                        layer.bindPopup(feature.properties.name);
+                    pointToLayer: function (feature, latLng) {
+                        return new L.Marker(latLng, {icon: new ckanIcon})
+                    },
+                    onEachFeature: function(feature, layer) {
+                      var body = '';
+                      var row = '<tr><th>{key}</th><td>{value}</td></tr>';
+                      var table = '<table class="table table-striped table-bordered table-condensed" style="width:300px;"><tbody>{body}</tbody></table>';
+                      jQuery.each(feature.properties, function(key, value){
+                        if (value != null && typeof value === 'object') {
+                          value = JSON.stringify(value);
+                        }
+                        body += L.Util.template(row, {key: key, value: value});
+                      });
+                      var popupContent = L.Util.template(table, {body: body});
+                        layer.bindPopup(popupContent);
                     }
                 });
                 gj.addTo(map);
@@ -145,10 +160,11 @@ this.ckan.module('spatial-form', function (jQuery, _) {
         if (this.extent) {
             /* update = show existing polygon */
             oldExtent = L.geoJson(this.extent, {
-            style: this.options.styles.default_,
-            pointToLayer: function (feature, latLng) {
+              style: this.options.styles.default_,
+              pointToLayer: function (feature, latLng) {
                 return new L.Marker(latLng, {icon: new ckanIcon})
-            }});
+              }
+            });
             oldExtent.addTo(map);
             map.fitBounds(oldExtent.getBounds());
         }
