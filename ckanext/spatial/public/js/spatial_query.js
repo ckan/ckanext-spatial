@@ -54,21 +54,28 @@ this.ckan.module('spatial-query', function ($, _) {
             var coords = xmin;
             xmin = coords[0]; ymin = coords[1]; xmax = coords[2]; ymax = coords[3];
         }
-        return new L.Rectangle([[ymin, xmin], [ymax, xmax]],
-                               this.options.style);
+        //return new L.Rectangle([[ymin, xmin], [ymax, xmax]], this.options.style);
+        rekt = new L.Rectangle([[ymin, xmin], [ymax, xmax]], this.options.style);
+        fg = new L.FeatureGroup();
+        fg.addLayer(rekt);
+        return fg;
     },
 
     _drawExtentFromGeoJSON: function(geom) {
-        return new L.GeoJSON(geom, {style: this.options.style});
+        //return new L.GeoJSON(geom, {style: this.options.style});
+        gj = new L.GeoJSON(geom, {style: this.options.style});
+        fg = new L.FeatureGroup();
+        fg.addLayer(gj);
+        return fg;
     },
 
     _onReady: function() {
       var module = this;
       var map;
-      var extentLayer;
+      var extentLayer = new L.FeatureGroup(); // new in Leaflet.draw 2.*
       var previous_box;
       var previous_extent;
-      var is_exanded = false;
+      var is_expanded = false;
       var should_zoom = true;
       var form = $("#dataset-search");
       // CKAN 2.1
@@ -85,29 +92,39 @@ this.ckan.module('spatial-query', function ($, _) {
         }
       });
 
-      // OK map time
-      map = ckan.commonLeafletMap('dataset-map-container', this.options.map_config, {attributionControl: false});
+      // Initialize the map
+      map = ckan.commonLeafletMap(
+        'dataset-map-container', 
+        this.options.map_config, 
+        {attributionControl: false}
+      );
+      map.addLayer(extentLayer); // new for Leaflet.draw 2.*
 
       // Initialize the draw control
       map.addControl(new L.Control.Draw({
+        draw: {
+          polyline: false,
+          circle: false,
+          marker: false,
+          polygon: false,
+          rectangle: {
+            shapeOptions: module.options.style,
+            title: 'Draw rectangle'
+          }
+        },
+        edit: false,
         position: 'topright',
-        polyline: false, polygon: false,
-        circle: false, marker: false,
-        rectangle: {
-          shapeOptions: module.options.style,
-          title: 'Draw rectangle'
-        }
       }));
 
-      // OK add the expander
-      $('.leaflet-control-draw a', module.el).on('click', function(e) {
-        if (!is_exanded) {
+      // Adding the expander
+      $('.leaflet-draw-draw-rectangle', module.el).on('click', function(e) {
+        if (!is_expanded) {
           $('body').addClass('dataset-map-expanded');
           if (should_zoom && !extentLayer) {
             map.zoomIn();
           }
           resetMap();
-          is_exanded = true;
+          is_expanded = true;
         }
       });
 
@@ -123,14 +140,14 @@ this.ckan.module('spatial-query', function ($, _) {
         setPreviousExtent();
         setPreviousBBBox();
         resetMap();
-        is_exanded = false;
+        is_expanded = false;
       });
 
       // Handle the apply expanded action
-      $('.apply', buttons).on('click', function() {
+      $('.apply').on('click', function() {
         if (extentLayer) {
           $('body').removeClass('dataset-map-expanded');
-          is_exanded = false;
+          is_expanded = false;
           resetMap();
           // Eugh, hacky hack.
           setTimeout(function() {
@@ -141,13 +158,12 @@ this.ckan.module('spatial-query', function ($, _) {
       });
 
       // When user finishes drawing the box, record it and add it to the map
-      map.on('draw:rectangle-created', function (e) {
-        if (extentLayer) {
-          map.removeLayer(extentLayer);
-        }
-        extentLayer = e.rect;
+      map.on('draw:created', function (e) {
+        for (searchboxLayer in extentLayer.layers) { extentLayer.removeLayer(searchboxLayer); }
+        var type = e.layerType,
+            layer = e.layer;
+        extentLayer.addLayer(layer);
         $('#ext_bbox').val(extentLayer.getBounds().toBBoxString());
-        map.addLayer(extentLayer);
         $('.apply', buttons).removeClass('disabled').addClass('btn-primary');
       });
 
@@ -166,12 +182,18 @@ this.ckan.module('spatial-query', function ($, _) {
         should_zoom = false;
       });
 
+      function emptyFeatureGroup(featureGroup) {
+        console.log('TODO empty featureGroup');
+        console.log(featureGroup);
+        // TODO
+      }
 
       // Is there an existing box from a previous search?
       function setPreviousBBBox() {
         previous_bbox = module._getParameterByName('ext_bbox');
         if (previous_bbox) {
           $('#ext_bbox').val(previous_bbox);
+          // TODO upgrade
           extentLayer = module._drawExtentFromCoords(previous_bbox.split(','))
           map.addLayer(extentLayer);
           map.fitBounds(extentLayer.getBounds());

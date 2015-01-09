@@ -15,10 +15,13 @@ e.g.
   <h2 class="module-heading">
     <i class="icon-medium icon-globe"></i>
     {{ _('Filter by location') }}
-    <a href="{{ h.remove_url_param(['ext_bbox','ext_prev_extent', 'ext_location']) }}" class="action">{{ _('Clear') }}</a>
+    <a href="{{ h.remove_url_param(['ext_bbox','ext_prev_extent', 'ext_location']) }}" 
+      class="action">{{ _('Clear') }}</a>
   </h2>
   {% set map_config = h.get_common_map_config() %}
-  <div class="dataset-map" data-module="spatial-query" data-default_extent="{{ default_extent }}" data-module-map_config="{{ h.dump_json(map_config) }}">
+  <div class="dataset-map" data-module="spatial-query" 
+    data-default_extent="{{ default_extent }}" 
+    data-module-map_config="{{ h.dump_json(map_config) }}">
     <div id="dataset-map-container"></div>
   </div>
   <div id="dataset-map-attribution">
