@@ -392,6 +392,62 @@ class SpatialHarvester(HarvesterBase):
                              harvest_object_id=harvest_object.id)
                  extras[key] = value
 
+
+
+
+        resource_locator_groups = iso_values.get('resource-locator-group', [])
+        data_formats = iso_values.get('data-format', [])
+        for resource_locator_group, data_format in zip(resource_locator_groups, data_formats):
+            for resource_locator in resource_locator_group['resource-locator']:
+                url = resource_locator.get('url', '').strip()
+                if url:
+                    resource = {}
+                    format_from_url = guess_resource_format(url)
+                    resource['format'] = format_from_url if format_from_url else data_format
+                    if resource['format'] == 'wms' and config.get('ckanext.spatial.harvest.validate_wms', False):
+                        # Check if the service is a view service
+                        test_url = url.split('?')[0] if '?' in url else url
+                        if self._is_wms(test_url):
+                            resource['verified'] = True
+                            resource['verified_date'] = datetime.now().isoformat()
+
+                    resource.update(
+                        {
+                            'url': url,
+                            'name': resource_locator.get('name') or p.toolkit._('Unnamed resource'),
+                            'description': resource_locator.get('description') or  '',
+                            'resource_locator_protocol': resource_locator.get('protocol') or '',
+                            'resource_locator_function': resource_locator.get('function') or '',
+                        })
+                    package_dict['resources'].append(resource)           
+
+
+        resource_locators = iso_values.get('resource-locator-identification', [])
+
+        if len(resource_locators):
+            for resource_locator in resource_locators:
+                url = resource_locator.get('url', '').strip()
+                if url:
+                    resource = {}
+                    format_from_url = guess_resource_format(url)
+                    resource['format'] = format_from_url
+                    if resource['format'] == 'wms' and config.get('ckanext.spatial.harvest.validate_wms', False):
+                        # Check if the service is a view service
+                        test_url = url.split('?')[0] if '?' in url else url
+                        if self._is_wms(test_url):
+                            resource['verified'] = True
+                            resource['verified_date'] = datetime.now().isoformat()
+
+                    resource.update(
+                        {
+                            'url': url,
+                            'name': resource_locator.get('name') or p.toolkit._('Unnamed resource'),
+                            'description': resource_locator.get('description') or  '',
+                            'resource_locator_protocol': resource_locator.get('protocol') or '',
+                            'resource_locator_function': resource_locator.get('function') or '',
+                        })
+                    package_dict['resources'].append(resource)
+
         extras_as_dict = []
         for key, value in extras.iteritems():
             if isinstance(value, (list, dict)):
