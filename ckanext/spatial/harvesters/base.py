@@ -352,8 +352,9 @@ class SpatialHarvester(HarvesterBase):
         distributor_data_format = iso_values.get('distributor-data-format', '')
         distribution_data_formats = iso_values.get('distribution-data-format', [])
 
-        if distributor_data_format:
-            resource_locator_group_data_format = [ (resource_locator_group, distributor_data_format) for resource_locator_group in resource_locator_groups]
+        if distributor_data_format or len(distribution_data_formats) == 1:
+            universal_format = distributor_data_format or distribution_data_formats[0]
+            resource_locator_group_data_format = [ (resource_locator_group, universal_format) for resource_locator_group in resource_locator_groups]
         else:
             resource_locator_group_data_format = zip(resource_locator_groups, distribution_data_formats)
 
