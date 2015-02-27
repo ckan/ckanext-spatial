@@ -801,7 +801,14 @@ class ISODocument(MappedXmlDocument):
             multiplicity="0..1",
         ),
         ISOElement(
-            name="data-format",
+            name="distributor-data-format",
+            search_paths=[
+                "gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributorFormat/gmd:MD_Format/gmd:name/gco:CharacterString/text()",
+            ],
+            multiplicity="0..1",
+        ),
+        ISOElement(
+            name="distribution-data-format",
             search_paths=[
                 "gmd:distributionInfo/gmd:MD_Distribution/gmd:distributionFormat/gmd:MD_Format/gmd:name/gco:CharacterString/text()",
             ],

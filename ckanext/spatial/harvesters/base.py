@@ -348,56 +348,16 @@ class SpatialHarvester(HarvesterBase):
         else:
             log.debug('No spatial extent defined for this object')
 
-        resource_locators = iso_values.get('resource-locator', []) +\
-            iso_values.get('resource-locator-identification', [])
-
-        if len(resource_locators):
-            for resource_locator in resource_locators:
-                url = resource_locator.get('url', '').strip()
-                if url:
-                    resource = {}
-                    format_from_url = guess_resource_format(url)
-                    resource['format'] = format_from_url if format_from_url else iso_values.get('format', '')
-                    if resource['format'] == 'wms' and config.get('ckanext.spatial.harvest.validate_wms', False):
-                        # Check if the service is a view service
-                        test_url = url.split('?')[0] if '?' in url else url
-                        if self._is_wms(test_url):
-                            resource['verified'] = True
-                            resource['verified_date'] = datetime.now().isoformat()
-
-                    resource.update(
-                        {
-                            'url': url,
-                            'name': resource_locator.get('name') or p.toolkit._('Unnamed resource'),
-                            'description': resource_locator.get('description') or  '',
-                            'resource_locator_protocol': resource_locator.get('protocol') or '',
-                            'resource_locator_function': resource_locator.get('function') or '',
-                        })
-                    package_dict['resources'].append(resource)
-
-
-        # Add default_extras from config
-        default_extras = self.source_config.get('default_extras',{})
-        if default_extras:
-           override_extras = self.source_config.get('override_extras',False)
-           for key,value in default_extras.iteritems():
-              log.debug('Processing extra %s', key)
-              if not key in extras or override_extras:
-                 # Look for replacement strings
-                 if isinstance(value,basestring):
-                    value = value.format(harvest_source_id=harvest_object.job.source.id,
-                             harvest_source_url=harvest_object.job.source.url.strip('/'),
-                             harvest_source_title=harvest_object.job.source.title,
-                             harvest_job_id=harvest_object.job.id,
-                             harvest_object_id=harvest_object.id)
-                 extras[key] = value
-
-
-
-
         resource_locator_groups = iso_values.get('resource-locator-group', [])
-        data_formats = iso_values.get('data-format', [])
-        for resource_locator_group, data_format in zip(resource_locator_groups, data_formats):
+        distributor_data_format = iso_values.get('distributor-data-format', '')
+        distribution_data_formats = iso_values.get('distribution-data-format', [])
+
+        if distributor_data_format:
+            resource_locator_group_data_format = [ (resource_locator_group, distributor_data_format) for resource_locator_group in resource_locator_groups]
+        else:
+            resource_locator_group_data_format = zip(resource_locator_groups, distribution_data_formats)
+
+        for resource_locator_group, data_format in resource_locator_group_data_format:
             for resource_locator in resource_locator_group['resource-locator']:
                 url = resource_locator.get('url', '').strip()
                 if url:
