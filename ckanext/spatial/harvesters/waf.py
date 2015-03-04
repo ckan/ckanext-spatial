@@ -14,6 +14,7 @@ from ckan.plugins.core import SingletonPlugin, implements
 from ckanext.harvest.interfaces import IHarvester
 from ckanext.harvest.model import HarvestObject
 from ckanext.harvest.model import HarvestObjectExtra as HOExtra
+from ckan.model import Package
 import ckanext.harvest.queue as queue
 
 from ckanext.spatial.harvesters.base import SpatialHarvester, guess_standard
@@ -73,22 +74,25 @@ class WAFHarvester(SpatialHarvester, SingletonPlugin):
 
         url_to_modified_db = {} ## mapping of url to last_modified in db
         url_to_ids = {} ## mapping of url to guid in db
+        url_deleted = set() ## manually deleted. may need to recover it.
 
 
         HOExtraAlias1 = aliased(HOExtra)
         HOExtraAlias2 = aliased(HOExtra)
-        query = model.Session.query(HarvestObject.guid, HarvestObject.package_id, HOExtraAlias1.value, HOExtraAlias2.value).\
+        query = model.Session.query(HarvestObject.guid, HarvestObject.package_id, HOExtraAlias1.value, HOExtraAlias2.value, Package.state).\
                                     join(HOExtraAlias1, HarvestObject.extras).\
                                     join(HOExtraAlias2, HarvestObject.extras).\
+                                    join(Package).\
                                     filter(HOExtraAlias1.key=='waf_modified_date').\
                                     filter(HOExtraAlias2.key=='waf_location').\
                                     filter(HarvestObject.current==True).\
                                     filter(HarvestObject.harvest_source_id==harvest_job.source.id)
 
 
-        for guid, package_id, modified_date, url in query:
+        for guid, package_id, modified_date, url, state in query:
             url_to_modified_db[url] = modified_date
             url_to_ids[url] = (guid, package_id)
+            if state == 'deleted': url_deleted.add(url)
 
         ######  Get current list of records from source ######
 
@@ -113,7 +117,8 @@ class WAFHarvester(SpatialHarvester, SingletonPlugin):
 
         for item in possible_changes:
             if (not url_to_modified_harvest[item] or not url_to_modified_db[item] #if there is no date assume change
-                or url_to_modified_harvest[item] > url_to_modified_db[item]):
+                or url_to_modified_harvest[item] > url_to_modified_db[item]
+                or item in url_deleted):
                 change.append(item)
 
         def create_extras(url, date, status):

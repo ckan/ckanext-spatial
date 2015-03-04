@@ -611,8 +611,20 @@ class SpatialHarvester(HarvesterBase):
 
         elif status == 'change':
 
+            # check status of the existing package, is it deleted?
+            is_deleted = False
+            existing_package_dict = None
+            try:
+                existing_package_dict = logic.get_action('package_show')(context,
+                    {'id': harvest_object.package_id})
+            except p.toolkit.ObjectNotFound:
+                pass
+            if existing_package_dict and \
+                    existing_package_dict['state'] == 'deleted':
+                is_deleted = True
+
             # Check if the modified date is more recent
-            if not self.force_import and previous_object and harvest_object.metadata_modified_date <= previous_object.metadata_modified_date:
+            if not is_deleted and previous_object and not self.force_import and harvest_object.metadata_modified_date <= previous_object.metadata_modified_date:
 
                 # Assign the previous job id to the new object to
                 # avoid losing history
@@ -624,33 +636,33 @@ class SpatialHarvester(HarvesterBase):
 
                 # Reindex the corresponding package to update the reference to the
                 # harvest object
-                if ((config.get('ckanext.spatial.harvest.reindex_unchanged', True) != 'False'
-                    or self.source_config.get('reindex_unchanged') != 'False')
-                    and harvest_object.package_id):
-                    context.update({'validate': False, 'ignore_auth': True})
-                    try:
-                        package_dict = logic.get_action('package_show')(context,
-                            {'id': harvest_object.package_id})
-                    except p.toolkit.ObjectNotFound:
-                        pass
+                if harvest_object.package_id:
+                    if existing_package_dict:
+                        package_dict = existing_package_dict
                     else:
+                        context.update({'validate': False,
+                            'ignore_auth': True})
+                        try:
+                            package_dict = logic.get_action('package_show')\
+                                (context, {'id': harvest_object.package_id})
+                        except p.toolkit.ObjectNotFound:
+                            pass
+
+                    if package_dict:
                         for extra in package_dict.get('extras', []):
                             if extra['key'] == 'harvest_object_id':
                                 extra['value'] = harvest_object.id
-                        if package_dict:
-                            package_index = PackageSearchIndex()
-                            package_index.index_package(package_dict)
+                        package_index = PackageSearchIndex()
+                        package_index.index_package(package_dict)
 
                 log.info('Document with GUID %s unchanged, skipping...' % (harvest_object.guid))
             else:
                 # make package name sticky
-                try:
-                    existing_package_dict = logic.get_action('package_show')(context,
-                        {'id': harvest_object.package_id})
-                except p.toolkit.ObjectNotFound:
-                    pass
-                else:
+                if existing_package_dict:
                     package_dict['name'] = existing_package_dict['name']
+                # undelete package on updating
+                if is_deleted:
+                    package_dict['state'] = 'active'
 
                 package_schema = logic.schema.default_update_package_schema()
                 package_schema['tags'] = tag_schema
