@@ -7,7 +7,7 @@ from ckan.lib.base import config
 from ckanext.spatial.model import PackageExtent
 from shapely.geometry import asShape
 
-from geoalchemy import WKTSpatialElement
+from ckanext.spatial.geoalchemy_common import WKTElement, ST_Transform
 
 log = logging.getLogger(__name__)
 
@@ -52,7 +52,8 @@ def save_package_extent(package_id, geometry = None, srid = None):
         if not srid:
             srid = db_srid
 
-        package_extent = PackageExtent(package_id=package_id,the_geom=WKTSpatialElement(shape.wkt, srid))
+        package_extent = PackageExtent(package_id=package_id,
+                                       the_geom=WKTElement(shape.wkt, srid))
 
     # Check if extent exists
     if existing_package_extent:
@@ -127,9 +128,9 @@ def _bbox_2_wkt(bbox, srid):
 
     if srid and srid != db_srid:
         # Input geometry needs to be transformed to the one used on the database
-        input_geometry = functions.transform(WKTSpatialElement(wkt,srid),db_srid)
+        input_geometry = ST_Transform(WKTElement(wkt,srid),db_srid)
     else:
-        input_geometry = WKTSpatialElement(wkt,db_srid)
+        input_geometry = WKTElement(wkt,db_srid)
     return input_geometry
 
 def bbox_query(bbox,srid=None):
