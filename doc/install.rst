@@ -143,6 +143,48 @@ Troubleshooting
 Here are some common problems you may find when installing or using the
 extension:
 
+When upgrading the extension to a newer version
++++++++++++++++++++++++++++++++++++++++++++++++
+
+::
+
+    File "/home/adria/dev/pyenvs/spatial/src/ckanext-spatial/ckanext/spatial/plugin.py", line 39, in <module>
+        check_geoalchemy_requirement()
+    File "/home/adria/dev/pyenvs/spatial/src/ckanext-spatial/ckanext/spatial/plugin.py", line 37, in check_geoalchemy_requirement
+        raise ImportError(msg.format('geoalchemy'))
+    ImportError: This version of ckanext-spatial requires geoalchemy2. Please install it by running `pip install geoalchemy2`.
+    For more details see the "Troubleshooting" section of the install documentation
+
+Starting from CKAN 2.3, the spatial requires GeoAlchemy2_ instead of GeoAlchemy, as this
+is incompatible with the SQLAlchemy version that CKAN core uses. GeoAlchemy2 will get
+installed on a new deployment, but if you are upgrading an existing ckanext-spatial
+install you'll need to install it manually. With the virtualenv CKAN is installed on
+activated, run::
+
+    pip install GeoAlchemy2
+
+Restart the server for the changes to take effect.
+
+::
+
+  File "/home/adria/dev/pyenvs/spatial/src/ckanext-spatial/ckanext/spatial/plugin.py", line 30, in check_geoalchemy_requirement
+    import geoalchemy2
+  File "/home/adria/dev/pyenvs/spatial/local/lib/python2.7/site-packages/geoalchemy2/__init__.py", line 1, in <module>
+    from .types import (  # NOQA
+  File "/home/adria/dev/pyenvs/spatial/local/lib/python2.7/site-packages/geoalchemy2/types.py", line 15, in <module>
+    from .comparator import BaseComparator, Comparator
+  File "/home/adria/dev/pyenvs/spatial/local/lib/python2.7/site-packages/geoalchemy2/comparator.py", line 52, in <module>
+    class BaseComparator(UserDefinedType.Comparator):
+  AttributeError: type object 'UserDefinedType' has no attribute 'Comparator'
+
+You are trying to run the extension against CKAN 2.3, but the requirements for CKAN haven't been updated
+(GeoAlchemy2 is crashing against SQLAlchemy 0.7.x). Upgrade the CKAN requirements as described in the
+`upgrade documentation`_.
+
+.. _GeoAlchemy2: http://geoalchemy-2.readthedocs.org/en/0.2.4/
+.. _upgrade documentation: http://docs.ckan.org/en/latest/maintaining/upgrading/upgrade-source.html
+
+
 When initializing the spatial tables
 ++++++++++++++++++++++++++++++++++++
 
