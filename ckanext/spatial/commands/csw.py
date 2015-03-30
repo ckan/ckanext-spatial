@@ -38,7 +38,7 @@ option:
     parser.add_option('-p', '--pycsw-config', dest='pycsw_config',
             default='default.cfg', help='pycsw config file to use.')
     parser.add_option('-u', '--ckan-url', dest='ckan_url',
-            default='http://localhost', help='CKAN instance to import the datasets from.')
+            help='CKAN instance to import the datasets from.')
 
     summary = __doc__.split('\n')[0]
     usage = __doc__

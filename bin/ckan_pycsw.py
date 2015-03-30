@@ -54,6 +54,9 @@ def setup_db(pycsw_config):
 def set_keywords(pycsw_config_file, pycsw_config, ckan_url, limit=20):
     """set pycsw service metadata keywords from top limit CKAN tags"""
 
+    ckan_url = ckan_url or pycsw_config.get('defaults', 'ckan_url')
+    ckan_url = ckan_url.rstrip('/') + '/'
+
     log.info('Fetching tags from %s', ckan_url)
     url = ckan_url + 'api/tag_counts'
     response = requests.get(url)
@@ -81,6 +84,8 @@ def load(pycsw_config, ckan_url):
 
     log.info('Started gathering CKAN datasets identifiers: {0}'.format(str(datetime.datetime.now())))
 
+    ckan_url = ckan_url or pycsw_config.get('defaults', 'ckan_url')
+    ckan_url = ckan_url.rstrip('/') + '/'
     query = 'api/search/dataset?qjson={"fl":"id,metadata_modified,extras_harvest_object_id,extras_source_datajson_identifier,extras_metadata_source,extras_collection_package_id", "q":"harvest_object_id:[\\"\\" TO *]", "limit":1000, "start":%s}'
 
     start = 0
