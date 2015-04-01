@@ -168,16 +168,16 @@ def bbox_query_ordered(bbox, srid=None):
               'query_srid': input_geometry.srid}
 
     # First get the area of the query box
-    sql = "SELECT ST_Area(GeomFromText(:query_bbox, :query_srid));"
+    sql = "SELECT ST_Area(ST_GeomFromText(:query_bbox, :query_srid));"
     params['search_area'] = Session.execute(sql, params).fetchone()[0]
 
     # Uses spatial ranking method from "USGS - 2006-1279" (Lanfear)
     sql = """SELECT ST_AsBinary(package_extent.the_geom) AS package_extent_the_geom,
-                    POWER(ST_Area(ST_Intersection(package_extent.the_geom, GeomFromText(:query_bbox, :query_srid))),2)/ST_Area(package_extent.the_geom)/:search_area as spatial_ranking,
+                    POWER(ST_Area(ST_Intersection(package_extent.the_geom, ST_GeomFromText(:query_bbox, :query_srid))),2)/ST_Area(package_extent.the_geom)/:search_area as spatial_ranking,
                     package_extent.package_id AS package_id
              FROM package_extent, package
              WHERE package_extent.package_id = package.id
-                AND ST_Intersects(package_extent.the_geom, GeomFromText(:query_bbox, :query_srid))
+                AND ST_Intersects(package_extent.the_geom, ST_GeomFromText(:query_bbox, :query_srid))
                 AND package.state = 'active'
              ORDER BY spatial_ranking desc"""
     extents = Session.execute(sql, params).fetchall()
