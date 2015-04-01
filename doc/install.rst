@@ -13,13 +13,50 @@ Install PostGIS and system packages
           install any of the packages on this section and can skip to the
           next one.
 
-.. note:: The package names and paths shown are the defaults on an Ubuntu
-          12.04 install (PostgreSQL 9.1 and PostGIS 1.5). Adjust the
-          package names and the paths if you are using a different version of
-          any of them.
+.. note:: The package names and paths shown are the defaults on Ubuntu installs.
+          Adjust the package names and the paths if you are using a different platform.
 
 All commands assume an existing CKAN database named ``ckan_default``.
 
+Ubuntu 14.04 (PostgreSQL 9.3 and PostGIS 2.1)
++++++++++++++++++++++++++++++++++++++++++++++
+
+#. Install PostGIS::
+
+        sudo apt-get install postgresql-9.3-postgis
+
+#. Run the following commands. The first one will create the necessary
+   tables and functions in the database, and the second will populate
+   the spatial reference table::
+
+        sudo -u postgres psql -d ckan_default -f /usr/share/postgresql/9.3/contrib/postgis-2.1/postgis.sql
+        sudo -u postgres psql -d ckan_default -f /usr/share/postgresql/9.3/contrib/postgis-2.1/spatial_ref_sys.sql
+
+#. Change the owner to spatial tables to the CKAN user to avoid errors later
+   on::
+
+        sudo -u postgres psql -d ckan_default -c 'ALTER VIEW geometry_columns OWNER TO ckan_default;'
+        sudo -u postgres psql -d ckan_default -c 'ALTER TABLE spatial_ref_sys OWNER TO ckan_default;'
+
+#. Execute the following command to see if PostGIS was properly
+   installed::
+
+        sudo -u postgres psql -d ckan_default -c "SELECT postgis_full_version()"
+
+   You should get something like::
+
+                                                                 postgis_full_version
+        ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+         POSTGIS="2.1.2 r12389" GEOS="3.4.2-CAPI-1.8.2 r3921" PROJ="Rel. 4.8.0, 6 March 2012" GDAL="GDAL 1.10.1, released 2013/08/26" LIBXML="2.9.1" LIBJSON="UNKNOWN" RASTER
+        (1 row)
+
+#. Install some other packages needed by the extension dependencies::
+
+     sudo apt-get install python-dev libxml2-dev libxslt1-dev libgeos-c1
+
+
+Ubuntu 12.04 (PostgreSQL 9.1 and PostGIS 1.5)
++++++++++++++++++++++++++++++++++++++++++++++
 
 #. Install PostGIS::
 
@@ -39,19 +76,9 @@ All commands assume an existing CKAN database named ``ckan_default``.
 
 #. Change the owner to spatial tables to the CKAN user to avoid errors later
    on::
-   
-   Open the Postgres console::
-   
-        $ sudo -u postgres psql
-        
-   Connect to the ``ckan_default`` database::
-        
-        postgres=# \c ckan_default
-        
-   Change the ownership for two spatial tables::
 
-        ALTER TABLE spatial_ref_sys OWNER TO ckan_default;
-        ALTER TABLE geometry_columns OWNER TO ckan_default;
+        sudo -u postgres psql -d ckan_default -c 'ALTER TABLE geometry_columns OWNER TO ckan_default;'
+        sudo -u postgres psql -d ckan_default -c 'ALTER TABLE spatial_ref_sys OWNER TO ckan_default;'
 
 #. Execute the following command to see if PostGIS was properly
    installed::
