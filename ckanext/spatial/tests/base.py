@@ -5,6 +5,7 @@ from sqlalchemy import Table
 from nose.plugins.skip import SkipTest
 
 from ckan.model import Session, repo, meta, engine_is_sqlite
+from ckanext.spatial.geoalchemy_common import postgis_version
 from ckanext.spatial.model.package_extent import setup as spatial_db_setup
 from ckanext.harvest.model import setup as harvest_model_setup
 
@@ -17,13 +18,6 @@ geojson_examples = {
         'multipoint':'{"type":"MultiPoint","coordinates":[[100.0,0.0],[101.0,1.0]]}',
         'multiline':'{"type":"MultiLineString","coordinates":[[[100.0,0.0],[101.0,1.0]],[[102.0,2.0],[103.0,3.0]]]}',
         'multipolygon':'{"type":"MultiPolygon","coordinates":[[[[102.0,2.0],[103.0,2.0],[103.0,3.0],[102.0,3.0],[102.0,2.0]]],[[[100.0,0.0],[101.0,0.0],[101.0,1.0],[100.0,1.0],[100.0,0.0]],[[100.2,0.2],[100.8,0.2],[100.8,0.8],[100.2,0.8],[100.2,0.2]]]]}'}
-
-
-def postgis_version():
-
-    result = Session.execute('SELECT postgis_lib_version()')
-
-    return result.scalar()
 
 
 def _execute_script(script_path):

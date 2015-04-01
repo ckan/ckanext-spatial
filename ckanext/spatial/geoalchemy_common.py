@@ -35,6 +35,13 @@ else:
     legacy_geoalchemy = True
 
 
+def postgis_version():
+
+    result = Session.execute('SELECT postgis_lib_version()')
+
+    return result.scalar()
+
+
 def setup_spatial_table(package_extent_class, db_srid=None):
 
     if legacy_geoalchemy:
@@ -55,10 +62,16 @@ def setup_spatial_table(package_extent_class, db_srid=None):
 
         GeometryDDL(package_extent_table)
     else:
+
+        # PostGIS 1.5 requires management=True when defining the Geometry
+        # field
+        management = (postgis_version()[:1] == '1')
+
         package_extent_table = Table(
             'package_extent', meta.metadata,
             Column('package_id', types.UnicodeText, primary_key=True),
-            Column('the_geom', Geometry('GEOMETRY', srid=db_srid)),
+            Column('the_geom', Geometry('GEOMETRY', srid=db_srid,
+                                        management=management)),
         )
 
         meta.mapper(package_extent_class, package_extent_table)

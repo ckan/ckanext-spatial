@@ -7,9 +7,12 @@ from ckan.lib.base import config
 from ckanext.spatial.model import PackageExtent
 from shapely.geometry import asShape
 
-from ckanext.spatial.geoalchemy_common import WKTElement, ST_Transform, ST_Equals, compare_geometry_fields
+from ckanext.spatial.geoalchemy_common import (WKTElement, ST_Transform,
+                                               compare_geometry_fields,
+                                               )
 
 log = logging.getLogger(__name__)
+
 
 def get_srid(crs):
     """Returns the SRID for the provided CRS definition
