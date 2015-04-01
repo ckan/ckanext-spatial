@@ -126,6 +126,7 @@ class SpatialMetadata(p.SingletonPlugin):
                         error_dict = {'spatial':[u'Error creating geometry: %s' % str(e)]}
                         raise p.toolkit.ValidationError(error_dict, error_summary=package_error_summary(error_dict))
                     except Exception, e:
+                        raise
                         if bool(os.getenv('DEBUG')):
                             raise
                         error_dict = {'spatial':[u'Error: %s' % str(e)]}
