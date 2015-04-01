@@ -7,7 +7,7 @@ from ckan.lib.base import config
 from ckanext.spatial.model import PackageExtent
 from shapely.geometry import asShape
 
-from ckanext.spatial.geoalchemy_common import WKTElement, ST_Transform
+from ckanext.spatial.geoalchemy_common import WKTElement, ST_Transform, ST_Equals, compare_geometry_fields
 
 log = logging.getLogger(__name__)
 
@@ -64,7 +64,7 @@ def save_package_extent(package_id, geometry = None, srid = None):
             log.debug('Deleted extent for package %s' % package_id)
         else:
             # Check if extent changed
-            if Session.scalar(package_extent.the_geom.wkt) <> Session.scalar(existing_package_extent.the_geom.wkt):
+            if not compare_geometry_fields(package_extent.the_geom, existing_package_extent.the_geom):
                 # Update extent
                 existing_package_extent.the_geom = package_extent.the_geom
                 existing_package_extent.save()

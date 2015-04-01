@@ -6,7 +6,7 @@ it against the CKAN version on startup
 '''
 
 from ckan.plugins import toolkit
-from ckan.model import meta
+from ckan.model import meta, Session
 
 from sqlalchemy import types, Column, Table
 
@@ -17,13 +17,17 @@ if toolkit.check_ckan_version(min_version='2.3'):
     from geoalchemy2 import Geometry
     from sqlalchemy import func
     ST_Transform = func.ST_Transform
+    ST_Equals = func.ST_Equals
 
     legacy_geoalchemy = False
 else:
     # CKAN < 2.3, use GeoAlchemy
 
     from geoalchemy import WKTSpatialElement as WKTElement
-    from geoalchemy.functions import transform as ST_Transform
+    from geoalchemy import functions
+    ST_Transform = functions.transform
+    ST_Equals = functions.equals
+
     from geoalchemy import (Geometry, GeometryColumn, GeometryDDL,
                             GeometryExtensionColumn)
     from geoalchemy.postgis import PGComparator
@@ -60,3 +64,8 @@ def setup_spatial_table(package_extent_class, db_srid=None):
         meta.mapper(package_extent_class, package_extent_table)
 
     return package_extent_table
+
+
+def compare_geometry_fields(geom_field1, geom_field2):
+
+    return Session.scalar(ST_Equals(geom_field1, geom_field2))
