@@ -58,6 +58,9 @@ Ubuntu 14.04 (PostgreSQL 9.3 and PostGIS 2.1)
 Ubuntu 12.04 (PostgreSQL 9.1 and PostGIS 1.5)
 +++++++++++++++++++++++++++++++++++++++++++++
 
+.. note:: You can also install PostGIS 2.x on Ubuntu 12.04 using the packages
+    on the UbuntuGIS_ repository. Check the documentation there for details.
+
 #. Install PostGIS::
 
         sudo apt-get install postgresql-9.1-postgis
@@ -98,29 +101,13 @@ Ubuntu 12.04 (PostgreSQL 9.1 and PostGIS 1.5)
      sudo apt-get install python-dev libxml2-dev libxslt1-dev libgeos-c1
 
 
+.. _UbuntuGIS: https://wiki.ubuntu.com/UbuntuGIS
+
 Install the extension
 ---------------------
 
 1. Install this extension into your python environment (where CKAN is also
-   installed).
-
-   .. note:: Depending on the CKAN core version you are targeting you will need
-             to use a different branch from the extension.
-
-   For a production site, use the ``stable`` branch, unless there is a specific
-   branch that targets the CKAN core version that you are using.
-
-   To target the latest CKAN core release::
-
-     (pyenv) $ pip install -e "git+https://github.com/okfn/ckanext-spatial.git@stable#egg=ckanext-spatial"
-
-   To target an old release (if a release branch exists, otherwise use
-   ``stable``)::
-
-     (pyenv) $ pip install -e "git+https://github.com/okfn/ckanext-spatial.git@release-v1.8#egg=ckanext-spatial"
-
-   To target CKAN ``master``, use the extension ``master`` branch (ie no
-   branch defined)::
+   installed)::
 
     (pyenv) $ pip install -e "git+https://github.com/okfn/ckanext-spatial.git#egg=ckanext-spatial"
 
