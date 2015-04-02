@@ -48,5 +48,9 @@ setup(
     spatial=ckanext.spatial.commands.spatial:Spatial
     ckan-pycsw=ckanext.spatial.commands.csw:Pycsw
     validation=ckanext.spatial.commands.validation:Validation
+
+    [ckan.test_plugins]
+    test_spatial_plugin = ckanext.spatial.tests.test_plugin.plugin:TestSpatialPlugin
+
 	""",
 )

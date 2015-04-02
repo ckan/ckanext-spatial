@@ -3,7 +3,6 @@ import logging
 try: from cStringIO import StringIO
 except ImportError: from StringIO import StringIO
 
-from geoalchemy import WKTSpatialElement, functions
 from pylons import response
 from pkg_resources import resource_stream
 from lxml import etree

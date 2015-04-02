@@ -12,10 +12,38 @@ from ckan import plugins as p
 from ckan.lib.search import SearchError, PackageSearchQuery
 from ckan.lib.helpers import json
 
-from ckanext.spatial.lib import save_package_extent,validate_bbox, bbox_query, bbox_query_ordered
+
+def check_geoalchemy_requirement():
+    '''Checks if a suitable geoalchemy version installed
+
+       Checks if geoalchemy2 is present when using CKAN >= 2.3, and raises
+       an ImportError otherwise so users can upgrade manually.
+    '''
+
+    msg = ('This version of ckanext-spatial requires {0}. ' +
+           'Please install it by running `pip install {0}`.\n' +
+           'For more details see the "Troubleshooting" section of the ' +
+           'install documentation')
+
+    if p.toolkit.check_ckan_version(min_version='2.3'):
+        try:
+            import geoalchemy2
+        except ImportError:
+            raise ImportError(msg.format('geoalchemy2'))
+    else:
+        try:
+            import geoalchemy
+        except ImportError:
+            raise ImportError(msg.format('geoalchemy'))
+
+check_geoalchemy_requirement()
+
+
+from ckanext.spatial.lib import save_package_extent, validate_bbox, bbox_query, bbox_query_ordered
 from ckanext.spatial.model.package_extent import setup as setup_model
 
 log = getLogger(__name__)
+
 
 def package_error_summary(error_dict):
     ''' Do some i18n stuff on the error_dict keys '''
@@ -98,6 +126,7 @@ class SpatialMetadata(p.SingletonPlugin):
                         error_dict = {'spatial':[u'Error creating geometry: %s' % str(e)]}
                         raise p.toolkit.ValidationError(error_dict, error_summary=package_error_summary(error_dict))
                     except Exception, e:
+                        raise
                         if bool(os.getenv('DEBUG')):
                             raise
                         error_dict = {'spatial':[u'Error: %s' % str(e)]}
