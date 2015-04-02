@@ -9,7 +9,6 @@ from owslib.iso import MD_Metadata
 from pylons import config
 from nose.plugins.skip import SkipTest
 
-#from ckan.tests import CkanServerCase
 from ckan.model import engine_is_sqlite
 
 service = "http://ogcdev.bgs.ac.uk/geonetwork/srv/en/csw"
