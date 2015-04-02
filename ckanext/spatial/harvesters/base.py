@@ -355,7 +355,7 @@ class SpatialHarvester(HarvesterBase):
         if distributor_data_format or len(distribution_data_formats) == 1:
             universal_format = distributor_data_format or distribution_data_formats[0]
             resource_locator_group_data_format = [ (resource_locator_group, universal_format) for resource_locator_group in resource_locator_groups]
-        elif len(distribution_data_formats) == 0:
+        elif len(distribution_data_formats) == 0 or len(distribution_data_formats) != len(resource_locator_groups) :
             resource_locator_group_data_format = [ (resource_locator_group, None) for resource_locator_group in resource_locator_groups]
         else:
             resource_locator_group_data_format = zip(resource_locator_groups, distribution_data_formats)
