@@ -3,14 +3,44 @@ import random
 
 from nose.tools import assert_equal
 
+from shapely.geometry import asShape
+
 from ckan import model
 from ckan import plugins
 from ckan.lib.helpers import json
-from ckan.logic.schema import default_create_package_schema
 from ckan.logic.action.create import package_create
 from ckan.lib.munge import munge_title_to_name
+
+from ckanext.spatial.model import PackageExtent
 from ckanext.spatial.lib import validate_bbox, bbox_query, bbox_query_ordered
+from ckanext.spatial.geoalchemy_common import WKTElement, compare_geometry_fields
 from ckanext.spatial.tests.base import SpatialTestBase
+
+
+class TestCompareGeometries(SpatialTestBase):
+
+    def _get_extent_object(self, geometry):
+        if isinstance(geometry, basestring):
+            geometry = json.loads(geometry)
+        shape = asShape(geometry)
+        return PackageExtent(package_id='xxx',
+                             the_geom=WKTElement(shape.wkt, 4326))
+
+    def test_same_points(self):
+
+        extent1 = self._get_extent_object(self.geojson_examples['point'])
+        extent2 = self._get_extent_object(self.geojson_examples['point'])
+
+        assert compare_geometry_fields(extent1.the_geom, extent2.the_geom)
+
+    def test_different_points(self):
+
+        extent1 = self._get_extent_object(self.geojson_examples['point'])
+        extent2 = self._get_extent_object(self.geojson_examples['point_2'])
+
+        assert not compare_geometry_fields(extent1.the_geom, extent2.the_geom)
+
+
 
 class TestValidateBbox:
     bbox_dict = {'minx': -4.96,

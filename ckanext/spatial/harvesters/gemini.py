@@ -76,7 +76,7 @@ class GeminiHarvester(SpatialHarvester):
                 self._save_object_error('Error importing Gemini document.', harvest_object, 'Import')
             else:
                 self._save_object_error('Error importing Gemini document: %s' % str(e), harvest_object, 'Import')
-
+            raise
             if debug_exception_mode:
                 raise
 
@@ -355,10 +355,6 @@ class GeminiHarvester(SpatialHarvester):
 
         self.obj.current = True
         self.obj.save()
-
-
-        assert gemini_guid == [e['value'] for e in package['extras'] if e['key'] == 'guid'][0]
-        assert self.obj.id == [e['value'] for e in package['extras'] if e['key'] ==  'harvest_object_id'][0]
 
         return package
 

@@ -1,16 +1,14 @@
 from logging import getLogger
 
-from sqlalchemy import types, Column, Table
-
-from geoalchemy import Geometry, GeometryColumn, GeometryDDL, GeometryExtensionColumn
-from geoalchemy.postgis import PGComparator
-
+from sqlalchemy import Table
 
 from ckan.lib.base import config
 from ckan import model
 from ckan.model import Session
 from ckan.model import meta
 from ckan.model.domain_object import DomainObject
+
+from ckanext.spatial.geoalchemy_common import setup_spatial_table
 
 log = getLogger(__name__)
 
@@ -58,6 +56,7 @@ class PackageExtent(DomainObject):
         self.package_id = package_id
         self.the_geom = the_geom
 
+
 def define_spatial_tables(db_srid=None):
 
     global package_extent_table
@@ -67,18 +66,4 @@ def define_spatial_tables(db_srid=None):
     else:
         db_srid = int(db_srid)
 
-    package_extent_table = Table('package_extent', meta.metadata,
-                    Column('package_id', types.UnicodeText, primary_key=True),
-                    GeometryExtensionColumn('the_geom', Geometry(2,srid=db_srid)))
-
-
-    meta.mapper(PackageExtent, package_extent_table, properties={
-            'the_geom': GeometryColumn(package_extent_table.c.the_geom,
-                                            comparator=PGComparator)})
-
-    # enable the DDL extension
-    GeometryDDL(package_extent_table)
-
-
-
-
+    package_extent_table = setup_spatial_table(PackageExtent, db_srid)
