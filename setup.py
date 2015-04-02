@@ -30,8 +30,10 @@ setup(
     [ckan.plugins]
     spatial_metadata=ckanext.spatial.plugin:SpatialMetadata
     spatial_query=ckanext.spatial.plugin:SpatialQuery
-    wms_preview=ckanext.spatial.nongeos_plugin:WMSPreview
-    geojson_preview=ckanext.spatial.nongeos_plugin:GeoJSONPreview
+    wms_view=ckanext.spatial.nongeos_plugin:WMSView
+    geojson_view=ckanext.spatial.nongeos_plugin:GeoJSONView
+    wms_preview=ckanext.spatial.nongeos_plugin:WMSView
+    geojson_preview=ckanext.spatial.nongeos_plugin:GeoJSONView
     cswserver=ckanext.spatial.plugin:CatalogueServiceWeb
     spatial_harvest_metadata_api=ckanext.spatial.plugin:HarvestMetadataApi
 
