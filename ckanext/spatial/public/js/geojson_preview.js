@@ -72,14 +72,16 @@ ckan.module('geojsonpreview', function (jQuery, _) {
         style: self.options.style,
         onEachFeature: function(feature, layer) {
           var body = '';
-          jQuery.each(feature.properties, function(key, value){
-            if (value != null && typeof value === 'object') {
-              value = JSON.stringify(value);
-            }
-            body += L.Util.template(self.options.row, {key: key, value: value});
-          });
-          var popupContent = L.Util.template(self.options.table, {body: body});
-          layer.bindPopup(popupContent);
+          if (feature.properties) {
+            jQuery.each(feature.properties, function(key, value){
+              if (value != null && typeof value === 'object') {
+                value = JSON.stringify(value);
+              }
+              body += L.Util.template(self.options.row, {key: key, value: value});
+            });
+            var popupContent = L.Util.template(self.options.table, {body: body});
+            layer.bindPopup(popupContent);
+          }
         }
       }).addTo(self.map);
       self.map.fitBounds(gjLayer.getBounds());

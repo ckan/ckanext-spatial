@@ -30,6 +30,8 @@ setup(
     [ckan.plugins]
     spatial_metadata=ckanext.spatial.plugin:SpatialMetadata
     spatial_query=ckanext.spatial.plugin:SpatialQuery
+    wms_view=ckanext.spatial.nongeos_plugin:WMSView
+    geojson_view=ckanext.spatial.nongeos_plugin:GeoJSONView
     wms_preview=ckanext.spatial.nongeos_plugin:WMSPreview
     geojson_preview=ckanext.spatial.nongeos_plugin:GeoJSONPreview
     cswserver=ckanext.spatial.plugin:CatalogueServiceWeb
@@ -48,5 +50,9 @@ setup(
     spatial=ckanext.spatial.commands.spatial:Spatial
     ckan-pycsw=ckanext.spatial.commands.csw:Pycsw
     validation=ckanext.spatial.commands.validation:Validation
+
+    [ckan.test_plugins]
+    test_spatial_plugin = ckanext.spatial.tests.test_plugin.plugin:TestSpatialPlugin
+
 	""",
 )
