@@ -17,13 +17,14 @@ The GeoJSON previewer is based on Leaflet_. It will render GeoJSON_ files on a
 map and add a popup showing the features properties, for those resources that
 have a format of ``geojson`` or ``gjson``.
 
-To enable the GeoJSON previewer you need to add the ``geojson_preview`` plugin
+To enable the GeoJSON previewer you need to add the ``geojson_view`` plugin
 to your ini file. This plugin also requires the `resource_proxy`_
 plugin (Make sure you load the ``resource_proxy`` plugin before any other
 from the spatial extension)::
 
-    ckan.plugins = resource_proxy geojson_preview
+    ckan.plugins = resource_proxy geojson_view
 
+.. note:: If using CKAN < 2.3, use `geojson_preview`
 
 WMS Preview
 -----------
@@ -39,12 +40,14 @@ just the main WMS service endpoint, for example:
 
 http://vmap0.tiles.osgeo.org/wms/vmap0?SERVICE=WMS&REQUEST=GetCapabilities&VERSION=1.1.1
 
-To enable the WMS previewer you need to add the ``wms_preview`` plugin to your
+To enable the WMS previewer you need to add the ``wms_view`` plugin to your
 ini file. This plugin also requires the `resource_proxy`_
 plugin (Make sure you load the ``resource_proxy`` plugin before any other
 from the spatial extension::
 
-    ckan.plugins = resource_proxy wms_preview
+    ckan.plugins = resource_proxy wms_view
+
+.. note:: If using CKAN < 2.3, use `geojson_preview`
 
 .. note:: Please note that the WMS previewer included in ckanext-spatial is
           just a proof of concept and has important limitations, and is

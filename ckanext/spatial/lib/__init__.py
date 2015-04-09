@@ -7,9 +7,12 @@ from ckan.lib.base import config
 from ckanext.spatial.model import PackageExtent
 from shapely.geometry import asShape
 
-from geoalchemy import WKTSpatialElement
+from ckanext.spatial.geoalchemy_common import (WKTElement, ST_Transform,
+                                               compare_geometry_fields,
+                                               )
 
 log = logging.getLogger(__name__)
+
 
 def get_srid(crs):
     """Returns the SRID for the provided CRS definition
@@ -52,7 +55,8 @@ def save_package_extent(package_id, geometry = None, srid = None):
         if not srid:
             srid = db_srid
 
-        package_extent = PackageExtent(package_id=package_id,the_geom=WKTSpatialElement(shape.wkt, srid))
+        package_extent = PackageExtent(package_id=package_id,
+                                       the_geom=WKTElement(shape.wkt, srid))
 
     # Check if extent exists
     if existing_package_extent:
@@ -63,7 +67,7 @@ def save_package_extent(package_id, geometry = None, srid = None):
             log.debug('Deleted extent for package %s' % package_id)
         else:
             # Check if extent changed
-            if Session.scalar(package_extent.the_geom.wkt) <> Session.scalar(existing_package_extent.the_geom.wkt):
+            if not compare_geometry_fields(package_extent.the_geom, existing_package_extent.the_geom):
                 # Update extent
                 existing_package_extent.the_geom = package_extent.the_geom
                 existing_package_extent.save()
@@ -127,9 +131,9 @@ def _bbox_2_wkt(bbox, srid):
 
     if srid and srid != db_srid:
         # Input geometry needs to be transformed to the one used on the database
-        input_geometry = functions.transform(WKTSpatialElement(wkt,srid),db_srid)
+        input_geometry = ST_Transform(WKTElement(wkt,srid),db_srid)
     else:
-        input_geometry = WKTSpatialElement(wkt,db_srid)
+        input_geometry = WKTElement(wkt,db_srid)
     return input_geometry
 
 def bbox_query(bbox,srid=None):
@@ -167,16 +171,16 @@ def bbox_query_ordered(bbox, srid=None):
               'query_srid': input_geometry.srid}
 
     # First get the area of the query box
-    sql = "SELECT ST_Area(GeomFromText(:query_bbox, :query_srid));"
+    sql = "SELECT ST_Area(ST_GeomFromText(:query_bbox, :query_srid));"
     params['search_area'] = Session.execute(sql, params).fetchone()[0]
 
     # Uses spatial ranking method from "USGS - 2006-1279" (Lanfear)
     sql = """SELECT ST_AsBinary(package_extent.the_geom) AS package_extent_the_geom,
-                    POWER(ST_Area(ST_Intersection(package_extent.the_geom, GeomFromText(:query_bbox, :query_srid))),2)/ST_Area(package_extent.the_geom)/:search_area as spatial_ranking,
+                    POWER(ST_Area(ST_Intersection(package_extent.the_geom, ST_GeomFromText(:query_bbox, :query_srid))),2)/ST_Area(package_extent.the_geom)/:search_area as spatial_ranking,
                     package_extent.package_id AS package_id
              FROM package_extent, package
              WHERE package_extent.package_id = package.id
-                AND ST_Intersects(package_extent.the_geom, GeomFromText(:query_bbox, :query_srid))
+                AND ST_Intersects(package_extent.the_geom, ST_GeomFromText(:query_bbox, :query_srid))
                 AND package.state = 'active'
              ORDER BY spatial_ranking desc"""
     extents = Session.execute(sql, params).fetchall()

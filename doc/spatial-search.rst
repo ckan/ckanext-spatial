@@ -42,14 +42,14 @@ Regardless of the backend that you are using, in order to make a dataset
 queryable by location, an special extra must be defined, with its key named
 'spatial'. The value must be a valid GeoJSON_ geometry, for example::
 
-    { 
+    {
       "type":"Polygon",
       "coordinates":[[[2.05827, 49.8625],[2.05827, 55.7447], [-6.41736, 55.7447], [-6.41736, 49.8625], [2.05827, 49.8625]]]
     }
 
 or::
 
-    { 
+    {
       "type": "Point",
       "coordinates": [-3.145,53.078]
     }
@@ -70,11 +70,11 @@ The following table summarizes the different spatial search backends:
 +------------------------+---------------+-------------------------------------+-----------------------------------------------------------+-------------------------------------------+
 | Backend                | Solr Versions | Supported geometries                | Sorting and relevance                                     | Performance with large number of datasets |
 +========================+===============+=====================================+===========================================================+===========================================+
-| ``solr``               | 3.1 to 4.x    | Bounding Box                        | Yes, spatial sorting combined with other query parameters | Good                                      |
+| ``solr``               | >= 3.1        | Bounding Box                        | Yes, spatial sorting combined with other query parameters | Good                                      |
 +------------------------+---------------+-------------------------------------+-----------------------------------------------------------+-------------------------------------------+
-| ``solr-spatial-field`` | 4.x           | Bounding Box, Point and Polygon [1] | Not implemented                                           | Good                                      |
+| ``solr-spatial-field`` | >= 4.x        | Bounding Box, Point and Polygon [1] | Not implemented                                           | Good                                      |
 +------------------------+---------------+-------------------------------------+-----------------------------------------------------------+-------------------------------------------+
-| ``postgis``            | 1.3 to 4.x    | Bounding Box                        | Partial, only spatial sorting supported [2]               | Poor                                      |
+| ``postgis``            | >= 1.3        | Bounding Box                        | Partial, only spatial sorting supported [2]               | Poor                                      |
 +------------------------+---------------+-------------------------------------+-----------------------------------------------------------+-------------------------------------------+
 
 
@@ -196,9 +196,9 @@ There are snippets already created to load the map on the left sidebar or in
 the main body of the dataset details page, but these can be easily modified to
 suit your project needs
 
-To add a map to the sidebar, add the following block to the dataset details page template (eg
-``ckanext-myproj/ckanext/myproj/templates/package/read.html``). If your custom 
-theme is simply extending the CKAN default theme, you will need to add ``{% ckan_extends %}`` 
+To add a map to the sidebar, add the following block to the dataset page template (eg
+``ckanext-myproj/ckanext/myproj/templates/package/read_base.html``). If your custom
+theme is simply extending the CKAN default theme, you will need to add ``{% ckan_extends %}``
 to the start of your custom read.html, then continue with this::
 
     {% block secondary_content %}
@@ -211,7 +211,8 @@ to the start of your custom read.html, then continue with this::
 
     {% endblock %}
 
-For adding the map to the main body, add this::
+For adding the map to the main body, add this to the main dataset page template (eg
+``ckanext-myproj/ckanext/myproj/templates/package/read.html``)::
 
     {% block primary_content_inner %}
 
