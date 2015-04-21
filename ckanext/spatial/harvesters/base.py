@@ -328,6 +328,7 @@ class SpatialHarvester(HarvesterBase):
             except ValueError, e:
                 self._save_object_error('Error parsing bounding box value: {0}'.format(str(e)),
                                     harvest_object, 'Import')
+                return False
             else:
                 # Construct a GeoJSON extent so ckanext-spatial can register the extent geometry
 
@@ -339,6 +340,7 @@ class SpatialHarvester(HarvesterBase):
                     )
                     self._save_object_error('Point extent defined instead of polygon',
                                      harvest_object, 'Import')
+                    return False
                 else:
                     extent_string = self.extent_template.substitute(
                         xmin=xmin, ymin=ymin, xmax=xmax, ymax=ymax
