@@ -143,6 +143,14 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
         return ids
 
     def fetch_stage(self,harvest_object):
+
+        # Check harvest object status
+        status = self._get_object_extra(harvest_object, 'status')
+
+        if status == 'delete':
+            # No need to fetch anything, just pass to the import stage
+            return True
+
         log = logging.getLogger(__name__ + '.CSW.fetch')
         log.debug('CswHarvester fetch_stage for object: %s', harvest_object.id)
 
