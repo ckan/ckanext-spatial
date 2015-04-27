@@ -174,3 +174,69 @@ class GeoJSONView(DataViewBase):
 
 class GeoJSONPreview(GeoJSONView):
     pass
+
+
+class WMTSView(DataViewBase):
+    p.implements(p.ITemplateHelpers, inherit=True)
+
+    WMTS = ['wmts']
+
+    # IResourceView (CKAN >=2.3)
+    def info(self):
+        return {'name': 'wmts_view',
+                'title': 'wmts',
+                'icon': 'map-marker',
+                'iframed': True,
+                'default_title': p.toolkit._('WMTS'),
+                }
+
+    def can_view(self, data_dict):
+        resource = data_dict['resource']
+        format_lower = resource['format'].lower()
+
+        if format_lower in self.WMTS:
+            return self.same_domain or self.proxy_is_enabled
+        return False
+
+    def view_template(self, context, data_dict):
+        return 'dataviewer/wmts.html'
+
+    # IResourcePreview (CKAN < 2.3)
+    def can_preview(self, data_dict):
+        format_lower = data_dict['resource']['format'].lower()
+
+        correct_format = format_lower in self.WMTS
+        can_preview_from_domain = self.proxy_is_enabled or data_dict['resource']['on_same_domain']
+        quality = 2
+
+        if p.toolkit.check_ckan_version('2.1'):
+            if correct_format:
+                if can_preview_from_domain:
+                    return {'can_preview': True, 'quality': quality}
+                else:
+                    return {'can_preview': False,
+                            'fixable': 'Enable resource_proxy',
+                            'quality': quality}
+            else:
+                return {'can_preview': False, 'quality': quality}
+
+        return correct_format and can_preview_from_domain
+
+    def preview_template(self, context, data_dict):
+        return 'dataviewer/wmts.html'
+
+    ## ITemplateHelpers
+
+    def get_helpers(self):
+        from ckanext.spatial import helpers as spatial_helpers
+
+        # CKAN does not allow to define two helpers with the same name
+        # As this plugin can be loaded independently of the main spatial one
+        # We define a different helper pointing to the same function
+        return {
+                'get_common_map_config_wmts' : spatial_helpers.get_common_map_config,
+                }
+
+
+class WMTSPreview(WMTSView):
+    pass

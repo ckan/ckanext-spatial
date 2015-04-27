@@ -1,0 +1,38 @@
+html, body {
+  max-height: 600px;
+  padding: 0;
+  margin: 0;
+  background: none;
+}
+
+#map {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+#map .table{
+  width: 300px;
+}
+
+#map label {
+  font-weight: normal;
+}
+
+#map label:after {
+  content: none;
+}
+
+#map input {
+  width: auto;
+  top: auto;
+}
+
+.leaflet-control-layers {
+  box-shadow: 0 1px 7px rgba(0,0,0,0.4);
+  background: #f8f8f9;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  overflow: auto;
+  max-height: 200px;
+}
