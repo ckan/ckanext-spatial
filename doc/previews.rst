@@ -47,7 +47,7 @@ from the spatial extension::
 
     ckan.plugins = resource_proxy wms_view
 
-.. note:: If using CKAN < 2.3, use `geojson_preview`
+.. note:: If using CKAN < 2.3, use `wms_preview`
 
 .. note:: Please note that the WMS previewer included in ckanext-spatial is
           just a proof of concept and has important limitations, and is
