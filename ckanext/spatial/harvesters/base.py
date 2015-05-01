@@ -652,11 +652,13 @@ class SpatialHarvester(HarvesterBase):
                         new_extras = []
                         for extra in package_dict.get('extras', []):
                             if extra['key'] in [
-                                    'harvest_object_id',
-                                    'harvest_source_id'
-                                ]:
+                                        'harvest_object_id',
+                                        'harvest_source_id',
+                                        'harvest_source_title',
+                                    ]:
                                 continue
                             new_extras.append(extra)
+                        # make sure harvest obj and source info is included.
                         new_extras.append({
                                 'key': 'harvest_object_id',
                                 'value': harvest_object.id,
@@ -664,6 +666,10 @@ class SpatialHarvester(HarvesterBase):
                         new_extras.append({
                                 'key': 'harvest_source_id',
                                 'value': harvest_object.source.id,
+                            })
+                        new_extras.append({
+                                'key': 'harvest_source_title',
+                                'value': harvest_object.source.title,
                             })
                         package_dict['extras'] = new_extras
                         package_index = PackageSearchIndex()
