@@ -39,11 +39,12 @@
 
       if (mapConfig.type == 'mapbox') {
           // MapBox base map
-          if (!mapConfig['mapbox.map_id']) {
-            throw '[CKAN Map Widgets] You need to provide a map ID ([account].[handle]) when using a MapBox layer. ' +
+          if (!mapConfig['mapbox.map_id'] || !mapConfig['mapbox.access_token']) {
+            throw '[CKAN Map Widgets] You need to provide a map ID ([account].[handle]) and an access token when using a MapBox layer. ' +
                   'See http://www.mapbox.com/developers/api-overview/ for details';
           }
-          baseLayerUrl = '//{s}.tiles.mapbox.com/v3/{handle}/{z}/{x}/{y}.png';
+
+          baseLayerUrl = '//{s}.tiles.mapbox.com/v4/' + mapConfig['mapbox.map_id'] + '/{z}/{x}/{y}.png?access_token=' + mapConfig['mapbox.access_token'];
           leafletBaseLayerOptions.handle = mapConfig['mapbox.map_id'];
           leafletBaseLayerOptions.subdomains = mapConfig.subdomains || 'abcd';
           leafletBaseLayerOptions.attribution = mapConfig.attribution || 'Data: <a href="http://osm.org/copyright" target="_blank">OpenStreetMap</a>, Design: <a href="http://mapbox.com/about/maps" target="_blank">MapBox</a>';
