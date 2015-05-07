@@ -28,6 +28,7 @@
                                     leafletMapOptions,
                                     leafletBaseLayerOptions) {
 
+      var isHttps = window.location.href.substring(0, 5).toLowerCase() === 'https';
       var mapConfig = mapConfig || {type: 'mapquest'};
       var leafletMapOptions = leafletMapOptions || {};
       var leafletBaseLayerOptions = jQuery.extend(leafletBaseLayerOptions, {
@@ -53,7 +54,11 @@
           leafletBaseLayerOptions.attribution = mapConfig.attribution;
       } else {
           // MapQuest OpenStreetMap base map
-          baseLayerUrl = '//otile{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png';
+          if (isHttps) {
+            baseLayerUrl = '//otile{s}-s.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png';
+          } else {
+            baseLayerUrl = '//otile{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png';
+          }
           leafletBaseLayerOptions.subdomains = mapConfig.subdomains || '1234';
           leafletBaseLayerOptions.attribution = mapConfig.attribution || 'Map data &copy; OpenStreetMap contributors, Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="//developer.mapquest.com/content/osm/mq_logo.png">';
       }
