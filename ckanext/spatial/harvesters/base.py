@@ -513,6 +513,12 @@ class SpatialHarvester(HarvesterBase):
                                     harvest_object, 'Import')
             return False
 
+        # Build the package dict
+        package_dict = self.get_package_dict(iso_values, harvest_object)
+        if not package_dict:
+            log.error('No package dict returned, aborting import for object {0}'.format(harvest_object.id))
+            return False
+
         # Flag previous object as not current anymore
         if previous_object and not self.force_import:
             previous_object.current = False
@@ -553,16 +559,8 @@ class SpatialHarvester(HarvesterBase):
         harvest_object.metadata_modified_date = metadata_modified_date
         harvest_object.add()
 
-
         # Build the package dict
         package_dict = self.get_package_dict(iso_values, harvest_object)
-        for harvester in p.PluginImplementations(ISpatialHarvester):
-            package_dict = harvester.get_package_dict(context, {
-                'package_dict': package_dict,
-                'iso_values': iso_values,
-                'xml_tree': iso_parser.xml_tree,
-                'harvest_object': harvest_object,
-            })
         if not package_dict:
             log.error('No package dict returned, aborting import for object {0}'.format(harvest_object.id))
             return False
