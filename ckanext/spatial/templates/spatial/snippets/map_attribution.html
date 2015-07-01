@@ -1,9 +1,9 @@
 <div>
     {{ _('Map data') }} &copy;
-    <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> {{ _('contributors') }} |
+    <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> |
     {% if map_config.type == 'mapbox' %}
-        {{ _('Tiles by') }} <a href="http://www.mapbox.com/about/maps/">MapBox</a>
+        {{ _('Tiles') }} &copy; <a href="http://www.mapbox.com/about/maps/">MapBox</a>
     {% else %}
-        {{ _('Tiles by') }} <a href="http://www.mapquest.com">MapQuest</a>
+        {{ _('Tiles') }} &copy; <a href="http://www.mapquest.com">MapQuest</a>
     {% endif %}
 </div>
