@@ -106,6 +106,7 @@ details about the available options:
             <field name="minx" type="float" indexed="true" stored="true" />
             <field name="miny" type="float" indexed="true" stored="true" />
         </fields>
+
     The solr schema file is typically located at: (..)/src/ckan/ckan/config/solr/schema.xml
 
 * ``solr-spatial-field``

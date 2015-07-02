@@ -25,6 +25,24 @@ this.ckan.module('dataset-map', function (jQuery, _) {
 
       this.extent = this.el.data('extent');
 
+      // fix bbox when w-long is positive while e-long is negative.
+      if (this.extent.type == 'Polygon'
+        && this.extent.coordinates[0].length == 5) {
+        _coordinates = this.extent.coordinates[0]
+        w = _coordinates[0][0];
+        e = _coordinates[2][0];
+        if (w > e) {
+          w_new = w
+          while (w_new > e) w_new -=360
+          for (var i = 0; i < _coordinates.length; i++) {
+            if (_coordinates[i][0] == w) {
+              _coordinates[i][0] = w_new
+            };
+          };
+          this.extent.coordinates[0] = _coordinates
+        };
+      };
+
       // hack to make leaflet use a particular location to look for images
       L.Icon.Default.imagePath = this.options.site_url + 'js/vendor/leaflet/images';
 
