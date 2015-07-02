@@ -9,9 +9,11 @@ Check the Troubleshooting_ section if you get errors at any stage.
 Install PostGIS and system packages
 -----------------------------------
 
-.. note:: If you *only* want to load the :doc:`previews` you don't need to
-          install any of the packages on this section and can skip to the
-          next one.
+
+.. warning:: If you are looking for the geospatial preview plugins to render eg GeoJSON
+          or WMS services, these are now located in ckanext-geoview_. They have a much simpler
+          installation, so you can skip all the following steps if you just want the previews.
+
 
 .. note:: The package names and paths shown are the defaults on Ubuntu installs.
           Adjust the package names and the paths if you are using a different platform.
@@ -160,6 +162,8 @@ extension:
 When upgrading the extension to a newer version
 +++++++++++++++++++++++++++++++++++++++++++++++
 
+This version of ckanext-spatial requires geoalchemy2
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ::
 
     File "/home/adria/dev/pyenvs/spatial/src/ckanext-spatial/ckanext/spatial/plugin.py", line 39, in <module>
@@ -178,6 +182,9 @@ activated, run::
     pip install GeoAlchemy2
 
 Restart the server for the changes to take effect.
+
+AttributeError: type object 'UserDefinedType' has no attribute 'Comparator'
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ::
 
@@ -199,8 +206,83 @@ You are trying to run the extension against CKAN 2.3, but the requirements for C
 .. _upgrade documentation: http://docs.ckan.org/en/latest/maintaining/upgrading/upgrade-source.html
 
 
+ckan.plugins.core.PluginNotFoundException: geojson_view
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+::
+
+  File "/home/pyenvs/spatial/src/ckan/ckan/plugins/core.py", line 149, in load
+    service = _get_service(plugin)
+  File "/home/pyenvs/spatial/src/ckan/ckan/plugins/core.py", line 256, in _get_service
+    raise PluginNotFoundException(plugin_name)
+    ckan.plugins.core.PluginNotFoundException: geojson_view
+
+Your CKAN instance is using the ``geojson_view`` (or ``geojson_preview``) plugin. This plugin has been
+moved from ckanext-spatial to ckanext-geoview_. Please install ckanext-geoview following the instructions on the
+README.
+
+TemplateNotFound: Template dataviewer/geojson.html cannot be found
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+::
+
+    File '/home/pyenvs/spatial/src/ckan/ckan/lib/base.py', line 129 in render_template
+      template_path, template_type = render_.template_info(template_name)
+    File '/home/pyenvs/spatial/src/ckan/ckan/lib/render.py', line 51 in template_info
+      raise TemplateNotFound('Template %s cannot be found' % template_name)
+    TemplateNotFound: Template dataviewer/geojson.html cannot be found
+
+See the issue above for details. Install ckanext-geoview_ and additionally run the following on the
+ckanext-spatial directory with your virtualenv activated::
+
+     python setup.py develop
+
+
+ImportError: No module named nongeos_plugin
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+::
+
+  File "/home/pyenvs/spatial/src/ckan/ckan/plugins/core.py", line 255, in _get_service
+    return plugin.load()(name=plugin_name)
+  File "/home/pyenvs/spatial/local/lib/python2.7/site-packages/pkg_resources.py", line 2147, in load
+    ['__name__'])
+  ImportError: No module named nongeos_plugin
+
+See the issue above for details. Install ckanext-geoview_ and additionally run the following on the
+ckanext-spatial directory with your virtualenv activated::
+
+     python setup.py develop
+
+
+Plugin class 'GeoJSONPreview' does not implement an interface
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+::
+
+ File "/home/pyenvs/spatial/src/ckanext-spatial/ckanext/spatial/nongeos_plugin.py", line 175, in <module>
+   class GeoJSONPreview(GeoJSONView):
+ File "/home/pyenvs/spatial/local/lib/python2.7/site-packages/pyutilib/component/core/core.py", line 732, in __new__
+   return PluginMeta.__new__(cls, name, bases, d)
+ File "/home/pyenvs/spatial/local/lib/python2.7/site-packages/pyutilib/component/core/core.py", line 659, in __new__
+   raise PluginError("Plugin class %r does not implement an interface, and it has already been defined in environment '%r'." % (str(name), PluginGlobals.env().name))
+   pyutilib.component.core.core.PluginError: Plugin class 'GeoJSONPreview' does not implement an interface, and it has already been defined in environment ''pca''
+
+You have correctly installed ckanext-geoview_ but the ckanext-spatial source code is outdated, with references
+to the view plugins previously part of this extension. Pull the latest version of the code and re-register the
+extension. With the virtualenv CKAN is installed on activated, run::
+
+     git pull
+     python setup.py develop
+
+
+
 When initializing the spatial tables
 ++++++++++++++++++++++++++++++++++++
+
+
+No function matches the given name and argument types
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ::
 
@@ -212,6 +294,9 @@ When initializing the spatial tables
 
 PostGIS was not installed correctly. Please check the "Setting up PostGIS"
 section.
+
+permission denied for relation spatial_ref_sys
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ::
 
@@ -242,12 +327,19 @@ it.
 When performing a spatial query
 +++++++++++++++++++++++++++++++
 
+SQL expression, column, or mapped entity expected - got '<class 'ckanext.spatial.model.PackageExtent'>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 ::
 
     InvalidRequestError: SQL expression, column, or mapped entity expected - got '<class 'ckanext.spatial.model.PackageExtent'>'
 
 The spatial model has not been loaded. You probably forgot to add the
 ``spatial_metadata`` plugin to your ini configuration file.
+
+
+Operation on two geometries with different SRIDs
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ::
 
@@ -307,3 +399,5 @@ Now check the install by running xmllint::
 
 .. _PostGIS: http://postgis.org
 .. _ckanext-harvest: https://github.com/okfn/ckanext-harvest
+.. _ckanext-geoview: https://github.com/ckan/ckanext-geoview
+
