@@ -26,12 +26,13 @@ this.ckan.module('dataset-map', function (jQuery, _) {
       this.extent = this.el.data('extent');
 
       // fix bbox when w-long is positive while e-long is negative.
+      // assuming coordinate sequence is west to east (left to right)
       if (this.extent.type == 'Polygon'
         && this.extent.coordinates[0].length == 5) {
         _coordinates = this.extent.coordinates[0]
         w = _coordinates[0][0];
         e = _coordinates[2][0];
-        if (w > e) {
+        if (w >= 0 && e < 0) {
           w_new = w
           while (w_new > e) w_new -=360
           for (var i = 0; i < _coordinates.length; i++) {
