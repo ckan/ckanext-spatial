@@ -36,12 +36,13 @@ MapBox
 ++++++
 
 `MapBox`_ allows to define your custom maps based on OpenStreetMap data, using
-their online editor or the more advanced `TileMill`_ desktop tool. You will
-need to provide a map id with the ``[account].[handle]`` form (Check `here`_
-for more details)::
+their online editor or the more advanced `MapBox Studio`_ desktop tool. You will
+need to provide a map id with the ``[account].[handle]`` form and and access token
+(Check `here`_ for more details)::
 
     ckanext.spatial.common_map.type = mapbox
     ckanext.spatial.common_map.mapbox.map_id = youraccount.map-xxxxxxxx
+    ckanext.spatial.common_map.mapbox.access_token = pk.ey...
 
 .. image:: _static/base-map-mapbox.png
 
@@ -124,7 +125,7 @@ And this for a primary content map::
 .. _MapQuest-OSM: http://developer.mapquest.com/web/products/open/map
 .. _MapQuest: http://www.mapquest.com/
 .. _MapBox: http://www.mapbox.com/
-.. _TileMill: http://www.mapbox.com/tilemill/
+.. _MapBox Studio: https://www.mapbox.com/mapbox-studio
 .. _here: http://www.mapbox.com/developers/api-overview/
 .. _`Leaflet URL template`: http://leafletjs.com/reference.html#url-template
 .. _Stamen: http://stamen.com/
