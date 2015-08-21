@@ -8,8 +8,18 @@ import ckan.new_tests.factories as factories
 
 from ckanext.spatial.tests.base import SpatialTestBase
 
+extents = {
+    'nz': '{"type":"Polygon","coordinates":[[[174,-38],[176,-38],[176,-40],[174,-40],[174,-38]]]}',
+    'ohio': '{"type": "Polygon","coordinates": [[[-84,38],[-84,40],[-80,42],[-80,38],[-84,38]]]}',
+    'dateline': '{"type":"Polygon","coordinates":[[[169,70],[169,60],[192,60],[192,70],[169,70]]]}',
+    'dateline2': '{"type":"Polygon","coordinates":[[[170,60],[-170,60],[-170,70],[170,70],[170,60]]]}',
+}
+
 
 class TestAction(SpatialTestBase):
+
+    def teardown(self):
+        helpers.reset_db()
 
     def test_spatial_query(self):
 
@@ -23,7 +33,7 @@ class TestAction(SpatialTestBase):
             extras={'ext_bbox': '-180,-90,180,90'})
 
         assert_equals(result['count'], 1)
-        assert_equals(result['results'][0]['title'], dataset['title'])
+        assert_equals(result['results'][0]['id'], dataset['id'])
 
     def test_spatial_query_outside_bbox(self):
 
@@ -42,6 +52,119 @@ class TestAction(SpatialTestBase):
 
         assert_raises(SearchError, helpers.call_action,
                       'package_search', extras={'ext_bbox': '-10,-20,10,a'})
+
+    def test_spatial_query_nz(self):
+
+        dataset = factories.Dataset(
+            extras=[{'key': 'spatial',
+                     'value': extents['nz']}]
+        )
+
+        result = helpers.call_action(
+            'package_search',
+            extras={'ext_bbox': '56,-54,189,-28'})
+
+        assert_equals(result['count'], 1)
+        assert_equals(result['results'][0]['id'], dataset['id'])
+
+    def test_spatial_query_nz_wrap(self):
+
+        dataset = factories.Dataset(
+            extras=[{'key': 'spatial',
+                     'value': extents['nz']}]
+        )
+
+        result = helpers.call_action(
+            'package_search',
+            extras={'ext_bbox': '-203,-54,-167,-28'})
+
+        assert_equals(result['count'], 1)
+        assert_equals(result['results'][0]['id'], dataset['id'])
+
+    def test_spatial_query_ohio(self):
+
+        dataset = factories.Dataset(
+            extras=[{'key': 'spatial',
+                     'value': extents['ohio']}]
+        )
+
+        result = helpers.call_action(
+            'package_search',
+            extras={'ext_bbox': '-110,37,-78,53'})
+
+        assert_equals(result['count'], 1)
+        assert_equals(result['results'][0]['id'], dataset['id'])
+
+    def test_spatial_query_ohio_wrap(self):
+
+        dataset = factories.Dataset(
+            extras=[{'key': 'spatial',
+                     'value': extents['ohio']}]
+        )
+
+        result = helpers.call_action(
+            'package_search',
+            extras={'ext_bbox': '258,37,281,51'})
+
+        assert_equals(result['count'], 1)
+        assert_equals(result['results'][0]['id'], dataset['id'])
+
+    def test_spatial_query_dateline_1(self):
+
+        dataset = factories.Dataset(
+            extras=[{'key': 'spatial',
+                     'value': extents['dateline']}]
+        )
+
+        result = helpers.call_action(
+            'package_search',
+            extras={'ext_bbox': '-197,56,-128,70'})
+
+        assert_equals(result['count'], 1)
+        assert_equals(result['results'][0]['id'], dataset['id'])
+
+    def test_spatial_query_dateline_2(self):
+
+        dataset = factories.Dataset(
+            extras=[{'key': 'spatial',
+                     'value': extents['dateline']}]
+        )
+
+        result = helpers.call_action(
+            'package_search',
+            extras={'ext_bbox': '162,54,237,70'})
+
+        assert_equals(result['count'], 1)
+        assert_equals(result['results'][0]['id'], dataset['id'])
+
+    def test_spatial_query_dateline_3(self):
+
+        dataset = factories.Dataset(
+            extras=[{'key': 'spatial',
+                     'value': extents['dateline2']}]
+        )
+
+        result = helpers.call_action(
+            'package_search',
+            extras={'ext_bbox': '-197,56,-128,70'})
+
+        assert_equals(result['count'], 1)
+        assert_equals(result['results'][0]['id'], dataset['id'])
+
+    def test_spatial_query_dateline_4(self):
+
+        dataset = factories.Dataset(
+            extras=[{'key': 'spatial',
+                     'value': extents['dateline2']}]
+        )
+
+        result = helpers.call_action(
+            'package_search',
+            extras={'ext_bbox': '162,54,237,70'})
+
+        assert_equals(result['count'], 1)
+        assert_equals(result['results'][0]['id'], dataset['id'])
+
 
 
 class TestHarvestedMetadataAPI(SpatialTestBase, helpers.FunctionalTestBase):
