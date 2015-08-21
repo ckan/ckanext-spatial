@@ -13,3 +13,7 @@ env:
 install:
     - bash bin/travis-build.bash
 script: sh bin/travis-run.sh
+branches:
+  except:
+    - stable
+    - release-v2.0
