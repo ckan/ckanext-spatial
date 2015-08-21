@@ -241,6 +241,14 @@ class SpatialQuery(p.SingletonPlugin):
             if not bbox:
                 raise SearchError('Wrong bounding box provided')
 
+            # Adjust easting values
+            while (bbox['minx'] < -180):
+                bbox['minx'] += 360
+                bbox['maxx'] += 360
+            while (bbox['minx'] > 180):
+                bbox['minx'] -= 360
+                bbox['maxx'] -= 360
+
             if self.search_backend == 'solr':
                 search_params = self._params_for_solr_search(bbox, search_params)
             elif self.search_backend == 'solr-spatial-field':
