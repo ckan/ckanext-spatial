@@ -4,15 +4,16 @@
 # project.
 # 
 # Translators:
+# Alexis Troberg <alexis.troberg@gofore.com>, 2015
 # Peter Kronström <peter.kronstrom@gofore.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: ytp\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2015-07-01 14:23+0300\n"
-"PO-Revision-Date: 2015-07-01 11:32+0000\n"
-"Last-Translator: Peter Kronström <peter.kronstrom@gofore.com>\n"
-"Language-Team: Swedish (http://www.transifex.com/projects/p/ytp/language/sv/)\n"
+"PO-Revision-Date: 2015-09-28 17:34+0000\n"
+"Last-Translator: Alexis Troberg <alexis.troberg@gofore.com>\n"
+"Language-Team: Swedish (http://www.transifex.com/avoindata/ytp/language/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -22,44 +23,44 @@ msgstr ""
 
 #: ckanext/spatial/helpers.py:47
 msgid "Resource Provider"
-msgstr ""
+msgstr "Resursföreskrivare"
 
 #: ckanext/spatial/helpers.py:48
 msgid "Point of Contact"
-msgstr ""
+msgstr "Kontaktpunkt"
 
 #: ckanext/spatial/helpers.py:49
 msgid "Principal Investigator"
-msgstr ""
+msgstr "Ansvarig forskare"
 
 #: ckanext/spatial/nongeos_plugin.py:53
 msgid "WMS"
-msgstr ""
+msgstr "WMS"
 
 #: ckanext/spatial/nongeos_plugin.py:124
 msgid "GeoJSON"
-msgstr ""
+msgstr "GeoJSON"
 
 #: ckanext/spatial/plugin.py:59
 msgid "Resources"
-msgstr ""
+msgstr "Resurser"
 
 #: ckanext/spatial/plugin.py:59
 msgid "Package resource(s) invalid"
-msgstr ""
+msgstr "Paketets resurs(er) är felaktig(t)"
 
 #: ckanext/spatial/plugin.py:61 ckanext/spatial/plugin.py:63
 msgid "Extras"
-msgstr ""
+msgstr "Extra"
 
 #: ckanext/spatial/plugin.py:61
 msgid "Missing Value"
-msgstr ""
+msgstr "Värde fattas"
 
 #: ckanext/spatial/public/js/geojson_preview.js:13
 #, python-format
 msgid "An error occurred: %(text)s %(error)s"
-msgstr ""
+msgstr "Ett fel inträffade: %(text)s %(error)s"
 
 #: ckanext/spatial/templates/dataviewer/geojson.html:12
 #: ckanext/spatial/templates/dataviewer/wms.html:7
@@ -69,7 +70,7 @@ msgstr "Laddar..."
 #: ckanext/spatial/templates/spatial/snippets/dataset_map.html:17
 #: ckanext/spatial/templates/spatial/snippets/dataset_map_sidebar.html:17
 msgid "Dataset extent"
-msgstr "Dataset omfattning"
+msgstr "Datasetets omfattning"
 
 #: ckanext/spatial/templates/spatial/snippets/map_attribution.html:2
 msgid "Map data"
@@ -82,8 +83,8 @@ msgstr "Kartrutor"
 
 #: ckanext/spatial/templates/spatial/snippets/spatial_query.html:17
 msgid "Filter by location"
-msgstr ""
+msgstr "Filtrera på basen av läge"
 
 #: ckanext/spatial/templates/spatial/snippets/spatial_query.html:18
 msgid "Clear"
-msgstr ""
+msgstr "Töm"
