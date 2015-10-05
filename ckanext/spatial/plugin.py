@@ -310,12 +310,12 @@ class SpatialQuery(p.SingletonPlugin):
         '''
         This will add an fq filter with the form:
 
-            +spatial_geom:"Intersects({minx} {miny} {maxx} {maxy})
+            +spatial_geom:"Intersects(ENVELOPE({minx}, {miny}, {maxx}, {maxy}))
 
         '''
         search_params['fq_list'] = search_params.get('fq_list', [])
-        search_params['fq_list'].append('+spatial_geom:"Intersects({minx} {miny} {maxx} {maxy})"'
-                                     .format(minx=bbox['minx'],miny=bbox['miny'],maxx=bbox['maxx'],maxy=bbox['maxy']))
+        search_params['fq_list'].append('+spatial_geom:"Intersects(ENVELOPE({minx}, {maxx}, {maxy}, {miny}))"'
+                                        .format(minx=bbox['minx'], miny=bbox['miny'], maxx=bbox['maxx'], maxy=bbox['maxy']))
 
         return search_params
 
