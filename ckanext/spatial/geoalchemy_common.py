@@ -49,7 +49,8 @@ def setup_spatial_table(package_extent_class, db_srid=None):
         package_extent_table = Table(
             'package_extent', meta.metadata,
             Column('package_id', types.UnicodeText, primary_key=True),
-            GeometryExtensionColumn('the_geom', Geometry(2, srid=db_srid))
+            GeometryExtensionColumn('the_geom', Geometry(2, srid=db_srid)),
+	    extend_existing=True
         )
 
         meta.mapper(
@@ -72,6 +73,7 @@ def setup_spatial_table(package_extent_class, db_srid=None):
             Column('package_id', types.UnicodeText, primary_key=True),
             Column('the_geom', Geometry('GEOMETRY', srid=db_srid,
                                         management=management)),
+	    extend_existing=True
         )
 
         meta.mapper(package_extent_class, package_extent_table)
