@@ -3,8 +3,8 @@ Spatial Search
 ==============
 
 The spatial extension allows to index datasets with spatial information so they
-can be filtered via a spatial query. This includes both via the web interface
-(see the `Spatial Search Widget`_) or via the `action API`_, e.g.::
+can be filtered via a spatial search query. This includes both via the web
+interface (see the `Spatial Search Widget`_) or via the `action API`_, e.g.::
 
     POST http://localhost:5000/api/action/package_search
         { "q": "Pollution",
@@ -24,7 +24,7 @@ can be filtered via a spatial query. This includes both via the web interface
 Setup
 -----
 
-To enable the spatial query you need to add the ``spatial_query`` plugin to
+To enable the spatial search you need to add the ``spatial_query`` plugin to
 your ini file. This plugin requires the ``spatial_metadata`` plugin, eg::
 
   ckan.plugins = [other plugins] spatial_metadata spatial_query
@@ -39,7 +39,7 @@ Geo-Indexing your datasets
 --------------------------
 
 Regardless of the backend that you are using, in order to make a dataset
-queryable by location, an special extra must be defined, with its key named
+searchable by location, it must have a special extra, with its key named
 'spatial'. The value must be a valid GeoJSON_ geometry, for example::
 
     {
@@ -57,6 +57,12 @@ or::
 
 Every time a dataset is created, updated or deleted, the extension will
 synchronize the information stored in the extra with the geometry table.
+
+If you already have datasets when you enable Spatial Search then you'll need to
+reindex them:
+
+   paster --plugin=ckan search-index rebuild --config=/etc/ckan/default/development.ini
+
 
 Choosing a backend for the spatial search
 +++++++++++++++++++++++++++++++++++++++++
