@@ -162,9 +162,11 @@ Spatial Search Widget
 The extension provides a snippet to add a map widget to the search form, which
 allows filtering results by an area of interest.
 
-To add the map widget to the to the sidebar of the search page, add this to the
-dataset search page template
-(``myproj/ckanext/myproj/templates/package/search.html``)::
+To add the map widget to the sidebar of the search page, add the following
+block to the dataset search page template
+(``myproj/ckanext/myproj/templates/package/search.html``). If your custom
+theme is simply extending the CKAN default theme, you will need to add ``{% ckan_extends %}``
+to the start of your custom search.html, then continue with this::
 
     {% block secondary_content %}
 
