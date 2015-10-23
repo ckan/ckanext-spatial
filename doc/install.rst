@@ -387,7 +387,7 @@ Configure with the SO directory you found before::
 Now make it and install it::
 
     $ make
-  $ sudo make install
+    $ sudo make install
 
 Now check the install by running xmllint::
 
