@@ -1,10 +1,11 @@
-<div>Map data &copy; <a
-href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors</div>
-{% if map_config.type == 'mapbox' %}
-  <div>Tiles by <a href="http://www.mapbox.com/about/maps/">MapBox</a></div>
-{% elif map_config.type == 'custom' %}
+{% if map_config.type == 'custom' %}
   <div>{{ map_config.attribution|safe }}</div>
 {% else %}
-  <div>Tiles by <a href="http://www.mapquest.com">MapQuest</a></div>
+  <div>Map data &copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors</div>
+  {% if map_config.type == 'mapbox' %}
+    <div>Tiles by <a href="http://www.mapbox.com/about/maps/">MapBox</a></div>
+  {% else %}
+    <div>Tiles by <a href="http://www.mapquest.com">MapQuest</a></div>
+  {% endif %}
 {% endif %}
 
