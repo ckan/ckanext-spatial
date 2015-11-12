@@ -74,7 +74,7 @@ def set_keywords(pycsw_config_file, pycsw_config, ckan_url, limit=20):
         pycsw_config.write(configfile)
 
 
-def load(pycsw_config, ckan_url):
+def load(pycsw_config, ckan_url, force_update=False):
 
     database = pycsw_config.get('repository', 'database')
     table_name = pycsw_config.get('repository', 'table', 'records')
@@ -137,7 +137,7 @@ def load(pycsw_config, ckan_url):
     changed = set()
 
     for key in set(gathered_records) & set(existing_records):
-        if gathered_records[key]['metadata_modified'] > existing_records[key]:
+        if force_update or gathered_records[key]['metadata_modified'] > existing_records[key]:
             changed.add(key)
 
     for ckan_id in deleted:

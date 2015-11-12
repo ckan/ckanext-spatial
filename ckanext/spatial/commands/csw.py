@@ -57,7 +57,9 @@ option:
         elif cmd in ['load', 'set_keywords']:
             ckan_url = self.options.ckan_url
             if cmd == 'load':
-                ckan_pycsw.load(config, ckan_url)
+                force_update = True if len(self.args) > 1 and \
+                                self.args[1] == 'force_update' else False
+                ckan_pycsw.load(config, ckan_url, force_update)
             else:
                 ckan_pycsw.set_keywords(self.options.pycsw_config, config, ckan_url)
         elif cmd == 'clear':
