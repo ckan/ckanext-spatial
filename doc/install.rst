@@ -33,7 +33,7 @@ Ubuntu 14.04 (PostgreSQL 9.3 and PostGIS 2.1)
         sudo -u postgres psql -d ckan_default -f /usr/share/postgresql/9.3/contrib/postgis-2.1/postgis.sql
         sudo -u postgres psql -d ckan_default -f /usr/share/postgresql/9.3/contrib/postgis-2.1/spatial_ref_sys.sql
 
-#. Change the owner to spatial tables to the CKAN user to avoid errors later
+#. Change the owner of spatial tables to the CKAN user to avoid errors later
    on::
 
         sudo -u postgres psql -d ckan_default -c 'ALTER VIEW geometry_columns OWNER TO ckan_default;'
