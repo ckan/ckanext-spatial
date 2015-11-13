@@ -9,8 +9,8 @@ Check the Troubleshooting_ section if you get errors at any stage.
 Install PostGIS and system packages
 -----------------------------------
 
-.. warning:: If you are looking for the geospatial preview plugins to render eg GeoJSON
-          or WMS services, these are now located in ckanext-geoview_. They have a much simpler
+.. warning:: If you are looking for the geospatial preview plugins to render (eg GeoJSON
+          or WMS services), these are now located in ckanext-geoview_. They have a much simpler
           installation, so you can skip all the following steps if you just want the previews.
 
 
@@ -125,7 +125,7 @@ its documentation for details on how to set it up.
 Configuration
 -------------
 
-Once PostGIS is installed and configured in the database the extension needs
+Once PostGIS is installed and configured in the database, the extension needs
 to create a table to store the datasets extent, called ``package_extent``.
 
 This will happen automatically the next CKAN is restarted after adding the
