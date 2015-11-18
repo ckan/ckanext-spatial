@@ -14,7 +14,7 @@ class Pycsw(script.command.Command):
     ckan-pycsw set_keywords [-p] [-u]
         Sets pycsw server metadata keywords from CKAN site tag list.
 
-    ckan-pycsw load [-p] [-u]
+    ckan-pycsw load [force_update] [-p] [-u]
         Loads CKAN datasets as records into the pycsw db.
 
     ckan-pycsw clear [-p]
