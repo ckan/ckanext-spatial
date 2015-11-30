@@ -2,6 +2,7 @@ import sys
 import logging
 import datetime
 import io
+import time
 ##Needed for the debugging code bellow
 #import codecs
 
@@ -89,6 +90,9 @@ def load(pycsw_config, ckan_url, force_update=False):
     query = 'api/search/dataset?qjson={"fl":"id,metadata_modified,extras_harvest_object_id,extras_source_datajson_identifier,extras_metadata_source,extras_collection_package_id", "q":"harvest_object_id:[\\"\\" TO *]", "limit":1000, "start":%s}'
 
     start = 0
+    retry_total = 5
+    retry_current = 1
+    retry_delay = 5 # in seconds
 
     gathered_records = {}
 
@@ -96,6 +100,16 @@ def load(pycsw_config, ckan_url, force_update=False):
         url = ckan_url + query % start
 
         response = requests.get(url)
+        if not response.ok:
+            if retry_current < retry_total:
+                log.info('%s of %s tries failed. Will try again in %s seconds.' \
+                        % (retry_current, retry_total, retry_delay))
+                time.sleep(retry_delay)
+                retry_current += 1
+                continue
+            else:
+                raise RuntimeError, '%s. Gather failed at page %s on %s' % \
+                        (response.reason, start, datetime.datetime.now())
         listing = response.json()
         if not isinstance(listing, dict):
             raise RuntimeError, 'Wrong API response: %s' % listing
@@ -119,7 +133,7 @@ def load(pycsw_config, ckan_url, force_update=False):
                 gathered_records[result['id']]['source'] = 'datajson'
 
         start = start + 1000
-        log.debug('Gathered %s' % start)
+        log.info('Gathered %s' % start)
 
     log.info('Gather finished ({0} datasets): {1}'.format(
         len(gathered_records.keys()),
