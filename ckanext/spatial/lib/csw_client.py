@@ -49,7 +49,7 @@ class OwsService(object):
         if not hasattr(self, "__ows_obj__"):
             if endpoint is None:
                 raise ValueError("Must specify a service endpoint")
-            self.__ows_obj__ = self._Implementation(endpoint)
+            self.__ows_obj__ = self._Implementation(endpoint, timeout=120)
         return self.__ows_obj__
     
     def getcapabilities(self, debug=False, **kw):
