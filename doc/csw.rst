@@ -200,11 +200,8 @@ keep CKAN and pycsw in sync, and serve pycsw with Apache + mod_wsgi like CKAN.
     pycsw should be now accessible at http://localhost/csw
 
 
-Legacy libraries
-----------------
-
 cswinfo
-+++++++
+-------
 
 The command-line tool ``cswinfo`` allows to make queries on CSW servers and
 returns the info in nicely formatted JSON. This may be more convenient to type
@@ -223,9 +220,9 @@ For details, type::
 There are options for querying by only certain types, keywords and typenames
 as well as configuring the ElementSetName.
 
-The equivalent example to the one above for asking the cabailities is::
+The equivalent example to the one above for asking the capabilities is::
 
- $ cswinfo csw getcapabilities http://127.0.0.1:5000/csw
+ cswinfo csw getcapabilities http://127.0.0.1:8000/
 
 OWSLib is the library used to actually perform the queries.
 

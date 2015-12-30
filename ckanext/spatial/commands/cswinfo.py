@@ -5,9 +5,6 @@ import logging
 
 from ckanext.spatial.lib.csw_client import CswService
 
-#remote = "http://www.nationaalgeoregister.nl/geonetwork/srv/eng/csw"
-#remote = "http://locationmetadataeditor.data.gov.uk/geonetwork/srv/csw"
-
 def cswinfo():
     """
     Hello World
