@@ -33,26 +33,64 @@
       var leafletMapOptions = leafletMapOptions || {};
       var leafletBaseLayerOptions = jQuery.extend(leafletBaseLayerOptions, {
                 maxZoom: 18
-                });
+      });
+      var leafletMultiLayerOptions = [];
 
       map = new L.Map(container, leafletMapOptions);
 
       if (mapConfig.type == 'mapbox') {
           // MapBox base map
           if (!mapConfig['mapbox.map_id'] || !mapConfig['mapbox.access_token']) {
-            throw '[CKAN Map Widgets] You need to provide a map ID ([account].[handle]) and an access token when using a MapBox layer. ' +
+              throw '[CKAN Map Widgets] You need to provide a map ID ' +
+		  '([account].[handle]) and an access token when using a MapBox layer. ' +
                   'See http://www.mapbox.com/developers/api-overview/ for details';
           }
 
-          baseLayerUrl = '//{s}.tiles.mapbox.com/v4/' + mapConfig['mapbox.map_id'] + '/{z}/{x}/{y}.png?access_token=' + mapConfig['mapbox.access_token'];
+          baseLayerUrl = '//{s}.tiles.mapbox.com/v4/' + mapConfig['mapbox.map_id'] +
+	      '/{z}/{x}/{y}.png?access_token=' + mapConfig['mapbox.access_token'];
           leafletBaseLayerOptions.handle = mapConfig['mapbox.map_id'];
           leafletBaseLayerOptions.subdomains = mapConfig.subdomains || 'abcd';
-          leafletBaseLayerOptions.attribution = mapConfig.attribution || 'Data: <a href="http://osm.org/copyright" target="_blank">OpenStreetMap</a>, Design: <a href="http://mapbox.com/about/maps" target="_blank">MapBox</a>';
+          leafletBaseLayerOptions.attribution = mapConfig.attribution ||
+	      'Data: <a href="http://osm.org/copyright" target="_blank">' +
+	      'OpenStreetMap</a>, Design: <a href="http://mapbox.com/about/maps"' +
+	      'target="_blank">MapBox</a>';
       } else if (mapConfig.type == 'custom') {
           // Custom XYZ layer
           baseLayerUrl = mapConfig['custom.url'];
           if (mapConfig.subdomains) leafletBaseLayerOptions.subdomains = mapConfig.subdomains;
           leafletBaseLayerOptions.attribution = mapConfig.attribution;
+      } else if (mapConfig.type == 'multilayer') {
+	  // Custom multi-layer map
+	  console.log(mapConfig);
+	  // parse layer-specific mapConfig properties into array of layers
+	  function layerprops(mc) {
+	      var match = [];
+	      for (mprop in mc) {
+		  if ((ma = /^(layer_\d+)\.(.+)$/.exec(mprop))) {
+		      match.push(ma);
+		  }
+	      }
+	      return(match);
+	  };
+	  
+	  mapconf = (function (){
+	      var mc = JSON.parse(JSON.stringify(mapConfig));
+	      for (lp in layerprops(mapConfig)) {
+		  delete mc[lp[0]];
+		  mc[lp[1]] = mc[lp[1]] || {};
+		  
+		  
+	      
+			      
+	      
+	  console.log(layerprops);
+	  // layernames = (function (mapconf) {
+	  //     var layernames = Object.getOwnPropertyNames(mapconf).filter(function (key) {
+	  // 	  return (/^layer_(\d+)\..+$/.test(key));
+	  //     });
+	  //     return(layernames);
+	  // }(mapConfig))
+
       } else {
           // MapQuest OpenStreetMap base map
           if (isHttps) {
@@ -61,9 +99,12 @@
             baseLayerUrl = '//otile{s}.mqcdn.com/tiles/1.0.0/osm/{z}/{x}/{y}.png';
           }
           leafletBaseLayerOptions.subdomains = mapConfig.subdomains || '1234';
-          leafletBaseLayerOptions.attribution = mapConfig.attribution || 'Map data &copy; OpenStreetMap contributors, Tiles Courtesy of <a href="http://www.mapquest.com/" target="_blank">MapQuest</a> <img src="//developer.mapquest.com/content/osm/mq_logo.png">';
+          leafletBaseLayerOptions.attribution = mapConfig.attribution ||
+	      'Map data &copy; OpenStreetMap contributors, Tiles Courtesy of ' +
+	      '<a href="http://www.mapquest.com/" target="_blank">MapQuest</a> ' +
+	      '<img src="//developer.mapquest.com/content/osm/mq_logo.png">';
       }
-
+      
       var baseLayer = new L.TileLayer(baseLayerUrl, leafletBaseLayerOptions);
       map.addLayer(baseLayer);
 
