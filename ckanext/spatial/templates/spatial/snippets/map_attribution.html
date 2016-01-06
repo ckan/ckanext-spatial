@@ -1,4 +1,4 @@
-{% if map_config.type == 'custom' %}
+{% if map_config.type == 'custom' or map_config.type == 'multilayer' %}
   <div>{{ map_config.attribution|safe }}</div>
 {% else %}
   <div>Map data &copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors</div>
