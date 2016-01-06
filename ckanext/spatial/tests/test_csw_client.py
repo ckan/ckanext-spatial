@@ -1,26 +1,11 @@
 import time
-import urllib
 from urllib2 import urlopen
 import os
 
-from owslib.csw import CatalogueServiceWeb
-from owslib.fes import PropertyIsEqualTo
-from owslib.iso import MD_Metadata
 from pylons import config
 from nose.plugins.skip import SkipTest
 
 from ckan.model import engine_is_sqlite
-
-service = "http://ogcdev.bgs.ac.uk/geonetwork/srv/en/csw"
-service = "http://ec2-46-51-149-132.eu-west-1.compute.amazonaws.com:8080/geonetwork/srv/csw"
-service = "http://localhost:5000/csw"
-#service = "http://localhost:8080/geonetwork/srv/csw"
-
-GMD = "http://www.isotc211.org/2005/gmd"
-
-### make sure GetRecords is called first so that we can use identifiers
-### we know exist later on in GetRecordById
-identifiers = []
 
 # copied from ckan/tests/__init__ to save importing it and therefore
 # setting up Pylons.
@@ -79,103 +64,3 @@ class CkanProcess(CkanServerCase):
     def teardown_class(cls):
         cls._stop_ckan_server(cls.pid)
 
-class TestCswClient(CkanProcess):
-
-    ## Invalid requests ##
-    
-    def test_invalid(self):
-        params = urllib.urlencode({'spam': 1, 'eggs': 2, 'bacon': 0})
-        f = urlopen(service, params)
-        response = f.read()
-        f.close()
-        assert "MissingParameterValue" in response, response
-        assert 'locator="request"' in response, response
-
-    def test_empty(self):
-        fp = urlopen(service)
-        response = fp.read()
-        fp.close()
-        assert "MissingParameterValue" in response, response
-        assert 'locator="request"' in response, response
-
-    def test_invalid_request(self):
-        fp = urlopen(service + "?request=foo")
-        response = fp.read()
-        fp.close()
-        assert "OperationNotSupported" in response, response
-        assert 'locator="foo"' in response, response
-
-    def test_invalid_service(self):
-        fp = urlopen(service + "?request=GetCapabilities&service=hello")
-        response = fp.read()
-        fp.close()
-        assert "InvalidParameterValue" in response, response
-        assert 'locator="service"' in response, response
-
-    ## Test Capabilities ##
-        
-    def test_good(self):
-        fp = urlopen(service + "?request=GetCapabilities&service=CSW")
-        caps = fp.read()
-        fp.close()
-        assert "GetCapabilities" in caps
-        assert "GetRecords" in caps
-        assert "GetRecordById" in caps
-        
-    def test_good_post(self):
-        csw = CatalogueServiceWeb(service)
-        assert csw.identification.title, csw.identification.title
-        ops = dict((x.name, x.methods) for x in csw.operations)
-        assert "GetCapabilities" in ops
-        assert "GetRecords" in ops
-        assert "GetRecordById" in ops
-
-    ## Get 01 Records ##
-
-
-    def test_GetRecords(self):
-        # NB: This test fails because no records have been setup...
-        raise SkipTest() # therefore skip
-        csw = CatalogueServiceWeb(service)
-        csw.getrecords2(outputschema=GMD, startposition=1, maxrecords=5)
-        nrecords = len(csw.records)
-        #print csw.response[:1024]
-        assert nrecords == 5, nrecords
-        for ident in csw.records:
-            identifiers.append(ident)
-            assert isinstance(csw.records[ident], MD_Metadata), (ident, csw.records[ident])
-
-    def test_GetRecords_dataset(self):
-        csw = CatalogueServiceWeb(service)
-        constraints = [PropertyIsEqualTo("dc:type", "dataset")]
-        csw.getrecords2(constraints=constraints, outputschema=GMD, startposition=1, maxrecords=5)
-        nrecords = len(csw.records)
-        # TODO
-
-    def test_GetRecords_brief(self):
-        csw = CatalogueServiceWeb(service)
-        csw.getrecords2(outputschema=GMD, startposition=1, maxrecords=5, esn="brief")
-        nrecords = len(csw.records)
-        # TODO
-
-    def test_GetRecords_summary(self):
-        csw = CatalogueServiceWeb(service)
-        csw.getrecords2(outputschema=GMD, startposition=1, maxrecords=5, esn="summary")
-        nrecords = len(csw.records)
-        # TODO
-
-    ## Get 02 RecordById ##
-
-    def test_GetRecordById(self):
-        csw = CatalogueServiceWeb(service)
-        tofetch = identifiers[:2]
-        csw.getrecordbyid(tofetch, outputschema=GMD)
-        nrecords = len(csw.records)
-        assert nrecords == len(tofetch), nrecords
-        for ident in csw.records:
-            identifiers.append(ident)
-            assert isinstance(csw.records[ident], MD_Metadata), (ident, csw.records[ident])
-
-        csw.getrecordbyid(["nonexistent"], outputschema=GMD)
-        nrecords = len(csw.records)
-        assert nrecords == 0, nrecords
