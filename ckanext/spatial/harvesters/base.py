@@ -285,6 +285,26 @@ class SpatialHarvester(HarvesterBase):
             if license_url_extracted:
                 extras['licence_url'] = license_url_extracted
 
+
+        # Metadata license ID check for package
+        use_constraints = iso_values.get('use-constraints')
+        if use_constraints:
+
+            license_list = logic.action.get.license_list({'model': model, 'session': model.Session, 'user': 'harvest'}, {})
+
+            for constraint in use_constraints:
+                package_license = None
+
+                for license in license_list:
+                    if constraint == str(license.get('id')) or constraint == str(license.get('url')) or (str(license.get('id')) in constraint.lower()):
+                        package_license = license.get('id')
+                        break
+
+                if package_license:
+                    package_dict['license_id'] = package_license
+                    break
+
+
         extras['access_constraints'] = iso_values.get('limitations-on-public-access', '')
 
         # Grpahic preview
