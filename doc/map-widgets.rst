@@ -68,10 +68,15 @@ This is a complete example that uses `Stamen`_'s famous `watercolor maps`_::
     ckanext.spatial.common_map.custom.url = http://tile.stamen.com/watercolor/{z}/{x}/{y}.jpg
     ckanext.spatial.common_map.attribution = Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.
 
+This is a example using TMS::
+
+    ckanext.spatial.common_map.type = custom
+    ckanext.spatial.common_map.custom.url = /url/to/your/tms/{z}/{x}/{y}.png
+    ckanext.spatial.common_map.tms = true
+
 .. note:: For custom base layers you need to manually modify the attribution
     link on the templates for widgets on the sidebar, like the spatial query
     and dataset map widgets.
-
 
 
 For developers
