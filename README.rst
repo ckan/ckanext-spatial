@@ -43,7 +43,7 @@ guidelines that apply to CKAN core, described in
 Copying and License
 -------------------
 
-This material is copyright (c) 2006-2011 Open Knowledge Foundation.
+This material is copyright (c) 2006-2016 Open Knowledge Foundation.
 
 It is open and licensed under the GNU Affero General Public License (AGPL) v3.0
 whose full text may be found at:

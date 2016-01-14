@@ -4,8 +4,12 @@ from nose.tools import assert_equals
 from ckan.model import Session
 from ckan.lib.helpers import url_for
 
-import ckan.new_tests.helpers as helpers
-import ckan.new_tests.factories as factories
+try:
+    import ckan.new_tests.helpers as helpers
+    import ckan.new_tests.factories as factories
+except ImportError:
+    import ckan.tests.helpers as helpers
+    import ckan.tests.factories as factories
 
 from ckanext.spatial.model import PackageExtent
 from ckanext.spatial.geoalchemy_common import legacy_geoalchemy

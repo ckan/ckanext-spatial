@@ -2,8 +2,12 @@ from ckan.lib.helpers import url_for
 
 from ckanext.spatial.tests.base import SpatialTestBase
 
-import ckan.new_tests.helpers as helpers
-import ckan.new_tests.factories as factories
+try:
+    import ckan.new_tests.helpers as helpers
+    import ckan.new_tests.factories as factories
+except ImportError:
+    import ckan.tests.helpers as helpers
+    import ckan.tests.factories as factories
 
 
 class TestSpatialWidgets(SpatialTestBase, helpers.FunctionalTestBase):
