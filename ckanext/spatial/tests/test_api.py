@@ -3,8 +3,12 @@ from nose.tools import assert_equals, assert_raises
 
 from ckan.model import Session
 from ckan.lib.search import SearchError
-import ckan.new_tests.helpers as helpers
-import ckan.new_tests.factories as factories
+try:
+    import ckan.new_tests.helpers as helpers
+    import ckan.new_tests.factories as factories
+except ImportError:
+    import ckan.tests.helpers as helpers
+    import ckan.tests.factories as factories
 
 from ckanext.spatial.tests.base import SpatialTestBase
 
