@@ -71,8 +71,7 @@ class SpatialMetadata(p.SingletonPlugin):
         from ckanext.spatial.model.package_extent import setup as setup_model
 
         if not p.toolkit.asbool(config.get('ckan.spatial.testing', 'False')):
-            print "*" * 100
-            print "Setting up the models"
+            log.debug('Setting up the spatial model')
             setup_model()
 
     def update_config(self, config):
