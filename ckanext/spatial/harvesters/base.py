@@ -290,13 +290,14 @@ class SpatialHarvester(HarvesterBase):
         use_constraints = iso_values.get('use-constraints')
         if use_constraints:
 
-            license_list = logic.action.get.license_list({'model': model, 'session': model.Session, 'user': 'harvest'}, {})
+            context = {'model': model, 'session': model.Session, 'user': self._get_user_name()}
+            license_list = p.toolkit.get_action('license_list')(context, {})
 
             for constraint in use_constraints:
                 package_license = None
 
                 for license in license_list:
-                    if constraint == str(license.get('id')) or constraint == str(license.get('url')) or (str(license.get('id')) in constraint.lower()):
+                    if constraint.lower() == license.get('id') or constraint == license.get('url'):
                         package_license = license.get('id')
                         break
 
