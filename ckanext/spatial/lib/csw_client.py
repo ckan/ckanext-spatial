@@ -67,8 +67,8 @@ class CswService(OwsService):
     """
     from owslib.csw import CatalogueServiceWeb as _Implementation
 
-    def __init__(self):
-        super(CswService, self).__init__()
+    def __init__(self, endpoint=None):
+        super(CswService, self).__init__(endpoint)
         self.sortby = SortBy([SortProperty('dc:identifier')])
 
     def getrecords(self, qtype=None, keywords=[],
