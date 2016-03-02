@@ -52,6 +52,7 @@
           // Custom XYZ layer
           baseLayerUrl = mapConfig['custom.url'];
           if (mapConfig.subdomains) leafletBaseLayerOptions.subdomains = mapConfig.subdomains;
+          if (mapConfig.tms) leafletBaseLayerOptions.tms = mapConfig.tms;
           leafletBaseLayerOptions.attribution = mapConfig.attribution;
       } else {
           // MapQuest OpenStreetMap base map

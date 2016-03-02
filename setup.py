@@ -24,13 +24,9 @@ setup(
 	],
 	entry_points=\
 	"""
-    [console_scripts]
-    cswinfo = ckanext.spatial.commands.cswinfo:cswinfo
-
     [ckan.plugins]
     spatial_metadata=ckanext.spatial.plugin:SpatialMetadata
     spatial_query=ckanext.spatial.plugin:SpatialQuery
-    cswserver=ckanext.spatial.plugin:CatalogueServiceWeb
     spatial_harvest_metadata_api=ckanext.spatial.plugin:HarvestMetadataApi
 
     csw_harvester=ckanext.spatial.harvesters:CSWHarvester
