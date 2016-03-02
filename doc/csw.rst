@@ -199,66 +199,6 @@ keep CKAN and pycsw in sync, and serve pycsw with Apache + mod_wsgi like CKAN.
 
     pycsw should be now accessible at http://localhost/csw
 
-
-Legacy plugins and libraries
-----------------------------
-
-
-Old CSW Server
-++++++++++++++
-
-.. warning:: **Deprecated:** The old csw plugin has been deprecated, please see `ckan-pycsw`_
-    for details on how to integrate with pycsw.
-
-To activate it, add the ``csw_server`` plugin to your ini file.
-
-Only harvested datasets are served by this CSW Server. This is because
-the harvested document is the one that is served, not something derived
-from the CKAN Dataset object. Datasets that are created in CKAN by methods
-other than harvesting are not served.
-
-The currently supported methods with this CSW Server are:
- * GetCapabilities
- * GetRecords
- * GetRecordById
-
-For example you can ask the capabilities of the CSW server installed into CKAN
-running on 127.0.0.1:5000 like this::
-
- curl 'http://127.0.0.1:5000/csw?request=GetCapabilities&service=CSW&version=2.0.2'
-
-And get a list of the records like this::
-
- curl 'http://127.0.0.1:5000/csw?request=GetRecords&service=CSW&resultType=results&elementSetName=full&version=2.0.2'
-
-The standard CSW response is in XML format.
-
-cswinfo
-+++++++
-
-The command-line tool ``cswinfo`` allows to make queries on CSW servers and
-returns the info in nicely formatted JSON. This may be more convenient to type
-than using, for example, curl.
-
-Currently available queries are:
- * getcapabilities
- * getidentifiers
- * getrecords
- * getrecordbyid
-
-For details, type::
-
- cswinfo csw -h
-
-There are options for querying by only certain types, keywords and typenames
-as well as configuring the ElementSetName.
-
-The equivalent example to the one above for asking the cabailities is::
-
- $ cswinfo csw getcapabilities http://127.0.0.1:5000/csw
-
-OWSLib is the library used to actually perform the queries.
-
 .. _pycsw: http://pycsw.org 
 .. _pycsw documentation: http://docs.pycsw.org/en/latest/installation.html
 .. _package install: http://docs.ckan.org/en/latest/install-from-package.html

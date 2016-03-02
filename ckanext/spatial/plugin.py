@@ -5,11 +5,10 @@ from logging import getLogger
 
 from pylons import config
 
-import shapely
+
 
 from ckan import plugins as p
 
-from ckan.lib.search import SearchError, PackageSearchQuery
 from ckan.lib.helpers import json
 
 
@@ -37,10 +36,6 @@ def check_geoalchemy_requirement():
             raise ImportError(msg.format('geoalchemy'))
 
 check_geoalchemy_requirement()
-
-
-from ckanext.spatial.lib import save_package_extent, validate_bbox, bbox_query, bbox_query_ordered
-from ckanext.spatial.model.package_extent import setup as setup_model
 
 log = getLogger(__name__)
 
@@ -73,8 +68,10 @@ class SpatialMetadata(p.SingletonPlugin):
     p.implements(p.ITemplateHelpers, inherit=True)
 
     def configure(self, config):
+        from ckanext.spatial.model.package_extent import setup as setup_model
 
         if not p.toolkit.asbool(config.get('ckan.spatial.testing', 'False')):
+            log.debug('Setting up the spatial model')
             setup_model()
 
     def update_config(self, config):
@@ -101,6 +98,8 @@ class SpatialMetadata(p.SingletonPlugin):
         For a given package, looks at the spatial extent (as given in the
         extra "spatial" in GeoJSON format) and records it in PostGIS.
         '''
+        from ckanext.spatial.lib import save_package_extent
+
         if not package.id:
             log.warning('Couldn\'t store spatial extent because no id was provided for the package')
             return
@@ -139,6 +138,7 @@ class SpatialMetadata(p.SingletonPlugin):
 
 
     def delete(self, package):
+        from ckanext.spatial.lib import save_package_extent
         save_package_extent(package.id,None)
 
     ## ITemplateHelpers
@@ -175,6 +175,7 @@ class SpatialQuery(p.SingletonPlugin):
         return map
 
     def before_index(self, pkg_dict):
+        import shapely
 
         if pkg_dict.get('extras_spatial', None) and self.search_backend in ('solr', 'solr-spatial-field'):
             try:
@@ -235,11 +236,22 @@ class SpatialQuery(p.SingletonPlugin):
         return pkg_dict
 
     def before_search(self, search_params):
+        from ckanext.spatial.lib import  validate_bbox
+        from ckan.lib.search import SearchError
+
         if search_params.get('extras', None) and search_params['extras'].get('ext_bbox', None):
 
             bbox = validate_bbox(search_params['extras']['ext_bbox'])
             if not bbox:
                 raise SearchError('Wrong bounding box provided')
+
+            # Adjust easting values
+            while (bbox['minx'] < -180):
+                bbox['minx'] += 360
+                bbox['maxx'] += 360
+            while (bbox['minx'] > 180):
+                bbox['minx'] -= 360
+                bbox['maxx'] -= 360
 
             if self.search_backend == 'solr':
                 search_params = self._params_for_solr_search(bbox, search_params)
@@ -312,6 +324,8 @@ class SpatialQuery(p.SingletonPlugin):
         return search_params
 
     def _params_for_postgis_search(self, bbox, search_params):
+        from ckanext.spatial.lib import   bbox_query, bbox_query_ordered
+        from ckan.lib.search import SearchError
 
         # Note: This will be deprecated at some point in favour of the
         # Solr 4 spatial sorting capabilities
@@ -359,6 +373,7 @@ class SpatialQuery(p.SingletonPlugin):
         return search_params
 
     def after_search(self, search_results, search_params):
+        from ckan.lib.search import PackageSearchQuery
 
         # Note: This will be deprecated at some point in favour of the
         # Solr 4 spatial sorting capabilities
@@ -374,45 +389,6 @@ class SpatialQuery(p.SingletonPlugin):
                 pkgs.append(json.loads(pkg))
             search_results['results'] = pkgs
         return search_results
-
-
-class CatalogueServiceWeb(p.SingletonPlugin):
-    p.implements(p.IConfigurable)
-    p.implements(p.IRoutes)
-
-    def configure(self, config):
-        config.setdefault("cswservice.title", "Untitled Service - set cswservice.title in config")
-        config.setdefault("cswservice.abstract", "Unspecified service description - set cswservice.abstract in config")
-        config.setdefault("cswservice.keywords", "")
-        config.setdefault("cswservice.keyword_type", "theme")
-        config.setdefault("cswservice.provider_name", "Unnamed provider - set cswservice.provider_name in config")
-        config.setdefault("cswservice.contact_name", "No contact - set cswservice.contact_name in config")
-        config.setdefault("cswservice.contact_position", "")
-        config.setdefault("cswservice.contact_voice", "")
-        config.setdefault("cswservice.contact_fax", "")
-        config.setdefault("cswservice.contact_address", "")
-        config.setdefault("cswservice.contact_city", "")
-        config.setdefault("cswservice.contact_region", "")
-        config.setdefault("cswservice.contact_pcode", "")
-        config.setdefault("cswservice.contact_country", "")
-        config.setdefault("cswservice.contact_email", "")
-        config.setdefault("cswservice.contact_hours", "")
-        config.setdefault("cswservice.contact_instructions", "")
-        config.setdefault("cswservice.contact_role", "")
-
-        config["cswservice.rndlog_threshold"] = float(config.get("cswservice.rndlog_threshold", "0.01"))
-
-    def before_map(self, route_map):
-        c = "ckanext.spatial.controllers.csw:CatalogueServiceWebController"
-        route_map.connect("/csw", controller=c, action="dispatch_get",
-                          conditions={"method": ["GET"]})
-        route_map.connect("/csw", controller=c, action="dispatch_post",
-                          conditions={"method": ["POST"]})
-
-        return route_map
-
-    def after_map(self, route_map):
-        return route_map
 
 class HarvestMetadataApi(p.SingletonPlugin):
     '''

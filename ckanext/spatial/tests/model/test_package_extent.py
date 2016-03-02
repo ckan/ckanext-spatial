@@ -3,7 +3,10 @@ from shapely.geometry import asShape
 
 from ckan.model import Session
 from ckan.lib.helpers import json
-from ckan.new_tests import factories
+try:
+    import ckan.new_tests.factories as factories
+except ImportError:
+    import ckan.tests.factories as factories
 
 from ckanext.spatial.model import PackageExtent
 from ckanext.spatial.geoalchemy_common import WKTElement, legacy_geoalchemy
