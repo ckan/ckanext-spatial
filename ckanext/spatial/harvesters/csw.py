@@ -84,6 +84,16 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
                 if not isinstance(require_in_abstract, basestring):
                     raise ValueError('require_in_abstract must be string')
 
+            identifier_schema = source_config_obj.get('identifier_schema', None)
+            if identifier_schema is not None:
+                if not isinstance(identifier_schema, basestring):
+                    raise ValueError('identifier_schema must be string')
+
+            esn = source_config_obj.get('esn', None)
+            if esn is not None:
+                if not isinstance(esn, basestring):
+                    raise ValueError('esn must be string')
+
         except ValueError, e:
             raise e
 
@@ -118,8 +128,11 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
 
         log.debug('Starting gathering for %s' % url)
         guids_in_harvest = set()
+
+        identifier_schema = harvest_job.source.config.get('identifier_schema', self.output_schema())
+
         try:
-            for identifier in self.csw.getidentifiers(page=10, outputschema="csw", cql=cql):
+            for identifier in self.csw.getidentifiers(page=10, outputschema=identifier_schema, cql=cql):
                 try:
                     log.info('Got identifier %s from the CSW', identifier)
                     if identifier is None:
@@ -196,8 +209,9 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
             return False
 
         identifier = harvest_object.guid
+        esn = self.source_config.get('esn', 'full')
         try:
-            record = self.csw.getrecordbyid([identifier], outputschema=self.output_schema(), esn="summary")
+            record = self.csw.getrecordbyid([identifier], outputschema=self.output_schema(), esn=esn)
         except Exception, e:
             self._save_object_error('Error getting the CSW record with GUID %s' % identifier, harvest_object)
             return False
