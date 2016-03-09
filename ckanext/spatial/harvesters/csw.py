@@ -79,6 +79,11 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
                     if not isinstance(keyword, basestring):
                         raise ValueError('require_keyword values must be strings')
 
+            require_in_abstract = source_config_obj.get('require_in_abstract', None)
+            if require_in_abstract is not None:
+                if not isinstance(require_in_abstract, basestring):
+                    raise ValueError('require_in_abstract must be string')
+
         except ValueError, e:
             raise e
 
