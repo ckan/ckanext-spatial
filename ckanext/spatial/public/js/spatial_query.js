@@ -2,6 +2,96 @@
  */
 this.ckan.module('spatial-query', function ($, _) {
 
+  L.Control.Arrow = L.Control.extend({
+    options: {
+      position: 'topleft'
+    },
+
+    onAdd: function (map) {
+      var arrowName = 'leaflet-control-arrow',
+          barName = 'leaflet-bar',
+          partName = barName + '-part',
+          container = L.DomUtil.create('div', arrowName + ' ' + barName);
+
+      this._map = map;
+
+      this._moveUpButton = this._createButton('', 'Move up',
+              arrowName + '-up ' +
+              partName + ' ' +
+              partName + '-up',
+              container, this._move('up'), this);
+
+      this._moveLeftButton = this._createButton('', 'Move left',
+              arrowName + '-left ' +
+              partName + ' ' +
+              partName + '-left',
+              container, this._move('left'),  this);
+
+      this._moveRightButton = this._createButton('', 'Move right',
+              arrowName + '-right ' +
+              partName + ' ' +
+              partName + '-right',
+              container, this._move('right'), this);
+
+      this._moveDownButton = this._createButton('', 'Move down',
+              arrowName + '-down ' +
+              partName + ' ' +
+              partName + '-down',
+              container, this._move('down'), this);
+
+
+      return container;
+    },
+
+    onRemove: function (map) {
+
+    },
+
+    _move: function (direction) {
+      var d = [0, 0];
+      var self = this;
+
+      switch (direction){
+        case 'up':
+          d[1] = -10;
+          break;
+        case 'down':
+          d[1] = 10;
+          break;
+        case 'left':
+          d[0] = -10;
+          break;
+        case 'right':
+          d[0] = 10;
+          break;
+      }
+      return function(e){
+        self._map.panBy(d);
+      }
+    },
+
+    _createButton: function (html, title, className, container, fn, context) {
+      var link = L.DomUtil.create('a', className, container);
+      link.innerHTML = html;
+      link.href = '#';
+      link.title = title;
+
+      var stop = L.DomEvent.stopPropagation;
+
+      L.DomEvent
+          .on(link, 'click', stop)
+          .on(link, 'mousedown', stop)
+          .on(link, 'dblclick', stop)
+          .on(link, 'click', L.DomEvent.preventDefault)
+          .on(link, 'click', fn, context);
+
+      return link;
+    }
+  });
+
+
+
+
   return {
     options: {
       i18n: {
@@ -71,9 +161,17 @@ this.ckan.module('spatial-query', function ($, _) {
       var is_exanded = false;
       var should_zoom = true;
       var form = $("#dataset-search");
+      var map_attribution = $('#dataset-map-attribution');
+      var map_nav = $('#dataset-map-nav');
+      var show_map_link = $('.show-map-link', map_nav);
       // CKAN 2.1
       if (!form.length) {
           form = $(".search-form");
+      }
+      var aFields = ['west-lng', 'north-lat', 'east-lng', 'south-lat'];
+      var aForm = [];
+      for (var f in aFields){
+        aForm.push($('#' + aFields[f]));
       }
 
       var buttons;
@@ -98,10 +196,14 @@ this.ckan.module('spatial-query', function ($, _) {
           title: 'Draw rectangle'
         }
       }));
+      map.addControl(new L.Control.Arrow());
 
       // OK add the expander
-      $('.leaflet-control-draw a', module.el).on('click', function(e) {
+      $('.leaflet-control-draw a', module.el)
+        .add($('.show-map-link', map_nav))
+        .on('click', function(e) {
         if (!is_exanded) {
+          map_nav.hide();
           $('body').addClass('dataset-map-expanded');
           if (should_zoom && !extentLayer) {
             map.zoomIn();
@@ -111,17 +213,16 @@ this.ckan.module('spatial-query', function ($, _) {
         }
       });
 
+      $('.extended-map-show-form a', module.el).on('click', toggleCoordinateForm);
+
       // Setup the expanded buttons
-      buttons = $(module.template.buttons).insertBefore('#dataset-map-attribution');
+      buttons = $(module.template.buttons).insertBefore(map_attribution);
 
       // Handle the cancel expanded action
       $('.cancel', buttons).on('click', function() {
+        map_nav.show();
         $('body').removeClass('dataset-map-expanded');
-        if (extentLayer) {
-          map.removeLayer(extentLayer);
-        }
-        setPreviousExtent();
-        setPreviousBBBox();
+        resetBBox();
         resetMap();
         is_exanded = false;
       });
@@ -140,15 +241,30 @@ this.ckan.module('spatial-query', function ($, _) {
         }
       });
 
+      $('#extended-map-reset').on('click', resetBBox);
+      $('#extended-map-update').on('click', function(){
+        var c = [];
+        for (var i in aForm){
+          c.push(aForm[i].val());
+        }
+        if (c.every(function(e){
+          return e.length;
+        })){
+          console.log(module.options)
+          var rect = new L.Rectangle(
+            new L.LatLngBounds(L.latLng(c[3], c[0]), L.latLng(c[1], c[2])),
+            module.options.style
+          );
+
+          drawRect(rect);
+        }
+      });
+
       // When user finishes drawing the box, record it and add it to the map
       map.on('draw:rectangle-created', function (e) {
-        if (extentLayer) {
-          map.removeLayer(extentLayer);
-        }
-        extentLayer = e.rect;
-        $('#ext_bbox').val(extentLayer.getBounds().toBBoxString());
-        map.addLayer(extentLayer);
-        $('.apply', buttons).removeClass('disabled').addClass('btn-primary');
+        bbox_preparations();
+
+        drawRect(e.rect);
       });
 
       // Record the current map view so we can replicate it after submitting
@@ -166,15 +282,40 @@ this.ckan.module('spatial-query', function ($, _) {
         should_zoom = false;
       });
 
+      function resetBBox() {
+        if (extentLayer) {
+          map.removeLayer(extentLayer);
+        }
+        setPreviousExtent();
+        setPreviousBBBox();
+      }
+
+      function drawRect(rect) {
+        if (extentLayer) {
+          map.removeLayer(extentLayer);
+        }
+        extentLayer = rect;
+        var bbox_string = extentLayer.getBounds().toBBoxString();
+        $('#ext_bbox').val(bbox_string);
+        fillForm(bbox_string);
+        map.addLayer(extentLayer);
+        map.fitBounds(extentLayer.getBounds());
+        $('.apply', buttons).removeClass('disabled').addClass('btn-primary');
+      }
 
       // Is there an existing box from a previous search?
       function setPreviousBBBox() {
         previous_bbox = module._getParameterByName('ext_bbox');
         if (previous_bbox) {
+          bbox_preparations();
+
           $('#ext_bbox').val(previous_bbox);
           extentLayer = module._drawExtentFromCoords(previous_bbox.split(','))
+          fillForm(previous_bbox);
           map.addLayer(extentLayer);
           map.fitBounds(extentLayer.getBounds());
+        } else {
+          fillForm(null);
         }
       }
 
@@ -202,6 +343,30 @@ this.ckan.module('spatial-query', function ($, _) {
           form.submit();
         }, 800);
       }
+
+      function bbox_preparations() {
+        $('body').addClass('dataset-map-layer-drawn')
+        show_map_link.parent().addClass('active');
+      }
+
+      function toggleCoordinateForm(event) {
+        $(event.target).parent().toggleClass('active')
+      }
+
+      function fillForm(bounds){
+        if (bounds === null) {
+          $('.extended-map-form input').val('');
+          return;
+        }
+        var b = bounds.split(',')
+
+
+        for (var i in b){
+          aForm[i].val(b[i]);
+        }
+
+      }
+
     }
   }
 });
