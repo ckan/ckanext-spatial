@@ -121,10 +121,27 @@
 .dataset-map-expanded .wrapper {
   margin-top: 383px;
 }
+.dataset-map-layer-drawn .extended-map-help,
 .active ~ .extended-map-help{
   display: none;
 }
+.dataset-map-layer-drawn .extended-map-form,
 .active ~ .extended-map-form{
+  display: block;
+}
+.dataset-map-layer-drawn .extended-map-control{
+  display: none;
+}
+.dataset-map-layer-drawn .extended-map-form input{
+  display: none;
+}
+.active ~ .extended-map-form input{
+  display: inline;
+}
+.active ~ .extended-map-form .span-input{
+  display: none;
+}
+.active ~ .extended-map-form .extended-map-control{
   display: block;
 }
 .extended-map-form .coord-field{
