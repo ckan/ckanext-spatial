@@ -14,7 +14,7 @@ e.g.
 <section id="dataset-map" class="module module-narrow module-shallow">
   <h2 class="module-heading">
     <i class="icon-medium icon-globe"></i>
-    {{ _('Filter by location') }}
+    {{ _('Location') }}
     <a id="dataset-map-clear" href="{{ h.remove_url_param(['ext_bbox','ext_prev_extent', 'ext_location']) }}" class="action">{{ _('Clear') }}</a>
   </h2>
   <ul class="unstyled nav nav-simple nav-facet nav-dataset-map" id="dataset-map-nav">
@@ -26,50 +26,58 @@ e.g.
   <div class="dataset-map" data-module="spatial-query" data-default_extent="{{ default_extent }}" data-module-map_config="{{ h.dump_json(map_config) }}">
     <div id="dataset-map-container">
     </div>
+    {% block extended_map_panel %}
+      <div id="extended-map-panel">
 
-    <div id="extended-map-panel">
-      <div class="extended-map-show-form">
-        <a href="javascript:;" class="btn btn-primary">{{ _('Enter coordinates') }}</a>
+        <div class="extended-map-show-form">
+          {% block extended_map_form_switcher %}
+          <a href="javascript:;" class="btn btn-primary">{{ _('Enter coordinates') }}</a>
+          {% endblock %}
+        </div>
+        {% block extended_map_help %}
+          <div class="extended-map-help">
+            {% trans %}
+              <ul>
+                Select a location extent by:
+                <li>Draving an extent box, or</li>
+                <li>Enter the latitude and longitude coordinates.</li>
+              </ul>
+            {% endtrans %}
+          </div>
+        {% endblock %}
+        {% block extended_map_form %}
+          <div class="extended-map-form">
+            <div class="coord-field">
+              <label for="north-lat">{{ _('North latitude') }}</label>
+              <input type="text" id="north-lat">
+              <span class="span-input"></span>
+            </div>
+
+            <div class="coord-field pull-right">
+              <label for="south-lat">{{ _('South latitude') }}</label>
+              <input type="text" id="south-lat">
+              <span class="span-input"></span>
+            </div>
+
+            <div class="coord-field">
+              <label for="west-lat">{{ _('West longitude') }}</label>
+              <input type="text" id="west-lng">
+              <span class="span-input"></span>
+            </div>
+
+            <div class="coord-field pull-right">
+              <label for="east-lat">{{ _('East longitude') }}</label>
+              <input type="text" id="east-lng">
+              <span class="span-input"></span>
+            </div>
+            <div class="extended-map-control">
+              <a href="javascript:;" id="extended-map-update" class="btn">{{ _('Update map') }}</a>
+              <a href="javascript:;" id="extended-map-reset" class="btn">{{ _('Reset coordinates to current map view') }}</a>
+            </div>
+          </div>
+        {% endblock %}
       </div>
-      <div class="extended-map-help">
-        {% trans %}
-          <ul>
-            Select a location extent by:
-            <li>Draving an extent box, or</li>
-            <li>Enter the latitude and longitude coordinates.</li>
-          </ul>
-        {% endtrans %}
-      </div>
-      <div class="extended-map-form">
-        <div class="coord-field">
-          <label for="north-lat">{{ _('North latitude') }}</label>
-          <input type="text" id="north-lat">
-          <span class="span-input"></span>
-        </div>
-
-        <div class="coord-field pull-right">
-          <label for="south-lat">{{ _('South latitude') }}</label>
-          <input type="text" id="south-lat">
-          <span class="span-input"></span>
-        </div>
-
-        <div class="coord-field">
-          <label for="west-lat">{{ _('West longitude') }}</label>
-          <input type="text" id="west-lng">
-          <span class="span-input"></span>
-        </div>
-
-        <div class="coord-field pull-right">
-          <label for="east-lat">{{ _('East longitude') }}</label>
-          <input type="text" id="east-lng">
-          <span class="span-input"></span>
-        </div>
-        <div class="extended-map-control">
-          <a href="javascript:;" id="extended-map-update" class="btn">{{ _('Update map') }}</a>
-          <a href="javascript:;" id="extended-map-reset" class="btn">{{ _('Reset coordinates to current map view') }}</a>
-        </div>
-      </div>
-    </div>
+    {% endblock %}
   </div>
   <div id="dataset-map-attribution">
     {% snippet "spatial/snippets/map_attribution.html", map_config=map_config %}
