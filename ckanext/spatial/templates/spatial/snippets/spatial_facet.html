@@ -1,0 +1,32 @@
+{#
+Displays a map widget to define a spatial filter on the dataset search page sidebar
+
+default_extent
+  Initial map extent (Optional, defaults to the whole world). It can be defined
+  either as a pair of coordinates or as a GeoJSON bounding box.
+
+e.g.
+  {% snippet "spatial/snippets/spatial_query.html", default_extent=[[15.62, -139.21], [64.92, -61.87]] %}
+
+  {% snippet "spatial/snippets/spatial_query.html", default_extent="{ \"type\": \"Polygon\", \"coordinates\": [[[74.89, 29.39],[74.89, 38.45], [60.50, 38.45], [60.50, 29.39], [74.89, 29.39]]]}" %}
+
+#}
+{% with bbox = request.GET.ext_bbox %}
+    {% if bbox %}
+      <p class="filter-list">
+          <span class="facet">{{ _('Location extent') }}:</span>
+            <span class="filtered pill">
+              {% for coord in bbox.split(',') %}
+                {{ loop.cycle(
+                  _('West longitude'),
+                  _('North latitude'),
+                  _('East longitude'),
+                  _('South latitude'))
+                }}
+                {{ coord|float|round(5) }}&deg;{% if not loop.last %},{% endif %}
+              {% endfor %}
+              <a href="{{ h.remove_url_param(['ext_bbox','ext_prev_extent', 'ext_location']) }}" class="remove" title="{{ _('Remove') }}"><i class="icon-remove"></i></a>
+            </span>
+      </p>
+    {% endif %}
+{% endwith %}

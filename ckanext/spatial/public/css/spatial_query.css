@@ -151,6 +151,9 @@
 .coord-field .span-input{
   margin-left: 0;
 }
+.coord-field .span-input:after{
+  content: "\00b0";
+}
 .extended-map-form .coord-field input{
   max-width: 100%;
   box-sizing: border-box;

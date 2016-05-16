@@ -179,7 +179,7 @@ this.ckan.module('spatial-query', function ($, _) {
       var jqaForm = $();  // empty jQuery object
       $.each(aForm, function(i, o) {jqaForm = jqaForm.add(o)});
       jqaForm.on('change', function(e){
-        $(e.target).next().text((e.target.value||'').slice(0, 13));
+        $(e.target).next().text(parseFloat(e.target.value, 5).toFixed(5));
       })
 
       // Add necessary fields to the search form if not already created
