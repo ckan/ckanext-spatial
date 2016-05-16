@@ -148,6 +148,9 @@
   display: inline-block;
   width: 47.5%;
 }
+.coord-field .span-input{
+  margin-left: 0;
+}
 .extended-map-form .coord-field input{
   max-width: 100%;
   box-sizing: border-box;

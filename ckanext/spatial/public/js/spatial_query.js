@@ -176,6 +176,12 @@ this.ckan.module('spatial-query', function ($, _) {
 
       var buttons;
 
+      var jqaForm = $();  // empty jQuery object
+      $.each(aForm, function(i, o) {jqaForm = jqaForm.add(o)});
+      jqaForm.on('change', function(e){
+        $(e.target).next().text((e.target.value||'').slice(0, 13));
+      })
+
       // Add necessary fields to the search form if not already created
       $(['ext_bbox', 'ext_prev_extent']).each(function(index, item){
         if ($("#" + item).length === 0) {
@@ -250,7 +256,6 @@ this.ckan.module('spatial-query', function ($, _) {
         if (c.every(function(e){
           return e.length;
         })){
-          console.log(module.options)
           var rect = new L.Rectangle(
             new L.LatLngBounds(L.latLng(c[3], c[0]), L.latLng(c[1], c[2])),
             module.options.style
@@ -362,7 +367,7 @@ this.ckan.module('spatial-query', function ($, _) {
 
 
         for (var i in b){
-          aForm[i].val(b[i]);
+          aForm[i].val(b[i]).trigger('change');
         }
 
       }
