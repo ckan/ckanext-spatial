@@ -157,8 +157,23 @@
 .extended-map-form .coord-field input{
   max-width: 100%;
   box-sizing: border-box;
-  padding: 1em;
+  height: 2em;
+  padding-right: 0;
 }
+.active .show-map-link i{
+  display: inline-block;
+}
+.show-map-link i{
+  position: absolute;
+  right: 2px;
+  padding-top: 3px;
+  font-size: 16px;
+  display: none;
+}
+.nav-facet .nav-item.active .show-map-link:after{
+  display: none;
+}
+
 .extended-map-control .btn{
   margin-top: 15px;
   width: 100%;
@@ -178,7 +193,7 @@
   border-radius: 4px;
   display: block;
   border: 1px solid #aaa;
-  font-size: 16px;
+  font-size: 15px;
   text-align: center;
   position: relative;
 }
@@ -209,7 +224,11 @@
 .leaflet-control-arrow-left:hover,
 .leaflet-control-arrow-right:hover,
 .leaflet-control-arrow-up:hover,
-.leaflet-control-arrow-down:hover{
+.leaflet-control-arrow-down:hover,
+.leaflet-control-arrow-left:focus,
+.leaflet-control-arrow-right:focus,
+.leaflet-control-arrow-up:focus,
+.leaflet-control-arrow-down:focus{
   background: #fff;
   text-decoration: none;
 }

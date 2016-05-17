@@ -179,7 +179,7 @@ this.ckan.module('spatial-query', function ($, _) {
       var jqaForm = $();  // empty jQuery object
       $.each(aForm, function(i, o) {jqaForm = jqaForm.add(o)});
       jqaForm.on('change', function(e){
-        $(e.target).next().text(parseFloat(e.target.value, 5).toFixed(5));
+        $(e.target).next().text(parseFloat(e.target.value, 5).toFixed(1));
       })
 
       // Add necessary fields to the search form if not already created
@@ -217,6 +217,10 @@ this.ckan.module('spatial-query', function ($, _) {
           resetMap();
           is_exanded = true;
         }
+      });
+      $('.show-map-link i', map_nav).on('click', function(e){
+        window.location.href = $('#dataset-map-clear').attr('href');
+        e.stopPropagation();
       });
 
       $('.extended-map-show-form a', module.el).on('click', toggleCoordinateForm);
@@ -291,8 +295,7 @@ this.ckan.module('spatial-query', function ($, _) {
         if (extentLayer) {
           map.removeLayer(extentLayer);
         }
-        setPreviousExtent();
-        setPreviousBBBox();
+        drawBBox(map.getBounds().toBBoxString());
       }
 
       function drawRect(rect) {
@@ -313,15 +316,18 @@ this.ckan.module('spatial-query', function ($, _) {
         previous_bbox = module._getParameterByName('ext_bbox');
         if (previous_bbox) {
           bbox_preparations();
-
-          $('#ext_bbox').val(previous_bbox);
-          extentLayer = module._drawExtentFromCoords(previous_bbox.split(','))
-          fillForm(previous_bbox);
-          map.addLayer(extentLayer);
-          map.fitBounds(extentLayer.getBounds());
+          drawBBox(previous_bbox);
         } else {
           fillForm(null);
         }
+      }
+
+      function drawBBox(bbox) {
+        $('#ext_bbox').val(bbox);
+        extentLayer = module._drawExtentFromCoords(bbox.split(','))
+        fillForm(bbox);
+        map.addLayer(extentLayer);
+        map.fitBounds(extentLayer.getBounds());
       }
 
       // Is there an existing extent from a previous search?
@@ -363,8 +369,9 @@ this.ckan.module('spatial-query', function ($, _) {
           $('.extended-map-form input').val('');
           return;
         }
-        var b = bounds.split(',')
-
+        var b = $.map(bounds.split(','), function(e){
+          return parseFloat(e).toFixed(1)
+        })
 
         for (var i in b){
           aForm[i].val(b[i]).trigger('change');
