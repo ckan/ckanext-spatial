@@ -295,6 +295,7 @@ this.ckan.module('spatial-query', function ($, _) {
         if (extentLayer) {
           map.removeLayer(extentLayer);
         }
+        $('.apply', buttons).removeClass('disabled').addClass('btn-primary');
         drawBBox(map.getBounds().toBBoxString());
       }
 
