@@ -212,6 +212,10 @@ this.ckan.module('spatial-query', function ($, _) {
           map_nav.hide();
           $('body').addClass('dataset-map-expanded');
           if (should_zoom && !extentLayer) {
+            if (module.options.default_extent){
+              var rect = getRectFromCoordinates(module.options.default_extent);
+              drawRect(rect);
+            }
             map.zoomIn();
           }
           resetMap();
@@ -260,10 +264,10 @@ this.ckan.module('spatial-query', function ($, _) {
         if (c.every(function(e){
           return e.length;
         })){
-          var rect = new L.Rectangle(
-            new L.LatLngBounds(L.latLng(c[3], c[0]), L.latLng(c[1], c[2])),
-            module.options.style
-          );
+          var rect = getRectFromCoordinates([
+            [c[3], c[0]],
+            [c[1], c[2]]
+          ]);
 
           drawRect(rect);
         }
@@ -291,11 +295,18 @@ this.ckan.module('spatial-query', function ($, _) {
         should_zoom = false;
       });
 
+      function getRectFromCoordinates(c){
+
+        return new L.Rectangle(
+            new L.LatLngBounds(L.latLng(c[0]), L.latLng(c[1])),
+            module.options.style
+          )
+      }
+
       function resetBBox() {
         if (extentLayer) {
           map.removeLayer(extentLayer);
         }
-        $('.apply', buttons).removeClass('disabled').addClass('btn-primary');
         drawBBox(map.getBounds().toBBoxString());
       }
 
