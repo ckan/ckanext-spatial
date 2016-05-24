@@ -35,7 +35,7 @@
   margin: 5px 8px;
 }
 .module-narrow #dataset-map-container{
-  position: absolute;
+  position: relative;
 }
 .extended-map-form,
 .module-narrow #dataset-map-attribution,
