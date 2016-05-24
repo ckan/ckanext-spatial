@@ -25,7 +25,7 @@ e.g.
     </li>
   </ul>
   {% set map_config = h.get_common_map_config() %}
-  <div class="dataset-map" data-module="spatial-query" data-default_extent="{{ default_extent }}" data-module-map_config="{{ h.dump_json(map_config) }}">
+  <div class="dataset-map" data-module="spatial-query" data-default_extent="{{ default_extent }}" data-module-map_config="{{ h.dump_json(map_config) }}" {% if draw_default %}data-module-draw_default{%endif%}>
     <div id="dataset-map-container">
     </div>
     {% snippet "spatial/snippets/accessibility_panel.html" %}
