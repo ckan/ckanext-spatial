@@ -5,12 +5,13 @@ echo "This is travis-build.bash..."
 
 echo "Installing the packages that CKAN requires..."
 sudo apt-get update -qq
-sudo apt-get install solr-jetty
+sudo apt-get install solr-jetty -qq
 
 echo "Installing PostGIS..."
 if [ $POSTGISVERSION == '1' ]
 then
-    sudo apt-get install postgresql-9.1-postgis
+    sudo apt-cache show postgres-9.1-postgis
+    sudo apt-get install postgresql-9.1-postgis=1.5.3-2 -u -V
 fi
 # PostGIS 2.1 already installed on Travis
 
