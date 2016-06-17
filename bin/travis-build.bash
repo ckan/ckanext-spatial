@@ -12,6 +12,8 @@ if [ $POSTGISVERSION == '1' ]
 then
     dpkg -l | grep postgres
     sudo apt-cache show postgresql-9.1-postgis
+
+    sudo apt-cache purge postgresql-9.1-postgis-2.1 postgresql-9.1-postgis-2.1-scripts
     sudo apt-get install postgresql-9.1-postgis=1.5.3-2 -u -V
 fi
 # PostGIS 2.1 already installed on Travis
