@@ -4,7 +4,7 @@ from pylons.i18n import _
 
 import ckan.lib.helpers as h, json
 from ckan.lib.base import BaseController, c, g, request, \
-                          response, session, render, config, abort, redirect
+                          response, session, render, config, abort
 
 from ckan.model import Package
 
