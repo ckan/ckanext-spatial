@@ -69,7 +69,9 @@
           wmsOptions['layers'] = mapConfig['wms.layers'];
           wmsOptions['styles'] = mapConfig['wms.styles'] || '';
           wmsOptions['format'] = mapConfig['wms.format'] || 'image/png';
-          wmsOptions['crs'] = mapConfig['wms.srs'] || mapConfig['wms.crs'];
+          if(mapConfig['wms.srs'] || mapConfig['wms.crs']) {
+              wmsOptions['crs'] = mapConfig['wms.srs'] || mapConfig['wms.crs'];
+          }
           wmsOptions['version'] = mapConfig['wms.version'] || '1.1.1';
           
           baseLayer = new L.TileLayer.WMS(baseLayerUrl, wmsOptions);
