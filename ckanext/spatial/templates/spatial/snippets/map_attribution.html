@@ -1,5 +1,7 @@
 {% if map_config.type == 'custom' %}
   <div>{{ map_config.attribution|safe }}</div>
+{% elif map_config.type == 'wms' %}
+  <div>{{ map_config['wms.attribution']|safe }}</div>
 {% else %}
   <div>Map data &copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> contributors</div>
   {% if map_config.type == 'mapbox' %}
