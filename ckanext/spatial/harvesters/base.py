@@ -17,6 +17,7 @@ from pylons import config
 from owslib import wms
 import requests
 from lxml import etree
+from sqlalchemy.exc import IntegrityError
 
 from ckan import plugins as p
 from ckan import model
@@ -24,6 +25,7 @@ from ckan.lib.helpers import json
 from ckan import logic
 from ckan.lib.navl.validators import not_empty
 from ckan.lib.search.index import PackageSearchIndex
+from ckan.lib.search.common import SearchIndexError
 
 from ckanext.harvest.harvesters.base import HarvesterBase
 from ckanext.harvest.model import HarvestObject
@@ -326,9 +328,7 @@ class SpatialHarvester(HarvesterBase):
                 ymin = float(bbox['south'])
                 ymax = float(bbox['north'])
             except ValueError, e:
-                self._save_object_error('Error parsing bounding box value: {0}'.format(str(e)),
-                                    harvest_object, 'Import')
-                return False
+                extras['spatial'] = None
             else:
                 # Construct a GeoJSON extent so ckanext-spatial can register the extent geometry
 
@@ -338,9 +338,6 @@ class SpatialHarvester(HarvesterBase):
                     extent_string = Template('{"type": "Point", "coordinates": [$x, $y]}').substitute(
                         x=xmin, y=ymin
                     )
-                    self._save_object_error('Point extent defined instead of polygon',
-                                     harvest_object, 'Import')
-                    return False
                 else:
                     extent_string = self.extent_template.substitute(
                         xmin=xmin, ymin=ymin, xmax=xmax, ymax=ymax
@@ -605,8 +602,14 @@ class SpatialHarvester(HarvesterBase):
             try:
                 package_id = p.toolkit.get_action('package_create')(context, package_dict)
                 log.info('Created new package %s with guid %s', package_id, harvest_object.guid)
+            except IntegrityError:
+                self._save_object_error('Some name conflict error. Should resolve itself in next harvest job.', harvest_object, 'Import')
+                return False
             except p.toolkit.ValidationError, e:
                 self._save_object_error('Validation Error: %s' % str(e.error_summary), harvest_object, 'Import')
+                return False
+            except:
+                self._save_object_error('Unexpected Error: %s' % sys.exc_info()[0], harvest_object, 'Import')
                 return False
 
         elif status == 'change':
@@ -673,8 +676,11 @@ class SpatialHarvester(HarvesterBase):
                             })
                         package_dict['extras'] = new_extras
                         package_index = PackageSearchIndex()
-                        package_index.index_package(package_dict)
-
+                        try:
+                            package_index.index_package(package_dict)
+                        except SearchIndexError, e:
+                            self._save_object_error('Solr Error: %s' % str(e), harvest_object, 'Import')
+                            return False
                 log.info('Document with GUID %s unchanged, skipping...' % (harvest_object.guid))
             else:
                 # make package name sticky
