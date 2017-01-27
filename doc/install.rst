@@ -24,7 +24,7 @@ Ubuntu 14.04 (PostgreSQL 9.3 and PostGIS 2.1)
 
 #. Install PostGIS::
 
-        sudo apt-get install postgresql-9.3-postgis
+        sudo apt-get install postgresql-9.3-postgis-2.1
 
 #. Run the following commands. The first one will create the necessary
    tables and functions in the database, and the second will populate

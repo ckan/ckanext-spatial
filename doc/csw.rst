@@ -64,8 +64,8 @@ Setup
 1. Install pycsw. There are several options for this, depending on your
    server setup, check the `pycsw documentation`_.
 
-   .. note:: CKAN integration requires at least pycsw version 1.8.0. Make sure
-             to install at least this version.
+   .. note:: CKAN integration requires least pycsw version 1.8.0. In general,
+             use the latest stable version.
 
    The following instructions assume that you have installed CKAN via a
    `package install`_ and should be run as root, but the steps are the same if
@@ -78,8 +78,8 @@ Setup
 
     git clone https://github.com/geopython/pycsw.git
     cd pycsw
-    # Remember to use at least pycsw 1.8.0
-    git checkout 1.8.0
+    # always use the latest stable version
+    git checkout 1.10.4
     pip install -e .
     python setup.py build
     python setup.py install

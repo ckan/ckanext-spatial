@@ -37,12 +37,15 @@
 #dataset-map-edit-buttons {
   display: none;
 }
-.leaflet-control-draw-rectangle {
+.leaflet-draw-toolbar a.leaflet-draw-draw-rectangle {
   background-image: url("../img/pencil.png");
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -o-border-radius: 5px;
-  border-radius: 5px;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  background-size: 12px 12px;
+  border-radius: 4px;
+}
+.leaflet-draw-actions li {
+  display: none;
 }
 .dataset-map-expanded #dataset-map {
   position: absolute;
