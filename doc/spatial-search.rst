@@ -114,6 +114,8 @@ details about the available options:
         </fields>
 
     The solr schema file is typically located at: (..)/src/ckan/ckan/config/solr/schema.xml
+    After adding these lines to solr schema, reindex solr
+    ``paster --plugin=ckan search-index rebuild --config=/etc/ckan/default/development.ini``
 
 * ``solr-spatial-field``
     This option uses the `spatial field`_ introduced in Solr 4, which allows
@@ -140,6 +142,9 @@ details about the available options:
             <!-- ... -->
             <field name="spatial_geom"  type="location_rpt" indexed="true" stored="true" multiValued="true" />
         </fields>
+        
+    After adding these lines to solr schema, reindex solr
+    ``paster --plugin=ckan search-index rebuild --config=/etc/ckan/default/development.ini``
 
 * ``postgis``
     This is the original implementation of the spatial search. It
