@@ -240,16 +240,16 @@ class SchematronValidator(BaseValidator):
     @classmethod
     def schematron(cls, schema):
         transforms = [
-            "validation/xml/schematron/iso_dsdl_include.xsl",
-            "validation/xml/schematron/iso_abstract_expand.xsl",
-            "validation/xml/schematron/iso_svrl_for_xslt1.xsl",
+            "xml/schematron/iso_dsdl_include.xsl",
+            "xml/schematron/iso_abstract_expand.xsl",
+            "xml/schematron/iso_svrl_for_xslt1.xsl",
             ]
         if isinstance(schema, file):
             compiled = etree.parse(schema)
         else:
             compiled = schema
         for filename in transforms:
-            with resource_stream("ckanext.spatial", filename) as stream:
+            with resource_stream(__name__, filename) as stream:
                 xform_xml = etree.parse(stream)
                 xform = etree.XSLT(xform_xml)
                 compiled = xform(compiled)
