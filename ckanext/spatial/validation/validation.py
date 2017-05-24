@@ -246,7 +246,7 @@ class SchematronValidator(BaseValidator):
             "{http://purl.oclc.org/dsdl/svrl}text")
         message = message_element.text.strip()
 
-        #TODO: Do we really need such detail on the error messages?
+        # TODO: Do we really need such detail on the error messages?
         return message, 'Error Message: "%s"  Error Location: "%s"  Error Assert: "%s"' % (message, location, assert_)
 
     @classmethod
