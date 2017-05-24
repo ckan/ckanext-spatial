@@ -75,9 +75,9 @@ class HarvestMetadataApiController(BaseApiController):
 
     def _transform_to_html(self, content, xslt_package=None, xslt_path=None):
 
-        xslt_package = xslt_package or 'ckanext.spatial.templates'
+        xslt_package = xslt_package or 'ckanext'
         xslt_path = xslt_path or \
-            'ckanext/spatial/gemini2-html-stylesheet.xsl'
+            'spatial/templates/ckanext/spatial/gemini2-html-stylesheet.xsl'
 
         # optimise -- read transform only once and compile rather
         # than at each request
