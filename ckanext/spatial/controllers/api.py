@@ -75,7 +75,7 @@ class HarvestMetadataApiController(BaseApiController):
 
     def _transform_to_html(self, content, xslt_package=None, xslt_path=None):
 
-        xslt_package = xslt_package or 'ckanext.spatial'
+        xslt_package = xslt_package or 'ckanext.spatial.validation'
         xslt_path = xslt_path or \
             'templates/ckanext/spatial/gemini2-html-stylesheet.xsl'
 
