@@ -262,7 +262,7 @@ class SchematronValidator(BaseValidator):
             compiled = schema
         for filename in transforms:
             with resource_stream(
-                    'ckanext.spatial.validation', filename) as stream:
+                    __name__, filename) as stream:
                 xform_xml = etree.parse(stream)
                 xform = etree.XSLT(xform_xml)
                 compiled = xform(compiled)
@@ -276,7 +276,7 @@ class ConstraintsSchematron(SchematronValidator):
     @classmethod
     def get_schematrons(cls):
         with resource_stream(
-                'ckanext.spatial.validation',
+                __name__,
                 "xml/medin/ISOTS19139A1Constraints_v1.3.sch") as schema:
 
             return [cls.schematron(schema)]
@@ -289,7 +289,7 @@ class ConstraintsSchematron14(SchematronValidator):
     @classmethod
     def get_schematrons(cls):
         with resource_stream(
-                'ckanext.spatial.validation',
+                __name__,
                 "xml/medin/ISOTS19139A1Constraints_v1.4.sch") as schema:
             return [cls.schematron(schema)]
 
@@ -301,7 +301,7 @@ class Gemini2Schematron(SchematronValidator):
     @classmethod
     def get_schematrons(cls):
         with resource_stream(
-                'ckanext.spatial.validation',
+                __name__,
                 "xml/gemini2/gemini2-schematron-20110906-v1.2.sch") as schema:
             return [cls.schematron(schema)]
 
@@ -312,7 +312,7 @@ class Gemini2Schematron13(SchematronValidator):
 
     @classmethod
     def get_schematrons(cls):
-        with resource_stream('ckanext.spatial.validation',
+        with resource_stream(__name__,
                              "xml/gemini2/Gemini2_R1r3.sch") as schema:
             return [cls.schematron(schema)]
 
