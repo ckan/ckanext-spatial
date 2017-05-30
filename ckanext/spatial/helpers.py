@@ -6,6 +6,7 @@ from ckan.lib import helpers as h
 
 log = logging.getLogger(__name__)
 
+
 def get_reference_date(date_str):
     '''
         Gets a reference date extra created by the harvesters and formats it
@@ -29,6 +30,7 @@ def get_reference_date(date_str):
         return ', '.join(out)
     except (ValueError, TypeError):
         return date_str
+
 
 def get_responsible_party(value):
     '''
@@ -58,6 +60,7 @@ def get_responsible_party(value):
         return '; '.join(out)
     except (ValueError, TypeError):
         return value
+
 
 def get_common_map_config():
     '''
