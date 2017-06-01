@@ -6,6 +6,7 @@ from lxml import etree
 
 log = __import__("logging").getLogger(__name__)
 
+
 class BaseValidator(object):
     '''Base class for a validator.'''
     name = None
@@ -23,6 +24,7 @@ class BaseValidator(object):
           (is_valid, [(error_message_string, error_line_number)])
         '''
         raise NotImplementedError
+
 
 class XsdValidator(BaseValidator):
     '''Base class for validators that use an XSD schema.'''
@@ -46,12 +48,16 @@ class XsdValidator(BaseValidator):
         schema = etree.XMLSchema(xsd)
         # With libxml2 versions before 2.9, this fails with this error:
         #    gmx_schema = etree.XMLSchema(gmx_xsd)
-        #  File "xmlschema.pxi", line 103, in lxml.etree.XMLSchema.__init__ (src/lxml/lxml.etree.c:116069)
-        # XMLSchemaParseError: local list type: A type, derived by list or union, must have the simple ur-type definition as base type, not '{http://www.opengis.net/gml/3.2}doubleList'., line 118
+        # File "xmlschema.pxi", line 103, in
+        # lxml.etree.XMLSchema.__init__ (src/lxml/lxml.etree.c:116069)
+        # XMLSchemaParseError: local list type: A type, derived by list or
+        # union, must have the simple ur-type definition as base type,
+        # not '{http://www.opengis.net/gml/3.2}doubleList'., line 118
         try:
             schema.assertValid(xml)
         except etree.DocumentInvalid:
-            log.info('Validation errors found using schema {0}'.format(xsd_name))
+            log.info(
+                'Validation errors found using schema {0}'.format(xsd_name))
             errors = []
             for error in schema.error_log:
                 errors.append((error.message, error.line))
@@ -68,13 +74,15 @@ class ISO19139Schema(XsdValidator):
     def is_valid(cls, xml):
         xsd_path = 'xml/iso19139'
         gmx_xsd_filepath = os.path.join(os.path.dirname(__file__),
-                                            xsd_path, 'gmx/gmx.xsd')
+                                        xsd_path, 'gmx/gmx.xsd')
         xsd_name = 'Dataset schema (gmx.xsd)'
         is_valid, errors = cls._is_valid(xml, gmx_xsd_filepath, xsd_name)
         if not is_valid:
-            #TODO: not sure if we need this one, keeping for backwards compatibility
+            # TODO: not sure if we need this one,
+            # keeping for backwards compatibility
             errors.insert(0, ('{0} Validation Error'.format(xsd_name), None))
         return is_valid, errors
+
 
 class ISO19139EdenSchema(XsdValidator):
     name = 'iso19139eden'
@@ -92,16 +100,21 @@ class ISO19139EdenSchema(XsdValidator):
             xsd_name = 'Dataset schema (gmx.xsd)'
             is_valid, errors = cls._is_valid(xml, gmx_xsd_filepath, xsd_name)
             if not is_valid:
-                #TODO: not sure if we need this one, keeping for backwards compatibility
-                errors.insert(0, ('{0} Validation Error'.format(xsd_name), None))
+                # TODO: not sure if we need this one, keeping for backwards
+                # compatibility
+                errors.insert(
+                    0, ('{0} Validation Error'.format(xsd_name), None))
         elif metadata_type == 'service':
-            gmx_and_srv_xsd_filepath = os.path.join(os.path.dirname(__file__),
-                                                    xsd_path, 'gmx_and_srv.xsd')
+            gmx_and_srv_xsd_filepath = os.path.join(
+                os.path.dirname(__file__), xsd_path, 'gmx_and_srv.xsd')
             xsd_name = 'Service schemas (gmx.xsd & srv.xsd)'
-            is_valid, errors = cls._is_valid(xml, gmx_and_srv_xsd_filepath, xsd_name)
+            is_valid, errors = cls._is_valid(
+                xml, gmx_and_srv_xsd_filepath, xsd_name)
             if not is_valid:
-                #TODO: not sure if we need this one, keeping for backwards compatibility
-                errors.insert(0, ('{0} Validation Error'.format(xsd_name), None))
+                # TODO: not sure if we need this one, keeping for
+                # backwards compatibility
+                errors.insert(
+                    0, ('{0} Validation Error'.format(xsd_name), None))
         else:
             is_valid = False
             errors = [('Metadata type not recognised "%s" - cannot choose an ISO19139 validator.' %
@@ -127,7 +140,6 @@ class ISO19139EdenSchema(XsdValidator):
             return 'dataset'
 
 
-
 class ISO19139NGDCSchema(XsdValidator):
     '''
     XSD based validation for ISO 19139 documents.
@@ -145,8 +157,9 @@ class ISO19139NGDCSchema(XsdValidator):
         xsd_path = 'xml/iso19139ngdc'
 
         xsd_filepath = os.path.join(os.path.dirname(__file__),
-                                        xsd_path, 'schema.xsd')
+                                    xsd_path, 'schema.xsd')
         return cls._is_valid(xml, xsd_filepath, 'NGDC Schema (schema.xsd)')
+
 
 class FGDCSchema(XsdValidator):
     '''
@@ -166,8 +179,9 @@ class FGDCSchema(XsdValidator):
         xsd_path = 'xml/fgdc'
 
         xsd_filepath = os.path.join(os.path.dirname(__file__),
-                                        xsd_path, 'fgdc-std-001-1998.xsd')
-        return cls._is_valid(xml, xsd_filepath, 'FGDC Schema (fgdc-std-001-1998.xsd)')
+                                    xsd_path, 'fgdc-std-001-1998.xsd')
+        return cls._is_valid(
+            xml, xsd_filepath, 'FGDC Schema (fgdc-std-001-1998.xsd)')
 
 
 class SchematronValidator(BaseValidator):
@@ -201,7 +215,8 @@ class SchematronValidator(BaseValidator):
         for schematron in cls.schematrons:
             result = schematron(xml)
             errors = []
-            for element in result.findall("{http://purl.oclc.org/dsdl/svrl}failed-assert"):
+            for element in result.findall(
+                    "{http://purl.oclc.org/dsdl/svrl}failed-assert"):
                 errors.append(element)
             if len(errors) > 0:
                 messages_already_reported = set()
@@ -209,8 +224,9 @@ class SchematronValidator(BaseValidator):
                 for error in errors:
                     message, details = cls.extract_error_details(error)
                     if not message in messages_already_reported:
-                        #TODO: perhaps can extract the source line from the error location
-                        error_details.append((details,None))
+                        # TODO: perhaps can extract the source line from the
+                        # error location
+                        error_details.append((details, None))
                         messages_already_reported.add(message)
                 return False, error_details
         return True, []
@@ -226,25 +242,27 @@ class SchematronValidator(BaseValidator):
         '''
         assert_ = failed_assert_element.get('test')
         location = failed_assert_element.get('location')
-        message_element = failed_assert_element.find("{http://purl.oclc.org/dsdl/svrl}text")
+        message_element = failed_assert_element.find(
+            "{http://purl.oclc.org/dsdl/svrl}text")
         message = message_element.text.strip()
 
-        #TODO: Do we really need such detail on the error messages?
+        # TODO: Do we really need such detail on the error messages?
         return message, 'Error Message: "%s"  Error Location: "%s"  Error Assert: "%s"' % (message, location, assert_)
 
     @classmethod
     def schematron(cls, schema):
         transforms = [
-            "validation/xml/schematron/iso_dsdl_include.xsl",
-            "validation/xml/schematron/iso_abstract_expand.xsl",
-            "validation/xml/schematron/iso_svrl_for_xslt1.xsl",
+            "xml/schematron/iso_dsdl_include.xsl",
+            "xml/schematron/iso_abstract_expand.xsl",
+            "xml/schematron/iso_svrl_for_xslt1.xsl",
             ]
         if isinstance(schema, file):
             compiled = etree.parse(schema)
         else:
             compiled = schema
         for filename in transforms:
-            with resource_stream("ckanext.spatial", filename) as stream:
+            with resource_stream(
+                    __name__, filename) as stream:
                 xform_xml = etree.parse(stream)
                 xform = etree.XSLT(xform_xml)
                 compiled = xform(compiled)
@@ -257,9 +275,12 @@ class ConstraintsSchematron(SchematronValidator):
 
     @classmethod
     def get_schematrons(cls):
-        with resource_stream("ckanext.spatial",
-                             "validation/xml/medin/ISOTS19139A1Constraints_v1.3.sch") as schema:
+        with resource_stream(
+                __name__,
+                "xml/medin/ISOTS19139A1Constraints_v1.3.sch") as schema:
+
             return [cls.schematron(schema)]
+
 
 class ConstraintsSchematron14(SchematronValidator):
     name = 'constraints-1.4'
@@ -267,8 +288,9 @@ class ConstraintsSchematron14(SchematronValidator):
 
     @classmethod
     def get_schematrons(cls):
-        with resource_stream("ckanext.spatial",
-                             "validation/xml/medin/ISOTS19139A1Constraints_v1.4.sch") as schema:
+        with resource_stream(
+                __name__,
+                "xml/medin/ISOTS19139A1Constraints_v1.4.sch") as schema:
             return [cls.schematron(schema)]
 
 
@@ -278,9 +300,11 @@ class Gemini2Schematron(SchematronValidator):
 
     @classmethod
     def get_schematrons(cls):
-        with resource_stream("ckanext.spatial",
-                             "validation/xml/gemini2/gemini2-schematron-20110906-v1.2.sch") as schema:
+        with resource_stream(
+                __name__,
+                "xml/gemini2/gemini2-schematron-20110906-v1.2.sch") as schema:
             return [cls.schematron(schema)]
+
 
 class Gemini2Schematron13(SchematronValidator):
     name = 'gemini2-1.3'
@@ -288,8 +312,8 @@ class Gemini2Schematron13(SchematronValidator):
 
     @classmethod
     def get_schematrons(cls):
-        with resource_stream("ckanext.spatial",
-                             "validation/xml/gemini2/Gemini2_R1r3.sch") as schema:
+        with resource_stream(__name__,
+                             "xml/gemini2/Gemini2_R1r3.sch") as schema:
             return [cls.schematron(schema)]
 
 all_validators = (ISO19139Schema,
@@ -308,8 +332,8 @@ class Validators(object):
     '''
     def __init__(self, profiles=["iso19139", "constraints", "gemini2"]):
         self.profiles = profiles
-        
-        self.validators = {} # name: class
+
+        self.validators = {}  # name: class
         for validator_class in all_validators:
             self.validators[validator_class.name] = validator_class
 
@@ -323,8 +347,8 @@ class Validators(object):
     def is_valid(self, xml):
         '''Returns whether or not an XML file is valid.
         Returns a tuple, the first value is a boolean indicating
-        whether the validation passed or not. The second is the name of the profile
-        that failed and the third is a list of tuples,
+        whether the validation passed or not. The second is the name of the
+        profile that failed and the third is a list of tuples,
         each containing the error message and the error line if present.
 
         Params:
