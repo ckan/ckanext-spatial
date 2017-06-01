@@ -37,7 +37,7 @@ else:
 
 def postgis_version():
 
-    result = Session.execute('SELECT postgis_lib_version()')
+    result = Session.execute('SELECT PostGIS_Lib_Version()')
 
     return result.scalar()
 
