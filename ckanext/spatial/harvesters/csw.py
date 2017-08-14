@@ -91,8 +91,11 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
 
         log.debug('Starting gathering for %s' % url)
         guids_in_harvest = set()
+
+        identifier_schema = self.source_config.get('identifier_schema', self.output_schema())
+
         try:
-            for identifier in self.csw.getidentifiers(page=10, outputschema=self.output_schema(), cql=cql):
+            for identifier in self.csw.getidentifiers(page=10, outputschema=identifier_schema, cql=cql):
                 try:
                     log.info('Got identifier %s from the CSW', identifier)
                     if identifier is None:
@@ -163,8 +166,9 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
             return False
 
         identifier = harvest_object.guid
+        esn = self.source_config.get('esn', 'full')
         try:
-            record = self.csw.getrecordbyid([identifier], outputschema=self.output_schema())
+            record = self.csw.getrecordbyid([identifier], outputschema=self.output_schema(), esn=esn)
         except Exception, e:
             self._save_object_error('Error getting the CSW record with GUID %s' % identifier, harvest_object)
             return False
