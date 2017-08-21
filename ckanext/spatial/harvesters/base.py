@@ -32,6 +32,8 @@ from ckanext.spatial.validation import Validators, all_validators
 from ckanext.spatial.model import ISODocument
 from ckanext.spatial.interfaces import ISpatialHarvester
 
+from ckanext.etsin.data_catalog_service import DatasetCatalogMetaxAPIService
+
 log = logging.getLogger(__name__)
 
 DEFAULT_VALIDATOR_PROFILES = ['iso19139']
@@ -421,7 +423,7 @@ class SpatialHarvester(HarvesterBase):
 
         package_dict['extras'] = extras_as_dict
 
-        return package_dict
+            return package_dict
 
     def transform_to_iso(self, original_document, original_format, harvest_object):
         '''
