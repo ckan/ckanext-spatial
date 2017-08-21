@@ -566,6 +566,9 @@ class SpatialHarvester(HarvesterBase):
             log.error('No package dict returned, aborting import for object {0}'.format(harvest_object.id))
             return False
 
+        # Set dataset catalog id
+        package_dict['dataset_catalog'] = self.catalog_id
+
         # Create / update the package
         context.update({
            'extras_as_string': True,
@@ -827,3 +830,11 @@ class SpatialHarvester(HarvesterBase):
                 self._save_object_error(error[0], harvest_object, 'Validation', line=error[1])
 
         return valid, profile, errors
+
+    def _set_dataset_catalog_id(self):
+        self.catalog_id = ''
+        catalog_service = DatasetCatalogMetaxAPIService()
+        try:
+            self.catalog_id = catalog_service.create_or_update_dataset_catalogs(True, CSWHarvester.DATASET_CATALOG_JSON_FILE_PATH)
+        except Exception:
+            raise
