@@ -423,7 +423,7 @@ class SpatialHarvester(HarvesterBase):
 
         package_dict['extras'] = extras_as_dict
 
-            return package_dict
+        return package_dict
 
     def transform_to_iso(self, original_document, original_format, harvest_object):
         '''
