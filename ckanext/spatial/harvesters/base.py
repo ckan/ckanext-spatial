@@ -831,10 +831,10 @@ class SpatialHarvester(HarvesterBase):
 
         return valid, profile, errors
 
-    def _set_dataset_catalog_id(self):
+    def _set_dataset_catalog_id(self, catalog_json_file_path):
         self.catalog_id = ''
         catalog_service = DatasetCatalogMetaxAPIService()
         try:
-            self.catalog_id = catalog_service.create_or_update_dataset_catalogs(True, CSWHarvester.DATASET_CATALOG_JSON_FILE_PATH)
+            self.catalog_id = catalog_service.create_or_update_dataset_catalogs(True, catalog_json_file_path)
         except Exception:
             raise

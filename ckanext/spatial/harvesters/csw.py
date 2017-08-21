@@ -68,7 +68,7 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
         return 'gmd'
 
     def gather_stage(self, harvest_job):
-        super(CSWHarvester, self)._set_dataset_catalog_id()
+        super(CSWHarvester, self)._set_dataset_catalog_id(CSWHarvester.DATASET_CATALOG_JSON_FILE_PATH)
 
         log = logging.getLogger(__name__ + '.CSW.gather')
         log.debug('CswHarvester gather_stage for job: %r', harvest_job)
