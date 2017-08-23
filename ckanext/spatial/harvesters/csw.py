@@ -27,7 +27,7 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
     # What is the correct path? This file could be located also in this project
     # if the path is easier to find from this project. Currently the file is in
     # ckanext-etsin
-    DATASET_CATALOG_JSON_FILE_PATH = "resources/syke_data_catalog.json"
+    DATA_CATALOG_JSON_FILE_PATH = "resources/syke_data_catalog.json"
 
     def info(self):
         return {
@@ -68,7 +68,7 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
         return 'gmd'
 
     def gather_stage(self, harvest_job):
-        super(CSWHarvester, self)._set_dataset_catalog_id(CSWHarvester.DATASET_CATALOG_JSON_FILE_PATH)
+        super(CSWHarvester, self).set_data_catalog_id(CSWHarvester.DATA_CATALOG_JSON_FILE_PATH)
 
         log = logging.getLogger(__name__ + '.CSW.gather')
         log.debug('CswHarvester gather_stage for job: %r', harvest_job)

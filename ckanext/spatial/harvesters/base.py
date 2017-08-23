@@ -32,7 +32,7 @@ from ckanext.spatial.validation import Validators, all_validators
 from ckanext.spatial.model import ISODocument
 from ckanext.spatial.interfaces import ISpatialHarvester
 
-from ckanext.etsin.data_catalog_service import DatasetCatalogMetaxAPIService
+from ckanext.etsin.data_catalog_service import DataCatalogMetaxAPIService
 
 log = logging.getLogger(__name__)
 
@@ -568,8 +568,8 @@ class SpatialHarvester(HarvesterBase):
             log.error('No package dict returned, aborting import for object {0}'.format(harvest_object.id))
             return False
 
-        # Set dataset catalog id
-        package_dict['dataset_catalog'] = self.catalog_id
+        # Set data catalog id
+        package_dict['data_catalog'] = self.catalog_id
 
         # Create / update the package
         context.update({
@@ -833,10 +833,10 @@ class SpatialHarvester(HarvesterBase):
 
         return valid, profile, errors
 
-    def _set_dataset_catalog_id(self, catalog_json_file_path):
+    def set_data_catalog_id(self, catalog_json_file_path):
         self.catalog_id = ''
-        catalog_service = DatasetCatalogMetaxAPIService()
+        catalog_service = DataCatalogMetaxAPIService()
         try:
-            self.catalog_id = catalog_service.create_or_update_dataset_catalogs(True, catalog_json_file_path)
+            self.catalog_id = catalog_service.create_or_update_data_catalogs(True, catalog_json_file_path)
         except Exception:
             raise
