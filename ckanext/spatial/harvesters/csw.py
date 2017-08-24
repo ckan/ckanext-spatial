@@ -15,6 +15,7 @@ from ckanext.harvest.model import HarvestObjectExtra as HOExtra
 from ckanext.spatial.lib.csw_client import CswService
 from ckanext.spatial.harvesters.base import SpatialHarvester, text_traceback
 
+from ckanext.etsin.data_catalog_service import DataCatalogMetaxAPIService
 
 class CSWHarvester(SpatialHarvester, SingletonPlugin):
     '''
@@ -24,9 +25,6 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
 
     csw=None
 
-    # What is the correct path? This file could be located also in this project
-    # if the path is easier to find from this project. Currently the file is in
-    # ckanext-etsin
     DATA_CATALOG_JSON_FILE_PATH = "resources/syke_data_catalog.json"
 
     def info(self):
@@ -68,7 +66,9 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
         return 'gmd'
 
     def gather_stage(self, harvest_job):
-        super(CSWHarvester, self).set_data_catalog_id(CSWHarvester.DATA_CATALOG_JSON_FILE_PATH)
+        # Get data catalog id to be used in harvest_object
+        # so that import_stage can access it
+        catalog_id = self._get_data_catalog_id()
 
         log = logging.getLogger(__name__ + '.CSW.gather')
         log.debug('CswHarvester gather_stage for job: %r', harvest_job)
@@ -128,18 +128,27 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
         for guid in new:
             obj = HarvestObject(guid=guid, job=harvest_job,
                                 extras=[HOExtra(key='status', value='new')])
+            if catalog_id:
+                obj.extras.append(HOExtra(key='catalog_id', value=catalog_id))
+
             obj.save()
             ids.append(obj.id)
         for guid in change:
             obj = HarvestObject(guid=guid, job=harvest_job,
                                 package_id=guid_to_package_id[guid],
                                 extras=[HOExtra(key='status', value='change')])
+            if catalog_id:
+                obj.extras.append(HOExtra(key='catalog_id', value=catalog_id))
+
             obj.save()
             ids.append(obj.id)
         for guid in delete:
             obj = HarvestObject(guid=guid, job=harvest_job,
                                 package_id=guid_to_package_id[guid],
                                 extras=[HOExtra(key='status', value='delete')])
+            if catalog_id:
+                obj.extras.append(HOExtra(key='catalog_id', value=catalog_id))
+
             model.Session.query(HarvestObject).\
                   filter_by(guid=guid).\
                   update({'current': False}, False)
@@ -203,3 +212,7 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
 
     def _setup_csw_client(self, url):
         self.csw = CswService(url)
+
+    def _get_data_catalog_id(self):
+        catalog_service = DataCatalogMetaxAPIService()
+        return catalog_service.create_or_update_data_catalogs(True, CSWHarvester.DATA_CATALOG_JSON_FILE_PATH)
