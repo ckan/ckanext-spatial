@@ -15,7 +15,7 @@ from ckanext.harvest.model import HarvestObjectExtra as HOExtra
 from ckanext.spatial.lib.csw_client import CswService
 from ckanext.spatial.harvesters.base import SpatialHarvester, text_traceback
 
-from ckanext.etsin.data_catalog_service import DataCatalogMetaxAPIService
+from ckanext.etsin.data_catalog_service import get_data_catalog_id
 
 class CSWHarvester(SpatialHarvester, SingletonPlugin):
     '''
@@ -24,8 +24,6 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
     implements(IHarvester)
 
     csw=None
-
-    DATA_CATALOG_JSON_FILE_PATH = "resources/syke_data_catalog.json"
 
     def info(self):
         return {
@@ -66,16 +64,15 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
         return 'gmd'
 
     def gather_stage(self, harvest_job):
-        # Get data catalog id to be used in harvest_object
-        # so that import_stage can access it
-        catalog_id = self._get_data_catalog_id()
-
         log = logging.getLogger(__name__ + '.CSW.gather')
         log.debug('CswHarvester gather_stage for job: %r', harvest_job)
         # Get source URL
         url = harvest_job.source.url
 
         self._set_source_config(harvest_job.source.config)
+        # Get data catalog id to be used in harvest_object
+        # so that import_stage can access it
+        catalog_id = get_data_catalog_id(self.source_config)
 
         try:
             self._setup_csw_client(url)
@@ -212,7 +209,3 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
 
     def _setup_csw_client(self, url):
         self.csw = CswService(url)
-
-    def _get_data_catalog_id(self):
-        catalog_service = DataCatalogMetaxAPIService()
-        return catalog_service.create_or_update_data_catalogs(True, CSWHarvester.DATA_CATALOG_JSON_FILE_PATH)
