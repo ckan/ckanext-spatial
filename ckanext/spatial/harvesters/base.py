@@ -594,17 +594,18 @@ class SpatialHarvester(HarvesterBase):
             package_dict['id'] = unicode(uuid.uuid4())
             package_schema['id'] = [unicode]
 
-            # Save reference to the package on the object
-            harvest_object.package_id = package_dict['id']
-            harvest_object.add()
-            # Defer constraints and flush so the dataset can be indexed with
-            # the harvest object id (on the after_show hook from the harvester
-            # plugin)
-            model.Session.execute('SET CONSTRAINTS harvest_object_package_id_fkey DEFERRED')
-            model.Session.flush()
-
             try:
                 package_id = p.toolkit.get_action('package_create')(context, package_dict)
+
+                # Save reference to the package on the object
+                harvest_object.package_id = package_id
+                harvest_object.add()
+                # Defer constraints and flush so the dataset can be indexed with
+                # the harvest object id (on the after_show hook from the harvester
+                # plugin)
+                model.Session.execute('SET CONSTRAINTS harvest_object_package_id_fkey DEFERRED')
+                model.Session.flush()
+
                 log.info('Created new package %s with guid %s', package_id, harvest_object.guid)
             except p.toolkit.ValidationError, e:
                 self._save_object_error('Validation Error: %s' % str(e.error_summary), harvest_object, 'Import')
