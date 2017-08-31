@@ -566,6 +566,13 @@ class SpatialHarvester(HarvesterBase):
             log.error('No package dict returned, aborting import for object {0}'.format(harvest_object.id))
             return False
 
+        # Set data catalog id to package_dict, if it exists in
+        # HarvestObjectExtra objects
+        for ho in harvest_object.extras:
+            if ho.key == 'catalog_id':
+                package_dict['data_catalog'] = ho.value
+                break
+
         # Create / update the package
         context.update({
            'extras_as_string': True,
