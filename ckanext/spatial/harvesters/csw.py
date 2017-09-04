@@ -15,8 +15,6 @@ from ckanext.harvest.model import HarvestObjectExtra as HOExtra
 from ckanext.spatial.lib.csw_client import CswService
 from ckanext.spatial.harvesters.base import SpatialHarvester, text_traceback
 
-from ckanext.etsin.data_catalog_service import get_data_catalog_id
-
 class CSWHarvester(SpatialHarvester, SingletonPlugin):
     '''
     A Harvester for CSW servers
@@ -70,9 +68,6 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
         url = harvest_job.source.url
 
         self._set_source_config(harvest_job.source.config)
-        # Get data catalog id to be used in harvest_object
-        # so that import_stage can access it
-        catalog_id = get_data_catalog_id(self.source_config)
 
         try:
             self._setup_csw_client(url)
@@ -125,27 +120,18 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
         for guid in new:
             obj = HarvestObject(guid=guid, job=harvest_job,
                                 extras=[HOExtra(key='status', value='new')])
-            if catalog_id:
-                obj.extras.append(HOExtra(key='catalog_id', value=catalog_id))
-
             obj.save()
             ids.append(obj.id)
         for guid in change:
             obj = HarvestObject(guid=guid, job=harvest_job,
                                 package_id=guid_to_package_id[guid],
                                 extras=[HOExtra(key='status', value='change')])
-            if catalog_id:
-                obj.extras.append(HOExtra(key='catalog_id', value=catalog_id))
-
             obj.save()
             ids.append(obj.id)
         for guid in delete:
             obj = HarvestObject(guid=guid, job=harvest_job,
                                 package_id=guid_to_package_id[guid],
                                 extras=[HOExtra(key='status', value='delete')])
-            if catalog_id:
-                obj.extras.append(HOExtra(key='catalog_id', value=catalog_id))
-
             model.Session.query(HarvestObject).\
                   filter_by(guid=guid).\
                   update({'current': False}, False)

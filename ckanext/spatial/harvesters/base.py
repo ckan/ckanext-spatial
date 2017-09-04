@@ -567,11 +567,9 @@ class SpatialHarvester(HarvesterBase):
             return False
 
         # Set data catalog id to package_dict, if it exists in
-        # HarvestObjectExtra objects
-        for ho in harvest_object.extras:
-            if ho.key == 'catalog_id':
-                package_dict['data_catalog'] = ho.value
-                break
+        # harvest source configuration
+        if self.source_config.get('data_catalog_id', False):
+            package_dict['data_catalog'] = self.source_config.get('data_catalog_id')
 
         # Create / update the package
         context.update({
