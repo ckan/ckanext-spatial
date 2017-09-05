@@ -601,6 +601,8 @@ class SpatialHarvester(HarvesterBase):
 
             try:
                 package_id = p.toolkit.get_action('package_create')(context, package_dict)
+                if not package_id:
+                    return False
 
                 # Save reference to the package on the object
                 harvest_object.package_id = package_id
@@ -657,15 +659,15 @@ class SpatialHarvester(HarvesterBase):
                 package_dict['id'] = harvest_object.package_id
                 try:
                     package_id = p.toolkit.get_action('package_update')(context, package_dict)
+                    if not package_id:
+                        return False
                     log.info('Updated package %s with guid %s', package_id, harvest_object.guid)
                 except p.toolkit.ValidationError, e:
                     self._save_object_error('Validation Error: %s' % str(e.error_summary), harvest_object, 'Import')
                     return False
 
         model.Session.commit()
-
         return True
-    ##
 
     def _is_wms(self, url):
         '''
