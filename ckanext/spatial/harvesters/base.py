@@ -751,22 +751,8 @@ class SpatialHarvester(HarvesterBase):
            ckanext.spatial.harvest.user_name = harvest
 
         '''
-        if self._user_name:
-            return self._user_name
 
-        context = {'model': model,
-                   'ignore_auth': True,
-                   'defer_commit': True, # See ckan/ckan#1714
-                  }
-        self._site_user = p.toolkit.get_action('get_site_user')(context, {})
-
-        config_user_name = config.get('ckanext.spatial.harvest.user_name')
-        if config_user_name:
-            self._user_name = config_user_name
-        else:
-            self._user_name = self._site_user['name']
-
-        return self._user_name
+        return 'harvest'
 
     def _get_content(self, url):
         '''
