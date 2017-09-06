@@ -229,23 +229,23 @@ class SpatialHarvester(HarvesterBase):
         source_dataset = model.Package.get(harvest_object.source.id)
         if source_dataset.owner_org:
             package_dict['owner_org'] = source_dataset.owner_org
-	
-	#Get the owner org, check if organization type is Federal government.
-	#If is Federal Government, then apply US Public Domain license
-	owner_org = p.toolkit.get_action('organization_show')(data_dict={'id': package_dict['owner_org']})
+
+        #Get the owner org, check if organization type is Federal government.
+        #If is Federal Government, then apply US Public Domain license
+        owner_org = p.toolkit.get_action('organization_show')(data_dict={'id': package_dict['owner_org']})
         org_type_array = owner_org['extras']
 	
-	is_federal = False
-	for item in org_type_array:
-	    if item['value'] == 'Federal Government' and item['key'] == 'organization_type':
-	        is_federal = True
+        is_federal = False
+        for item in org_type_array:
+            if item['value'] == 'Federal Government' and item['key'] == 'organization_type':
+                is_federal = True
+		break
 
-	if is_federal:
-	    package_dict['license'] = 'U.S. Public Domain Works'
-	    package_dict['license_id'] = 'us-pd'
-	    #package_dict['license_url'] = 'www.usa.gov/publicdomain/label/1.0'
+        if is_federal:
+            package_dict['license'] = 'U.S. Public Domain Works'
+            package_dict['license_id'] = 'us-pd'
 
-	# Package name
+        # Package name
         package = harvest_object.package
         if package is None or package.title != iso_values['title']:
             name = self._gen_new_name(iso_values['title'])
