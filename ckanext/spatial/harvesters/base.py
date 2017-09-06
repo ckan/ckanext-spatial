@@ -552,7 +552,6 @@ class SpatialHarvester(HarvesterBase):
         harvest_object.metadata_modified_date = metadata_modified_date
         harvest_object.add()
 
-
         # Build the package dict
         package_dict = self.get_package_dict(iso_values, harvest_object)
         for harvester in p.PluginImplementations(ISpatialHarvester):
@@ -566,10 +565,15 @@ class SpatialHarvester(HarvesterBase):
             log.error('No package dict returned, aborting import for object {0}'.format(harvest_object.id))
             return False
 
-        # Set data catalog id to package_dict, if it exists in
+        # Set data catalog id to context, if it exists in
         # harvest source configuration
         if self.source_config.get('data_catalog_id', False):
-            package_dict['data_catalog'] = self.source_config.get('data_catalog_id')
+            context['data_catalog_id'] = self.source_config.get('data_catalog_id')
+
+        # Set harvest_source_name to context, if it exists in
+        # harvest source configuration
+        if self.source_config.get('harvest_source_name', False):
+            context['harvest_source_name'] = self.source_config.get('harvest_source_name')
 
         # Create / update the package
         context.update({
