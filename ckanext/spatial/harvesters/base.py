@@ -567,11 +567,9 @@ class SpatialHarvester(HarvesterBase):
             return False
 
         # Set data catalog id to package_dict, if it exists in
-        # HarvestObjectExtra objects
-        for ho in harvest_object.extras:
-            if ho.key == 'catalog_id':
-                package_dict['data_catalog'] = ho.value
-                break
+        # harvest source configuration
+        if self.source_config.get('data_catalog_id', False):
+            package_dict['data_catalog'] = self.source_config.get('data_catalog_id')
 
         # Create / update the package
         context.update({
@@ -601,17 +599,20 @@ class SpatialHarvester(HarvesterBase):
             package_dict['id'] = unicode(uuid.uuid4())
             package_schema['id'] = [unicode]
 
-            # Save reference to the package on the object
-            harvest_object.package_id = package_dict['id']
-            harvest_object.add()
-            # Defer constraints and flush so the dataset can be indexed with
-            # the harvest object id (on the after_show hook from the harvester
-            # plugin)
-            model.Session.execute('SET CONSTRAINTS harvest_object_package_id_fkey DEFERRED')
-            model.Session.flush()
-
             try:
                 package_id = p.toolkit.get_action('package_create')(context, package_dict)
+                if not package_id:
+                    return False
+
+                # Save reference to the package on the object
+                harvest_object.package_id = package_id
+                harvest_object.add()
+                # Defer constraints and flush so the dataset can be indexed with
+                # the harvest object id (on the after_show hook from the harvester
+                # plugin)
+                model.Session.execute('SET CONSTRAINTS harvest_object_package_id_fkey DEFERRED')
+                model.Session.flush()
+
                 log.info('Created new package %s with guid %s', package_id, harvest_object.guid)
             except p.toolkit.ValidationError, e:
                 self._save_object_error('Validation Error: %s' % str(e.error_summary), harvest_object, 'Import')
@@ -658,15 +659,15 @@ class SpatialHarvester(HarvesterBase):
                 package_dict['id'] = harvest_object.package_id
                 try:
                     package_id = p.toolkit.get_action('package_update')(context, package_dict)
+                    if not package_id:
+                        return False
                     log.info('Updated package %s with guid %s', package_id, harvest_object.guid)
                 except p.toolkit.ValidationError, e:
                     self._save_object_error('Validation Error: %s' % str(e.error_summary), harvest_object, 'Import')
                     return False
 
         model.Session.commit()
-
         return True
-    ##
 
     def _is_wms(self, url):
         '''
@@ -750,22 +751,8 @@ class SpatialHarvester(HarvesterBase):
            ckanext.spatial.harvest.user_name = harvest
 
         '''
-        if self._user_name:
-            return self._user_name
 
-        context = {'model': model,
-                   'ignore_auth': True,
-                   'defer_commit': True, # See ckan/ckan#1714
-                  }
-        self._site_user = p.toolkit.get_action('get_site_user')(context, {})
-
-        config_user_name = config.get('ckanext.spatial.harvest.user_name')
-        if config_user_name:
-            self._user_name = config_user_name
-        else:
-            self._user_name = self._site_user['name']
-
-        return self._user_name
+        return 'harvest'
 
     def _get_content(self, url):
         '''
