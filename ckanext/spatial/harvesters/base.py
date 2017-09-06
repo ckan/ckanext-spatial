@@ -242,7 +242,6 @@ class SpatialHarvester(HarvesterBase):
                 break
 
         if is_federal:
-            package_dict['license'] = 'U.S. Public Domain Works'
             package_dict['license_id'] = 'us-pd'
 
         # Package name
