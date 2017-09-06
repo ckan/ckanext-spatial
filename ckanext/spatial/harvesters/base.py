@@ -239,7 +239,7 @@ class SpatialHarvester(HarvesterBase):
         for item in org_type_array:
             if item['value'] == 'Federal Government' and item['key'] == 'organization_type':
                 is_federal = True
-		break
+                break
 
         if is_federal:
             package_dict['license'] = 'U.S. Public Domain Works'
