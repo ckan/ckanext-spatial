@@ -234,7 +234,7 @@ class SpatialHarvester(HarvesterBase):
         #If is Federal Government, then apply US Public Domain license
         owner_org = p.toolkit.get_action('organization_show')(data_dict={'id': package_dict['owner_org']})
         org_type_array = owner_org['extras']
-	
+
         is_federal = False
         for item in org_type_array:
             if item['value'] == 'Federal Government' and item['key'] == 'organization_type':
