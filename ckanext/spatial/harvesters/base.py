@@ -566,6 +566,10 @@ class SpatialHarvester(HarvesterBase):
             log.error('No package dict returned, aborting import for object {0}'.format(harvest_object.id))
             return False
 
+        if package_dict == 'skip':
+            log.info('Skipping import for object {0}'.format(harvest_object.id))
+            return 'unchanged'
+
         # Create / update the package
         context.update({
            'extras_as_string': True,
