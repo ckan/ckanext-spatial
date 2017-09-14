@@ -8,7 +8,7 @@ env:
     - CKANVERSION=2.4 POSTGISVERSION=2
 services:
     - redis-server
-    - postgres
+    - postgresql
 install:
     - bash bin/travis-build.bash
 script: sh bin/travis-run.sh
