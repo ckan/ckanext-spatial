@@ -203,20 +203,26 @@ class SpatialHarvester(HarvesterBase):
         :rtype: dict
         '''
         harvest_source = harvest_object.source
-        source_config = json.loads(harvest_source.config)
-
-        # Getting the validation regex or use default to remove
-        # any special character from the tag(keyword) string
-        tag_validation_regex = source_config.get('tag_validation_regex', ur'[^\w\d_\ \-\\\']+')
-        tag_replacement = source_config.get('tag_validation_replacement', ' ')
-        tag_re = re.compile(tag_validation_regex, re.UNICODE)
+        try:
+            source_config = json.loads(harvest_source.config)
+        
+            # Getting the validation regex or use default to remove
+            # any special character from the tag(keyword) string
+            tag_validation_regex = source_config.get('tag_validation_regex', ur'[^\w\d_\ \-\\\']+')
+            tag_replacement = source_config.get('tag_validation_replacement', ' ')
+            tag_re = re.compile(tag_validation_regex, re.UNICODE)
+        except json.JSONDecodeError, err:
+            log.warning("Cannot load harvest source config: %s", err)
+            tag_validation_regex = None
 
         tags = []
         if 'tags' in iso_values:
             for tag in iso_values['tags']:
-                # replace with string, and strip replacement from ends
-                # so "some strange tag!" won't become "some-strange-tag-"
-                tag = tag_re.sub(tag_replacement, tag).strip(tag_replacement)[:50]
+                if tag_validation_regex:
+                    # replace with string, and strip replacement from ends
+                    # so "some strange tag!" won't become "some-strange-tag-"
+                    tag = tag_re.sub(tag_replacement, tag).strip(tag_replacement)
+                tag = tag[:50]
                 tags.append({'name': tag})
 
         # Add default_tags from config
