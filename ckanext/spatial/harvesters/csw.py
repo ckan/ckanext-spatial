@@ -15,6 +15,8 @@ from ckanext.harvest.model import HarvestObjectExtra as HOExtra
 from ckanext.spatial.lib.csw_client import CswService
 from ckanext.spatial.harvesters.base import SpatialHarvester, text_traceback
 
+from ckanext.etsin.data_catalog_service import ensure_data_catalog_ok
+
 class CSWHarvester(SpatialHarvester, SingletonPlugin):
     '''
     A Harvester for CSW servers
@@ -68,6 +70,10 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
         url = harvest_job.source.url
 
         self._set_source_config(harvest_job.source.config)
+
+        # Data catalog related operations
+        if not ensure_data_catalog_ok(self.source_config.get('harvest_source_name', '')):
+            return []
 
         try:
             self._setup_csw_client(url)
