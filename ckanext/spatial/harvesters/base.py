@@ -472,7 +472,7 @@ class SpatialHarvester(HarvesterBase):
         original_document = self._get_object_extra(harvest_object, 'original_document')
         original_format = self._get_object_extra(harvest_object, 'original_format')
         if original_document and original_format:
-            #DEPRECATED use the ISpatialHarvester interface method
+            # DEPRECATED use the ISpatialHarvester interface method
             self.__base_transform_to_iso_called = False
             content = self.transform_to_iso(original_document, original_format, harvest_object)
             if not self.__base_transform_to_iso_called:
@@ -564,11 +564,6 @@ class SpatialHarvester(HarvesterBase):
         if not package_dict:
             log.error('No package dict returned, aborting import for object {0}'.format(harvest_object.id))
             return False
-
-        # Set data catalog id to context, if it exists in
-        # harvest source configuration
-        if self.source_config.get('data_catalog_id', False):
-            context['data_catalog_id'] = self.source_config.get('data_catalog_id')
 
         # Set harvest_source_name to context, if it exists in
         # harvest source configuration
