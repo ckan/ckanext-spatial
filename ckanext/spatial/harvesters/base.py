@@ -619,51 +619,58 @@ class SpatialHarvester(HarvesterBase):
 
         elif status == 'change':
 
-            # Check if the modified date is more recent
-            if not self.force_import and previous_object and harvest_object.metadata_modified_date <= previous_object.metadata_modified_date:
+            # Set force_harvest_update from config if it exists, default to false
+            force_harvest_update = config.get('force_harvest_update', False)
 
-                # Assign the previous job id to the new object to
-                # avoid losing history
-                harvest_object.harvest_job_id = previous_object.job.id
-                harvest_object.add()
+            if previous_object:
+                # Check if the modified date is more recent
+                if not force_harvest_update and not self.force_import and harvest_object.metadata_modified_date <= previous_object.metadata_modified_date:
 
-                # Delete the previous object to avoid cluttering the object table
-                previous_object.delete()
+                    # Assign the previous job id to the new object to
+                    # avoid losing history
+                    harvest_object.harvest_job_id = previous_object.job.id
+                    harvest_object.add()
 
-                # Reindex the corresponding package to update the reference to the
-                # harvest object
-                if ((config.get('ckanext.spatial.harvest.reindex_unchanged', True) != 'False'
-                    or self.source_config.get('reindex_unchanged') != 'False')
-                    and harvest_object.package_id):
-                    context.update({'validate': False, 'ignore_auth': True})
+                    # Delete the previous object to avoid cluttering the object table
+                    previous_object.delete()
+
+                    # Reindex the corresponding package to update the reference to the
+                    # harvest object
+                    if ((config.get('ckanext.spatial.harvest.reindex_unchanged', True) != 'False'
+                        or self.source_config.get('reindex_unchanged') != 'False')
+                        and harvest_object.package_id):
+                        context.update({'validate': False, 'ignore_auth': True})
+                        try:
+                            package_dict = logic.get_action('package_show')(context,
+                                {'id': harvest_object.package_id})
+                        except p.toolkit.ObjectNotFound:
+                            pass
+                        else:
+                            for extra in package_dict.get('extras', []):
+                                if extra['key'] == 'harvest_object_id':
+                                    extra['value'] = harvest_object.id
+                            if package_dict:
+                                package_index = PackageSearchIndex()
+                                package_index.index_package(package_dict)
+
+                    log.info('Document with GUID %s unchanged, skipping...' % (harvest_object.guid))
+                else:
+                    package_schema = logic.schema.default_update_package_schema()
+                    package_schema['tags'] = tag_schema
+                    context['schema'] = package_schema
+
+                    package_dict['id'] = harvest_object.package_id
                     try:
-                        package_dict = logic.get_action('package_show')(context,
-                            {'id': harvest_object.package_id})
-                    except p.toolkit.ObjectNotFound:
-                        pass
-                    else:
-                        for extra in package_dict.get('extras', []):
-                            if extra['key'] == 'harvest_object_id':
-                                extra['value'] = harvest_object.id
-                        if package_dict:
-                            package_index = PackageSearchIndex()
-                            package_index.index_package(package_dict)
-
-                log.info('Document with GUID %s unchanged, skipping...' % (harvest_object.guid))
-            else:
-                package_schema = logic.schema.default_update_package_schema()
-                package_schema['tags'] = tag_schema
-                context['schema'] = package_schema
-
-                package_dict['id'] = harvest_object.package_id
-                try:
-                    package_id = p.toolkit.get_action('package_update')(context, package_dict)
-                    if not package_id:
+                        package_id = p.toolkit.get_action('package_update')(context, package_dict)
+                        if not package_id:
+                            return False
+                        log.info('Updated package %s with guid %s', package_id, harvest_object.guid)
+                    except p.toolkit.ValidationError, e:
+                        self._save_object_error('Validation Error: %s' % str(e.error_summary), harvest_object, 'Import')
                         return False
-                    log.info('Updated package %s with guid %s', package_id, harvest_object.guid)
-                except p.toolkit.ValidationError, e:
-                    self._save_object_error('Validation Error: %s' % str(e.error_summary), harvest_object, 'Import')
-                    return False
+            else:
+                log.error("Previous harvest object does not exist even though update operation had been assumed. "
+                          "Skipping this one..")
 
         model.Session.commit()
         return True
