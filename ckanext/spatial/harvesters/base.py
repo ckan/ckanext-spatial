@@ -620,7 +620,7 @@ class SpatialHarvester(HarvesterBase):
         elif status == 'change':
 
             # Set force_harvest_update from config if it exists, default to false
-            force_harvest_update = config.get('force_harvest_update', False)
+            force_harvest_update = self.source_config.get('force_harvest_update', False)
 
             if previous_object:
                 # Check if the modified date is more recent
