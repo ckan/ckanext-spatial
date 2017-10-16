@@ -211,6 +211,8 @@ class SpatialHarvester(HarvesterBase):
             for tag in iso_values['tags']:
                 if do_clean:
                     tag = munge_tag(tag)
+                else:
+                    tag = tag[:50]
                 tags.append({'name': tag})
 
         # Add default_tags from config
