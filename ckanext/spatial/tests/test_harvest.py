@@ -825,14 +825,6 @@ class TestHarvest(HarvestFixtureBase):
         rev.author = self.context['user']
         Session.flush()
 
-        def fakeinfo(self):
-            return {
-                'name': 'fakename',
-                'title': 'CKAN',
-                'description': 'Dummy harvester',
-                'form_config_interface': 'Text'
-            }
-        GeminiHarvester.info = fakeinfo
 
         source, job = self._create_source_and_job(source_fixture)
         job.package = package
