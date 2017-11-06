@@ -117,7 +117,7 @@ Install the extension
 
 3. Install the rest of Python modules required by the extension::
 
-     pip install -r ckanext-spatial/pip-requirements.txt
+     pip install -r /usr/lib/ckan/default/src/ckanext-spatial/pip-requirements.txt
 
 4. Restart CKAN. For example if you've deployed CKAN with Apache on Ubuntu::
 
