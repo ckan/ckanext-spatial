@@ -6,6 +6,7 @@ env:
     - CKANVERSION=2.2 POSTGISVERSION=2
     - CKANVERSION=2.3 POSTGISVERSION=2
     - CKANVERSION=2.4 POSTGISVERSION=2
+sudo: required
 services:
     - redis-server
     - postgresql
