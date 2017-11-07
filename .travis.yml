@@ -6,6 +6,12 @@ env:
     - CKANVERSION=2.2 POSTGISVERSION=2
     - CKANVERSION=2.3 POSTGISVERSION=2
     - CKANVERSION=2.4 POSTGISVERSION=2
+sudo: required
+addons:
+  postgresql: 9.6
+  apt:
+    packages:
+    - postgresql-9.6-postgis-2.3
 services:
     - redis-server
     - postgresql
