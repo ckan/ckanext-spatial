@@ -24,7 +24,7 @@ from ckan.lib.helpers import json
 from ckan import logic
 from ckan.lib.navl.validators import not_empty
 from ckan.lib.search.index import PackageSearchIndex
-from ckan.lib.munge import munge_tag
+from ckanext.harvest.harvesters.base import munge_tag
 
 from ckanext.harvest.harvesters.base import HarvesterBase
 from ckanext.harvest.model import HarvestObject

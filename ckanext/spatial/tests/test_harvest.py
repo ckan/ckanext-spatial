@@ -850,12 +850,10 @@ class TestHarvest(HarvestFixtureBase):
                                       context={'user': user_name},
                                       name='existing-group')
 
-        rev = getattr(Session, 'revision', None)
-        Session.flush()
-        Session.revision = rev or model.repo.new_revision()
-
-        
-        context = {'user': 'dummy', 'defer_commit': True}
+        rev = getattr(Session, 'revision', None) or model.repo.new_revision()
+        Session.commit()
+        Session.revision = rev
+        context = {'user': 'dummy'} 
         package_schema = default_update_package_schema()
         context['schema'] = package_schema
         package_dict = {'frequency': 'manual',
@@ -875,17 +873,17 @@ class TestHarvest(HarvestFixtureBase):
               'guid': unicode(uuid4()),
               'identifier': 'dummy'}
         
-        rev = getattr(Session, 'revision', None)
         p = Package(name='fakename')
         Session.add(p)
-        Session.flush()
-        Session.revision = rev or model.repo.new_revision()
+        Session.commit()
+        Session.revision = rev
+
         package_dict['id'] = p.id
         package_data = call_action('package_update', context=context, **package_dict)
 
         Session.commit()
+        Session.revision = rev
 
-        Session.revision = rev or model.repo.new_revision()
         package = Package.get('fakename')
         source, job = self._create_source_and_job(source_fixture, {'defer_commit': True})
         job.package = package
