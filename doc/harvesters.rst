@@ -61,6 +61,21 @@ reindexing) it can be turn off with the following option::
 
     ckanext.spatial.harvest.reindex_unchanged = False
 
+You can configure the single harvesters using a JSON object in the configuration form field.
+The currently supported configuration options are:
+
+* ``default_tags``: A list of tags that will be added to all harvested datasets.
+  Tags don't need to previously exist. This field takes a list of strings.
+* ``default_extras``: A dictionary of key value pairs that will be added to extras of the harvested datasets.
+* ``override_extras``: Assign default extras even if they already exist in the remote dataset.
+  Default is False (only non existing extras are added).
+* ``clean_tags``:  By default, tags are not stripped of accent characters, spaces and
+  capital letters for display. If this option is set to True, accent characters will
+  be replaced by their ascii equivalents, capital letters replaced by lower-case ones,
+  and spaces replaced with dashes. Setting this option to False gives the same effect as leaving it unset.
+* ``validator_profiles``: A list of string that specifies a list of validators that will be applied to the
+  current harvester, overriding the global ones defined by the 'ckan.spatial.validator.profiles' option.
+
 
 Customizing the harvesters
 --------------------------
