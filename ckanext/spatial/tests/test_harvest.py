@@ -61,16 +61,22 @@ class HarvestFixtureBase(SpatialTestBase):
 
         return job
 
-    def _create_source_and_job(self, source_fixture):
+    def _create_source_and_job(self, source_fixture, context_defaults=None):
         context ={'model':model,
                  'session':Session,
                  'user':u'harvest'}
+        if context_defaults:
+            context.update(context_defaults)
 
         if config.get('ckan.harvest.auth.profile') == u'publisher' \
            and not 'publisher_id' in source_fixture:
            source_fixture['publisher_id'] = self.publisher.id
 
         source_dict=get_action('harvest_source_create')(context,source_fixture)
+        if context.get('defer_commit'):
+            rev = getattr(Session, 'revision', None)
+            Session.flush()
+            Session.revision = rev or model.repo.new_revision()
         source = HarvestSource.get(source_dict['id'])
         assert source
 
@@ -846,11 +852,11 @@ class TestHarvest(HarvestFixtureBase):
 
         rev = getattr(Session, 'revision', None)
         Session.flush()
-        Session.revision = rev or repo.new_revision()
+        Session.revision = rev or model.repo.new_revision()
 
         
         context = {'user': 'dummy', 'defer_commit': True}
-        package_schema = default_create_package_schema()
+        package_schema = default_update_package_schema()
         context['schema'] = package_schema
         package_dict = {'frequency': 'manual',
               'publisher_name': 'dummy',
@@ -869,14 +875,19 @@ class TestHarvest(HarvestFixtureBase):
               'guid': unicode(uuid4()),
               'identifier': 'dummy'}
         
-        package_data = call_action('package_create', context=context, **package_dict)
-
         rev = getattr(Session, 'revision', None)
+        p = Package(name='fakename')
+        Session.add(p)
         Session.flush()
-        Session.revision = rev or repo.new_revision()
+        Session.revision = rev or model.repo.new_revision()
+        package_dict['id'] = p.id
+        package_data = call_action('package_update', context=context, **package_dict)
 
+        Session.commit()
+
+        Session.revision = rev or model.repo.new_revision()
         package = Package.get('fakename')
-        source, job = self._create_source_and_job(source_fixture)
+        source, job = self._create_source_and_job(source_fixture, {'defer_commit': True})
         job.package = package
         job.guid = uuid4()
         harvester = SpatialHarvester()
