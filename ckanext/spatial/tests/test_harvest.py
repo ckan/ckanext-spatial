@@ -11,7 +11,12 @@ from ckan import model
 from ckan.model import Session, Package, Group, User
 from ckan.logic.schema import default_update_package_schema, default_create_package_schema
 from ckan.logic import get_action
-from ckan.tests.helpers import call_action
+
+try:
+    from ckan.new_tests.helpers import call_action
+except ImportError:
+    from ckan.tests.helpers import call_action
+
 from ckanext.harvest.model import (HarvestSource, HarvestJob, HarvestObject)
 from ckanext.spatial.validation import Validators
 from ckanext.spatial.harvesters.gemini import (GeminiDocHarvester,
@@ -813,14 +818,17 @@ class TestHarvest(HarvestFixtureBase):
             'name': 'test-source',
             'url': u'http://127.0.0.1:8999/gemini2.1/dataset1.xml',
             'source_type': u'gemini-single',
-            'owner_org': 'test-org'
+            'owner_org': 'test-org',
+            'metadata_created': datetime.now().strftime('%YYYY-%MM-%DD %HH:%MM:%s'),
+            'metadata_modified': datetime.now().strftime('%YYYY-%MM-%DD %HH:%MM:%s'),
+
         }
 
         user = User.get('dummy')
         if not user:
             user = call_action('user_create',
                                name='dummy',
-                               password='dummy',
+                               password='dummybummy',
                                email='dummy@dummy.com')
             user_name = user['name']
         else:
@@ -840,7 +848,7 @@ class TestHarvest(HarvestFixtureBase):
         Session.flush()
         Session.revision = rev or repo.new_revision()
 
-
+        
         context = {'user': 'dummy', 'defer_commit': True}
         package_schema = default_create_package_schema()
         context['schema'] = package_schema
@@ -857,6 +865,7 @@ class TestHarvest(HarvestFixtureBase):
               'modified': datetime.now(),
               'publisher_identifier': 'dummy',
               'metadata_created' : datetime.now(),
+              'metadata_modified' : datetime.now(),
               'guid': unicode(uuid4()),
               'identifier': 'dummy'}
         
