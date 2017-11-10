@@ -8,9 +8,10 @@ from nose.tools import assert_equal, assert_in, assert_raises
 
 from ckan.lib.base import config
 from ckan import model
-from ckan.model import Session, Package, Group
-from ckan.logic.schema import default_update_package_schema
+from ckan.model import Session, Package, Group, User
+from ckan.logic.schema import default_update_package_schema, default_create_package_schema
 from ckan.logic import get_action
+from ckan.tests.helpers import call_action
 from ckanext.harvest.model import (HarvestSource, HarvestJob, HarvestObject)
 from ckanext.spatial.validation import Validators
 from ckanext.spatial.harvesters.gemini import (GeminiDocHarvester,
@@ -815,17 +816,57 @@ class TestHarvest(HarvestFixtureBase):
             'owner_org': 'test-org'
         }
 
-        org = Group(name='test-org', title='test-org', type='organization')
-        org.is_organization = True
-        package = Package(name='fakename')
-        
-        Session.add(org)
-        Session.add(package)
-        rev = model.repo.new_revision()
-        rev.author = self.context['user']
+        user = User.get('dummy')
+        if not user:
+            user = call_action('user_create',
+                               name='dummy',
+                               password='dummy',
+                               email='dummy@dummy.com')
+            user_name = user['name']
+        else:
+            user_name = user.name
+        org = Group.by_name('test-org')
+        if org is None:
+            org  = call_action('organization_create',
+                                context={'user': user_name},
+                                name='test-org')
+        existing_g = Group.by_name('existing-group')
+        if existing_g is None:
+            existing_g  = call_action('group_create',
+                                      context={'user': user_name},
+                                      name='existing-group')
+
+        rev = getattr(Session, 'revision', None)
         Session.flush()
+        Session.revision = rev or repo.new_revision()
 
 
+        context = {'user': 'dummy', 'defer_commit': True}
+        package_schema = default_create_package_schema()
+        context['schema'] = package_schema
+        package_dict = {'frequency': 'manual',
+              'publisher_name': 'dummy',
+              'extras': [{'key':'theme', 'value':['non-mappable', 'thememap1']}],
+              'groups': [],
+              'title': 'fakename',
+              'holder_name': 'dummy',
+              'holder_identifier': 'dummy',
+              'name': 'dummy',
+              'notes': 'dummy',
+              'owner_org': 'test-org',
+              'modified': datetime.now(),
+              'publisher_identifier': 'dummy',
+              'metadata_created' : datetime.now(),
+              'guid': unicode(uuid4()),
+              'identifier': 'dummy'}
+        
+        package_data = call_action('package_create', context=context, **package_dict)
+
+        rev = getattr(Session, 'revision', None)
+        Session.flush()
+        Session.revision = rev or repo.new_revision()
+
+        package = Package.get('fakename')
         source, job = self._create_source_and_job(source_fixture)
         job.package = package
         job.guid = uuid4()
@@ -856,7 +897,7 @@ class TestHarvest(HarvestFixtureBase):
         # but tags are truncated to 50 chars
         assert {'name': TAG_CHARS_VALID} not in tags
         assert {'name': TAG_CHARS_INVALID} in tags
-        assert {'name': TAG_LONG_VALID} in tags
+        assert {'name': TAG_LONG_VALID_LONG} in tags
         assert {'name': TAG_LONG_INVALID} not in tags
 
         harvester.source_config = {'clean_tags': True}
