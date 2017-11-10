@@ -150,7 +150,7 @@ class SpatialHarvester(HarvesterBase):
                 if not isinstance(source_config_obj['default_extras'],dict):
                     raise ValueError('default_extras must be a dictionary')
 
-            for key in ('override_extras'):
+            for key in ('override_extras', 'clean_tags'):
                 if key in source_config_obj:
                     if not isinstance(source_config_obj[key],bool):
                         raise ValueError('%s must be boolean' % key)
@@ -208,12 +208,8 @@ class SpatialHarvester(HarvesterBase):
 
         if 'tags' in iso_values:
             do_clean = self.source_config.get('clean_tags')
-            for tag in iso_values['tags']:
-                if do_clean:
-                    tag = munge_tag(tag)
-                else:
-                    tag = tag[:50]
-                tags.append({'name': tag})
+            tags_val = [munge_tag(tag) if do_clean else tag[:100] for tag in iso_values['tags']]
+            tags = [{'name': tag} for tag in tags_val]
 
         # Add default_tags from config
         default_tags = self.source_config.get('default_tags', [])
