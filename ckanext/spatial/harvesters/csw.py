@@ -63,6 +63,9 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
         return 'gmd'
 
     def get_constraints(self):
+        '''Returns the CSW constraints that should be used during gather stage.
+        Should be overwritten by sub-classes.
+        '''
         return []
 
     def gather_stage(self, harvest_job):
