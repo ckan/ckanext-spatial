@@ -62,7 +62,7 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
     def output_schema(self):
         return 'gmd'
 
-    def get_constraints(self):
+    def get_constraints(self, harvest_job):
         '''Returns the CSW constraints that should be used during gather stage.
         Should be overwritten by sub-classes.
         '''
@@ -98,7 +98,7 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
         log.debug('Starting gathering for %s' % url)
         guids_in_harvest = set()
         try:
-            for identifier in self.csw.getidentifiers(page=10, outputschema=self.output_schema(), cql=cql, constraints=self.get_constraints()):
+            for identifier in self.csw.getidentifiers(page=10, outputschema=self.output_schema(), cql=cql, constraints=self.get_constraints(harvest_job)):
                 try:
                     log.info('Got identifier %s from the CSW', identifier)
                     if identifier is None:
