@@ -175,6 +175,7 @@ class SpatialQuery(p.SingletonPlugin):
 
     def before_index(self, pkg_dict):
         import shapely
+        import shapely.geometry
 
         if pkg_dict.get('extras_spatial', None) and self.search_backend in ('solr', 'solr-spatial-field'):
             try:

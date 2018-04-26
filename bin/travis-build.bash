@@ -5,14 +5,8 @@ echo "This is travis-build.bash..."
 
 echo "Installing the packages that CKAN requires..."
 sudo apt-get update -qq
-sudo apt-get install postgresql-9.1 solr-jetty libcommons-fileupload-java:amd64=1.2.2-1
+sudo apt-get install solr-jetty
 
-echo "Installing PostGIS..."
-if [ $POSTGISVERSION == '1' ]
-then
-    sudo apt-get install postgresql-9.1-postgis=1.5.3-2
-fi
-# PostGIS 2.1 already installed on Travis
 
 echo "Patching lxml..."
 wget ftp://xmlsoft.org/libxml2/libxml2-2.9.0.tar.gz
