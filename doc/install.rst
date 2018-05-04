@@ -107,15 +107,21 @@ Ubuntu 12.04 (PostgreSQL 9.1 and PostGIS 1.5)
 Install the extension
 ---------------------
 
-1. Install this extension into your python environment (where CKAN is also
-   installed)::
+1. Activate your CKAN virtual environment, for example::
 
-    (pyenv) $ pip install -e "git+https://github.com/okfn/ckanext-spatial.git#egg=ckanext-spatial"
+     . /usr/lib/ckan/default/bin/activate
 
+2. Install the ckanext-spatial Python package into your virtual environment::
 
-2. Install the rest of python modules required by the extension::
+     pip install -e "git+https://github.com/ckan/ckanext-spatial.git#egg=ckanext-spatial"
 
-     (pyenv) $ pip install -r pip-requirements.txt
+3. Install the rest of Python modules required by the extension::
+
+     pip install -r /usr/lib/ckan/default/src/ckanext-spatial/pip-requirements.txt
+
+4. Restart CKAN. For example if you've deployed CKAN with Apache on Ubuntu::
+
+     sudo service apache2 reload
 
 To use the :doc:`harvesters`, you will need to install and configure the
 harvester extension: `ckanext-harvest`_. Follow the install instructions on
@@ -150,6 +156,11 @@ extents are stored in the database with the following option. Use the EPSG code
 as an integer (e.g 4326, 4258, 27700, etc). It defaults to 4326::
 
     ckan.spatial.srid = 4326
+
+As with any configuration change, for it to take effect you need to restart
+CKAN. For example if you've deployed CKAN with Apache on Ubuntu::
+
+    sudo service apache2 reload
 
 
 Troubleshooting
