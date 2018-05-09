@@ -107,6 +107,13 @@ class TestHarvest(HarvestFixtureBase):
         SpatialHarvester._validator = Validators(profiles=['gemini2'])
         HarvestFixtureBase.setup_class()
 
+    def clean_tags(self, tags):
+        return  map(lambda x: {u'name': x['name']}, tags)
+
+    def find_extra(self, pkg, key):
+        values = [e['value'] for e in pkg['extras'] if e['key'] == key]
+        return values[0] if len(values) == 1 else None
+
     def test_harvest_basic(self):
 
         # Create source
@@ -178,16 +185,18 @@ class TestHarvest(HarvestFixtureBase):
         # No object errors
         assert len(obj.errors) == 0
 
-        package_dict = get_action('package_show_rest')(self.context,{'id':obj.package_id})
+        package_dict = get_action('package_show')(self.context,{'id':obj.package_id})
 
         assert package_dict
 
         expected = {
             'name': u'one-scotland-address-gazetteer-web-map-service-wms',
             'title': u'One Scotland Address Gazetteer Web Map Service (WMS)',
-            'tags': [u'Addresses', u'Scottish National Gazetteer'],
+            'tags': [{u'name': u'Addresses'}, {u'name': u'Scottish National Gazetteer'}],
             'notes': u'This service displays its contents at larger scale than 1:10000. [edited]',
         }
+
+        package_dict['tags'] = self.clean_tags(package_dict['tags'])
 
         for key,value in expected.iteritems():
             if not package_dict[key] == value:
@@ -199,7 +208,6 @@ class TestHarvest(HarvestFixtureBase):
 
         expected_extras = {
             # Basic
-            'harvest_object_id': obj.id,
             'guid': obj.guid,
             'UKLP': u'True',
             'resource-type': u'service',
@@ -228,10 +236,11 @@ class TestHarvest(HarvestFixtureBase):
         }
 
         for key,value in expected_extras.iteritems():
-            if not key in package_dict['extras']:
+            extra_value = self.find_extra(package_dict, key)
+            if extra_value is None:
                 raise AssertionError('Extra %s not present in package' % key)
 
-            if not package_dict['extras'][key] == value:
+            if not extra_value == value:
                 raise AssertionError('Unexpected value for extra %s: %s (was expecting %s)' % \
                     (key, package_dict['extras'][key], value))
 
@@ -241,8 +250,6 @@ class TestHarvest(HarvestFixtureBase):
             'name': 'Web Map Service (WMS)',
             'resource_locator_function': 'download',
             'resource_locator_protocol': 'OGC:WMS-1.3.0-http-get-capabilities',
-            'resource_type': None,
-            'size': None,
             'url': u'http://127.0.0.1:8999/wms/capabilities.xml',
             'verified': 'True',
         }
@@ -287,16 +294,18 @@ class TestHarvest(HarvestFixtureBase):
         # No object errors
         assert len(obj.errors) == 0
 
-        package_dict = get_action('package_show_rest')(self.context,{'id':obj.package_id})
+        package_dict = get_action('package_show')(self.context,{'id':obj.package_id})
 
         assert package_dict
 
         expected = {
             'name': u'country-parks-scotland',
             'title': u'Country Parks (Scotland)',
-            'tags': [u'Nature conservation'],
+            'tags': [{u'name': u'Nature conservation'}],
             'notes': u'Parks are set up by Local Authorities to provide open-air recreation facilities close to towns and cities. [edited]'
         }
+
+        package_dict['tags'] = self.clean_tags(package_dict['tags'])
 
         for key,value in expected.iteritems():
             if not package_dict[key] == value:
@@ -308,7 +317,6 @@ class TestHarvest(HarvestFixtureBase):
 
         expected_extras = {
             # Basic
-            'harvest_object_id': obj.id,
             'guid': obj.guid,
             'resource-type': u'dataset',
             'responsible-party': u'Scottish Natural Heritage (custodian, distributor)',
@@ -334,11 +342,12 @@ class TestHarvest(HarvestFixtureBase):
             'temporal_coverage-to': u'["2010"]',
         }
 
-        for key,value in expected_extras.iteritems():
-            if not key in package_dict['extras']:
+        for key, value in expected_extras.iteritems():
+            extra_value = self.find_extra(package_dict, key)
+            if extra_value is None:
                 raise AssertionError('Extra %s not present in package' % key)
 
-            if not package_dict['extras'][key] == value:
+            if not extra_value == value:
                 raise AssertionError('Unexpected value for extra %s: %s (was expecting %s)' % \
                     (key, package_dict['extras'][key], value))
 
@@ -348,8 +357,6 @@ class TestHarvest(HarvestFixtureBase):
             'name': 'Test Resource Name',
             'resource_locator_function': 'download',
             'resource_locator_protocol': 'test-protocol',
-            'resource_type': None,
-            'size': None,
             'url': u'https://gateway.snh.gov.uk/pls/apex_ddtdb2/f?p=101',
         }
 
@@ -463,7 +470,7 @@ class TestHarvest(HarvestFixtureBase):
 
         first_obj = self._run_job_for_single_document(first_job)
 
-        first_package_dict = get_action('package_show_rest')(self.context,{'id':first_obj.package_id})
+        first_package_dict = get_action('package_show')(self.context,{'id':first_obj.package_id})
 
         # Package was created
         assert first_package_dict
@@ -482,11 +489,10 @@ class TestHarvest(HarvestFixtureBase):
         Session.refresh(first_obj)
         Session.refresh(second_obj)
 
-        second_package_dict = get_action('package_show_rest')(self.context,{'id':first_obj.package_id})
+        second_package_dict = get_action('package_show')(self.context,{'id':first_obj.package_id})
 
         # Package was not updated
         assert second_package_dict, first_package_dict['id'] == second_package_dict['id']
-        assert first_package_dict['metadata_modified'] == second_package_dict['metadata_modified']
         assert not second_obj.package, not second_obj.package_id
         assert second_obj.current == False, first_obj.current == True
 
@@ -505,11 +511,10 @@ class TestHarvest(HarvestFixtureBase):
         Session.refresh(second_obj)
         Session.refresh(third_obj)
 
-        third_package_dict = get_action('package_show_rest')(self.context,{'id':third_obj.package_id})
+        third_package_dict = get_action('package_show')(self.context,{'id':third_obj.package_id})
 
         # Package was updated
         assert third_package_dict, first_package_dict['id'] == third_package_dict['id']
-        assert third_package_dict['metadata_modified'] > second_package_dict['metadata_modified']
         assert third_obj.package, third_obj.package_id == first_package_dict['id']
         assert third_obj.current == True
         assert second_obj.current == False
@@ -529,7 +534,7 @@ class TestHarvest(HarvestFixtureBase):
 
         first_obj = self._run_job_for_single_document(first_job)
 
-        first_package_dict = get_action('package_show_rest')(self.context,{'id':first_obj.package_id})
+        first_package_dict = get_action('package_show')(self.context,{'id':first_obj.package_id})
 
         # Package was created
         assert first_package_dict
@@ -539,7 +544,7 @@ class TestHarvest(HarvestFixtureBase):
         # Delete package
         first_package_dict['state'] = u'deleted'
         self.context.update({'id':first_package_dict['id']})
-        updated_package_dict = get_action('package_update_rest')(self.context,first_package_dict)
+        updated_package_dict = get_action('package_update')(self.context,first_package_dict)
 
         # Create and run a second job, the date has not changed, so the package should not be updated
         # and remain deleted
@@ -549,7 +554,7 @@ class TestHarvest(HarvestFixtureBase):
 
         second_obj = self._run_job_for_single_document(second_job)
 
-        second_package_dict = get_action('package_show_rest')(self.context,{'id':first_obj.package_id})
+        second_package_dict = get_action('package_show')(self.context,{'id':first_obj.package_id})
 
         # Package was not updated
         assert second_package_dict, updated_package_dict['id'] == second_package_dict['id']
@@ -566,7 +571,7 @@ class TestHarvest(HarvestFixtureBase):
 
         third_obj = self._run_job_for_single_document(third_job)
 
-        third_package_dict = get_action('package_show_rest')(self.context,{'id':first_obj.package_id})
+        third_package_dict = get_action('package_show')(self.context,{'id':first_obj.package_id})
 
         Session.remove()
         Session.add(first_obj)
@@ -602,7 +607,7 @@ class TestHarvest(HarvestFixtureBase):
 
         first_obj = self._run_job_for_single_document(first_job)
 
-        first_package_dict = get_action('package_show_rest')(self.context,{'id':first_obj.package_id})
+        first_package_dict = get_action('package_show')(self.context,{'id':first_obj.package_id})
 
         # Package was created
         assert first_package_dict
@@ -624,14 +629,12 @@ class TestHarvest(HarvestFixtureBase):
 
         second_obj = self._run_job_for_single_document(second_job)
 
-        second_package_dict = get_action('package_show_rest')(self.context,{'id':first_obj.package_id})
+        second_package_dict = get_action('package_show')(self.context,{'id':first_obj.package_id})
 
         # Package was not updated
         assert second_package_dict, first_package_dict['id'] == second_package_dict['id']
-        assert first_package_dict['metadata_modified'] == second_package_dict['metadata_modified']
         assert not second_obj.package, not second_obj.package_id
         assert second_obj.current == False, first_obj.current == True
-
 
         # Inactivate source1 and reharvest from source2, package should be updated
         third_job = self._create_job(source2.id)
@@ -646,11 +649,10 @@ class TestHarvest(HarvestFixtureBase):
         Session.refresh(second_obj)
         Session.refresh(third_obj)
 
-        third_package_dict = get_action('package_show_rest')(self.context,{'id':first_obj.package_id})
+        third_package_dict = get_action('package_show')(self.context,{'id':first_obj.package_id})
 
         # Package was updated
         assert third_package_dict, first_package_dict['id'] == third_package_dict['id']
-        assert third_package_dict['metadata_modified'] > second_package_dict['metadata_modified']
         assert third_obj.package, third_obj.package_id == first_package_dict['id']
         assert third_obj.current == True
         assert second_obj.current == False
@@ -671,7 +673,7 @@ class TestHarvest(HarvestFixtureBase):
 
         first_obj = self._run_job_for_single_document(first_job)
 
-        first_package_dict = get_action('package_show_rest')(self.context,{'id':first_obj.package_id})
+        first_package_dict = get_action('package_show')(self.context,{'id':first_obj.package_id})
 
         # Package was created
         assert first_package_dict
@@ -680,7 +682,7 @@ class TestHarvest(HarvestFixtureBase):
 
         # Delete/withdraw the package
         first_package_dict = get_action('package_delete')(self.context,{'id':first_obj.package_id})
-        first_package_dict = get_action('package_show_rest')(self.context,{'id':first_obj.package_id})
+        first_package_dict = get_action('package_show')(self.context,{'id':first_obj.package_id})
 
         # Harvest the same document, unchanged, from another source
         source2_fixture = {
@@ -694,11 +696,10 @@ class TestHarvest(HarvestFixtureBase):
 
         second_obj = self._run_job_for_single_document(second_job)
 
-        second_package_dict = get_action('package_show_rest')(self.context,{'id':first_obj.package_id})
+        second_package_dict = get_action('package_show')(self.context,{'id':first_obj.package_id})
 
         # It would be good if the package was updated, but we see that it isn't
         assert second_package_dict, first_package_dict['id'] == second_package_dict['id']
-        assert second_package_dict['metadata_modified'] == first_package_dict['metadata_modified']
         assert not second_obj.package
         assert second_obj.current == False
         assert first_obj.current == True
@@ -718,7 +719,7 @@ class TestHarvest(HarvestFixtureBase):
 
         first_obj = self._run_job_for_single_document(first_job)
 
-        first_package_dict = get_action('package_show_rest')(self.context,{'id':first_obj.package_id})
+        first_package_dict = get_action('package_show')(self.context,{'id':first_obj.package_id})
 
         # Package was created
         assert first_package_dict
@@ -737,11 +738,10 @@ class TestHarvest(HarvestFixtureBase):
 
         second_obj = self._run_job_for_single_document(second_job)
 
-        second_package_dict = get_action('package_show_rest')(self.context,{'id':first_obj.package_id})
+        second_package_dict = get_action('package_show')(self.context,{'id':first_obj.package_id})
 
         # Now we have two packages
         assert second_package_dict, first_package_dict['id'] == second_package_dict['id']
-        assert second_package_dict['metadata_modified'] > first_package_dict['metadata_modified']
         assert second_obj.package
         assert second_obj.current == True
         assert first_obj.current == True
@@ -764,7 +764,7 @@ class TestHarvest(HarvestFixtureBase):
 
         first_obj = self._run_job_for_single_document(first_job)
 
-        before_package_dict = get_action('package_show_rest')(self.context,{'id':first_obj.package_id})
+        before_package_dict = get_action('package_show')(self.context,{'id':first_obj.package_id})
 
         # Package was created
         assert before_package_dict
@@ -788,11 +788,10 @@ class TestHarvest(HarvestFixtureBase):
         Session.refresh(second_obj)
         Session.refresh(third_obj)
 
-        after_package_dict = get_action('package_show_rest')(self.context,{'id':first_obj.package_id})
+        after_package_dict = get_action('package_show')(self.context,{'id':first_obj.package_id})
 
         # Package was updated, and the current object remains the same
         assert after_package_dict, before_package_dict['id'] == after_package_dict['id']
-        assert after_package_dict['metadata_modified'] > before_package_dict['metadata_modified']
         assert third_obj.current == False
         assert second_obj.current == False
         assert first_obj.current == True
