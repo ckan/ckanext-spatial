@@ -7,17 +7,6 @@ echo "Installing the packages that CKAN requires..."
 sudo apt-get update -qq
 sudo apt-get install solr-jetty
 
-
-echo "Patching lxml..."
-wget ftp://xmlsoft.org/libxml2/libxml2-2.9.0.tar.gz
-tar zxf libxml2-2.9.0.tar.gz
-cd libxml2-2.9.0/
-./configure --quiet --libdir=/usr/lib/x86_64-linux-gnu
-make --silent
-sudo make --silent install
-xmllint --version
-cd -
-
 echo "Installing CKAN and its Python dependencies..."
 git clone https://github.com/ckan/ckan
 cd ckan
