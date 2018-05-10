@@ -12,12 +12,7 @@ git clone https://github.com/ckan/ckan
 cd ckan
 if [ $CKANVERSION != 'master' ]
 then
-    if [$CKANVERSION == '2.7' || $CKANVERSION == '2.8']
-    then
-      git checkout $CKANVERSION
-    else
-      git checkout release-v$CKANVERSION-latest
-    fi
+    git checkout $CKANVERSION
 fi
 
 # Unpin CKAN's psycopg2 dependency get an important bugfix
