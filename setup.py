@@ -16,7 +16,7 @@ setup(
 	url='http://okfn.org',
 	license='AGPL',
 	packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
-	namespace_packages=['ckanext', 'ckanext.spatial'],
+	namespace_packages=['ckanext'],
 	include_package_data=True,
 	zip_safe=False,
 	install_requires=[
