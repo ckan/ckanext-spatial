@@ -1,11 +1,14 @@
 language: python
+dist: trusty
 python:
     - "2.7"
+cache: pip
 env:
-    - CKANVERSION=master POSTGISVERSION=2
-    - CKANVERSION=2.2 POSTGISVERSION=2
-    - CKANVERSION=2.3 POSTGISVERSION=2
-    - CKANVERSION=2.4 POSTGISVERSION=2
+    - CKANVERSION=master
+    - CKANVERSION=release-v2.5-latest
+    - CKANVERSION=release-v2.6-latest
+    - CKANVERSION=2.7
+    - CKANVERSION=2.8
 sudo: required
 addons:
   postgresql: 9.6
@@ -14,7 +17,6 @@ addons:
     - postgresql-9.6-postgis-2.3
 services:
     - redis-server
-    - postgresql
 install:
     - bash bin/travis-build.bash
 script: sh bin/travis-run.sh
