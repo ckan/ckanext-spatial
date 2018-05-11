@@ -7,27 +7,21 @@ echo "Installing the packages that CKAN requires..."
 sudo apt-get update -qq
 sudo apt-get install solr-jetty
 
-
-echo "Patching lxml..."
-wget ftp://xmlsoft.org/libxml2/libxml2-2.9.0.tar.gz
-tar zxf libxml2-2.9.0.tar.gz
-cd libxml2-2.9.0/
-./configure --quiet --libdir=/usr/lib/x86_64-linux-gnu
-make --silent
-sudo make --silent install
-xmllint --version
-cd -
-
 echo "Installing CKAN and its Python dependencies..."
 git clone https://github.com/ckan/ckan
 cd ckan
 if [ $CKANVERSION != 'master' ]
 then
-    git checkout release-v$CKANVERSION-latest
+    git checkout $CKANVERSION
 fi
+
+# Unpin CKAN's psycopg2 dependency get an important bugfix
+# https://stackoverflow.com/questions/47044854/error-installing-psycopg2-2-6-2
+sed -i '/psycopg2/c\psycopg2' requirements.txt
+
 python setup.py develop
-pip install -r requirements.txt --allow-all-external
-pip install -r dev-requirements.txt --allow-all-external
+pip install -r requirements.txt
+pip install -r dev-requirements.txt
 cd -
 
 echo "Setting up Solr..."
@@ -44,18 +38,9 @@ sudo -u postgres psql -c "CREATE USER ckan_default WITH PASSWORD 'pass';"
 sudo -u postgres psql -c 'CREATE DATABASE ckan_test WITH OWNER ckan_default;'
 
 echo "Setting up PostGIS on the database..."
-if [ $POSTGISVERSION == '1' ]
-then
-    sudo -u postgres psql -d ckan_test -f /usr/share/postgresql/9.1/contrib/postgis-1.5/postgis.sql
-    sudo -u postgres psql -d ckan_test -f /usr/share/postgresql/9.1/contrib/postgis-1.5/spatial_ref_sys.sql
-    sudo -u postgres psql -d ckan_test -c 'ALTER TABLE geometry_columns OWNER TO ckan_default;'
-    sudo -u postgres psql -d ckan_test -c 'ALTER TABLE spatial_ref_sys OWNER TO ckan_default;'
-elif [ $POSTGISVERSION == '2' ]
-then
-    sudo -u postgres psql -d ckan_test -c 'CREATE EXTENSION postgis;'
-    sudo -u postgres psql -d ckan_test -c 'ALTER VIEW geometry_columns OWNER TO ckan_default;'
-    sudo -u postgres psql -d ckan_test -c 'ALTER TABLE spatial_ref_sys OWNER TO ckan_default;'
-fi
+sudo -u postgres psql -d ckan_test -c 'CREATE EXTENSION postgis;'
+sudo -u postgres psql -d ckan_test -c 'ALTER VIEW geometry_columns OWNER TO ckan_default;'
+sudo -u postgres psql -d ckan_test -c 'ALTER TABLE spatial_ref_sys OWNER TO ckan_default;'
 
 echo "Install other libraries required..."
 sudo apt-get install python-dev libxml2-dev libxslt1-dev libgeos-c1
@@ -69,13 +54,13 @@ echo "Installing ckanext-harvest and its requirements..."
 git clone https://github.com/ckan/ckanext-harvest
 cd ckanext-harvest
 python setup.py develop
-pip install -r pip-requirements.txt --allow-all-external
+pip install -r pip-requirements.txt
 
 paster harvester initdb -c ../ckan/test-core.ini
 cd -
 
 echo "Installing ckanext-spatial and its requirements..."
-pip install -r pip-requirements.txt --allow-all-external
+pip install -r pip-requirements.txt
 python setup.py develop
 
 
