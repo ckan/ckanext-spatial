@@ -24,6 +24,7 @@ from ckan.lib.helpers import json
 from ckan import logic
 from ckan.lib.navl.validators import not_empty
 from ckan.lib.search.index import PackageSearchIndex
+from ckanext.harvest.harvesters.base import munge_tag
 
 from ckanext.harvest.harvesters.base import HarvesterBase
 from ckanext.harvest.model import HarvestObject
@@ -149,7 +150,7 @@ class SpatialHarvester(HarvesterBase):
                 if not isinstance(source_config_obj['default_extras'],dict):
                     raise ValueError('default_extras must be a dictionary')
 
-            for key in ('override_extras'):
+            for key in ('override_extras', 'clean_tags'):
                 if key in source_config_obj:
                     if not isinstance(source_config_obj[key],bool):
                         raise ValueError('%s must be boolean' % key)
@@ -202,18 +203,19 @@ class SpatialHarvester(HarvesterBase):
         :returns: A dataset dictionary (package_dict)
         :rtype: dict
         '''
-
+        
         tags = []
+
         if 'tags' in iso_values:
-            for tag in iso_values['tags']:
-                tag = tag[:50] if len(tag) > 50 else tag
-                tags.append({'name': tag})
+            do_clean = self.source_config.get('clean_tags')
+            tags_val = [munge_tag(tag) if do_clean else tag[:100] for tag in iso_values['tags']]
+            tags = [{'name': tag} for tag in tags_val]
 
         # Add default_tags from config
-        default_tags = self.source_config.get('default_tags',[])
+        default_tags = self.source_config.get('default_tags', [])
         if default_tags:
-           for tag in default_tags:
-              tags.append({'name': tag})
+            for tag in default_tags:
+                tags.append({'name': tag})
 
         package_dict = {
             'title': iso_values['title'],

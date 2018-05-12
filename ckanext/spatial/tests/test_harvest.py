@@ -1,13 +1,22 @@
+import os
 from datetime import datetime, date
 import lxml
+import json
+from uuid import uuid4
 from nose.plugins.skip import SkipTest
 from nose.tools import assert_equal, assert_in, assert_raises
 
 from ckan.lib.base import config
 from ckan import model
-from ckan.model import Session, Package
-from ckan.logic.schema import default_update_package_schema
+from ckan.model import Session, Package, Group, User
+from ckan.logic.schema import default_update_package_schema, default_create_package_schema
 from ckan.logic import get_action
+
+try:
+    from ckan.new_tests.helpers import call_action
+except ImportError:
+    from ckan.tests.helpers import call_action
+
 from ckanext.harvest.model import (HarvestSource, HarvestJob, HarvestObject)
 from ckanext.spatial.validation import Validators
 from ckanext.spatial.harvesters.gemini import (GeminiDocHarvester,
@@ -799,6 +808,104 @@ class TestHarvest(HarvestFixtureBase):
 
         source_dict = get_action('harvest_source_show')(self.context,{'id':source.id})
         assert source_dict['status']['total_datasets'] == 1
+
+    def test_clean_tags(self):
+        
+        # Create source
+        source_fixture = {
+            'title': 'Test Source',
+            'name': 'test-source',
+            'url': u'http://127.0.0.1:8999/gemini2.1/dataset1.xml',
+            'source_type': u'gemini-single',
+            'owner_org': 'test-org',
+            'metadata_created': datetime.now().strftime('%YYYY-%MM-%DD %HH:%MM:%s'),
+            'metadata_modified': datetime.now().strftime('%YYYY-%MM-%DD %HH:%MM:%s'),
+
+        }
+
+        user = User.get('dummy')
+        if not user:
+            user = call_action('user_create',
+                               name='dummy',
+                               password='dummybummy',
+                               email='dummy@dummy.com')
+            user_name = user['name']
+        else:
+            user_name = user.name
+        org = Group.by_name('test-org')
+        if org is None:
+            org  = call_action('organization_create',
+                                context={'user': user_name},
+                                name='test-org')
+        existing_g = Group.by_name('existing-group')
+        if existing_g is None:
+            existing_g  = call_action('group_create',
+                                      context={'user': user_name},
+                                      name='existing-group')
+
+        context = {'user': 'dummy'} 
+        package_schema = default_update_package_schema()
+        context['schema'] = package_schema
+        package_dict = {'frequency': 'manual',
+              'publisher_name': 'dummy',
+              'extras': [{'key':'theme', 'value':['non-mappable', 'thememap1']}],
+              'groups': [],
+              'title': 'fakename',
+              'holder_name': 'dummy',
+              'holder_identifier': 'dummy',
+              'name': 'fakename',
+              'notes': 'dummy',
+              'owner_org': 'test-org',
+              'modified': datetime.now(),
+              'publisher_identifier': 'dummy',
+              'metadata_created' : datetime.now(),
+              'metadata_modified' : datetime.now(),
+              'guid': unicode(uuid4()),
+              'identifier': 'dummy'}
+        
+        package_data = call_action('package_create', context=context, **package_dict)
+
+        package = Package.get('fakename')
+        source, job = self._create_source_and_job(source_fixture)
+        job.package = package
+        job.guid = uuid4()
+        harvester = SpatialHarvester()
+        with open(os.path.join('..', 'data', 'dataset.json')) as f:
+            dataset = json.load(f)
+
+        # long tags are invalid in all cases
+        TAG_LONG_INVALID = 'abcdefghij' * 20
+        # if clean_tags is not set to true, tags will be truncated to 50 chars
+        TAG_LONG_VALID = TAG_LONG_INVALID[:50]
+        # default truncate to 100
+        TAG_LONG_VALID_LONG = TAG_LONG_INVALID[:100]
+
+        assert len(TAG_LONG_VALID) == 50
+        assert TAG_LONG_VALID[-1] == 'j'
+        TAG_CHARS_INVALID = 'Pretty-inv@lid.tag!'
+        TAG_CHARS_VALID = 'pretty-invlidtag'
+
+        dataset['tags'].append(TAG_LONG_INVALID)
+        dataset['tags'].append(TAG_CHARS_INVALID)
+
+        harvester.source_config = {'clean_tags': False}
+        out = harvester.get_package_dict(dataset, job)
+        tags = out['tags']
+
+        # no clean tags, so invalid chars are in
+        # but tags are truncated to 50 chars
+        assert {'name': TAG_CHARS_VALID} not in tags
+        assert {'name': TAG_CHARS_INVALID} in tags
+        assert {'name': TAG_LONG_VALID_LONG} in tags
+        assert {'name': TAG_LONG_INVALID} not in tags
+
+        harvester.source_config = {'clean_tags': True}
+
+        out = harvester.get_package_dict(dataset, job)
+        tags = out['tags']
+        assert {'name': TAG_CHARS_VALID} in tags
+        assert {'name': TAG_LONG_VALID_LONG} in tags
+
 
 BASIC_GEMINI = '''<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco">
   <gmd:fileIdentifier xmlns:gml="http://www.opengis.net/gml">
