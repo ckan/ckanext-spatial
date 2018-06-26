@@ -15,6 +15,7 @@ from ckanext.harvest.model import HarvestObjectExtra as HOExtra
 from ckanext.spatial.lib.csw_client import CswService
 from ckanext.spatial.harvesters.base import SpatialHarvester, text_traceback
 
+from ckanext.etsin.data_catalog_service import ensure_data_catalog_ok
 
 class CSWHarvester(SpatialHarvester, SingletonPlugin):
     '''
@@ -70,6 +71,10 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
 
         self._set_source_config(harvest_job.source.config)
 
+        # Data catalog related operations
+        if not ensure_data_catalog_ok(self.source_config.get('harvest_source_name', '')):
+            return []
+
         try:
             self._setup_csw_client(url)
         except Exception, e:
@@ -91,8 +96,11 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
 
         log.debug('Starting gathering for %s' % url)
         guids_in_harvest = set()
+
+        identifier_schema = self.source_config.get('identifier_schema', self.output_schema())
+
         try:
-            for identifier in self.csw.getidentifiers(page=10, outputschema=self.output_schema(), cql=cql):
+            for identifier in self.csw.getidentifiers(page=10, outputschema=identifier_schema, cql=cql):
                 try:
                     log.info('Got identifier %s from the CSW', identifier)
                     if identifier is None:
@@ -163,8 +171,9 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
             return False
 
         identifier = harvest_object.guid
+        esn = self.source_config.get('esn', 'full')
         try:
-            record = self.csw.getrecordbyid([identifier], outputschema=self.output_schema())
+            record = self.csw.getrecordbyid([identifier], outputschema=self.output_schema(), esn=esn)
         except Exception, e:
             self._save_object_error('Error getting the CSW record with GUID %s' % identifier, harvest_object)
             return False
@@ -192,4 +201,3 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
 
     def _setup_csw_client(self, url):
         self.csw = CswService(url)
-
