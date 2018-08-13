@@ -146,6 +146,10 @@ class SpatialHarvester(HarvesterBase):
                 if not isinstance(source_config_obj['default_tags'],list):
                     raise ValueError('default_tags must be a list')
 
+            if 'default_groups' in source_config_obj:
+                if not isinstance(source_config_obj['default_groups'], list):
+                    raise ValueError('default_groups must be a *list* of group names/ids')
+
             if 'default_extras' in source_config_obj:
                 if not isinstance(source_config_obj['default_extras'],dict):
                     raise ValueError('default_extras must be a dictionary')
@@ -217,12 +221,32 @@ class SpatialHarvester(HarvesterBase):
             for tag in default_tags:
                 tags.append({'name': tag})
 
+        # Adding default_groups from config
+        groups = []
+        default_groups = self.source_config.get('default_groups', [])
+        if default_groups:
+            for group_id in default_groups:
+                context = {'model': model, 'user': p.toolkit.c.user}
+                try:
+                    group = p.toolkit.get_action('group_show')(context, {'id': group_id})
+                    groups.append({'id': group['id'], 'name': group['name']})
+                except p.toolkit.ObjectNotFound, e:
+                    logging.error('Default group %s not found, proceeding without.' % group_id)
+
         package_dict = {
             'title': iso_values['title'],
             'notes': iso_values['abstract'],
             'tags': tags,
             'resources': [],
+            'groups': groups
         }
+
+        # set default values from config
+        default_values = self.source_config.get('default_values',[])
+        if default_values:
+            for default_field in default_values:
+                for key in default_field:
+                    package_dict[key] = default_field[key]
 
         # We need to get the owner organization (if any) from the harvest
         # source dataset
