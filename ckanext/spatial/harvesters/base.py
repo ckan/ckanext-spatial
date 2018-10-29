@@ -1,7 +1,7 @@
 import re
 import cgitb
 import warnings
-import urllib2
+import requests
 import sys
 import logging
 from string import Template
@@ -670,8 +670,8 @@ class SpatialHarvester(HarvesterBase):
         '''
         try:
             capabilities_url = wms.WMSCapabilitiesReader().capabilities_url(url)
-            res = urllib2.urlopen(capabilities_url, None, 10)
-            xml = res.read()
+            res = requests.get(capabilities_url)
+            xml = res.text
 
             s = wms.WebMapService(url, xml=xml)
             return isinstance(s.contents, dict) and s.contents != {}
@@ -767,8 +767,8 @@ class SpatialHarvester(HarvesterBase):
         DEPRECATED: Use _get_content_as_unicode instead
         '''
         url = url.replace(' ', '%20')
-        http_response = urllib2.urlopen(url)
-        return http_response.read()
+        http_response = requests.get(url)
+        return http_response.content
 
     def _get_content_as_unicode(self, url):
         '''
@@ -788,7 +788,7 @@ class SpatialHarvester(HarvesterBase):
         url = url.replace(' ', '%20')
         response = requests.get(url, timeout=10)
 
-        content = response.text
+        content = response.content
 
         # Remove original XML declaration
         content = re.sub('<\?xml(.*)\?>', '', content)
