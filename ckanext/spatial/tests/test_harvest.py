@@ -265,7 +265,7 @@ class TestHarvest(HarvestFixtureBase):
 
         resource = package_dict['resources'][0]
         for key,value in expected_resource.iteritems():
-            if not resource[key] == value:
+            if not resource.get(key) == value:
                 raise AssertionError('Unexpected value in resource for %s: %s (was expecting %s)' % \
                     (key, resource[key], value))
         assert datetime.strptime(resource['verified_date'],'%Y-%m-%dT%H:%M:%S.%f').date() == date.today()
