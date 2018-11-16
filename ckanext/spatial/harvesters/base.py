@@ -768,7 +768,7 @@ class SpatialHarvester(HarvesterBase):
         '''
         url = url.replace(' ', '%20')
         http_response = requests.get(url)
-        return http_response.content
+        return http_response.text
 
     def _get_content_as_unicode(self, url):
         '''
@@ -788,7 +788,7 @@ class SpatialHarvester(HarvesterBase):
         url = url.replace(' ', '%20')
         response = requests.get(url, timeout=10)
 
-        content = response.content
+        content = response.text
 
         # Remove original XML declaration
         content = re.sub('<\?xml(.*)\?>', '', content)
