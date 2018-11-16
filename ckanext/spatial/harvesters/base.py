@@ -788,7 +788,7 @@ class SpatialHarvester(HarvesterBase):
         url = url.replace(' ', '%20')
         response = requests.get(url, timeout=10)
 
-        content = response.content
+        content = response.text
 
         # Remove original XML declaration
         content = re.sub('<\?xml(.*)\?>', '', content)
