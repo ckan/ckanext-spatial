@@ -17,14 +17,14 @@ class OwsService(object):
     def __init__(self, endpoint=None):
         if endpoint is not None:
             self._ows(endpoint)
-            
+
     def __call__(self, args):
         return getattr(self, args.operation)(**self._xmd(args))
-    
+
     @classmethod
     def _operations(cls):
         return [x for x in dir(cls) if not x.startswith("_")]
-    
+
     def _xmd(self, obj):
         md = {}
         for attr in [x for x in dir(obj) if not x.startswith("_")]:
@@ -42,7 +42,7 @@ class OwsService(object):
             else:
                 md[attr] = self._xmd(val)
         return md
-        
+
     def _ows(self, endpoint=None, **kw):
         if not hasattr(self, "_Implementation"):
             raise NotImplementedError("Needs an Implementation")
@@ -51,7 +51,7 @@ class OwsService(object):
                 raise ValueError("Must specify a service endpoint")
             self.__ows_obj__ = self._Implementation(endpoint)
         return self.__ows_obj__
-    
+
     def getcapabilities(self, debug=False, **kw):
         ows = self._ows(**kw)
         caps = self._xmd(ows)
@@ -60,7 +60,7 @@ class OwsService(object):
             if "response" in caps: del caps["response"]
         if "owscommon" in caps: del caps["owscommon"]
         return caps
-    
+
 class CswService(OwsService):
     """
     Perform various operations on a CSW service
@@ -173,19 +173,31 @@ class CswService(OwsService):
         record = self._xmd(csw.records.values()[0])
 
         ## strip off the enclosing results container, we only want the metadata
-        #md = csw._exml.find("/gmd:MD_Metadata")#, namespaces=namespaces)
-        # Ordinary Python version's don't support the metadata argument
-        md = csw._exml.find("/{http://www.isotc211.org/2005/gmd}MD_Metadata")
+        # Ordinary Python versions don't support the metadata argument
+        # get the first element matching gmd:MD_Metadata or gmi:MI_Metadata
+        # or return None if not found
+        md = next(iter(csw._exml.xpath("./gmd:MD_Metadata|./gmi:MI_Metadata",
+			               namespaces=namespaces)), None)
+        # If MD_Metadata or MI_Metadata is not the root element, raise
+        # an error
+        if md is None:
+            raise ValueError("Could not find MD_Metadata or MI_Metadata "
+                             "in XML document")
+
         mdtree = etree.ElementTree(md)
         try:
-            record["xml"] = etree.tostring(mdtree, pretty_print=True, encoding=unicode)
+            record["xml"] = etree.tostring(mdtree, pretty_print=True,
+                                           encoding='unicode')
         except TypeError:
             # API incompatibilities between different flavours of elementtree
             try:
-                record["xml"] = etree.tostring(mdtree, pretty_print=True, encoding=unicode)
+                record["xml"] = etree.tostring(mdtree, pretty_print=True,
+                                               encoding='unicode')
             except AssertionError:
-                record["xml"] = etree.tostring(md, pretty_print=True, encoding=unicode)
+                record["xml"] = etree.tostring(md, pretty_print=True,
+                                               encoding='unicode')
 
-        record["xml"] = '<?xml version="1.0" encoding="UTF-8"?>\n' + record["xml"]
+        record["xml"] = ('<?xml version="1.0" encoding="UTF-8"?>\n'
+                         '{}'.format(record["xml"]))
         record["tree"] = mdtree
         return record
