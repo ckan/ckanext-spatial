@@ -149,7 +149,7 @@ class GeminiHarvester(SpatialHarvester):
                 or last_harvested_object.metadata_modified_date < self.obj.metadata_modified_date \
                 or self.force_import \
                 or (last_harvested_object.metadata_modified_date == self.obj.metadata_modified_date and
-                    last_harvested_object.source.active is False):
+                    (last_harvested_object.content != self.obj.content or last_harvested_object.source.active is False)):
 
                 if self.force_import:
                     log.info('Import forced for object %s with GUID %s' % (self.obj.id,gemini_guid))
@@ -169,16 +169,8 @@ class GeminiHarvester(SpatialHarvester):
                          return None
 
             else:
-                if last_harvested_object.content != self.obj.content and \
-                 last_harvested_object.metadata_modified_date == self.obj.metadata_modified_date:
-                    diff_generator = difflib.unified_diff(
-                        last_harvested_object.content.split('\n'),
-                        self.obj.content.split('\n'))
-                    diff = '\n'.join([line for line in diff_generator])
-                    raise Exception('The contents of document with GUID %s changed, but the metadata date has not been updated.\nDiff:\n%s' % (gemini_guid, diff))
-                else:
-                    # The content hasn't changed, no need to update the package
-                    log.info('Document with GUID %s unchanged, skipping...' % (gemini_guid))
+                # The content hasn't changed, no need to update the package
+                log.info('Document with GUID %s unchanged, skipping...' % (gemini_guid))
                 return None
         else:
             log.info('No package with GEMINI guid %s found, let\'s create one' % gemini_guid)
@@ -795,5 +787,3 @@ class GeminiWafHarvester(GeminiHarvester, SingletonPlugin):
         base_url += '/'
         log.debug('WAF base URL: %s', base_url)
         return [base_url + i for i in urls]
-
-
