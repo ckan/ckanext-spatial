@@ -597,8 +597,14 @@ class GeminiCswHarvester(GeminiHarvester, SingletonPlugin):
             return False
 
         try:
-            # Save the fetch contents in the HarvestObject
-            harvest_object.content = record['xml']
+            # Contents come from csw_client already declared and encoded as utf-8
+            # Remove original XML declaration
+            # (copied from csw.py:179
+            import re
+
+            content = re.sub('<\?xml(.*)\?>', '', record['xml'])
+
+            harvest_object.content = content.strip()
             harvest_object.save()
         except Exception,e:
             self._save_object_error('Error saving the harvest object for GUID %s [%r]' % \
