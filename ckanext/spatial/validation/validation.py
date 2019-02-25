@@ -316,6 +316,7 @@ class Gemini2Schematron13(SchematronValidator):
                              "xml/gemini2/Gemini2_R1r3.sch") as schema:
             return [cls.schematron(schema)]
 
+
 all_validators = (ISO19139Schema,
                   ISO19139EdenSchema,
                   ISO19139NGDCSchema,
@@ -338,7 +339,7 @@ class Validators(object):
             self.validators[validator_class.name] = validator_class
 
     def add_validator(self, validator_class):
-            self.validators[validator_class.name] = validator_class
+        self.validators[validator_class.name] = validator_class
 
     def isvalid(self, xml):
         '''For backward compatibility'''
@@ -358,19 +359,19 @@ class Validators(object):
           (is_valid, failed_profile_name, [(error_message_string, error_line_number)])
         '''
 
-
         log.debug('Starting validation against profile(s) %s' % ','.join(self.profiles))
         for name in self.profiles:
             validator = self.validators[name]
             is_valid, error_message_list = validator.is_valid(xml)
             if not is_valid:
-                #error_message_list.insert(0, 'Validating against "%s" profile failed' % validator.title)
+                # error_message_list.insert(0, 'Validating against "%s" profile failed' % validator.title)
                 log.info('Validating against "%s" profile failed' % validator.title)
                 log.debug('%r', error_message_list)
                 return False, validator.name, error_message_list
             log.debug('Validated against "%s"', validator.title)
         log.info('Validation passed')
         return True, None, []
+
 
 if __name__ == '__main__':
     from sys import argv
