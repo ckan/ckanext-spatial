@@ -33,6 +33,7 @@ def check_geoalchemy_requirement():
         except ImportError:
             raise ImportError(msg.format('geoalchemy'))
 
+
 check_geoalchemy_requirement()
 
 log = getLogger(__name__)
@@ -58,6 +59,7 @@ def package_error_summary(error_dict):
         else:
             summary[p.toolkit._(prettify(key))] = error[0]
     return summary
+
 
 class SpatialMetadata(p.SingletonPlugin):
 
@@ -92,7 +94,7 @@ class SpatialMetadata(p.SingletonPlugin):
     def edit(self, package):
         self.check_spatial_extra(package)
 
-    def check_spatial_extra(self,package):
+    def check_spatial_extra(self, package):
         '''
         For a given package, looks at the spatial extent (as given in the
         extra "spatial" in GeoJSON format) and records it in PostGIS.
@@ -110,45 +112,45 @@ class SpatialMetadata(p.SingletonPlugin):
                     try:
                         log.debug('Received: %r' % extra.value)
                         geometry = json.loads(extra.value)
-                    except ValueError,e:
-                        error_dict = {'spatial':[u'Error decoding JSON object: %s' % str(e)]}
+                    except ValueError, e:
+                        error_dict = {'spatial': [u'Error decoding JSON object: %s' % str(e)]}
                         raise p.toolkit.ValidationError(error_dict, error_summary=package_error_summary(error_dict))
-                    except TypeError,e:
-                        error_dict = {'spatial':[u'Error decoding JSON object: %s' % str(e)]}
+                    except TypeError, e:
+                        error_dict = {'spatial': [u'Error decoding JSON object: %s' % str(e)]}
                         raise p.toolkit.ValidationError(error_dict, error_summary=package_error_summary(error_dict))
 
                     try:
-                        save_package_extent(package.id,geometry)
+                        save_package_extent(package.id, geometry)
 
-                    except ValueError,e:
-                        error_dict = {'spatial':[u'Error creating geometry: %s' % str(e)]}
+                    except ValueError, e:
+                        error_dict = {'spatial': [u'Error creating geometry: %s' % str(e)]}
                         raise p.toolkit.ValidationError(error_dict, error_summary=package_error_summary(error_dict))
                     except Exception, e:
                         if bool(os.getenv('DEBUG')):
                             raise
-                        error_dict = {'spatial':[u'Error: %s' % str(e)]}
+                        error_dict = {'spatial': [u'Error: %s' % str(e)]}
                         raise p.toolkit.ValidationError(error_dict, error_summary=package_error_summary(error_dict))
 
                 elif (extra.state == 'active' and not extra.value) or extra.state == 'deleted':
                     # Delete extent from table
-                    save_package_extent(package.id,None)
+                    save_package_extent(package.id, None)
 
                 break
 
-
     def delete(self, package):
         from ckanext.spatial.lib import save_package_extent
-        save_package_extent(package.id,None)
+        save_package_extent(package.id, None)
 
-    ## ITemplateHelpers
+    # ITemplateHelpers
 
     def get_helpers(self):
         from ckanext.spatial import helpers as spatial_helpers
         return {
-                'get_reference_date' : spatial_helpers.get_reference_date,
+                'get_reference_date': spatial_helpers.get_reference_date,
                 'get_responsible_party': spatial_helpers.get_responsible_party,
-                'get_common_map_config' : spatial_helpers.get_common_map_config,
+                'get_common_map_config': spatial_helpers.get_common_map_config,
                 }
+
 
 class SpatialQuery(p.SingletonPlugin):
 
@@ -169,8 +171,8 @@ class SpatialQuery(p.SingletonPlugin):
     def before_map(self, map):
 
         map.connect('api_spatial_query', '/api/2/search/{register:dataset|package}/geo',
-            controller='ckanext.spatial.controllers.api:ApiController',
-            action='spatial_query')
+                    controller='ckanext.spatial.controllers.api:ApiController',
+                    action='spatial_query')
         return map
 
     def before_index(self, pkg_dict):
@@ -189,7 +191,8 @@ class SpatialQuery(p.SingletonPlugin):
                 if not (geometry['type'] == 'Polygon'
                    and len(geometry['coordinates']) == 1
                    and len(geometry['coordinates'][0]) == 5):
-                    log.error('Solr backend only supports bboxes (Polygons with 5 points), ignoring geometry {0}'.format(pkg_dict['extras_spatial']))
+                    log.error('Solr backend only supports bboxes (Polygons with 5 points), ignoring geometry {0}'
+                              .format(pkg_dict['extras_spatial']))
                     return pkg_dict
 
                 coords = geometry['coordinates']
@@ -232,11 +235,10 @@ class SpatialQuery(p.SingletonPlugin):
 
                 pkg_dict['spatial_geom'] = wkt
 
-
         return pkg_dict
 
     def before_search(self, search_params):
-        from ckanext.spatial.lib import  validate_bbox
+        from ckanext.spatial.lib import validate_bbox
         from ckan.lib.search import SearchError
 
         if search_params.get('extras', None) and search_params['extras'].get('ext_bbox', None):
@@ -282,7 +284,7 @@ class SpatialQuery(p.SingletonPlugin):
 
         '''
 
-        variables =dict(
+        variables = dict(
             x11=bbox['minx'],
             x12=bbox['maxx'],
             y11=bbox['miny'],
@@ -291,7 +293,7 @@ class SpatialQuery(p.SingletonPlugin):
             x22='maxx',
             y21='miny',
             y22='maxy',
-            area_search = abs(bbox['maxx'] - bbox['minx']) * abs(bbox['maxy'] - bbox['miny'])
+            area_search=abs(bbox['maxx'] - bbox['minx']) * abs(bbox['maxy'] - bbox['miny'])
         )
 
         bf = '''div(
@@ -301,7 +303,7 @@ class SpatialQuery(p.SingletonPlugin):
                        ),
                    2),
                    add({area_search}, mul(sub({y22}, {y21}), sub({x22}, {x21})))
-                )'''.format(**variables).replace('\n','').replace(' ','')
+                )'''.format(**variables).replace('\n', '').replace(' ', '')
 
         search_params['fq_list'] = ['{!frange incl=false l=0 u=1}%s' % bf]
 
@@ -324,7 +326,7 @@ class SpatialQuery(p.SingletonPlugin):
         return search_params
 
     def _params_for_postgis_search(self, bbox, search_params):
-        from ckanext.spatial.lib import   bbox_query, bbox_query_ordered
+        from ckanext.spatial.lib import bbox_query, bbox_query_ordered
         from ckan.lib.search import SearchError
 
         # Note: This will be deprecated at some point in favour of the
@@ -344,13 +346,13 @@ class SpatialQuery(p.SingletonPlugin):
             # they are in the wrong order anyway. We just need this SOLR
             # query to get the count and facet counts.
             rows = 0
-            search_params['sort'] = None # SOLR should not sort.
+            search_params['sort'] = None  # SOLR should not sort.
             # Store the rankings of the results for this page, so for
             # after_search to construct the correctly sorted results
             rows = search_params['extras']['ext_rows'] = search_params['rows']
             start = search_params['extras']['ext_start'] = search_params['start']
             search_params['extras']['ext_spatial'] = [
-                (extent.package_id, extent.spatial_ranking) \
+                (extent.package_id, extent.spatial_ranking)
                 for extent in extents[start:start+rows]]
         else:
             extents = bbox_query(bbox)
@@ -364,7 +366,7 @@ class SpatialQuery(p.SingletonPlugin):
             # of datasets within the bbox
             bbox_query_ids = [extent.package_id for extent in extents]
 
-            q = search_params.get('q','').strip() or '""'
+            q = search_params.get('q', '').strip() or '""'
             new_q = '%s AND ' % q if q else ''
             new_q += '(%s)' % ' OR '.join(['id:%s' % id for id in bbox_query_ids])
 
@@ -390,6 +392,7 @@ class SpatialQuery(p.SingletonPlugin):
             search_results['results'] = pkgs
         return search_results
 
+
 class HarvestMetadataApi(p.SingletonPlugin):
     '''
     Harvest Metadata API
@@ -406,8 +409,8 @@ class HarvestMetadataApi(p.SingletonPlugin):
         # Showing the harvest object content is an action of the default
         # harvest plugin, so just redirect there
         route_map.redirect('/api/2/rest/harvestobject/{id:.*}/xml',
-            '/harvest/object/{id}',
-            _redirect_code='301 Moved Permanently')
+                           '/harvest/object/{id}',
+                           _redirect_code='301 Moved Permanently')
 
         route_map.connect('/harvest/object/{id}/original', controller=controller,
                           action='display_xml_original')
@@ -419,8 +422,8 @@ class HarvestMetadataApi(p.SingletonPlugin):
 
         # Redirect old URL to a nicer and unversioned one
         route_map.redirect('/api/2/rest/harvestobject/:id/html',
-           '/harvest/object/{id}/html',
-            _redirect_code='301 Moved Permanently')
+                           '/harvest/object/{id}/html',
+                           _redirect_code='301 Moved Permanently')
 
         return route_map
 

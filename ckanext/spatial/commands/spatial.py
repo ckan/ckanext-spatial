@@ -1,12 +1,11 @@
 import sys
-import re
-from pprint import pprint
 import logging
 
 from ckan.lib.cli import CkanCommand
 from ckan.lib.helpers import json
 from ckanext.spatial.lib import save_package_extent
 log = logging.getLogger(__name__)
+
 
 class Spatial(CkanCommand):
     '''Performs spatially related operations.
@@ -20,7 +19,7 @@ class Spatial(CkanCommand):
         spatial extents
             Creates or updates the extent geometry column for datasets with
             an extent defined in the 'spatial' extra.
-      
+
     The commands should be run from the ckanext-spatial directory and expect
     a development.ini file to be present. Most of the time you will
     specify the config explicitly though::
@@ -31,7 +30,7 @@ class Spatial(CkanCommand):
 
     summary = __doc__.split('\n')[0]
     usage = __doc__
-    max_args = 2 
+    max_args = 2
     min_args = 0
 
     def command(self):
@@ -43,7 +42,7 @@ class Spatial(CkanCommand):
             sys.exit(1)
         cmd = self.args[0]
         if cmd == 'initdb':
-            self.initdb()    
+            self.initdb()
         elif cmd == 'extents':
             self.update_extents()
         else:
@@ -56,16 +55,16 @@ class Spatial(CkanCommand):
             srid = None
 
         from ckanext.spatial.model import setup as db_setup
-        
+
         db_setup(srid)
 
         print 'DB tables created'
 
     def update_extents(self):
-        from ckan.model import PackageExtra, Package, Session
-        conn = Session.connection()
-        packages = [extra.package \
-                    for extra in \
+        from ckan.model import PackageExtra, Session
+        Session.connection()
+        packages = [extra.package
+                    for extra in
                     Session.query(PackageExtra).filter(PackageExtra.key == 'spatial').all()]
 
         errors = []
@@ -77,21 +76,19 @@ class Spatial(CkanCommand):
                 geometry = json.loads(value)
 
                 count += 1
-            except ValueError,e:
-                errors.append(u'Package %s - Error decoding JSON object: %s' % (package.id,str(e)))
-            except TypeError,e:
-                errors.append(u'Package %s - Error decoding JSON object: %s' % (package.id,str(e)))
+            except ValueError, e:
+                errors.append(u'Package %s - Error decoding JSON object: %s' % (package.id, str(e)))
+            except TypeError, e:
+                errors.append(u'Package %s - Error decoding JSON object: %s' % (package.id, str(e)))
 
-            save_package_extent(package.id,geometry)
-        
+            save_package_extent(package.id, geometry)
 
         Session.commit()
-        
+
         if errors:
             msg = 'Errors were found:\n%s' % '\n'.join(errors)
             print msg
 
-        msg = "Done. Extents generated for %i out of %i packages" % (count,len(packages))
+        msg = "Done. Extents generated for %i out of %i packages" % (count, len(packages))
 
         print msg
-

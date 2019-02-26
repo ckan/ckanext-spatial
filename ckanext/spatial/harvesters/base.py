@@ -92,7 +92,7 @@ def guess_resource_format(url, use_mimetypes=True):
             return resource_type
 
     file_types = {
-        'kml' : ('kml',),
+        'kml': ('kml',),
         'kmz': ('kmz',),
         'gml': ('gml',),
     }
@@ -122,7 +122,7 @@ class SpatialHarvester(HarvesterBase):
     {"type": "Polygon", "coordinates": [[[$xmin, $ymin], [$xmax, $ymin], [$xmax, $ymax], [$xmin, $ymax], [$xmin, $ymin]]]}
     ''')
 
-    ## IHarvester
+    # IHarvester
 
     def validate_config(self, source_config):
         if not source_config:
@@ -143,16 +143,16 @@ class SpatialHarvester(HarvesterBase):
                     raise ValueError('Unknown validation profile(s): %s' % ','.join(unknown_profiles))
 
             if 'default_tags' in source_config_obj:
-                if not isinstance(source_config_obj['default_tags'],list):
+                if not isinstance(source_config_obj['default_tags'], list):
                     raise ValueError('default_tags must be a list')
 
             if 'default_extras' in source_config_obj:
-                if not isinstance(source_config_obj['default_extras'],dict):
+                if not isinstance(source_config_obj['default_extras'], dict):
                     raise ValueError('default_extras must be a dictionary')
 
             for key in ('override_extras', 'clean_tags'):
                 if key in source_config_obj:
-                    if not isinstance(source_config_obj[key],bool):
+                    if not isinstance(source_config_obj[key], bool):
                         raise ValueError('%s must be boolean' % key)
 
         except ValueError, e:
@@ -160,10 +160,7 @@ class SpatialHarvester(HarvesterBase):
 
         return source_config
 
-    ##
-
-    ## SpatialHarvester
-
+    # SpatialHarvester
 
     def get_package_dict(self, iso_values, harvest_object):
         '''
@@ -203,7 +200,7 @@ class SpatialHarvester(HarvesterBase):
         :returns: A dataset dictionary (package_dict)
         :rtype: dict
         '''
-        
+
         tags = []
 
         if 'tags' in iso_values:
@@ -287,7 +284,6 @@ class SpatialHarvester(HarvesterBase):
             if license_url_extracted:
                 extras['licence_url'] = license_url_extracted
 
-
         # Metadata license ID check for package
         use_constraints = iso_values.get('use-constraints')
         if use_constraints:
@@ -307,7 +303,6 @@ class SpatialHarvester(HarvesterBase):
                     package_dict['license_id'] = package_license
                     break
 
-
         extras['access_constraints'] = iso_values.get('limitations-on-public-access', '')
 
         # Grpahic preview
@@ -319,7 +314,6 @@ class SpatialHarvester(HarvesterBase):
                 extras['graphic-preview-description'] = browse_graphic.get('description')
             if browse_graphic.get('type'):
                 extras['graphic-preview-type'] = browse_graphic.get('type')
-
 
         for key in ['temporal-extent-begin', 'temporal-extent-end']:
             if len(iso_values[key]) > 0:
@@ -350,7 +344,7 @@ class SpatialHarvester(HarvesterBase):
                 ymax = float(bbox['north'])
             except ValueError, e:
                 self._save_object_error('Error parsing bounding box value: {0}'.format(str(e)),
-                                    harvest_object, 'Import')
+                                        harvest_object, 'Import')
             else:
                 # Construct a GeoJSON extent so ckanext-spatial can register the extent geometry
 
@@ -361,7 +355,7 @@ class SpatialHarvester(HarvesterBase):
                         x=xmin, y=ymin
                     )
                     self._save_object_error('Point extent defined instead of polygon',
-                                     harvest_object, 'Import')
+                                            harvest_object, 'Import')
                 else:
                     extent_string = self.extent_template.substitute(
                         xmin=xmin, ymin=ymin, xmax=xmax, ymax=ymax
@@ -391,28 +385,27 @@ class SpatialHarvester(HarvesterBase):
                         {
                             'url': url,
                             'name': resource_locator.get('name') or p.toolkit._('Unnamed resource'),
-                            'description': resource_locator.get('description') or  '',
+                            'description': resource_locator.get('description') or '',
                             'resource_locator_protocol': resource_locator.get('protocol') or '',
                             'resource_locator_function': resource_locator.get('function') or '',
                         })
                     package_dict['resources'].append(resource)
 
-
         # Add default_extras from config
-        default_extras = self.source_config.get('default_extras',{})
+        default_extras = self.source_config.get('default_extras', {})
         if default_extras:
-           override_extras = self.source_config.get('override_extras',False)
-           for key,value in default_extras.iteritems():
-              log.debug('Processing extra %s', key)
-              if not key in extras or override_extras:
-                 # Look for replacement strings
-                 if isinstance(value,basestring):
-                    value = value.format(harvest_source_id=harvest_object.job.source.id,
-                             harvest_source_url=harvest_object.job.source.url.strip('/'),
-                             harvest_source_title=harvest_object.job.source.title,
-                             harvest_job_id=harvest_object.job.id,
-                             harvest_object_id=harvest_object.id)
-                 extras[key] = value
+            override_extras = self.source_config.get('override_extras', False)
+            for key, value in default_extras.iteritems():
+                log.debug('Processing extra %s', key)
+                if not key in extras or override_extras:
+                    # Look for replacement strings
+                    if isinstance(value, basestring):
+                        value = value.format(harvest_source_id=harvest_object.job.source.id,
+                                             harvest_source_url=harvest_object.job.source.url.strip('/'),
+                                             harvest_source_title=harvest_object.job.source.title,
+                                             harvest_job_id=harvest_object.job.id,
+                                             harvest_object_id=harvest_object.id)
+                        extras[key] = value
 
         extras_as_dict = []
         for key, value in extras.iteritems():
@@ -456,9 +449,9 @@ class SpatialHarvester(HarvesterBase):
 
         # Get the last harvested object (if any)
         previous_object = model.Session.query(HarvestObject) \
-                          .filter(HarvestObject.guid==harvest_object.guid) \
-                          .filter(HarvestObject.current==True) \
-                          .first()
+                                       .filter(HarvestObject.guid == harvest_object.guid) \
+                                       .filter(HarvestObject.current == True) \
+                                       .first()
 
         if status == 'delete':
             # Delete package
@@ -474,7 +467,7 @@ class SpatialHarvester(HarvesterBase):
         original_document = self._get_object_extra(harvest_object, 'original_document')
         original_format = self._get_object_extra(harvest_object, 'original_format')
         if original_document and original_format:
-            #DEPRECATED use the ISpatialHarvester interface method
+            # DEPRECATED use the ISpatialHarvester interface method
             self.__base_transform_to_iso_called = False
             content = self.transform_to_iso(original_document, original_format, harvest_object)
             if not self.__base_transform_to_iso_called:
@@ -525,12 +518,12 @@ class SpatialHarvester(HarvesterBase):
             # First make sure there already aren't current objects
             # with the same guid
             existing_object = model.Session.query(HarvestObject.id) \
-                            .filter(HarvestObject.guid==iso_guid) \
-                            .filter(HarvestObject.current==True) \
+                            .filter(HarvestObject.guid == iso_guid) \
+                            .filter(HarvestObject.current == True) \
                             .first()
             if existing_object:
                 self._save_object_error('Object {0} already has this guid {1}'.format(existing_object.id, iso_guid),
-                        harvest_object, 'Import')
+                                        harvest_object, 'Import')
                 return False
 
             harvest_object.guid = iso_guid
@@ -548,12 +541,11 @@ class SpatialHarvester(HarvesterBase):
             metadata_modified_date = dateutil.parser.parse(iso_values['metadata-date'], ignoretz=True)
         except ValueError:
             self._save_object_error('Could not extract reference date for object {0} ({1})'
-                        .format(harvest_object.id, iso_values['metadata-date']), harvest_object, 'Import')
+                                    .format(harvest_object.id, iso_values['metadata-date']), harvest_object, 'Import')
             return False
 
         harvest_object.metadata_modified_date = metadata_modified_date
         harvest_object.add()
-
 
         # Build the package dict
         package_dict = self.get_package_dict(iso_values, harvest_object)
@@ -576,7 +568,6 @@ class SpatialHarvester(HarvesterBase):
 
         if self._site_user and context['user'] == self._site_user['name']:
             context['ignore_auth'] = True
-
 
         # The default package schema does not like Upper case tags
         tag_schema = logic.schema.default_tags_schema()
@@ -630,19 +621,19 @@ class SpatialHarvester(HarvesterBase):
                 if ((config.get('ckanext.spatial.harvest.reindex_unchanged', True) != 'False'
                     or self.source_config.get('reindex_unchanged') != 'False')
                     and harvest_object.package_id):
-                    context.update({'validate': False, 'ignore_auth': True})
-                    try:
-                        package_dict = logic.get_action('package_show')(context,
-                            {'id': harvest_object.package_id})
-                    except p.toolkit.ObjectNotFound:
-                        pass
-                    else:
-                        for extra in package_dict.get('extras', []):
-                            if extra['key'] == 'harvest_object_id':
-                                extra['value'] = harvest_object.id
-                        if package_dict:
-                            package_index = PackageSearchIndex()
-                            package_index.index_package(package_dict)
+                        context.update({'validate': False, 'ignore_auth': True})
+                        try:
+                            package_dict = logic.get_action('package_show')(context,
+                                                                            {'id': harvest_object.package_id})
+                        except p.toolkit.ObjectNotFound:
+                            pass
+                else:
+                    for extra in package_dict.get('extras', []):
+                        if extra['key'] == 'harvest_object_id':
+                            extra['value'] = harvest_object.id
+                    if package_dict:
+                        package_index = PackageSearchIndex()
+                        package_index.index_package(package_dict)
 
                 log.info('Document with GUID %s unchanged, skipping...' % (harvest_object.guid))
             else:
@@ -729,7 +720,6 @@ class SpatialHarvester(HarvesterBase):
                     if custom_validator not in all_validators:
                         self._validator.add_validator(custom_validator)
 
-
         return self._validator
 
     def _get_user_name(self):
@@ -750,8 +740,8 @@ class SpatialHarvester(HarvesterBase):
 
         context = {'model': model,
                    'ignore_auth': True,
-                   'defer_commit': True, # See ckan/ckan#1714
-                  }
+                   'defer_commit': True,  # See ckan/ckan#1714
+                   }
         self._site_user = p.toolkit.get_action('get_site_user')(context, {})
 
         config_user_name = config.get('ckanext.spatial.harvest.user_name')
