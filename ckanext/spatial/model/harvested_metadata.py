@@ -230,7 +230,7 @@ class ISOResponsibleParty(ISOElement):
                 "gmd:contactInfo/gmd:CI_Contact",
             ],
             multiplicity="0..1",
-            elements = [
+            elements=[
                 ISOElement(
                     name="email",
                     search_paths=[
@@ -299,6 +299,7 @@ class ISOReferenceDate(ISOElement):
         ),
     ]
 
+
 class ISOCoupledResources(ISOElement):
 
     elements = [
@@ -360,6 +361,7 @@ class ISOBoundingBox(ISOElement):
         ),
     ]
 
+
 class ISOBrowseGraphic(ISOElement):
 
     elements = [
@@ -407,7 +409,7 @@ class ISOKeyword(ISOElement):
         ),
         # If Thesaurus information is needed at some point, this is the
         # place to add it
-   ]
+    ]
 
 
 class ISOUsage(ISOElement):
@@ -428,7 +430,7 @@ class ISOUsage(ISOElement):
             multiplicity="0..1",
         ),
 
-   ]
+    ]
 
 
 class ISOAggregationInfo(ISOElement):
@@ -464,7 +466,7 @@ class ISOAggregationInfo(ISOElement):
             ],
             multiplicity="0..1",
         ),
-   ]
+    ]
 
 
 class ISODocument(MappedXmlDocument):

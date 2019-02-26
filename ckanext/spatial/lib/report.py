@@ -5,8 +5,11 @@ and then saved as a CSV.
 
 import datetime
 import csv
-try: from cStringIO import StringIO
-except ImportError: from StringIO import StringIO
+try:
+    from cStringIO import StringIO
+except ImportError:
+    from StringIO import StringIO
+
 
 class ReportTable(object):
     def __init__(self, column_names):
@@ -63,7 +66,6 @@ class ReportTable(object):
             try:
                 csvwriter.writerow(row_formatted)
             except Exception, e:
-                raise Exception("%s: %s, %s"%(e, row, row_formatted))
+                raise Exception("%s: %s, %s" % (e, row, row_formatted))
         csvout.seek(0)
         return csvout.read()
-        

@@ -26,11 +26,12 @@ def get_srid(crs):
         crs = crs.split(':')
         srid = crs[len(crs)-1]
     else:
-       srid = crs
+        srid = crs
 
     return int(srid)
 
-def save_package_extent(package_id, geometry = None, srid = None):
+
+def save_package_extent(package_id, geometry=None, srid=None):
     '''Adds, updates or deletes the package extent geometry.
 
        package_id: Package unique identifier
@@ -46,8 +47,7 @@ def save_package_extent(package_id, geometry = None, srid = None):
     '''
     db_srid = int(config.get('ckan.spatial.srid', '4326'))
 
-
-    existing_package_extent = Session.query(PackageExtent).filter(PackageExtent.package_id==package_id).first()
+    existing_package_extent = Session.query(PackageExtent).filter(PackageExtent.package_id == package_id).first()
 
     if geometry:
         shape = asShape(geometry)
@@ -79,6 +79,7 @@ def save_package_extent(package_id, geometry = None, srid = None):
         Session.add(package_extent)
         log.debug('Created new extent for package %s' % package_id)
 
+
 def validate_bbox(bbox_values):
     '''
     Ensures a bbox is expressed in a standard dict.
@@ -96,7 +97,7 @@ def validate_bbox(bbox_values):
     Any problems and it returns None.
     '''
 
-    if isinstance(bbox_values,basestring):
+    if isinstance(bbox_values, basestring):
         bbox_values = bbox_values.split(',')
 
     if len(bbox_values) is not 4:
@@ -108,10 +109,11 @@ def validate_bbox(bbox_values):
         bbox['miny'] = float(bbox_values[1])
         bbox['maxx'] = float(bbox_values[2])
         bbox['maxy'] = float(bbox_values[3])
-    except ValueError,e:
+    except ValueError, e:
         return None
 
     return bbox
+
 
 def _bbox_2_wkt(bbox, srid):
     '''
@@ -125,18 +127,19 @@ def _bbox_2_wkt(bbox, srid):
     bbox_template = Template('POLYGON (($minx $miny, $minx $maxy, $maxx $maxy, $maxx $miny, $minx $miny))')
 
     wkt = bbox_template.substitute(minx=bbox['minx'],
-                                        miny=bbox['miny'],
-                                        maxx=bbox['maxx'],
-                                        maxy=bbox['maxy'])
+                                   miny=bbox['miny'],
+                                   maxx=bbox['maxx'],
+                                   maxy=bbox['maxy'])
 
     if srid and srid != db_srid:
         # Input geometry needs to be transformed to the one used on the database
-        input_geometry = ST_Transform(WKTElement(wkt,srid),db_srid)
+        input_geometry = ST_Transform(WKTElement(wkt, srid), db_srid)
     else:
-        input_geometry = WKTElement(wkt,db_srid)
+        input_geometry = WKTElement(wkt, db_srid)
     return input_geometry
 
-def bbox_query(bbox,srid=None):
+
+def bbox_query(bbox, srid=None):
     '''
     Performs a spatial query of a bounding box.
 
@@ -149,10 +152,11 @@ def bbox_query(bbox,srid=None):
     input_geometry = _bbox_2_wkt(bbox, srid)
 
     extents = Session.query(PackageExtent) \
-              .filter(PackageExtent.package_id==Package.id) \
-              .filter(PackageExtent.the_geom.intersects(input_geometry)) \
-              .filter(Package.state==u'active')
+        .filter(PackageExtent.package_id == Package.id) \
+        .filter(PackageExtent.the_geom.intersects(input_geometry)) \
+        .filter(Package.state == u'active')
     return extents
+
 
 def bbox_query_ordered(bbox, srid=None):
     '''

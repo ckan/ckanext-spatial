@@ -9,7 +9,7 @@ from nose.tools import assert_equal, assert_in, assert_raises
 from ckan.lib.base import config
 from ckan import model
 from ckan.model import Session, Package, Group, User
-from ckan.logic.schema import default_update_package_schema, default_create_package_schema
+from ckan.logic.schema import default_update_package_schema
 from ckan.logic import get_action
 
 try:
@@ -40,37 +40,37 @@ class HarvestFixtureBase(SpatialTestBase):
         Session.commit()
 
         package_schema = default_update_package_schema()
-        self.context ={'model':model,
-                       'session':Session,
-                       'user':u'harvest',
-                       'schema':package_schema,
-                       'api_version': '2'}
+        self.context = {'model': model,
+                        'session': Session,
+                        'user': u'harvest',
+                        'schema': package_schema,
+                        'api_version': '2'}
 
     def teardown(self):
-       model.repo.rebuild_db()
+        model.repo.rebuild_db()
 
-    def _create_job(self,source_id):
+    def _create_job(self, source_id):
         # Create a job
-        context ={'model':model,
-                 'session':Session,
-                 'user':u'harvest'}
+        context = {'model': model,
+                   'session': Session,
+                   'user': u'harvest'}
 
-        job_dict=get_action('harvest_job_create')(context,{'source_id':source_id})
+        job_dict = get_action('harvest_job_create')(context, {'source_id': source_id})
         job = HarvestJob.get(job_dict['id'])
         assert job
 
         return job
 
     def _create_source_and_job(self, source_fixture):
-        context ={'model':model,
-                 'session':Session,
-                 'user':u'harvest'}
+        context = {'model': model,
+                   'session': Session,
+                   'user': u'harvest'}
 
         if config.get('ckan.harvest.auth.profile') == u'publisher' \
            and not 'publisher_id' in source_fixture:
-           source_fixture['publisher_id'] = self.publisher.id
+            source_fixture['publisher_id'] = self.publisher.id
 
-        source_dict=get_action('harvest_source_create')(context,source_fixture)
+        source_dict = get_action('harvest_source_create')(context, source_fixture)
         source = HarvestSource.get(source_dict['id'])
         assert source
 
@@ -78,12 +78,11 @@ class HarvestFixtureBase(SpatialTestBase):
 
         return source, job
 
-    def _run_job_for_single_document(self,job,force_import=False,expect_gather_errors=False,expect_obj_errors=False):
+    def _run_job_for_single_document(self, job, force_import=False, expect_gather_errors=False, expect_obj_errors=False):
 
         harvester = GeminiDocHarvester()
 
         harvester.force_import = force_import
-
 
         object_ids = harvester.gather_stage(job)
         assert object_ids, len(object_ids) == 1
@@ -109,6 +108,7 @@ class HarvestFixtureBase(SpatialTestBase):
 
         return obj
 
+
 class TestHarvest(HarvestFixtureBase):
 
     @classmethod
@@ -117,7 +117,7 @@ class TestHarvest(HarvestFixtureBase):
         HarvestFixtureBase.setup_class()
 
     def clean_tags(self, tags):
-        return  map(lambda x: {u'name': x['name']}, tags)
+        return map(lambda x: {u'name': x['name']}, tags)
 
     def find_extra(self, pkg, key):
         values = [e['value'] for e in pkg['extras'] if e['key'] == key]
@@ -152,7 +152,7 @@ class TestHarvest(HarvestFixtureBase):
             objects.append(obj)
             harvester.import_stage(obj)
 
-        pkgs = Session.query(Package).filter(Package.type!=u'harvest').all()
+        pkgs = Session.query(Package).filter(Package.type != u'harvest').all()
 
         assert_equal(len(pkgs), 2)
 
@@ -194,7 +194,7 @@ class TestHarvest(HarvestFixtureBase):
         # No object errors
         assert len(obj.errors) == 0
 
-        package_dict = get_action('package_show')(self.context,{'id':obj.package_id})
+        package_dict = get_action('package_show')(self.context, {'id': obj.package_id})
 
         assert package_dict
 
@@ -207,10 +207,10 @@ class TestHarvest(HarvestFixtureBase):
 
         package_dict['tags'] = self.clean_tags(package_dict['tags'])
 
-        for key,value in expected.iteritems():
+        for key, value in expected.iteritems():
             if not package_dict[key] == value:
-                raise AssertionError('Unexpected value for %s: %s (was expecting %s)' % \
-                    (key, package_dict[key], value))
+                raise AssertionError('Unexpected value for %s: %s (was expecting %s)' %
+                                     (key, package_dict[key], value))
 
         if config.get('ckan.harvest.auth.profile') == u'publisher':
             assert package_dict['groups'] == [self.publisher.id]
@@ -222,7 +222,7 @@ class TestHarvest(HarvestFixtureBase):
             'resource-type': u'service',
             'access_constraints': u'["No restriction on public access"]',
             'responsible-party': u'The Improvement Service (owner)',
-            'provider':u'The Improvement Service',
+            'provider': u'The Improvement Service',
             'contact-email': u'OSGCM@improvementservice.org.uk',
             # Spatial
             'bbox-east-long': u'0.5242365625',
@@ -244,14 +244,14 @@ class TestHarvest(HarvestFixtureBase):
             'temporal_coverage-to': u'["2004-06-16"]',
         }
 
-        for key,value in expected_extras.iteritems():
+        for key, value in expected_extras.iteritems():
             extra_value = self.find_extra(package_dict, key)
             if extra_value is None:
                 raise AssertionError('Extra %s not present in package' % key)
 
             if not extra_value == value:
-                raise AssertionError('Unexpected value for extra %s: %s (was expecting %s)' % \
-                    (key, package_dict['extras'][key], value))
+                raise AssertionError('Unexpected value for extra %s: %s (was expecting %s)' %
+                                     (key, package_dict['extras'][key], value))
 
         expected_resource = {
             'ckan_recommended_wms_preview': 'True',
@@ -264,11 +264,11 @@ class TestHarvest(HarvestFixtureBase):
         }
 
         resource = package_dict['resources'][0]
-        for key,value in expected_resource.iteritems():
+        for key, value in expected_resource.iteritems():
             if not resource[key] == value:
-                raise AssertionError('Unexpected value in resource for %s: %s (was expecting %s)' % \
-                    (key, resource[key], value))
-        assert datetime.strptime(resource['verified_date'],'%Y-%m-%dT%H:%M:%S.%f').date() == date.today()
+                raise AssertionError('Unexpected value in resource for %s: %s (was expecting %s)' %
+                                     (key, resource[key], value))
+        assert datetime.strptime(resource['verified_date'], '%Y-%m-%dT%H:%M:%S.%f').date() == date.today()
         assert resource['format'].lower() == 'wms'
 
     def test_harvest_fields_dataset(self):
@@ -303,7 +303,7 @@ class TestHarvest(HarvestFixtureBase):
         # No object errors
         assert len(obj.errors) == 0
 
-        package_dict = get_action('package_show')(self.context,{'id':obj.package_id})
+        package_dict = get_action('package_show')(self.context, {'id': obj.package_id})
 
         assert package_dict
 
@@ -316,10 +316,10 @@ class TestHarvest(HarvestFixtureBase):
 
         package_dict['tags'] = self.clean_tags(package_dict['tags'])
 
-        for key,value in expected.iteritems():
+        for key, value in expected.iteritems():
             if not package_dict[key] == value:
-                raise AssertionError('Unexpected value for %s: %s (was expecting %s)' % \
-                    (key, package_dict[key], value))
+                raise AssertionError('Unexpected value for %s: %s (was expecting %s)' %
+                                     (key, package_dict[key], value))
 
         if config.get('ckan.harvest.auth.profile') == u'publisher':
             assert package_dict['groups'] == [self.publisher.id]
@@ -331,13 +331,14 @@ class TestHarvest(HarvestFixtureBase):
             'responsible-party': u'Scottish Natural Heritage (custodian, distributor)',
             'access_constraints': u'["Copyright Scottish Natural Heritage"]',
             'contact-email': u'data_supply@snh.gov.uk',
-            'provider':'',
+            'provider': '',
             # Spatial
             'bbox-east-long': u'0.205857204',
             'bbox-north-lat': u'61.06066944',
             'bbox-south-lat': u'54.529947158',
             'bbox-west-long': u'-8.97114288',
-            'spatial': u'{"type": "Polygon", "coordinates": [[[0.205857204, 54.529947158], [-8.97114288, 54.529947158], [-8.97114288, 61.06066944], [0.205857204, 61.06066944], [0.205857204, 54.529947158]]]}',
+            'spatial': u'{"type": "Polygon", "coordinates": [[[0.205857204, 54.529947158], [-8.97114288, 54.529947158], ' \
+            u'[-8.97114288, 61.06066944], [0.205857204, 61.06066944], [0.205857204, 54.529947158]]]}',
             # Other
             'coupled-resource': u'[]',
             'dataset-reference-date': u'[{"type": "creation", "value": "2004-02"}, {"type": "revision", "value": "2006-07-03"}]',
@@ -357,8 +358,8 @@ class TestHarvest(HarvestFixtureBase):
                 raise AssertionError('Extra %s not present in package' % key)
 
             if not extra_value == value:
-                raise AssertionError('Unexpected value for extra %s: %s (was expecting %s)' % \
-                    (key, package_dict['extras'][key], value))
+                raise AssertionError('Unexpected value for extra %s: %s (was expecting %s)' %
+                                     (key, package_dict['extras'][key], value))
 
         expected_resource = {
             'description': 'Test Resource Description',
@@ -370,10 +371,10 @@ class TestHarvest(HarvestFixtureBase):
         }
 
         resource = package_dict['resources'][0]
-        for key,value in expected_resource.iteritems():
+        for key, value in expected_resource.iteritems():
             if not resource[key] == value:
-                raise AssertionError('Unexpected value in resource for %s: %s (was expecting %s)' % \
-                    (key, resource[key], value))
+                raise AssertionError('Unexpected value in resource for %s: %s (was expecting %s)' %
+                                     (key, resource[key], value))
 
     def test_harvest_error_bad_xml(self):
         # Create source

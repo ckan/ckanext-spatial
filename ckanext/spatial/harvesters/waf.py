@@ -5,7 +5,6 @@ import dateutil.parser
 import pyparsing as parse
 import requests
 from sqlalchemy.orm import aliased
-from sqlalchemy.exc import DataError
 
 from ckan import model
 
@@ -14,7 +13,6 @@ from ckan.plugins.core import SingletonPlugin, implements
 from ckanext.harvest.interfaces import IHarvester
 from ckanext.harvest.model import HarvestObject
 from ckanext.harvest.model import HarvestObjectExtra as HOExtra
-import ckanext.harvest.queue as queue
 
 from ckanext.spatial.harvesters.base import SpatialHarvester, guess_standard
 
@@ -36,17 +34,15 @@ class WAFHarvester(SpatialHarvester, SingletonPlugin):
             'description': 'A Web Accessible Folder (WAF) displaying a list of spatial metadata documents'
             }
 
-
     def get_original_url(self, harvest_object_id):
         url = model.Session.query(HOExtra.value).\
-                                    filter(HOExtra.key=='waf_location').\
-                                    filter(HOExtra.harvest_object_id==harvest_object_id).\
+                                    filter(HOExtra.key == 'waf_location').\
+                                    filter(HOExtra.harvest_object_id == harvest_object_id).\
                                     first()
 
         return url[0] if url else None
 
-
-    def gather_stage(self,harvest_job,collection_package_id=None):
+    def gather_stage(self, harvest_job, collection_package_id=None):
         log = logging.getLogger(__name__ + '.WAF.gather')
         log.debug('WafHarvester gather_stage for job: %r', harvest_job)
 
@@ -62,46 +58,44 @@ class WAFHarvester(SpatialHarvester, SingletonPlugin):
             response = requests.get(source_url, timeout=60)
             response.raise_for_status()
         except requests.exceptions.RequestException, e:
-            self._save_gather_error('Unable to get content for URL: %s: %r' % \
-                                        (source_url, e),harvest_job)
+            self._save_gather_error('Unable to get content for URL: %s: %r' %
+                                    (source_url, e), harvest_job)
             return None
 
         content = response.content
         scraper = _get_scraper(response.headers.get('server'))
 
-        ######  Get current harvest object out of db ######
+        # Get current harvest object out of db
 
-        url_to_modified_db = {} ## mapping of url to last_modified in db
-        url_to_ids = {} ## mapping of url to guid in db
-
+        url_to_modified_db = {}  # mapping of url to last_modified in db
+        url_to_ids = {}  # mapping of url to guid in db
 
         HOExtraAlias1 = aliased(HOExtra)
         HOExtraAlias2 = aliased(HOExtra)
         query = model.Session.query(HarvestObject.guid, HarvestObject.package_id, HOExtraAlias1.value, HOExtraAlias2.value).\
-                                    join(HOExtraAlias1, HarvestObject.extras).\
-                                    join(HOExtraAlias2, HarvestObject.extras).\
-                                    filter(HOExtraAlias1.key=='waf_modified_date').\
-                                    filter(HOExtraAlias2.key=='waf_location').\
-                                    filter(HarvestObject.current==True).\
-                                    filter(HarvestObject.harvest_source_id==harvest_job.source.id)
-
+            join(HOExtraAlias1, HarvestObject.extras).\
+            join(HOExtraAlias2, HarvestObject.extras).\
+            filter(HOExtraAlias1.key == 'waf_modified_date').\
+            filter(HOExtraAlias2.key == 'waf_location').\
+            filter(HarvestObject.current == True).\
+            filter(HarvestObject.harvest_source_id == harvest_job.source.id)
 
         for guid, package_id, modified_date, url in query:
             url_to_modified_db[url] = modified_date
             url_to_ids[url] = (guid, package_id)
 
-        ######  Get current list of records from source ######
+        # Get current list of records from source
 
-        url_to_modified_harvest = {} ## mapping of url to last_modified in harvest
+        url_to_modified_harvest = {}  # mapping of url to last_modified in harvest
         try:
-            for url, modified_date in _extract_waf(content,source_url,scraper):
+            for url, modified_date in _extract_waf(content, source_url, scraper):
                 url_to_modified_harvest[url] = modified_date
-        except Exception,e:
+        except Exception, e:
             msg = 'Error extracting URLs from %s, error was %s' % (source_url, e)
-            self._save_gather_error(msg,harvest_job)
+            self._save_gather_error(msg, harvest_job)
             return None
 
-        ######  Compare source and db ######
+        # Compare source and db
 
         harvest_locations = set(url_to_modified_harvest.keys())
         old_locations = set(url_to_modified_db.keys())
@@ -112,9 +106,9 @@ class WAFHarvester(SpatialHarvester, SingletonPlugin):
         change = []
 
         for item in possible_changes:
-            if (not url_to_modified_harvest[item] or not url_to_modified_db[item] #if there is no date assume change
+            if (not url_to_modified_harvest[item] or not url_to_modified_db[item]  # if there is no date assume change
                 or url_to_modified_harvest[item] > url_to_modified_db[item]):
-                change.append(item)
+                    change.append(item)
 
         def create_extras(url, date, status):
             extras = [HOExtra(key='waf_modified_date', value=date),
@@ -127,16 +121,15 @@ class WAFHarvester(SpatialHarvester, SingletonPlugin):
                 )
             return extras
 
-
         ids = []
         for location in new:
-            guid=hashlib.md5(location.encode('utf8','ignore')).hexdigest()
+            guid = hashlib.md5(location.encode('utf8', 'ignore')).hexdigest()
             obj = HarvestObject(job=harvest_job,
                                 extras=create_extras(location,
                                                      url_to_modified_harvest[location],
                                                      'new'),
                                 guid=guid
-                               )
+                                )
             obj.save()
             ids.append(obj.id)
 
@@ -147,19 +140,19 @@ class WAFHarvester(SpatialHarvester, SingletonPlugin):
                                                      'change'),
                                 guid=url_to_ids[location][0],
                                 package_id=url_to_ids[location][1],
-                               )
+                                )
             obj.save()
             ids.append(obj.id)
 
         for location in delete:
             obj = HarvestObject(job=harvest_job,
-                                extras=create_extras('','', 'delete'),
+                                extras=create_extras('', '', 'delete'),
                                 guid=url_to_ids[location][0],
                                 package_id=url_to_ids[location][1],
-                               )
+                                )
             model.Session.query(HarvestObject).\
-                  filter_by(guid=url_to_ids[location][0]).\
-                  update({'current': False}, False)
+                filter_by(guid=url_to_ids[location][0]).\
+                update({'current': False}, False)
 
             obj.save()
             ids.append(obj.id)
@@ -169,14 +162,13 @@ class WAFHarvester(SpatialHarvester, SingletonPlugin):
                 len(ids), len(new), len(change), len(delete)))
             return ids
         else:
-            self._save_gather_error('No records to change',
-                                     harvest_job)
+            self._save_gather_error('No records to change', harvest_job)
             return []
 
     def fetch_stage(self, harvest_object):
 
         # Check harvest object status
-        status = self._get_object_extra(harvest_object,'status')
+        status = self._get_object_extra(harvest_object, 'status')
 
         if status == 'delete':
             # No need to fetch anything, just pass to the import stage
@@ -221,27 +213,27 @@ class WAFHarvester(SpatialHarvester, SingletonPlugin):
         return True
 
 
-apache  = parse.SkipTo(parse.CaselessLiteral("<a href="), include=True).suppress() \
-        + parse.quotedString.setParseAction(parse.removeQuotes).setResultsName('url') \
-        + parse.SkipTo("</a>", include=True).suppress() \
-        + parse.Optional(parse.Literal('</td><td align="right">')).suppress() \
-        + parse.Optional(parse.Combine(
+apache = parse.SkipTo(parse.CaselessLiteral("<a href="), include=True).suppress() \
+       + parse.quotedString.setParseAction(parse.removeQuotes).setResultsName('url') \
+       + parse.SkipTo("</a>", include=True).suppress() \
+       + parse.Optional(parse.Literal('</td><td align="right">')).suppress() \
+       + parse.Optional(parse.Combine(
             parse.Word(parse.alphanums+'-') +
-            parse.Word(parse.alphanums+':')
-        ,adjacent=False, joinString=' ').setResultsName('date')
+            parse.Word(parse.alphanums+':'),
+            adjacent=False, joinString=' ').setResultsName('date')
         )
 
-iis =      parse.SkipTo("<br>").suppress() \
-         + parse.OneOrMore("<br>").suppress() \
-         + parse.Optional(parse.Combine(
-           parse.Word(parse.alphanums+'/') +
-           parse.Word(parse.alphanums+':') +
-           parse.Word(parse.alphas)
-         , adjacent=False, joinString=' ').setResultsName('date')
-         ) \
-         + parse.Word(parse.nums).suppress() \
-         + parse.Literal('<A HREF=').suppress() \
-         + parse.quotedString.setParseAction(parse.removeQuotes).setResultsName('url')
+iis = parse.SkipTo("<br>").suppress() \
+      + parse.OneOrMore("<br>").suppress() \
+      + parse.Optional(parse.Combine(
+        parse.Word(parse.alphanums+'/') +
+        parse.Word(parse.alphanums+':') +
+        parse.Word(parse.alphas),
+        adjacent=False, joinString=' ').setResultsName('date')
+        ) \
+      + parse.Word(parse.nums).suppress() \
+      + parse.Literal('<A HREF=').suppress() \
+      + parse.quotedString.setParseAction(parse.removeQuotes).setResultsName('url')
 
 other = parse.SkipTo(parse.CaselessLiteral("<a href="), include=True).suppress() \
         + parse.quotedString.setParseAction(parse.removeQuotes).setResultsName('url')
@@ -251,6 +243,7 @@ scrapers = {'apache': parse.OneOrMore(parse.Group(apache)),
             'other': parse.OneOrMore(parse.Group(other)),
             'iis': parse.OneOrMore(parse.Group(iis))}
 
+
 def _get_scraper(server):
     if not server or 'apache' in server.lower():
         return 'apache'
@@ -259,7 +252,8 @@ def _get_scraper(server):
     else:
         return 'other'
 
-def _extract_waf(content, base_url, scraper, results = None, depth=0):
+
+def _extract_waf(content, base_url, scraper, results=None, depth=0):
     if results is None:
         results = []
 
@@ -315,4 +309,3 @@ def _extract_waf(content, base_url, scraper, results = None, depth=0):
         results.append((urljoin(base_url, record.url), date))
 
     return results
-
