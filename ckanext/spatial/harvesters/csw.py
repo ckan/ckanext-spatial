@@ -22,7 +22,7 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
     '''
     implements(IHarvester)
 
-    csw=None
+    csw = None
 
     def info(self):
         return {
@@ -31,10 +31,9 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
             'description': 'A server that implements OGC\'s Catalog Service for the Web (CSW) standard'
             }
 
-
     def get_original_url(self, harvest_object_id):
         obj = model.Session.query(HarvestObject).\
-                                    filter(HarvestObject.id==harvest_object_id).\
+                                    filter(HarvestObject.id == harvest_object_id).\
                                     first()
 
         parts = urlparse.urlparse(obj.source.url)
@@ -44,7 +43,7 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
             'VERSION': '2.0.2',
             'REQUEST': 'GetRecordById',
             'OUTPUTSCHEMA': 'http://www.isotc211.org/2005/gmd',
-            'OUTPUTFORMAT':'application/xml' ,
+            'OUTPUTFORMAT': 'application/xml',
             'ID': obj.guid
         }
 

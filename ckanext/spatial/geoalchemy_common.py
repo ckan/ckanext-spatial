@@ -13,7 +13,6 @@ from sqlalchemy import types, Column, Table
 if toolkit.check_ckan_version(min_version='2.3'):
     # CKAN >= 2.3, use GeoAlchemy2
 
-    from geoalchemy2.elements import WKTElement
     from geoalchemy2 import Geometry
     from sqlalchemy import func
     ST_Transform = func.ST_Transform
@@ -23,7 +22,6 @@ if toolkit.check_ckan_version(min_version='2.3'):
 else:
     # CKAN < 2.3, use GeoAlchemy
 
-    from geoalchemy import WKTSpatialElement as WKTElement
     from geoalchemy import functions
     ST_Transform = functions.transform
     ST_Equals = functions.equals

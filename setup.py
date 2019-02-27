@@ -1,29 +1,27 @@
 from setuptools import setup, find_packages
-import sys, os
 
 version = '0.2'
 
 setup(
-	name='ckanext-spatial',
-	version=version,
-	description="Geo-related plugins for CKAN",
-	long_description="""\
-	""",
-	classifiers=[], # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
-	keywords='',
-	author='Open Knowledge Foundation',
-	author_email='info@okfn.org',
-	url='http://okfn.org',
-	license='AGPL',
-	packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
-	namespace_packages=['ckanext'],
-	include_package_data=True,
-	zip_safe=False,
-	install_requires=[
-		# -*- Extra requirements: -*-
-	],
-	entry_points=\
-	"""
+    name='ckanext-spatial',
+    version=version,
+    description="Geo-related plugins for CKAN",
+    long_description="""\
+    """,
+    classifiers=[],  # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
+    keywords='',
+    author='Open Knowledge Foundation',
+    author_email='info@okfn.org',
+    url='http://okfn.org',
+    license='AGPL',
+    packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
+    namespace_packages=['ckanext'],
+    include_package_data=True,
+    zip_safe=False,
+    install_requires=[
+        # -*- Extra requirements: -*-
+    ],
+    entry_points="""
     [ckan.plugins]
     spatial_metadata=ckanext.spatial.plugin:SpatialMetadata
     spatial_query=ckanext.spatial.plugin:SpatialQuery
@@ -46,5 +44,5 @@ setup(
     [ckan.test_plugins]
     test_spatial_plugin = ckanext.spatial.tests.test_plugin.plugin:TestSpatialPlugin
 
-	""",
+    """,
 )

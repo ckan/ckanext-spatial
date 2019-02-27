@@ -606,7 +606,8 @@ class SpatialHarvester(HarvesterBase):
         elif status == 'change':
 
             # Check if the modified date is more recent
-            if not self.force_import and previous_object and harvest_object.metadata_modified_date <= previous_object.metadata_modified_date:
+            if not self.force_import and previous_object
+            and harvest_object.metadata_modified_date <= previous_object.metadata_modified_date:
 
                 # Assign the previous job id to the new object to
                 # avoid losing history
@@ -619,14 +620,14 @@ class SpatialHarvester(HarvesterBase):
                 # Reindex the corresponding package to update the reference to the
                 # harvest object
                 if ((config.get('ckanext.spatial.harvest.reindex_unchanged', True) != 'False'
-                    or self.source_config.get('reindex_unchanged') != 'False')
-                    and harvest_object.package_id):
-                        context.update({'validate': False, 'ignore_auth': True})
-                        try:
-                            package_dict = logic.get_action('package_show')(context,
-                                                                            {'id': harvest_object.package_id})
-                        except p.toolkit.ObjectNotFound:
-                            pass
+                        or self.source_config.get('reindex_unchanged') != 'False')
+                        and harvest_object.package_id):
+                    context.update({'validate': False, 'ignore_auth': True})
+                    try:
+                        package_dict = logic.get_action('package_show')(context,
+                                                                        {'id': harvest_object.package_id})
+                    except p.toolkit.ObjectNotFound:
+                        pass
                 else:
                     for extra in package_dict.get('extras', []):
                         if extra['key'] == 'harvest_object_id':

@@ -108,7 +108,7 @@ class WAFHarvester(SpatialHarvester, SingletonPlugin):
         for item in possible_changes:
             if (not url_to_modified_harvest[item] or not url_to_modified_db[item]  # if there is no date assume change
                 or url_to_modified_harvest[item] > url_to_modified_db[item]):
-                    change.append(item)
+                change.append(item)
 
         def create_extras(url, date, status):
             extras = [HOExtra(key='waf_modified_date', value=date),
