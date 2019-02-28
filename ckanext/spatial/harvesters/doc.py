@@ -55,10 +55,9 @@ class DocHarvester(SpatialHarvester, SingletonPlugin):
                                     (url, e), harvest_job)
             return None
 
-        existing_object = model.Session.query(HarvestObject.guid, HarvestObject.package_id).\
-            filter(HarvestObject.current == True).\
-            filter(HarvestObject.harvest_source_id == harvest_job.source.id).\
-            first()
+        existing_object = model.Session.query(HarvestObject.guid, HarvestObject.package_id). \
+            filter(HarvestObject.harvest_source_id == harvest_job.source.id). \
+            filter(HarvestObject.current == True).first() # noqa
 
         def create_extras(url, status):
             return [HOExtra(key='doc_location', value=url),

@@ -234,7 +234,8 @@ class SpatialHarvester(HarvesterBase):
             if not name:
                 name = self._gen_new_name(str(iso_values['guid']))
             if not name:
-                raise Exception('Could not generate a unique name from the title or the GUID. Please choose a more unique title.')
+                raise Exception('Could not generate a unique name from the title or the GUID. '
+                                'Please choose a more unique title.')
             package_dict['name'] = name
         else:
             package_dict['name'] = package.name
@@ -397,7 +398,7 @@ class SpatialHarvester(HarvesterBase):
             override_extras = self.source_config.get('override_extras', False)
             for key, value in default_extras.iteritems():
                 log.debug('Processing extra %s', key)
-                if not key in extras or override_extras:
+                if key not in extras or override_extras:
                     # Look for replacement strings
                     if isinstance(value, basestring):
                         value = value.format(harvest_source_id=harvest_object.job.source.id,
@@ -450,8 +451,7 @@ class SpatialHarvester(HarvesterBase):
         # Get the last harvested object (if any)
         previous_object = model.Session.query(HarvestObject) \
                                        .filter(HarvestObject.guid == harvest_object.guid) \
-                                       .filter(HarvestObject.current == True) \
-                                       .first()
+                                       .filter(HarvestObject.current == True).first() # noqa
 
         if status == 'delete':
             # Delete package
@@ -492,7 +492,8 @@ class SpatialHarvester(HarvesterBase):
             if not is_valid:
                 # If validation errors were found, import will stop unless
                 # configuration per source or per instance says otherwise
-                continue_import = p.toolkit.asbool(config.get('ckanext.spatial.harvest.continue_on_validation_errors', False)) or \
+                continue_import = p.toolkit.asbool(config.get('ckanext.spatial.harvest.continue_on_validation_errors',
+                                                              False)) or \
                     self.source_config.get('continue_on_validation_errors')
                 if not continue_import:
                     return False
@@ -519,8 +520,7 @@ class SpatialHarvester(HarvesterBase):
             # with the same guid
             existing_object = model.Session.query(HarvestObject.id) \
                             .filter(HarvestObject.guid == iso_guid) \
-                            .filter(HarvestObject.current == True) \
-                            .first()
+                            .filter(HarvestObject.current == True).first() # noqa
             if existing_object:
                 self._save_object_error('Object {0} already has this guid {1}'.format(existing_object.id, iso_guid),
                                         harvest_object, 'Import')
@@ -606,8 +606,8 @@ class SpatialHarvester(HarvesterBase):
         elif status == 'change':
 
             # Check if the modified date is more recent
-            if not self.force_import and previous_object
-            and harvest_object.metadata_modified_date <= previous_object.metadata_modified_date:
+            if not self.force_import and previous_object \
+                    and harvest_object.metadata_modified_date <= previous_object.metadata_modified_date:
 
                 # Assign the previous job id to the new object to
                 # avoid losing history
@@ -815,7 +815,8 @@ class SpatialHarvester(HarvesterBase):
 
         valid, profile, errors = validator.is_valid(xml)
         if not valid:
-            log.error('Validation errors found using profile {0} for object with GUID {1}'.format(profile, harvest_object.guid))
+            log.error('Validation errors found using profile {0} for object with GUID {1}'
+                      .format(profile, harvest_object.guid))
             for error in errors:
                 self._save_object_error(error[0], harvest_object, 'Validation', line=error[1])
 

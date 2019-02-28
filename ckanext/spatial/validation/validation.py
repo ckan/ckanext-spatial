@@ -223,7 +223,7 @@ class SchematronValidator(BaseValidator):
                 error_details = []
                 for error in errors:
                     message, details = cls.extract_error_details(error)
-                    if not message in messages_already_reported:
+                    if message not in messages_already_reported:
                         # TODO: perhaps can extract the source line from the
                         # error location
                         error_details.append((details, None))

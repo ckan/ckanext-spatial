@@ -76,9 +76,9 @@ class WAFHarvester(SpatialHarvester, SingletonPlugin):
             join(HOExtraAlias1, HarvestObject.extras).\
             join(HOExtraAlias2, HarvestObject.extras).\
             filter(HOExtraAlias1.key == 'waf_modified_date').\
-            filter(HOExtraAlias2.key == 'waf_location').\
-            filter(HarvestObject.current == True).\
-            filter(HarvestObject.harvest_source_id == harvest_job.source.id)
+            filter(HOExtraAlias2.key == 'waf_location'). \
+            filter(HarvestObject.harvest_source_id == harvest_job.source.id).\
+            filter(HarvestObject.current == True) # noqa
 
         for guid, package_id, modified_date, url in query:
             url_to_modified_db[url] = modified_date
@@ -107,7 +107,7 @@ class WAFHarvester(SpatialHarvester, SingletonPlugin):
 
         for item in possible_changes:
             if (not url_to_modified_harvest[item] or not url_to_modified_db[item]  # if there is no date assume change
-                or url_to_modified_harvest[item] > url_to_modified_db[item]):
+                    or url_to_modified_harvest[item] > url_to_modified_db[item]):
                 change.append(item)
 
         def create_extras(url, date, status):

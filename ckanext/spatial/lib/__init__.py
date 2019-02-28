@@ -109,7 +109,7 @@ def validate_bbox(bbox_values):
         bbox['miny'] = float(bbox_values[1])
         bbox['maxx'] = float(bbox_values[2])
         bbox['maxy'] = float(bbox_values[3])
-    except ValueError, e:
+    except ValueError:
         return None
 
     return bbox
@@ -180,7 +180,9 @@ def bbox_query_ordered(bbox, srid=None):
 
     # Uses spatial ranking method from "USGS - 2006-1279" (Lanfear)
     sql = """SELECT ST_AsBinary(package_extent.the_geom) AS package_extent_the_geom,
-                    POWER(ST_Area(ST_Intersection(package_extent.the_geom, ST_GeomFromText(:query_bbox, :query_srid))),2)/ST_Area(package_extent.the_geom)/:search_area as spatial_ranking,
+                    POWER(ST_Area(ST_Intersection(package_extent.the_geom,
+                    ST_GeomFromText(:query_bbox, :query_srid))),2)
+                    /ST_Area(package_extent.the_geom)/:search_area as spatial_ranking,
                     package_extent.package_id AS package_id
              FROM package_extent, package
              WHERE package_extent.package_id = package.id

@@ -120,7 +120,7 @@ class GeminiHarvester(SpatialHarvester):
         except ValueError:
             try:
                 metadata_modified_date = datetime.strptime(gemini_values['metadata-date'], '%Y-%m-%dT%H:%M:%S')
-            except:
+            except Exception:
                 raise Exception('Could not extract reference date for GUID %s (%s)' %
                                 (gemini_guid, gemini_values['metadata-date']))
 
@@ -129,8 +129,7 @@ class GeminiHarvester(SpatialHarvester):
 
         last_harvested_object = Session.query(HarvestObject) \
             .filter(HarvestObject.guid == gemini_guid) \
-            .filter(HarvestObject.current == True) \
-            .all()
+            .filter(HarvestObject.current == True).all() # noqa
 
         if len(last_harvested_object) == 1:
             last_harvested_object = last_harvested_object[0]
@@ -163,7 +162,8 @@ class GeminiHarvester(SpatialHarvester):
                         log.info('Package for object with GUID %s will be re-activated' % gemini_guid)
                         reactivate_package = True
                     else:
-                        log.info('Remote record with GUID %s is not more recent than a deleted package, skipping... ' % gemini_guid)
+                        log.info('Remote record with GUID %s is not more recent than a deleted package, skipping... '
+                                 % gemini_guid)
                         return None
 
             else:
@@ -222,10 +222,10 @@ class GeminiHarvester(SpatialHarvester):
                 extras['licence_url'] = licence_url_extracted
 
         extras['access_constraints'] = gemini_values.get('limitations-on-public-access', '')
-        if gemini_values.has_key('temporal-extent-begin'):
+        if 'temporal-extent-begin' in gemini_values:
             # gemini_values['temporal-extent-begin'].sort()
             extras['temporal_coverage-from'] = gemini_values['temporal-extent-begin']
-        if gemini_values.has_key('temporal-extent-end'):
+        if 'temporal-extent-end' in gemini_values:
             # gemini_values['temporal-extent-end'].sort()
             extras['temporal_coverage-to'] = gemini_values['temporal-extent-end']
 
@@ -274,7 +274,8 @@ class GeminiHarvester(SpatialHarvester):
             if not name:
                 name = self.gen_new_name(str(gemini_guid))
             if not name:
-                raise Exception('Could not generate a unique name from the title or the GUID. Please choose a more unique title.')
+                raise Exception('Could not generate a unique name from the title or the GUID. '
+                                'Please choose a more unique title.')
             package_dict['name'] = name
         else:
             package_dict['name'] = package.name
@@ -324,7 +325,7 @@ class GeminiHarvester(SpatialHarvester):
 
         package_dict['extras'] = extras_as_dict
 
-        if package == None:
+        if package is None:
             # Create new package from data.
             package = self._create_package_from_data(package_dict)
             log.info('Created new package ID %s with GEMINI guid %s', package['id'], gemini_guid)
@@ -503,7 +504,8 @@ class GeminiHarvester(SpatialHarvester):
             gemini_xml = xml.find(metadata_tag)
 
         if gemini_xml is None:
-            self._save_gather_error('Content is not a valid Gemini document without the gmd:MD_Metadata element', self.harvest_job)
+            self._save_gather_error('Content is not a valid Gemini document without the gmd:MD_Metadata element',
+                                    self.harvest_job)
 
         gemini_string = etree.tostring(gemini_xml)
         gemini_document = GeminiDocument(gemini_string)
@@ -667,7 +669,8 @@ class GeminiDocHarvester(GeminiHarvester, SingletonPlugin):
                 self._save_gather_error('Could not get the GUID for source %s' % url, harvest_job)
                 return None
         except Exception, e:
-            self._save_gather_error('Error parsing the document. Is this a valid Gemini document?: %s [%r]' % (url, e), harvest_job)
+            self._save_gather_error('Error parsing the document. Is this a valid Gemini document?: %s [%r]'
+                                    % (url, e), harvest_job)
             if debug_exception_mode:
                 raise
             return None

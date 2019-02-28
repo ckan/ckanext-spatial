@@ -26,7 +26,7 @@ class ApiController(BaseApiController):
         error_400_msg = \
             'Please provide a suitable bbox parameter [minx,miny,maxx,maxy]'
 
-        if not 'bbox' in request.params:
+        if 'bbox' not in request.params:
             abort(400, error_400_msg)
 
         bbox = validate_bbox(request.params['bbox'])
@@ -127,7 +127,7 @@ class HarvestMetadataApiController(BaseApiController):
         response.headers['Content-Type'] = 'application/xml; charset=utf-8'
         response.headers['Content-Length'] = len(content)
 
-        if not '<?xml' in content.split('\n')[0]:
+        if '<?xml' not in content.split('\n')[0]:
             content = u'<?xml version="1.0" encoding="UTF-8"?>\n' + content
         return content.encode('utf-8')
 

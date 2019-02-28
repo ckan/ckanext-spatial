@@ -67,7 +67,7 @@ class HarvestFixtureBase(SpatialTestBase):
                    'user': u'harvest'}
 
         if config.get('ckan.harvest.auth.profile') == u'publisher' \
-           and not 'publisher_id' in source_fixture:
+           and 'publisher_id' not in source_fixture:
             source_fixture['publisher_id'] = self.publisher.id
 
         source_dict = get_action('harvest_source_create')(context, source_fixture)
@@ -91,7 +91,7 @@ class HarvestFixtureBase(SpatialTestBase):
         else:
             assert len(job.gather_errors) == 0
 
-        assert harvester.fetch_stage(object_ids) == True
+        assert harvester.fetch_stage(object_ids) is True
 
         obj = HarvestObject.get(object_ids[0])
         assert obj, obj.content
@@ -143,7 +143,7 @@ class TestHarvest(HarvestFixtureBase):
         assert len(object_ids) == 2
 
         # Fetch stage always returns True for Waf harvesters
-        assert harvester.fetch_stage(object_ids) == True
+        assert harvester.fetch_stage(object_ids) is True
 
         objects = []
         for object_id in object_ids:
@@ -159,7 +159,7 @@ class TestHarvest(HarvestFixtureBase):
         pkg_ids = [pkg.id for pkg in pkgs]
 
         for obj in objects:
-            assert obj.current == True
+            assert obj.current is True
             assert obj.package_id in pkg_ids
 
     def test_harvest_fields_service(self):
@@ -183,7 +183,7 @@ class TestHarvest(HarvestFixtureBase):
         assert len(job.gather_errors) == 0
 
         # Fetch stage always returns True for Single Doc harvesters
-        assert harvester.fetch_stage(object_ids) == True
+        assert harvester.fetch_stage(object_ids) is True
 
         obj = HarvestObject.get(object_ids[0])
         assert obj, obj.content
@@ -229,12 +229,18 @@ class TestHarvest(HarvestFixtureBase):
             'bbox-north-lat': u'61.0243',
             'bbox-south-lat': u'54.4764484375',
             'bbox-west-long': u'-9.099786875',
-            'spatial': u'{"type": "Polygon", "coordinates": [[[0.5242365625, 54.4764484375], [-9.099786875, 54.4764484375], [-9.099786875, 61.0243], [0.5242365625, 61.0243], [0.5242365625, 54.4764484375]]]}',
+            'spatial': u'{"type": "Polygon", "coordinates": [[[0.5242365625, 54.4764484375], [-9.099786875, 54.4764484375],'
+                       u' [-9.099786875, 61.0243], [0.5242365625, 61.0243], [0.5242365625, 54.4764484375]]]}',
             # Other
-            'coupled-resource': u'[{"href": ["http://scotgovsdi.edina.ac.uk/srv/en/csw?service=CSW&request=GetRecordById&version=2.0.2&outputSchema=http://www.isotc211.org/2005/gmd&elementSetName=full&id=250ea276-48e2-4189-8a89-fcc4ca92d652"], "uuid": ["250ea276-48e2-4189-8a89-fcc4ca92d652"], "title": []}]',
+            'coupled-resource': u'[{"href": ["http://scotgovsdi.edina.ac.uk/srv/en/csw?service=CSW&'
+                                u'request=GetRecordById&version=2.0.2&outputSchema=http://www.isotc211.org/2005/'
+                                u'gmd&elementSetName=full&id=250ea276-48e2-4189-8a89-fcc4ca92d652"], '
+                                u'"uuid": ["250ea276-48e2-4189-8a89-fcc4ca92d652"], "title": []}]',
             'dataset-reference-date': u'[{"type": "publication", "value": "2011-09-08"}]',
             'frequency-of-update': u'daily',
-            'licence': u'["Use of the One Scotland Gazetteer data used by this this service is available to any organisation that is a member of the One Scotland Mapping Agreement. It is not currently commercially available", "http://www.test.gov.uk/licenseurl"]',
+            'licence': u'["Use of the One Scotland Gazetteer data used by this this service is available to any '
+                       u'organisation that is a member of the One Scotland Mapping Agreement. '
+                       u'It is not currently commercially available", "http://www.test.gov.uk/licenseurl"]',
             'licence_url': u'http://www.test.gov.uk/licenseurl',
             'metadata-date': u'2011-09-08T16:07:32',
             'metadata-language': u'eng',
@@ -292,7 +298,7 @@ class TestHarvest(HarvestFixtureBase):
         assert len(job.gather_errors) == 0
 
         # Fetch stage always returns True for Single Doc harvesters
-        assert harvester.fetch_stage(object_ids) == True
+        assert harvester.fetch_stage(object_ids) is True
 
         obj = HarvestObject.get(object_ids[0])
         assert obj, obj.content
@@ -311,7 +317,8 @@ class TestHarvest(HarvestFixtureBase):
             'name': u'country-parks-scotland',
             'title': u'Country Parks (Scotland)',
             'tags': [{u'name': u'Nature conservation'}],
-            'notes': u'Parks are set up by Local Authorities to provide open-air recreation facilities close to towns and cities. [edited]'
+            'notes': u'Parks are set up by Local Authorities to provide open-air recreation facilities '
+                     u'close to towns and cities. [edited]'
         }
 
         package_dict['tags'] = self.clean_tags(package_dict['tags'])
@@ -341,7 +348,8 @@ class TestHarvest(HarvestFixtureBase):
             u'[-8.97114288, 61.06066944], [0.205857204, 61.06066944], [0.205857204, 54.529947158]]]}',
             # Other
             'coupled-resource': u'[]',
-            'dataset-reference-date': u'[{"type": "creation", "value": "2004-02"}, {"type": "revision", "value": "2006-07-03"}]',
+            'dataset-reference-date': u'[{"type": "creation", "value": "2004-02"}, '
+                                      u'{"type": "revision", "value": "2006-07-03"}]',
             'frequency-of-update': u'irregular',
             'licence': u'["Reference and PSMA Only", "http://www.test.gov.uk/licenseurl"]',
             'licence_url': u'http://www.test.gov.uk/licenseurl',
@@ -446,7 +454,7 @@ class TestHarvest(HarvestFixtureBase):
         assert len(job.gather_errors) == 0
 
         # Fetch stage always returns True for Single Doc harvesters
-        assert harvester.fetch_stage(object_ids) == True
+        assert harvester.fetch_stage(object_ids) is True
 
         obj = HarvestObject.get(object_ids[0])
         assert obj, obj.content
@@ -484,7 +492,7 @@ class TestHarvest(HarvestFixtureBase):
 
         # Package was created
         assert first_package_dict
-        assert first_obj.current == True
+        assert first_obj.current is True
         assert first_obj.package
 
         # Create and run a second job, the package should not be updated
@@ -504,7 +512,7 @@ class TestHarvest(HarvestFixtureBase):
         # Package was not updated
         assert second_package_dict, first_package_dict['id'] == second_package_dict['id']
         assert not second_obj.package, not second_obj.package_id
-        assert second_obj.current == False, first_obj.current == True
+        assert second_obj.current is False, first_obj.current is True
 
         # Create and run a third job, forcing the importing to simulate an update in the package
         third_job = self._create_job(source.id)
@@ -526,9 +534,9 @@ class TestHarvest(HarvestFixtureBase):
         # Package was updated
         assert third_package_dict, first_package_dict['id'] == third_package_dict['id']
         assert third_obj.package, third_obj.package_id == first_package_dict['id']
-        assert third_obj.current == True
-        assert second_obj.current == False
-        assert first_obj.current == False
+        assert third_obj.current is True
+        assert second_obj.current is False
+        assert first_obj.current is False
 
     def test_harvest_deleted_record(self):
 
@@ -549,7 +557,7 @@ class TestHarvest(HarvestFixtureBase):
         # Package was created
         assert first_package_dict
         assert first_package_dict['state'] == u'active'
-        assert first_obj.current == True
+        assert first_obj.current is True
 
         # Delete package
         first_package_dict['state'] = u'deleted'
@@ -569,7 +577,7 @@ class TestHarvest(HarvestFixtureBase):
         # Package was not updated
         assert second_package_dict, updated_package_dict['id'] == second_package_dict['id']
         assert not second_obj.package, not second_obj.package_id
-        assert second_obj.current == False, first_obj.current == True
+        assert second_obj.current is False, first_obj.current is True
 
         # Harvest an updated document, with a more recent modified date, package should be
         # updated and reactivated
@@ -594,8 +602,8 @@ class TestHarvest(HarvestFixtureBase):
         # Package was updated
         assert third_package_dict, third_package_dict['id'] == second_package_dict['id']
         assert third_obj.package, third_obj.package
-        assert third_obj.current == True, second_obj.current == False
-        assert first_obj.current == False
+        assert third_obj.current is True, second_obj.current is False
+        assert first_obj.current is False
 
         assert 'NEWER' in third_package_dict['title']
         assert third_package_dict['state'] == u'active'
@@ -619,7 +627,7 @@ class TestHarvest(HarvestFixtureBase):
         # Package was created
         assert first_package_dict
         assert first_package_dict['state'] == u'active'
-        assert first_obj.current == True
+        assert first_obj.current is True
 
         # Harvest the same document, unchanged, from another source, the package
         # is not updated.
@@ -641,7 +649,7 @@ class TestHarvest(HarvestFixtureBase):
         # Package was not updated
         assert second_package_dict, first_package_dict['id'] == second_package_dict['id']
         assert not second_obj.package, not second_obj.package_id
-        assert second_obj.current == False, first_obj.current == True
+        assert second_obj.current is False, first_obj.current is True
 
         # Inactivate source1 and reharvest from source2, package should be updated
         third_job = self._create_job(source2.id)
@@ -661,9 +669,9 @@ class TestHarvest(HarvestFixtureBase):
         # Package was updated
         assert third_package_dict, first_package_dict['id'] == third_package_dict['id']
         assert third_obj.package, third_obj.package_id == first_package_dict['id']
-        assert third_obj.current == True
-        assert second_obj.current == False
-        assert first_obj.current == False
+        assert third_obj.current is True
+        assert second_obj.current is False
+        assert first_obj.current is False
 
     def test_harvest_different_sources_same_document_but_deleted_inbetween(self):
 
@@ -684,7 +692,7 @@ class TestHarvest(HarvestFixtureBase):
         # Package was created
         assert first_package_dict
         assert first_package_dict['state'] == u'active'
-        assert first_obj.current == True
+        assert first_obj.current is True
 
         # Delete/withdraw the package
         first_package_dict = get_action('package_delete')(self.context, {'id': first_obj.package_id})
@@ -707,8 +715,8 @@ class TestHarvest(HarvestFixtureBase):
         # It would be good if the package was updated, but we see that it isn't
         assert second_package_dict, first_package_dict['id'] == second_package_dict['id']
         assert not second_obj.package
-        assert second_obj.current == False
-        assert first_obj.current == True
+        assert second_obj.current is False
+        assert first_obj.current is True
 
     def test_harvest_moves_sources(self):
 
@@ -729,7 +737,7 @@ class TestHarvest(HarvestFixtureBase):
         # Package was created
         assert first_package_dict
         assert first_package_dict['state'] == u'active'
-        assert first_obj.current == True
+        assert first_obj.current is True
 
         # Harvest the same document GUID but with a newer date, from another source.
         source2_fixture = {
@@ -748,8 +756,8 @@ class TestHarvest(HarvestFixtureBase):
         # Now we have two packages
         assert second_package_dict, first_package_dict['id'] == second_package_dict['id']
         assert second_obj.package
-        assert second_obj.current == True
-        assert first_obj.current == True
+        assert second_obj.current is True
+        assert first_obj.current is True
         # so currently, if you move a Gemini between harvest sources you need
         # to update the date to get it to reharvest, and then you should
         # withdraw the package relating to the original harvest source.
@@ -772,7 +780,7 @@ class TestHarvest(HarvestFixtureBase):
 
         # Package was created
         assert before_package_dict
-        assert first_obj.current == True
+        assert first_obj.current is True
         assert first_obj.package
 
         # Create and run two more jobs, the package should not be updated
@@ -796,9 +804,9 @@ class TestHarvest(HarvestFixtureBase):
 
         # Package was updated, and the current object remains the same
         assert after_package_dict, before_package_dict['id'] == after_package_dict['id']
-        assert third_obj.current == False
-        assert second_obj.current == False
-        assert first_obj.current == True
+        assert third_obj.current is False
+        assert second_obj.current is False
+        assert first_obj.current is True
 
         source_dict = get_action('harvest_source_show')(self.context, {'id': source.id})
         assert source_dict['status']['total_datasets'] == 1
@@ -906,11 +914,13 @@ BASIC_GEMINI = '''<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" 
     <gco:CharacterString>e269743a-cfda-4632-a939-0c8416ae801e</gco:CharacterString>
   </gmd:fileIdentifier>
   <gmd:hierarchyLevel>
-    <gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="service">service</gmd:MD_ScopeCode>
+    <gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/
+    ISO_19139_Schemas/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="service">service</gmd:MD_ScopeCode>
   </gmd:hierarchyLevel>
 </gmd:MD_Metadata>'''
 GUID = 'e269743a-cfda-4632-a939-0c8416ae801e'
-GEMINI_MISSING_GUID = '''<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"/>'''
+GEMINI_MISSING_GUID = '''<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd
+" xmlns:gco="http://www.isotc211.org/2005/gco"/>'''
 
 
 class TestGatherMethods(HarvestFixtureBase):
@@ -1123,7 +1133,8 @@ class TestValidation(HarvestFixtureBase):
         errors = self.get_validation_errors('11_Service_Invalid_GEMINI_Service_Type.xml')
         assert len(errors) > 0
         assert_in("Service type shall be one of"
-                  " 'discovery', 'view', 'download', 'transformation', 'invoke' or 'other' following INSPIRE generic names.", errors)
+                  " 'discovery', 'view', 'download', 'transformation', 'invoke' or 'other' "
+                  "following INSPIRE generic names.", errors)
 
     def test_12_service_valid(self):
         errors = self.get_validation_errors('12_Service_Valid.xml')
@@ -1133,4 +1144,5 @@ class TestValidation(HarvestFixtureBase):
         # This test Dataset has srv tags and only Service metadata should.
         errors = self.get_validation_errors('13_Dataset_Invalid_Element_srv.xml')
         assert len(errors) > 0
-        assert_in('Element \'{http://www.isotc211.org/2005/srv}SV_ServiceIdentification\': This element is not expected.', errors)
+        assert_in('Element \'{http://www.isotc211.org/2005/srv}SV_ServiceIdentification\': '
+                  'This element is not expected.', errors)

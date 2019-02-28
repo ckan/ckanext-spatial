@@ -24,12 +24,12 @@ def check_geoalchemy_requirement():
 
     if p.toolkit.check_ckan_version(min_version='2.3'):
         try:
-            import geoalchemy2
+            import geoalchemy2 # noqa
         except ImportError:
             raise ImportError(msg.format('geoalchemy2'))
     else:
         try:
-            import geoalchemy
+            import geoalchemy # noqa
         except ImportError:
             raise ImportError(msg.format('geoalchemy'))
 
@@ -182,7 +182,7 @@ class SpatialQuery(p.SingletonPlugin):
         if pkg_dict.get('extras_spatial', None) and self.search_backend in ('solr', 'solr-spatial-field'):
             try:
                 geometry = json.loads(pkg_dict['extras_spatial'])
-            except ValueError, e:
+            except ValueError:
                 log.error('Geometry not valid GeoJSON, not indexing')
                 return pkg_dict
 

@@ -57,7 +57,8 @@ def get_responsible_party(value):
         out = []
         parties = h.json.loads(value)
         for party in parties:
-            roles = [formatted[role] if role in formatted.keys() else p.toolkit._(role.capitalize()) for role in party['roles']]
+            roles = [formatted[role] if role in formatted.keys()
+                     else p.toolkit._(role.capitalize()) for role in party['roles']]
             out.append('{0} ({1})'.format(party['name'], ', '.join(roles)))
         return '; '.join(out)
     except (ValueError, TypeError):

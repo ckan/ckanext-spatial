@@ -75,9 +75,10 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
             self._save_gather_error('Error contacting the CSW server: %s' % e, harvest_job)
             return None
 
-        query = model.Session.query(HarvestObject.guid, HarvestObject.package_id).\
-            filter(HarvestObject.current == True).\
-            filter(HarvestObject.harvest_source_id == harvest_job.source.id)
+        query = model.Session.query(HarvestObject.guid, HarvestObject.package_id). \
+            filter(HarvestObject.harvest_source_id == harvest_job.source.id).\
+            filter(HarvestObject.current == True) # noqa
+
         guid_to_package_id = {}
 
         for guid, package_id in query:
