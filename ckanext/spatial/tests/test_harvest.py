@@ -469,7 +469,7 @@ class TestHarvest(HarvestFixtureBase):
         message = obj.errors[0].message
 
         assert_in('One email address shall be provided', message)
-        assert_in("Service type shall be one of 'discovery', 'view', 'download', 'transformation', 'invoke' or 'other'"
+        assert_in("Service type shall be one of 'discovery', 'view', 'download', 'transformation', 'invoke' or 'other' "
                   "following INSPIRE generic names", message)
         assert_in('Limitations on public access code list value shall be \'otherRestrictions\'', message)
         assert_in('One organisation name shall be provided', message)
