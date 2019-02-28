@@ -914,13 +914,11 @@ BASIC_GEMINI = '''<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" 
     <gco:CharacterString>e269743a-cfda-4632-a939-0c8416ae801e</gco:CharacterString>
   </gmd:fileIdentifier>
   <gmd:hierarchyLevel>
-    <gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/
-    ISO_19139_Schemas/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="service">service</gmd:MD_ScopeCode>
+    <gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="service">service</gmd:MD_ScopeCode>
   </gmd:hierarchyLevel>
-</gmd:MD_Metadata>'''
+</gmd:MD_Metadata>''' # noqa
 GUID = 'e269743a-cfda-4632-a939-0c8416ae801e'
-GEMINI_MISSING_GUID = '''<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd
-" xmlns:gco="http://www.isotc211.org/2005/gco"/>'''
+GEMINI_MISSING_GUID = '''<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"/>''' # noqa
 
 
 class TestGatherMethods(HarvestFixtureBase):
