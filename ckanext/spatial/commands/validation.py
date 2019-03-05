@@ -1,5 +1,4 @@
 import sys
-import re
 import os
 from pprint import pprint
 import logging
@@ -9,6 +8,7 @@ from lxml import etree
 from ckan.lib.cli import CkanCommand
 
 log = logging.getLogger(__name__)
+
 
 class Validation(CkanCommand):
     '''Validation commands
@@ -21,7 +21,7 @@ class Validation(CkanCommand):
         validation report-csv <filename>.csv
             Performs validation on all the harvested metadata in the db and
             writes a report in CSV format to the given filepath.
-      
+
         validation file <filename>.xml
             Performs validation on the given metadata file.
     '''
@@ -49,7 +49,6 @@ class Validation(CkanCommand):
 
     def report(self):
         from ckan import model
-        from ckanext.harvest.model import HarvestObject
         from ckanext.spatial.lib.reports import validation_report
 
         if len(self.args) >= 2:
@@ -92,7 +91,7 @@ class Validation(CkanCommand):
             print 'ERROR: Unicode Error reading file \'%s\': %s' % \
                   (metadata_filepath, e)
             sys.exit(1)
-            #import pdb; pdb.set_trace()
+            # import pdb; pdb.set_trace()
         xml = etree.fromstring(xml_string)
 
         # XML validation
@@ -102,11 +101,11 @@ class Validation(CkanCommand):
         if valid:
             try:
                 iso_document = ISODocument(xml_string)
-                iso_values = iso_document.read_values()
+                iso_document.read_values()
             except Exception, e:
                 valid = False
                 errors.append('CKAN exception reading values from ISODocument: %s' % e)
-        
+
         print '***************'
         print 'Summary'
         print '***************'

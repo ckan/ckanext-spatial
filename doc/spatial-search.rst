@@ -131,9 +131,10 @@ details about the available options:
             <!-- ... -->
             <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType"
                 spatialContextFactory="com.spatial4j.core.context.jts.JtsSpatialContextFactory"
+                autoIndex="true"
                 distErrPct="0.025"
                 maxDistErr="0.000009"
-                units="degrees" />
+                distanceUnits="degrees" />
         </types>
         <fields>
             <!-- ... -->

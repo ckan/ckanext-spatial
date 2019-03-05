@@ -1,13 +1,22 @@
+import os
 from datetime import datetime, date
 import lxml
+import json
+from uuid import uuid4
 from nose.plugins.skip import SkipTest
 from nose.tools import assert_equal, assert_in, assert_raises
 
 from ckan.lib.base import config
 from ckan import model
-from ckan.model import Session, Package
+from ckan.model import Session, Package, Group, User
 from ckan.logic.schema import default_update_package_schema
 from ckan.logic import get_action
+
+try:
+    from ckan.new_tests.helpers import call_action
+except ImportError:
+    from ckan.tests.helpers import call_action
+
 from ckanext.harvest.model import (HarvestSource, HarvestJob, HarvestObject)
 from ckanext.spatial.validation import Validators
 from ckanext.spatial.harvesters.gemini import (GeminiDocHarvester,
@@ -31,37 +40,37 @@ class HarvestFixtureBase(SpatialTestBase):
         Session.commit()
 
         package_schema = default_update_package_schema()
-        self.context ={'model':model,
-                       'session':Session,
-                       'user':u'harvest',
-                       'schema':package_schema,
-                       'api_version': '2'}
+        self.context = {'model': model,
+                        'session': Session,
+                        'user': u'harvest',
+                        'schema': package_schema,
+                        'api_version': '2'}
 
     def teardown(self):
-       model.repo.rebuild_db()
+        model.repo.rebuild_db()
 
-    def _create_job(self,source_id):
+    def _create_job(self, source_id):
         # Create a job
-        context ={'model':model,
-                 'session':Session,
-                 'user':u'harvest'}
+        context = {'model': model,
+                   'session': Session,
+                   'user': u'harvest'}
 
-        job_dict=get_action('harvest_job_create')(context,{'source_id':source_id})
+        job_dict = get_action('harvest_job_create')(context, {'source_id': source_id})
         job = HarvestJob.get(job_dict['id'])
         assert job
 
         return job
 
     def _create_source_and_job(self, source_fixture):
-        context ={'model':model,
-                 'session':Session,
-                 'user':u'harvest'}
+        context = {'model': model,
+                   'session': Session,
+                   'user': u'harvest'}
 
         if config.get('ckan.harvest.auth.profile') == u'publisher' \
-           and not 'publisher_id' in source_fixture:
-           source_fixture['publisher_id'] = self.publisher.id
+           and 'publisher_id' not in source_fixture:
+            source_fixture['publisher_id'] = self.publisher.id
 
-        source_dict=get_action('harvest_source_create')(context,source_fixture)
+        source_dict = get_action('harvest_source_create')(context, source_fixture)
         source = HarvestSource.get(source_dict['id'])
         assert source
 
@@ -69,12 +78,11 @@ class HarvestFixtureBase(SpatialTestBase):
 
         return source, job
 
-    def _run_job_for_single_document(self,job,force_import=False,expect_gather_errors=False,expect_obj_errors=False):
+    def _run_job_for_single_document(self, job, force_import=False, expect_gather_errors=False, expect_obj_errors=False):
 
         harvester = GeminiDocHarvester()
 
         harvester.force_import = force_import
-
 
         object_ids = harvester.gather_stage(job)
         assert object_ids, len(object_ids) == 1
@@ -83,7 +91,7 @@ class HarvestFixtureBase(SpatialTestBase):
         else:
             assert len(job.gather_errors) == 0
 
-        assert harvester.fetch_stage(object_ids) == True
+        assert harvester.fetch_stage(object_ids) is True
 
         obj = HarvestObject.get(object_ids[0])
         assert obj, obj.content
@@ -100,12 +108,20 @@ class HarvestFixtureBase(SpatialTestBase):
 
         return obj
 
+
 class TestHarvest(HarvestFixtureBase):
 
     @classmethod
     def setup_class(cls):
         SpatialHarvester._validator = Validators(profiles=['gemini2'])
         HarvestFixtureBase.setup_class()
+
+    def clean_tags(self, tags):
+        return map(lambda x: {u'name': x['name']}, tags)
+
+    def find_extra(self, pkg, key):
+        values = [e['value'] for e in pkg['extras'] if e['key'] == key]
+        return values[0] if len(values) == 1 else None
 
     def test_harvest_basic(self):
 
@@ -127,7 +143,7 @@ class TestHarvest(HarvestFixtureBase):
         assert len(object_ids) == 2
 
         # Fetch stage always returns True for Waf harvesters
-        assert harvester.fetch_stage(object_ids) == True
+        assert harvester.fetch_stage(object_ids) is True
 
         objects = []
         for object_id in object_ids:
@@ -136,14 +152,14 @@ class TestHarvest(HarvestFixtureBase):
             objects.append(obj)
             harvester.import_stage(obj)
 
-        pkgs = Session.query(Package).filter(Package.type!=u'harvest').all()
+        pkgs = Session.query(Package).filter(Package.type != u'harvest').all()
 
         assert_equal(len(pkgs), 2)
 
         pkg_ids = [pkg.id for pkg in pkgs]
 
         for obj in objects:
-            assert obj.current == True
+            assert obj.current is True
             assert obj.package_id in pkg_ids
 
     def test_harvest_fields_service(self):
@@ -167,7 +183,7 @@ class TestHarvest(HarvestFixtureBase):
         assert len(job.gather_errors) == 0
 
         # Fetch stage always returns True for Single Doc harvesters
-        assert harvester.fetch_stage(object_ids) == True
+        assert harvester.fetch_stage(object_ids) is True
 
         obj = HarvestObject.get(object_ids[0])
         assert obj, obj.content
@@ -178,46 +194,53 @@ class TestHarvest(HarvestFixtureBase):
         # No object errors
         assert len(obj.errors) == 0
 
-        package_dict = get_action('package_show_rest')(self.context,{'id':obj.package_id})
+        package_dict = get_action('package_show')(self.context, {'id': obj.package_id})
 
         assert package_dict
 
         expected = {
             'name': u'one-scotland-address-gazetteer-web-map-service-wms',
             'title': u'One Scotland Address Gazetteer Web Map Service (WMS)',
-            'tags': [u'Addresses', u'Scottish National Gazetteer'],
+            'tags': [{u'name': u'Addresses'}, {u'name': u'Scottish National Gazetteer'}],
             'notes': u'This service displays its contents at larger scale than 1:10000. [edited]',
         }
 
-        for key,value in expected.iteritems():
+        package_dict['tags'] = self.clean_tags(package_dict['tags'])
+
+        for key, value in expected.iteritems():
             if not package_dict[key] == value:
-                raise AssertionError('Unexpected value for %s: %s (was expecting %s)' % \
-                    (key, package_dict[key], value))
+                raise AssertionError('Unexpected value for %s: %s (was expecting %s)' %
+                                     (key, package_dict[key], value))
 
         if config.get('ckan.harvest.auth.profile') == u'publisher':
             assert package_dict['groups'] == [self.publisher.id]
 
         expected_extras = {
             # Basic
-            'harvest_object_id': obj.id,
             'guid': obj.guid,
             'UKLP': u'True',
             'resource-type': u'service',
             'access_constraints': u'["No restriction on public access"]',
             'responsible-party': u'The Improvement Service (owner)',
-            'provider':u'The Improvement Service',
+            'provider': u'The Improvement Service',
             'contact-email': u'OSGCM@improvementservice.org.uk',
             # Spatial
             'bbox-east-long': u'0.5242365625',
             'bbox-north-lat': u'61.0243',
             'bbox-south-lat': u'54.4764484375',
             'bbox-west-long': u'-9.099786875',
-            'spatial': u'{"type": "Polygon", "coordinates": [[[0.5242365625, 54.4764484375], [-9.099786875, 54.4764484375], [-9.099786875, 61.0243], [0.5242365625, 61.0243], [0.5242365625, 54.4764484375]]]}',
+            'spatial': u'{"type": "Polygon", "coordinates": [[[0.5242365625, 54.4764484375], [-9.099786875, 54.4764484375],'
+                       u' [-9.099786875, 61.0243], [0.5242365625, 61.0243], [0.5242365625, 54.4764484375]]]}',
             # Other
-            'coupled-resource': u'[{"href": ["http://scotgovsdi.edina.ac.uk/srv/en/csw?service=CSW&request=GetRecordById&version=2.0.2&outputSchema=http://www.isotc211.org/2005/gmd&elementSetName=full&id=250ea276-48e2-4189-8a89-fcc4ca92d652"], "uuid": ["250ea276-48e2-4189-8a89-fcc4ca92d652"], "title": []}]',
+            'coupled-resource': u'[{"href": ["http://scotgovsdi.edina.ac.uk/srv/en/csw?service=CSW&'
+                                u'request=GetRecordById&version=2.0.2&outputSchema=http://www.isotc211.org/2005/'
+                                u'gmd&elementSetName=full&id=250ea276-48e2-4189-8a89-fcc4ca92d652"], '
+                                u'"uuid": ["250ea276-48e2-4189-8a89-fcc4ca92d652"], "title": []}]',
             'dataset-reference-date': u'[{"type": "publication", "value": "2011-09-08"}]',
             'frequency-of-update': u'daily',
-            'licence': u'["Use of the One Scotland Gazetteer data used by this this service is available to any organisation that is a member of the One Scotland Mapping Agreement. It is not currently commercially available", "http://www.test.gov.uk/licenseurl"]',
+            'licence': u'["Use of the One Scotland Gazetteer data used by this this service is available to any '
+                       u'organisation that is a member of the One Scotland Mapping Agreement. '
+                       u'It is not currently commercially available", "http://www.test.gov.uk/licenseurl"]',
             'licence_url': u'http://www.test.gov.uk/licenseurl',
             'metadata-date': u'2011-09-08T16:07:32',
             'metadata-language': u'eng',
@@ -227,13 +250,14 @@ class TestHarvest(HarvestFixtureBase):
             'temporal_coverage-to': u'["2004-06-16"]',
         }
 
-        for key,value in expected_extras.iteritems():
-            if not key in package_dict['extras']:
+        for key, value in expected_extras.iteritems():
+            extra_value = self.find_extra(package_dict, key)
+            if extra_value is None:
                 raise AssertionError('Extra %s not present in package' % key)
 
-            if not package_dict['extras'][key] == value:
-                raise AssertionError('Unexpected value for extra %s: %s (was expecting %s)' % \
-                    (key, package_dict['extras'][key], value))
+            if not extra_value == value:
+                raise AssertionError('Unexpected value for extra %s: %s (was expecting %s)' %
+                                     (key, package_dict['extras'][key], value))
 
         expected_resource = {
             'ckan_recommended_wms_preview': 'True',
@@ -241,18 +265,16 @@ class TestHarvest(HarvestFixtureBase):
             'name': 'Web Map Service (WMS)',
             'resource_locator_function': 'download',
             'resource_locator_protocol': 'OGC:WMS-1.3.0-http-get-capabilities',
-            'resource_type': None,
-            'size': None,
             'url': u'http://127.0.0.1:8999/wms/capabilities.xml',
             'verified': 'True',
         }
 
         resource = package_dict['resources'][0]
-        for key,value in expected_resource.iteritems():
+        for key, value in expected_resource.iteritems():
             if not resource[key] == value:
-                raise AssertionError('Unexpected value in resource for %s: %s (was expecting %s)' % \
-                    (key, resource[key], value))
-        assert datetime.strptime(resource['verified_date'],'%Y-%m-%dT%H:%M:%S.%f').date() == date.today()
+                raise AssertionError('Unexpected value in resource for %s: %s (was expecting %s)' %
+                                     (key, resource[key], value))
+        assert datetime.strptime(resource['verified_date'], '%Y-%m-%dT%H:%M:%S.%f').date() == date.today()
         assert resource['format'].lower() == 'wms'
 
     def test_harvest_fields_dataset(self):
@@ -276,7 +298,7 @@ class TestHarvest(HarvestFixtureBase):
         assert len(job.gather_errors) == 0
 
         # Fetch stage always returns True for Single Doc harvesters
-        assert harvester.fetch_stage(object_ids) == True
+        assert harvester.fetch_stage(object_ids) is True
 
         obj = HarvestObject.get(object_ids[0])
         assert obj, obj.content
@@ -287,43 +309,47 @@ class TestHarvest(HarvestFixtureBase):
         # No object errors
         assert len(obj.errors) == 0
 
-        package_dict = get_action('package_show_rest')(self.context,{'id':obj.package_id})
+        package_dict = get_action('package_show')(self.context, {'id': obj.package_id})
 
         assert package_dict
 
         expected = {
             'name': u'country-parks-scotland',
             'title': u'Country Parks (Scotland)',
-            'tags': [u'Nature conservation'],
-            'notes': u'Parks are set up by Local Authorities to provide open-air recreation facilities close to towns and cities. [edited]'
+            'tags': [{u'name': u'Nature conservation'}],
+            'notes': u'Parks are set up by Local Authorities to provide open-air recreation facilities '
+                     u'close to towns and cities. [edited]'
         }
 
-        for key,value in expected.iteritems():
+        package_dict['tags'] = self.clean_tags(package_dict['tags'])
+
+        for key, value in expected.iteritems():
             if not package_dict[key] == value:
-                raise AssertionError('Unexpected value for %s: %s (was expecting %s)' % \
-                    (key, package_dict[key], value))
+                raise AssertionError('Unexpected value for %s: %s (was expecting %s)' %
+                                     (key, package_dict[key], value))
 
         if config.get('ckan.harvest.auth.profile') == u'publisher':
             assert package_dict['groups'] == [self.publisher.id]
 
         expected_extras = {
             # Basic
-            'harvest_object_id': obj.id,
             'guid': obj.guid,
             'resource-type': u'dataset',
             'responsible-party': u'Scottish Natural Heritage (custodian, distributor)',
             'access_constraints': u'["Copyright Scottish Natural Heritage"]',
             'contact-email': u'data_supply@snh.gov.uk',
-            'provider':'',
+            'provider': '',
             # Spatial
             'bbox-east-long': u'0.205857204',
             'bbox-north-lat': u'61.06066944',
             'bbox-south-lat': u'54.529947158',
             'bbox-west-long': u'-8.97114288',
-            'spatial': u'{"type": "Polygon", "coordinates": [[[0.205857204, 54.529947158], [-8.97114288, 54.529947158], [-8.97114288, 61.06066944], [0.205857204, 61.06066944], [0.205857204, 54.529947158]]]}',
+            'spatial': u'{"type": "Polygon", "coordinates": [[[0.205857204, 54.529947158], [-8.97114288, 54.529947158], ' \
+            u'[-8.97114288, 61.06066944], [0.205857204, 61.06066944], [0.205857204, 54.529947158]]]}',
             # Other
             'coupled-resource': u'[]',
-            'dataset-reference-date': u'[{"type": "creation", "value": "2004-02"}, {"type": "revision", "value": "2006-07-03"}]',
+            'dataset-reference-date': u'[{"type": "creation", "value": "2004-02"}, '
+                                      u'{"type": "revision", "value": "2006-07-03"}]',
             'frequency-of-update': u'irregular',
             'licence': u'["Reference and PSMA Only", "http://www.test.gov.uk/licenseurl"]',
             'licence_url': u'http://www.test.gov.uk/licenseurl',
@@ -334,13 +360,14 @@ class TestHarvest(HarvestFixtureBase):
             'temporal_coverage-to': u'["2010"]',
         }
 
-        for key,value in expected_extras.iteritems():
-            if not key in package_dict['extras']:
+        for key, value in expected_extras.iteritems():
+            extra_value = self.find_extra(package_dict, key)
+            if extra_value is None:
                 raise AssertionError('Extra %s not present in package' % key)
 
-            if not package_dict['extras'][key] == value:
-                raise AssertionError('Unexpected value for extra %s: %s (was expecting %s)' % \
-                    (key, package_dict['extras'][key], value))
+            if not extra_value == value:
+                raise AssertionError('Unexpected value for extra %s: %s (was expecting %s)' %
+                                     (key, package_dict['extras'][key], value))
 
         expected_resource = {
             'description': 'Test Resource Description',
@@ -348,16 +375,14 @@ class TestHarvest(HarvestFixtureBase):
             'name': 'Test Resource Name',
             'resource_locator_function': 'download',
             'resource_locator_protocol': 'test-protocol',
-            'resource_type': None,
-            'size': None,
             'url': u'https://gateway.snh.gov.uk/pls/apex_ddtdb2/f?p=101',
         }
 
         resource = package_dict['resources'][0]
-        for key,value in expected_resource.iteritems():
+        for key, value in expected_resource.iteritems():
             if not resource[key] == value:
-                raise AssertionError('Unexpected value in resource for %s: %s (was expecting %s)' % \
-                    (key, resource[key], value))
+                raise AssertionError('Unexpected value in resource for %s: %s (was expecting %s)' %
+                                     (key, resource[key], value))
 
     def test_harvest_error_bad_xml(self):
         # Create source
@@ -429,7 +454,7 @@ class TestHarvest(HarvestFixtureBase):
         assert len(job.gather_errors) == 0
 
         # Fetch stage always returns True for Single Doc harvesters
-        assert harvester.fetch_stage(object_ids) == True
+        assert harvester.fetch_stage(object_ids) is True
 
         obj = HarvestObject.get(object_ids[0])
         assert obj, obj.content
@@ -444,10 +469,10 @@ class TestHarvest(HarvestFixtureBase):
         message = obj.errors[0].message
 
         assert_in('One email address shall be provided', message)
-        assert_in('Service type shall be one of \'discovery\', \'view\', \'download\', \'transformation\', \'invoke\' or \'other\' following INSPIRE generic names', message)
+        assert_in("Service type shall be one of 'discovery', 'view', 'download', 'transformation', 'invoke' or 'other' "
+                  "following INSPIRE generic names", message)
         assert_in('Limitations on public access code list value shall be \'otherRestrictions\'', message)
         assert_in('One organisation name shall be provided', message)
-
 
     def test_harvest_update_records(self):
 
@@ -463,11 +488,11 @@ class TestHarvest(HarvestFixtureBase):
 
         first_obj = self._run_job_for_single_document(first_job)
 
-        first_package_dict = get_action('package_show_rest')(self.context,{'id':first_obj.package_id})
+        first_package_dict = get_action('package_show')(self.context, {'id': first_obj.package_id})
 
         # Package was created
         assert first_package_dict
-        assert first_obj.current == True
+        assert first_obj.current is True
         assert first_obj.package
 
         # Create and run a second job, the package should not be updated
@@ -482,17 +507,16 @@ class TestHarvest(HarvestFixtureBase):
         Session.refresh(first_obj)
         Session.refresh(second_obj)
 
-        second_package_dict = get_action('package_show_rest')(self.context,{'id':first_obj.package_id})
+        second_package_dict = get_action('package_show')(self.context, {'id': first_obj.package_id})
 
         # Package was not updated
         assert second_package_dict, first_package_dict['id'] == second_package_dict['id']
-        assert first_package_dict['metadata_modified'] == second_package_dict['metadata_modified']
         assert not second_obj.package, not second_obj.package_id
-        assert second_obj.current == False, first_obj.current == True
+        assert second_obj.current is False, first_obj.current is True
 
         # Create and run a third job, forcing the importing to simulate an update in the package
         third_job = self._create_job(source.id)
-        third_obj = self._run_job_for_single_document(third_job,force_import=True)
+        third_obj = self._run_job_for_single_document(third_job, force_import=True)
 
         # For some reason first_obj does not get updated after the import_stage,
         # and we have to force a refresh to get the actual DB values.
@@ -505,15 +529,14 @@ class TestHarvest(HarvestFixtureBase):
         Session.refresh(second_obj)
         Session.refresh(third_obj)
 
-        third_package_dict = get_action('package_show_rest')(self.context,{'id':third_obj.package_id})
+        third_package_dict = get_action('package_show')(self.context, {'id': third_obj.package_id})
 
         # Package was updated
         assert third_package_dict, first_package_dict['id'] == third_package_dict['id']
-        assert third_package_dict['metadata_modified'] > second_package_dict['metadata_modified']
         assert third_obj.package, third_obj.package_id == first_package_dict['id']
-        assert third_obj.current == True
-        assert second_obj.current == False
-        assert first_obj.current == False
+        assert third_obj.current is True
+        assert second_obj.current is False
+        assert first_obj.current is False
 
     def test_harvest_deleted_record(self):
 
@@ -529,17 +552,17 @@ class TestHarvest(HarvestFixtureBase):
 
         first_obj = self._run_job_for_single_document(first_job)
 
-        first_package_dict = get_action('package_show_rest')(self.context,{'id':first_obj.package_id})
+        first_package_dict = get_action('package_show')(self.context, {'id': first_obj.package_id})
 
         # Package was created
         assert first_package_dict
         assert first_package_dict['state'] == u'active'
-        assert first_obj.current == True
+        assert first_obj.current is True
 
         # Delete package
         first_package_dict['state'] = u'deleted'
-        self.context.update({'id':first_package_dict['id']})
-        updated_package_dict = get_action('package_update_rest')(self.context,first_package_dict)
+        self.context.update({'id': first_package_dict['id']})
+        updated_package_dict = get_action('package_update')(self.context, first_package_dict)
 
         # Create and run a second job, the date has not changed, so the package should not be updated
         # and remain deleted
@@ -549,13 +572,12 @@ class TestHarvest(HarvestFixtureBase):
 
         second_obj = self._run_job_for_single_document(second_job)
 
-        second_package_dict = get_action('package_show_rest')(self.context,{'id':first_obj.package_id})
+        second_package_dict = get_action('package_show')(self.context, {'id': first_obj.package_id})
 
         # Package was not updated
         assert second_package_dict, updated_package_dict['id'] == second_package_dict['id']
         assert not second_obj.package, not second_obj.package_id
-        assert second_obj.current == False, first_obj.current == True
-
+        assert second_obj.current is False, first_obj.current is True
 
         # Harvest an updated document, with a more recent modified date, package should be
         # updated and reactivated
@@ -566,7 +588,7 @@ class TestHarvest(HarvestFixtureBase):
 
         third_obj = self._run_job_for_single_document(third_job)
 
-        third_package_dict = get_action('package_show_rest')(self.context,{'id':first_obj.package_id})
+        third_package_dict = get_action('package_show')(self.context, {'id': first_obj.package_id})
 
         Session.remove()
         Session.add(first_obj)
@@ -580,13 +602,11 @@ class TestHarvest(HarvestFixtureBase):
         # Package was updated
         assert third_package_dict, third_package_dict['id'] == second_package_dict['id']
         assert third_obj.package, third_obj.package
-        assert third_obj.current == True, second_obj.current == False
-        assert first_obj.current == False
+        assert third_obj.current is True, second_obj.current is False
+        assert first_obj.current is False
 
         assert 'NEWER' in third_package_dict['title']
         assert third_package_dict['state'] == u'active'
-
-
 
     def test_harvest_different_sources_same_document(self):
 
@@ -602,12 +622,12 @@ class TestHarvest(HarvestFixtureBase):
 
         first_obj = self._run_job_for_single_document(first_job)
 
-        first_package_dict = get_action('package_show_rest')(self.context,{'id':first_obj.package_id})
+        first_package_dict = get_action('package_show')(self.context, {'id': first_obj.package_id})
 
         # Package was created
         assert first_package_dict
         assert first_package_dict['state'] == u'active'
-        assert first_obj.current == True
+        assert first_obj.current is True
 
         # Harvest the same document, unchanged, from another source, the package
         # is not updated.
@@ -624,18 +644,16 @@ class TestHarvest(HarvestFixtureBase):
 
         second_obj = self._run_job_for_single_document(second_job)
 
-        second_package_dict = get_action('package_show_rest')(self.context,{'id':first_obj.package_id})
+        second_package_dict = get_action('package_show')(self.context, {'id': first_obj.package_id})
 
         # Package was not updated
         assert second_package_dict, first_package_dict['id'] == second_package_dict['id']
-        assert first_package_dict['metadata_modified'] == second_package_dict['metadata_modified']
         assert not second_obj.package, not second_obj.package_id
-        assert second_obj.current == False, first_obj.current == True
-
+        assert second_obj.current is False, first_obj.current is True
 
         # Inactivate source1 and reharvest from source2, package should be updated
         third_job = self._create_job(source2.id)
-        third_obj = self._run_job_for_single_document(third_job,force_import=True)
+        third_obj = self._run_job_for_single_document(third_job, force_import=True)
 
         Session.remove()
         Session.add(first_obj)
@@ -646,16 +664,14 @@ class TestHarvest(HarvestFixtureBase):
         Session.refresh(second_obj)
         Session.refresh(third_obj)
 
-        third_package_dict = get_action('package_show_rest')(self.context,{'id':first_obj.package_id})
+        third_package_dict = get_action('package_show')(self.context, {'id': first_obj.package_id})
 
         # Package was updated
         assert third_package_dict, first_package_dict['id'] == third_package_dict['id']
-        assert third_package_dict['metadata_modified'] > second_package_dict['metadata_modified']
         assert third_obj.package, third_obj.package_id == first_package_dict['id']
-        assert third_obj.current == True
-        assert second_obj.current == False
-        assert first_obj.current == False
-
+        assert third_obj.current is True
+        assert second_obj.current is False
+        assert first_obj.current is False
 
     def test_harvest_different_sources_same_document_but_deleted_inbetween(self):
 
@@ -671,16 +687,16 @@ class TestHarvest(HarvestFixtureBase):
 
         first_obj = self._run_job_for_single_document(first_job)
 
-        first_package_dict = get_action('package_show_rest')(self.context,{'id':first_obj.package_id})
+        first_package_dict = get_action('package_show')(self.context, {'id': first_obj.package_id})
 
         # Package was created
         assert first_package_dict
         assert first_package_dict['state'] == u'active'
-        assert first_obj.current == True
+        assert first_obj.current is True
 
         # Delete/withdraw the package
-        first_package_dict = get_action('package_delete')(self.context,{'id':first_obj.package_id})
-        first_package_dict = get_action('package_show_rest')(self.context,{'id':first_obj.package_id})
+        first_package_dict = get_action('package_delete')(self.context, {'id': first_obj.package_id})
+        first_package_dict = get_action('package_show')(self.context, {'id': first_obj.package_id})
 
         # Harvest the same document, unchanged, from another source
         source2_fixture = {
@@ -694,15 +710,13 @@ class TestHarvest(HarvestFixtureBase):
 
         second_obj = self._run_job_for_single_document(second_job)
 
-        second_package_dict = get_action('package_show_rest')(self.context,{'id':first_obj.package_id})
+        second_package_dict = get_action('package_show')(self.context, {'id': first_obj.package_id})
 
         # It would be good if the package was updated, but we see that it isn't
         assert second_package_dict, first_package_dict['id'] == second_package_dict['id']
-        assert second_package_dict['metadata_modified'] == first_package_dict['metadata_modified']
         assert not second_obj.package
-        assert second_obj.current == False
-        assert first_obj.current == True
-
+        assert second_obj.current is False
+        assert first_obj.current is True
 
     def test_harvest_moves_sources(self):
 
@@ -718,12 +732,12 @@ class TestHarvest(HarvestFixtureBase):
 
         first_obj = self._run_job_for_single_document(first_job)
 
-        first_package_dict = get_action('package_show_rest')(self.context,{'id':first_obj.package_id})
+        first_package_dict = get_action('package_show')(self.context, {'id': first_obj.package_id})
 
         # Package was created
         assert first_package_dict
         assert first_package_dict['state'] == u'active'
-        assert first_obj.current == True
+        assert first_obj.current is True
 
         # Harvest the same document GUID but with a newer date, from another source.
         source2_fixture = {
@@ -737,18 +751,16 @@ class TestHarvest(HarvestFixtureBase):
 
         second_obj = self._run_job_for_single_document(second_job)
 
-        second_package_dict = get_action('package_show_rest')(self.context,{'id':first_obj.package_id})
+        second_package_dict = get_action('package_show')(self.context, {'id': first_obj.package_id})
 
         # Now we have two packages
         assert second_package_dict, first_package_dict['id'] == second_package_dict['id']
-        assert second_package_dict['metadata_modified'] > first_package_dict['metadata_modified']
         assert second_obj.package
-        assert second_obj.current == True
-        assert first_obj.current == True
+        assert second_obj.current is True
+        assert first_obj.current is True
         # so currently, if you move a Gemini between harvest sources you need
         # to update the date to get it to reharvest, and then you should
         # withdraw the package relating to the original harvest source.
-
 
     def test_harvest_import_command(self):
 
@@ -764,11 +776,11 @@ class TestHarvest(HarvestFixtureBase):
 
         first_obj = self._run_job_for_single_document(first_job)
 
-        before_package_dict = get_action('package_show_rest')(self.context,{'id':first_obj.package_id})
+        before_package_dict = get_action('package_show')(self.context, {'id': first_obj.package_id})
 
         # Package was created
         assert before_package_dict
-        assert first_obj.current == True
+        assert first_obj.current is True
         assert first_obj.package
 
         # Create and run two more jobs, the package should not be updated
@@ -778,7 +790,7 @@ class TestHarvest(HarvestFixtureBase):
         third_obj = self._run_job_for_single_document(third_job)
 
         # Run the import command manually
-        imported_objects = get_action('harvest_objects_import')(self.context,{'source_id':source.id})
+        get_action('harvest_objects_import')(self.context, {'source_id': source.id})
         Session.remove()
         Session.add(first_obj)
         Session.add(second_obj)
@@ -788,18 +800,114 @@ class TestHarvest(HarvestFixtureBase):
         Session.refresh(second_obj)
         Session.refresh(third_obj)
 
-        after_package_dict = get_action('package_show_rest')(self.context,{'id':first_obj.package_id})
+        after_package_dict = get_action('package_show')(self.context, {'id': first_obj.package_id})
 
         # Package was updated, and the current object remains the same
         assert after_package_dict, before_package_dict['id'] == after_package_dict['id']
-        assert after_package_dict['metadata_modified'] > before_package_dict['metadata_modified']
-        assert third_obj.current == False
-        assert second_obj.current == False
-        assert first_obj.current == True
+        assert third_obj.current is False
+        assert second_obj.current is False
+        assert first_obj.current is True
 
-
-        source_dict = get_action('harvest_source_show')(self.context,{'id':source.id})
+        source_dict = get_action('harvest_source_show')(self.context, {'id': source.id})
         assert source_dict['status']['total_datasets'] == 1
+
+    def test_clean_tags(self):
+
+        # Create source
+        source_fixture = {
+            'title': 'Test Source',
+            'name': 'test-source',
+            'url': u'http://127.0.0.1:8999/gemini2.1/dataset1.xml',
+            'source_type': u'gemini-single',
+            'owner_org': 'test-org',
+            'metadata_created': datetime.now().strftime('%YYYY-%MM-%DD %HH:%MM:%s'),
+            'metadata_modified': datetime.now().strftime('%YYYY-%MM-%DD %HH:%MM:%s'),
+
+        }
+
+        user = User.get('dummy')
+        if not user:
+            user = call_action('user_create',
+                               name='dummy',
+                               password='dummybummy',
+                               email='dummy@dummy.com')
+            user_name = user['name']
+        else:
+            user_name = user.name
+        org = Group.by_name('test-org')
+        if org is None:
+            org = call_action('organization_create',
+                              context={'user': user_name},
+                              name='test-org')
+        existing_g = Group.by_name('existing-group')
+        if existing_g is None:
+            existing_g = call_action('group_create',
+                                     context={'user': user_name},
+                                     name='existing-group')
+
+        context = {'user': 'dummy'}
+        package_schema = default_update_package_schema()
+        context['schema'] = package_schema
+        package_dict = {'frequency': 'manual',
+                        'publisher_name': 'dummy',
+                        'extras': [{'key': 'theme', 'value': ['non-mappable', 'thememap1']}],
+                        'groups': [],
+                        'title': 'fakename',
+                        'holder_name': 'dummy',
+                        'holder_identifier': 'dummy',
+                        'name': 'fakename',
+                        'notes': 'dummy',
+                        'owner_org': 'test-org',
+                        'modified': datetime.now(),
+                        'publisher_identifier': 'dummy',
+                        'metadata_created': datetime.now(),
+                        'metadata_modified': datetime.now(),
+                        'guid': unicode(uuid4()),
+                        'identifier': 'dummy'}
+
+        call_action('package_create', context=context, **package_dict)
+
+        package = Package.get('fakename')
+        source, job = self._create_source_and_job(source_fixture)
+        job.package = package
+        job.guid = uuid4()
+        harvester = SpatialHarvester()
+        with open(os.path.join('..', 'data', 'dataset.json')) as f:
+            dataset = json.load(f)
+
+        # long tags are invalid in all cases
+        TAG_LONG_INVALID = 'abcdefghij' * 20
+        # if clean_tags is not set to true, tags will be truncated to 50 chars
+        TAG_LONG_VALID = TAG_LONG_INVALID[:50]
+        # default truncate to 100
+        TAG_LONG_VALID_LONG = TAG_LONG_INVALID[:100]
+
+        assert len(TAG_LONG_VALID) == 50
+        assert TAG_LONG_VALID[-1] == 'j'
+        TAG_CHARS_INVALID = 'Pretty-inv@lid.tag!'
+        TAG_CHARS_VALID = 'pretty-invlidtag'
+
+        dataset['tags'].append(TAG_LONG_INVALID)
+        dataset['tags'].append(TAG_CHARS_INVALID)
+
+        harvester.source_config = {'clean_tags': False}
+        out = harvester.get_package_dict(dataset, job)
+        tags = out['tags']
+
+        # no clean tags, so invalid chars are in
+        # but tags are truncated to 50 chars
+        assert {'name': TAG_CHARS_VALID} not in tags
+        assert {'name': TAG_CHARS_INVALID} in tags
+        assert {'name': TAG_LONG_VALID_LONG} in tags
+        assert {'name': TAG_LONG_INVALID} not in tags
+
+        harvester.source_config = {'clean_tags': True}
+
+        out = harvester.get_package_dict(dataset, job)
+        tags = out['tags']
+        assert {'name': TAG_CHARS_VALID} in tags
+        assert {'name': TAG_LONG_VALID_LONG} in tags
+
 
 BASIC_GEMINI = '''<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco">
   <gmd:fileIdentifier xmlns:gml="http://www.opengis.net/gml">
@@ -808,9 +916,10 @@ BASIC_GEMINI = '''<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" 
   <gmd:hierarchyLevel>
     <gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="service">service</gmd:MD_ScopeCode>
   </gmd:hierarchyLevel>
-</gmd:MD_Metadata>'''
+</gmd:MD_Metadata>''' # noqa
 GUID = 'e269743a-cfda-4632-a939-0c8416ae801e'
-GEMINI_MISSING_GUID = '''<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"/>'''
+GEMINI_MISSING_GUID = '''<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"/>''' # noqa
+
 
 class TestGatherMethods(HarvestFixtureBase):
     def setup(self):
@@ -838,12 +947,15 @@ class TestGatherMethods(HarvestFixtureBase):
         assert_equal(res, (GEMINI_MISSING_GUID, ''))
 
     def test_get_gemini_string_and_guid__non_parsing(self):
-        content = '<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco">' # no closing tag
+        # no closing tag
+        content = '<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco">'
+
         assert_raises(lxml.etree.XMLSyntaxError, self.harvester.get_gemini_string_and_guid, content)
 
     def test_get_gemini_string_and_guid__empty(self):
         content = ''
         assert_raises(lxml.etree.XMLSyntaxError, self.harvester.get_gemini_string_and_guid, content)
+
 
 class TestImportStageTools:
     def test_licence_url_normal(self):
@@ -917,7 +1029,7 @@ class TestImportStageTools:
         assert_equal(GeminiHarvester._process_responsible_organisation(responsible_organisation),
                      ('Ordnance Survey', ['Distributor (distributor)',
                                           'Ordnance Survey (publisher, custodian)',
-                                ]))
+                                          ]))
 
     def test_responsible_organisation_blank_provider(self):
         # no owner or publisher, so blank provider
@@ -961,8 +1073,7 @@ class TestValidation(HarvestFixtureBase):
         harvester = GeminiDocHarvester()
 
         # Gather stage for GeminiDocHarvester includes validation
-        object_ids = harvester.gather_stage(job)
-
+        harvester.gather_stage(job)
 
         # Check the validation errors
         errors = '; '.join([gather_error.message for gather_error in job.gather_errors])
@@ -1019,7 +1130,9 @@ class TestValidation(HarvestFixtureBase):
     def test_11_service_fail_gemini_schematron(self):
         errors = self.get_validation_errors('11_Service_Invalid_GEMINI_Service_Type.xml')
         assert len(errors) > 0
-        assert_in("Service type shall be one of 'discovery', 'view', 'download', 'transformation', 'invoke' or 'other' following INSPIRE generic names.", errors)
+        assert_in("Service type shall be one of"
+                  " 'discovery', 'view', 'download', 'transformation', 'invoke' or 'other' "
+                  "following INSPIRE generic names.", errors)
 
     def test_12_service_valid(self):
         errors = self.get_validation_errors('12_Service_Valid.xml')
@@ -1029,4 +1142,5 @@ class TestValidation(HarvestFixtureBase):
         # This test Dataset has srv tags and only Service metadata should.
         errors = self.get_validation_errors('13_Dataset_Invalid_Element_srv.xml')
         assert len(errors) > 0
-        assert_in('Element \'{http://www.isotc211.org/2005/srv}SV_ServiceIdentification\': This element is not expected.', errors)
+        assert_in('Element \'{http://www.isotc211.org/2005/srv}SV_ServiceIdentification\': '
+                  'This element is not expected.', errors)

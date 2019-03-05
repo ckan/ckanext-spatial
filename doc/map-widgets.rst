@@ -20,17 +20,17 @@ that follows the `XYZ convention`_.
     proper attribution. Make sure to read and understand the terms and add
     the relevant attribution before using them on your CKAN instance.
 
-MapQuest-OSM
-++++++++++++
+Stamen Terrain
+++++++++++++++
 
-The `MapQuest-OSM`_ tiles are provided by `MapQuest`_, and are based on data by
+The Terrain tiles are provided by `Stamen`_, and are based on data by
 OpenStreetMap. This is the default base layer used by the map widgets, and you
 don't need to add any configuration option to use them. If you want to define
 it explicitly though, use the following setting::
 
-    ckanext.spatial.common_map.type = mapquest
+    ckanext.spatial.common_map.type = stamen
 
-.. image:: _static/base-map-mapquest.png
+.. image:: _static/base-map-stamen.png
 
 MapBox
 ++++++
@@ -60,7 +60,7 @@ template`_ format (ie {s} for subdomains if any, {z} for zoom and {x} {y} for
 tile coordinates). Additionally you can use
 ``ckanext.spatial.common_map.subdomains`` and
 ``ckanext.spatial.common_map.attribution`` if needed (these two will also work
-for MapQuest and MapBox layers if you want to tweak the defaults.
+for Stamen and MapBox layers if you want to tweak the defaults.
 
 This is a complete example that uses `Stamen`_'s famous `watercolor maps`_::
 
@@ -127,11 +127,9 @@ And this for a primary content map::
 .. _Leaflet: http://leafletjs.com
 .. _OpenStreetMap: http://openstreetmap.org
 .. _`XYZ convention`: http://wiki.openstreetmap.org/wiki/Slippy_map_tilenames
-.. _MapQuest-OSM: http://developer.mapquest.com/web/products/open/map
-.. _MapQuest: http://www.mapquest.com/
 .. _MapBox: http://www.mapbox.com/
 .. _MapBox Studio: https://www.mapbox.com/mapbox-studio
 .. _here: http://www.mapbox.com/developers/api-overview/
 .. _`Leaflet URL template`: http://leafletjs.com/reference.html#url-template
-.. _Stamen: http://stamen.com/
+.. _Stamen: http://maps.stamen.com/
 .. _`watercolor maps`: http://maps.stamen.com/watercolor/

@@ -170,7 +170,6 @@ class TestAction(SpatialTestBase):
         assert_equals(result['results'][0]['id'], dataset['id'])
 
 
-
 class TestHarvestedMetadataAPI(SpatialTestBase, helpers.FunctionalTestBase):
 
     def test_api(self):

@@ -1,7 +1,6 @@
 -e git+https://github.com/ckan/ckan#egg=ckan
 -r https://raw.githubusercontent.com/ckan/ckan/master/requirements.txt
 GeoAlchemy>=0.6
-Shapely>=1.2.13
 OWSLib==0.8.6
 lxml>=2.3
 pyparsing==1.5.6
