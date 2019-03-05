@@ -22,6 +22,13 @@ setup(
 	install_requires=[
 		# -*- Extra requirements: -*-
 	],
+    message_extractors={
+        'ckanext': [
+            ('**.py', 'python', None),
+            ('spatial/templates/**.html', 'ckan', None),
+            ('**.js', 'javascript', None)
+        ]
+    },
 	entry_points=\
 	"""
     [ckan.plugins]

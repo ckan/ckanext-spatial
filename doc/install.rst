@@ -276,6 +276,77 @@ extension. With the virtualenv CKAN is installed on activated, run::
 
 
 
+ckan.plugins.core.PluginNotFoundException: geojson_view
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+::
+
+  File "/home/pyenvs/spatial/src/ckan/ckan/plugins/core.py", line 149, in load
+    service = _get_service(plugin)
+  File "/home/pyenvs/spatial/src/ckan/ckan/plugins/core.py", line 256, in _get_service
+    raise PluginNotFoundException(plugin_name)
+    ckan.plugins.core.PluginNotFoundException: geojson_view
+
+Your CKAN instance is using the ``geojson_view`` (or ``geojson_preview``) plugin. This plugin has been
+moved from ckanext-spatial to ckanext-geoview_. Please install ckanext-geoview following the instructions on the
+README.
+
+TemplateNotFound: Template dataviewer/geojson.html cannot be found
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+::
+
+    File '/home/pyenvs/spatial/src/ckan/ckan/lib/base.py', line 129 in render_template
+      template_path, template_type = render_.template_info(template_name)
+    File '/home/pyenvs/spatial/src/ckan/ckan/lib/render.py', line 51 in template_info
+      raise TemplateNotFound('Template %s cannot be found' % template_name)
+    TemplateNotFound: Template dataviewer/geojson.html cannot be found
+
+See the issue above for details. Install ckanext-geoview_ and additionally run the following on the
+ckanext-spatial directory with your virtualenv activated::
+
+     python setup.py develop
+
+
+ImportError: No module named nongeos_plugin
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+::
+
+  File "/home/pyenvs/spatial/src/ckan/ckan/plugins/core.py", line 255, in _get_service
+    return plugin.load()(name=plugin_name)
+  File "/home/pyenvs/spatial/local/lib/python2.7/site-packages/pkg_resources.py", line 2147, in load
+    ['__name__'])
+  ImportError: No module named nongeos_plugin
+
+See the issue above for details. Install ckanext-geoview_ and additionally run the following on the
+ckanext-spatial directory with your virtualenv activated::
+
+     python setup.py develop
+
+
+Plugin class 'GeoJSONPreview' does not implement an interface
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+::
+
+ File "/home/pyenvs/spatial/src/ckanext-spatial/ckanext/spatial/nongeos_plugin.py", line 175, in <module>
+   class GeoJSONPreview(GeoJSONView):
+ File "/home/pyenvs/spatial/local/lib/python2.7/site-packages/pyutilib/component/core/core.py", line 732, in __new__
+   return PluginMeta.__new__(cls, name, bases, d)
+ File "/home/pyenvs/spatial/local/lib/python2.7/site-packages/pyutilib/component/core/core.py", line 659, in __new__
+   raise PluginError("Plugin class %r does not implement an interface, and it has already been defined in environment '%r'." % (str(name), PluginGlobals.env().name))
+   pyutilib.component.core.core.PluginError: Plugin class 'GeoJSONPreview' does not implement an interface, and it has already been defined in environment ''pca''
+
+You have correctly installed ckanext-geoview_ but the ckanext-spatial source code is outdated, with references
+to the view plugins previously part of this extension. Pull the latest version of the code and re-register the
+extension. With the virtualenv CKAN is installed on activated, run::
+
+     git pull
+     python setup.py develop
+
+
+
 When initializing the spatial tables
 ++++++++++++++++++++++++++++++++++++
 
