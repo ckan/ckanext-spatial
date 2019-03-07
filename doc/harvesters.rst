@@ -95,6 +95,24 @@ allows to tweak the dataset fields before creating or updating it::
 
             return package_dict
 
+It is possible to return ``'skip'`` if you want to prevent a dataset from being imported. This is useful if only datasets that fulfil certain criteria should be imported. In the following example, only datasets tagged ``opendata`` will be imported::
+
+    def get_package_dict(self, context, data_dict):
+
+        package_dict = data_dict['package_dict']
+        iso_values = data_dict['iso_values']
+
+        # checking for 'opendata' tag
+        tags = iso_values['tags']
+        if not 'opendata' in tags:
+            return 'skip'
+
+        # continue with custom code ...
+
+        return package_dict
+
+
+
 ``get_validators`` allows to register custom validation classes that can be
 applied to the harvested documents. Check the `Writing custom validators`_
 section to know more about how to write your custom validators::
