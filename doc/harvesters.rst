@@ -95,7 +95,7 @@ allows to tweak the dataset fields before creating or updating it::
 
             return package_dict
 
-It is possible to return ``'skip'`` if you want to prevent a dataset from being imported. This is useful if only datasets that fulfil certain criteria should be imported. In the following example, only datasets tagged ``opendata`` will be imported::
+It is possible to return ``'skip'`` if you want to prevent a dataset from being imported, but not have it register as an error or failed import (returning ``False`` will have that effect). This is useful if only datasets that fulfil certain criteria should be imported. In the following example, only datasets tagged ``opendata`` will be imported::
 
     def get_package_dict(self, context, data_dict):
 
