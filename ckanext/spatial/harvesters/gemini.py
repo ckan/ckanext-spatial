@@ -90,6 +90,7 @@ class GeminiHarvester(SpatialHarvester):
 
         Some errors raise Exceptions.
         '''
+        gemini_string = harvest_object.content
         log = logging.getLogger(__name__ + '.import')
         gemini_string = harvest_object.content
         xml = etree.fromstring(gemini_string.encode('utf-8'))
