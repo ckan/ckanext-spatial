@@ -3,7 +3,8 @@ enum34==1.1.6
 freezegun==0.3.12
 GeoAlchemy>=0.6
 GeoAlchemy2==0.5.0
-idna==2.7
+Shapely>=1.2.13
+OWSLib==0.8.6
 lxml>=2.3
 ndg-httpsclient==0.5.1
 OWSLib==0.18.0
