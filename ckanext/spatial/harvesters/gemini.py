@@ -68,7 +68,7 @@ class GeminiHarvester(SpatialHarvester):
             self._save_object_error('Empty content for object %s' % harvest_object.id,harvest_object,'Import')
             return False
         try:
-            self.import_gemini_object(harvest_object.content)
+            self.import_gemini_object(harvest_object)
             return True
         except Exception, e:
             log.error('Exception during import: %s' % text_traceback())
@@ -80,7 +80,7 @@ class GeminiHarvester(SpatialHarvester):
             if debug_exception_mode:
                 raise
 
-    def import_gemini_object(self, gemini_string):
+    def import_gemini_object(self, harvest_object):
         '''Imports the Gemini metadata into CKAN.
 
         The harvest_source_reference is an ID that the harvest_source uses
@@ -89,6 +89,7 @@ class GeminiHarvester(SpatialHarvester):
 
         Some errors raise Exceptions.
         '''
+        gemini_string = harvest_object.content
         log = logging.getLogger(__name__ + '.import')
         xml = etree.fromstring(gemini_string)
         valid, profile, errors = self._get_validator().is_valid(xml)
@@ -100,10 +101,10 @@ class GeminiHarvester(SpatialHarvester):
         unicode_gemini_string = etree.tostring(xml, encoding=unicode, pretty_print=True)
 
         # may raise Exception for errors
-        package_dict = self.write_package_from_gemini_string(unicode_gemini_string)
+        package_dict = self.write_package_from_gemini_string(unicode_gemini_string, harvest_object)
 
 
-    def write_package_from_gemini_string(self, content):
+    def write_package_from_gemini_string(self, content, harvest_object):
         '''Create or update a Package based on some content that has
         come from a URL.
 
@@ -255,6 +256,12 @@ class GeminiHarvester(SpatialHarvester):
             'tags': tags,
             'resources':[]
         }
+
+        # We need to get the owner organization (if any) from the harvest
+        # source dataset
+        source_dataset = Package.get(harvest_object.source.id)
+        if source_dataset.owner_org:
+            package_dict['owner_org'] = source_dataset.owner_org
 
         if self.obj.source.publisher_id:
             package_dict['groups'] = [{'id':self.obj.source.publisher_id}]
