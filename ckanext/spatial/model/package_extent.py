@@ -14,7 +14,8 @@ log = getLogger(__name__)
 
 package_extent_table = None
 
-DEFAULT_SRID = 4326 #(WGS 84)
+DEFAULT_SRID = 4326  # (WGS 84)
+
 
 def setup(srid=None):
 
@@ -23,17 +24,16 @@ def setup(srid=None):
         log.debug('Spatial tables defined in memory')
 
     if model.package_table.exists():
-        if not Table('geometry_columns',meta.metadata).exists() or \
-            not Table('spatial_ref_sys',meta.metadata).exists():
-            raise Exception('The spatial extension is enabled, but PostGIS ' + \
-                    'has not been set up in the database. ' + \
-                    'Please refer to the "Setting up PostGIS" section in the README.')
-
+        if not Table('geometry_columns', meta.metadata).exists() or \
+           not Table('spatial_ref_sys', meta.metadata).exists():
+            raise Exception('The spatial extension is enabled, but PostGIS '
+                            'has not been set up in the database. '
+                            'Please refer to the "Setting up PostGIS" section in the README.')
 
         if not package_extent_table.exists():
             try:
                 package_extent_table.create()
-            except Exception,e:
+            except Exception, e:
                 # Make sure the table does not remain incorrectly created
                 # (eg without geom column or constraints)
                 if package_extent_table.exists():

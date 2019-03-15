@@ -9,3 +9,5 @@ except ImportError:
 from ckanext.spatial.harvesters.csw import CSWHarvester
 from ckanext.spatial.harvesters.waf import WAFHarvester
 from ckanext.spatial.harvesters.doc import DocHarvester
+
+__all__ = ['CSWHarvester', 'WAFHarvester', 'DocHarvester']

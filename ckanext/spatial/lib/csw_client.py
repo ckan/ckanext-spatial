@@ -10,21 +10,23 @@ from owslib.fes import PropertyIsEqualTo, SortBy, SortProperty
 
 log = logging.getLogger(__name__)
 
+
 class CswError(Exception):
     pass
+
 
 class OwsService(object):
     def __init__(self, endpoint=None):
         if endpoint is not None:
             self._ows(endpoint)
-            
+
     def __call__(self, args):
         return getattr(self, args.operation)(**self._xmd(args))
-    
+
     @classmethod
     def _operations(cls):
         return [x for x in dir(cls) if not x.startswith("_")]
-    
+
     def _xmd(self, obj):
         md = {}
         for attr in [x for x in dir(obj) if not x.startswith("_")]:
@@ -42,7 +44,7 @@ class OwsService(object):
             else:
                 md[attr] = self._xmd(val)
         return md
-        
+
     def _ows(self, endpoint=None, **kw):
         if not hasattr(self, "_Implementation"):
             raise NotImplementedError("Needs an Implementation")
@@ -51,16 +53,20 @@ class OwsService(object):
                 raise ValueError("Must specify a service endpoint")
             self.__ows_obj__ = self._Implementation(endpoint)
         return self.__ows_obj__
-    
+
     def getcapabilities(self, debug=False, **kw):
         ows = self._ows(**kw)
         caps = self._xmd(ows)
         if not debug:
-            if "request" in caps: del caps["request"]
-            if "response" in caps: del caps["response"]
-        if "owscommon" in caps: del caps["owscommon"]
+            if "request" in caps:
+                del caps["request"]
+            if "response" in caps:
+                del caps["response"]
+        if "owscommon" in caps:
+            del caps["owscommon"]
         return caps
-    
+
+
 class CswService(OwsService):
     """
     Perform various operations on a CSW service
@@ -79,7 +85,7 @@ class CswService(OwsService):
         csw = self._ows(**kw)
 
         if qtype is not None:
-           constraints.append(PropertyIsEqualTo("dc:type", qtype))
+            constraints.append(PropertyIsEqualTo("dc:type", qtype))
 
         kwa = {
             "constraints": constraints,
@@ -95,7 +101,7 @@ class CswService(OwsService):
         if csw.exceptionreport:
             err = 'Error getting records: %r' % \
                   csw.exceptionreport.exceptions
-            #log.error(err)
+            # log.error(err)
             raise CswError(err)
         return [self._xmd(r) for r in csw.records.values()]
 
@@ -107,7 +113,7 @@ class CswService(OwsService):
         csw = self._ows(**kw)
 
         if qtype is not None:
-           constraints.append(PropertyIsEqualTo("dc:type", qtype))
+            constraints.append(PropertyIsEqualTo("dc:type", qtype))
 
         kwa = {
             "constraints": constraints,
@@ -128,7 +134,7 @@ class CswService(OwsService):
             if csw.exceptionreport:
                 err = 'Error getting identifiers: %r' % \
                       csw.exceptionreport.exceptions
-                #log.error(err)
+                # log.error(err)
                 raise CswError(err)
 
             if matches == 0:
@@ -166,14 +172,14 @@ class CswService(OwsService):
         if csw.exceptionreport:
             err = 'Error getting record by id: %r' % \
                   csw.exceptionreport.exceptions
-            #log.error(err)
+            # log.error(err)
             raise CswError(err)
         if not csw.records:
             return
         record = self._xmd(csw.records.values()[0])
 
-        ## strip off the enclosing results container, we only want the metadata
-        #md = csw._exml.find("/gmd:MD_Metadata")#, namespaces=namespaces)
+        # strip off the enclosing results container, we only want the metadata
+        # md = csw._exml.find("/gmd:MD_Metadata")#, namespaces=namespaces)
         # Ordinary Python version's don't support the metadata argument
         md = csw._exml.find("/{http://www.isotc211.org/2005/gmd}MD_Metadata")
         mdtree = etree.ElementTree(md)

@@ -5,6 +5,8 @@ from bin import ckan_pycsw
 
 from paste import script
 log = logging.getLogger(__name__)
+
+
 class Pycsw(script.command.Command):
     '''Manages the CKAN-pycsw integration
 
@@ -35,10 +37,14 @@ option:
     '''
 
     parser = script.command.Command.standard_parser(verbose=True)
-    parser.add_option('-p', '--pycsw-config', dest='pycsw_config',
-            default='default.cfg', help='pycsw config file to use.')
-    parser.add_option('-u', '--ckan-url', dest='ckan_url',
-            default='http://localhost', help='CKAN instance to import the datasets from.')
+    parser.add_option('-p', '--pycsw-config',
+                      dest='pycsw_config',
+                      default='default.cfg',
+                      help='pycsw config file to use.')
+    parser.add_option('-u', '--ckan-url',
+                      dest='ckan_url',
+                      default='http://localhost',
+                      help='CKAN instance to import the datasets from.')
 
     summary = __doc__.split('\n')[0]
     usage = __doc__

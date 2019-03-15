@@ -41,7 +41,6 @@ class TestCompareGeometries(SpatialTestBase):
         assert not compare_geometry_fields(extent1.the_geom, extent2.the_geom)
 
 
-
 class TestValidateBbox:
     bbox_dict = {'minx': -4.96,
                  'miny': 55.70,
@@ -64,8 +63,14 @@ class TestValidateBbox:
         res = validate_bbox('random')
         assert_equal(res, None)
 
+
 def bbox_2_geojson(bbox_dict):
-    return '{"type":"Polygon","coordinates":[[[%(minx)s, %(miny)s],[%(minx)s, %(maxy)s], [%(maxx)s, %(maxy)s], [%(maxx)s, %(miny)s], [%(minx)s, %(miny)s]]]}' % bbox_dict
+    return """{"type":"Polygon","coordinates":[[[%(minx)s, %(miny)s],
+                                              [%(minx)s, %(maxy)s],
+                                              [%(maxx)s, %(maxy)s],
+                                              [%(maxx)s, %(miny)s],
+                                              [%(minx)s, %(miny)s]]]}""" % bbox_dict
+
 
 class SpatialQueryTestBase(SpatialTestBase):
     '''Base class for tests of spatial queries'''
@@ -92,7 +97,7 @@ class SpatialQueryTestBase(SpatialTestBase):
                    'extras_as_string': True,
                    'api_version': 2,
                    'ignore_auth': True,
-                  }
+                   }
         package_dict = package_create(context, package_dict)
         return context.get('id')
 
@@ -100,6 +105,7 @@ class SpatialQueryTestBase(SpatialTestBase):
     def x_values_to_bbox(cls, x_tuple):
         return {'minx': x_tuple[0], 'maxx': x_tuple[1],
                 'miny': cls.miny, 'maxy': cls.maxy}
+
 
 class TestBboxQuery(SpatialQueryTestBase):
     # x values for the fixtures
@@ -111,6 +117,7 @@ class TestBboxQuery(SpatialQueryTestBase):
         package_titles = [model.Package.get(id_).title for id_ in package_ids]
         assert_equal(set(package_titles),
                      set(('(0, 3)', '(0, 4)', '(4, 5)')))
+
 
 class TestBboxQueryOrdered(SpatialQueryTestBase):
     # x values for the fixtures
@@ -132,18 +139,15 @@ class TestBboxQueryOrdered(SpatialQueryTestBase):
 
 class TestBboxQueryPerformance(SpatialQueryTestBase):
     # x values for the fixtures
-    fixtures_x = [(random.uniform(0, 3), random.uniform(3,9)) \
-                   for x in xrange(10)] # increase the number to 1000 say
+    fixtures_x = [(random.uniform(0, 3), random.uniform(3, 9))
+                  for x in xrange(10)]  # increase the number to 1000 say
+
     def test_query(self):
-        bbox_dict = self.x_values_to_bbox((2, 7))
         t0 = time.time()
-        q = bbox_query(bbox_dict)
         t1 = time.time()
         print 'bbox_query took: ', t1-t0
 
     def test_query_ordered(self):
-        bbox_dict = self.x_values_to_bbox((2, 7))
         t0 = time.time()
-        q = bbox_query_ordered(bbox_dict)
         t1 = time.time()
         print 'bbox_query_ordered took: ', t1-t0
