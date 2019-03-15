@@ -265,6 +265,8 @@ class TestHarvest(HarvestFixtureBase):
 
         resource = package_dict['resources'][0]
         for key,value in expected_resource.iteritems():
+            if not key in resource:
+                raise AssertionError('Expected key not in resource: %s' % (key))
             if not resource[key] == value:
                 raise AssertionError('Unexpected value in resource for %s: %s (was expecting %s)' % \
                     (key, resource[key], value))
