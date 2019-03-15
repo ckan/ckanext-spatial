@@ -14,6 +14,7 @@ except ImportError:
 from ckanext.spatial.model import PackageExtent
 from ckanext.spatial.geoalchemy_common import legacy_geoalchemy
 from ckanext.spatial.tests.base import SpatialTestBase
+from ckanext.spatial.tests.functional import legacy_routing
 
 
 class TestSpatialExtra(SpatialTestBase, helpers.FunctionalTestBase):
@@ -25,7 +26,11 @@ class TestSpatialExtra(SpatialTestBase, helpers.FunctionalTestBase):
         env = {'REMOTE_USER': user['name'].encode('ascii')}
         dataset = factories.Dataset(user=user)
 
-        offset = url_for(controller='package', action='edit', id=dataset['id'])
+        if legacy_routing:
+            offset = url_for(controller='package', action='edit',
+                             id=dataset['id'])
+        else:
+            offset = url_for('dataset.edit', id=dataset['id'])
         res = app.get(offset, extra_environ=env)
 
         form = res.forms[1]
@@ -66,7 +71,11 @@ class TestSpatialExtra(SpatialTestBase, helpers.FunctionalTestBase):
         env = {'REMOTE_USER': user['name'].encode('ascii')}
         dataset = factories.Dataset(user=user)
 
-        offset = url_for(controller='package', action='edit', id=dataset['id'])
+        if legacy_routing:
+            offset = url_for(controller='package', action='edit',
+                             id=dataset['id'])
+        else:
+            offset = url_for('dataset.edit', id=dataset['id'])
         res = app.get(offset, extra_environ=env)
 
         form = res.forms[1]
@@ -113,7 +122,11 @@ class TestSpatialExtra(SpatialTestBase, helpers.FunctionalTestBase):
         env = {'REMOTE_USER': user['name'].encode('ascii')}
         dataset = factories.Dataset(user=user)
 
-        offset = url_for(controller='package', action='edit', id=dataset['id'])
+        if legacy_routing:
+            offset = url_for(controller='package', action='edit',
+                             id=dataset['id'])
+        else:
+            offset = url_for('dataset.edit', id=dataset['id'])
         res = app.get(offset, extra_environ=env)
 
         form = res.forms[1]
@@ -133,7 +146,11 @@ class TestSpatialExtra(SpatialTestBase, helpers.FunctionalTestBase):
         env = {'REMOTE_USER': user['name'].encode('ascii')}
         dataset = factories.Dataset(user=user)
 
-        offset = url_for(controller='package', action='edit', id=dataset['id'])
+        if legacy_routing:
+            offset = url_for(controller='package', action='edit',
+                             id=dataset['id'])
+        else:
+            offset = url_for('dataset.edit', id=dataset['id'])
         res = app.get(offset, extra_environ=env)
 
         form = res.forms[1]
