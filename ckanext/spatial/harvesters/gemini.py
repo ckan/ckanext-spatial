@@ -455,10 +455,9 @@ class GeminiHarvester(SpatialHarvester):
         tag_schema['name'] = [not_empty,unicode]
         package_schema['tags'] = tag_schema
 
-        # TODO: user
         context = {'model':model,
                    'session':Session,
-                   'user':'harvest',
+                   'user': self._get_user_name(),
                    'schema':package_schema,
                    'extras_as_string':True,
                    'api_version': '2'}
@@ -650,7 +649,7 @@ class GeminiDocHarvester(GeminiHarvester, SingletonPlugin):
 
         # Get contents
         try:
-            content = self._get_content(url)
+            content = self._get_content_as_unicode(url)
         except Exception,e:
             self._save_gather_error('Unable to get content for URL: %s: %r' % \
                                         (url, e),harvest_job)
@@ -711,7 +710,7 @@ class GeminiWafHarvester(GeminiHarvester, SingletonPlugin):
 
         # Get contents
         try:
-            content = self._get_content(url)
+            content = self._get_content_as_unicode(url)
         except Exception,e:
             self._save_gather_error('Unable to get content for URL: %s: %r' % \
                                         (url, e),harvest_job)
@@ -720,7 +719,7 @@ class GeminiWafHarvester(GeminiHarvester, SingletonPlugin):
         try:
             for url in self._extract_urls(content,url):
                 try:
-                    content = self._get_content(url)
+                    content = self._get_content_as_unicode(url)
                 except Exception, e:
                     msg = 'Couldn\'t harvest WAF link: %s: %s' % (url, e)
                     self._save_gather_error(msg,harvest_job)
