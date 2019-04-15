@@ -68,8 +68,7 @@ class GeminiHarvester(SpatialHarvester):
             self._save_object_error('Empty content for object %s' % harvest_object.id,harvest_object,'Import')
             return False
         try:
-            self.import_gemini_object(harvest_object)
-            return True
+            return self.import_gemini_object(harvest_object)
         except Exception, e:
             log.error('Exception during import: %s' % text_traceback())
             if not str(e).strip():
@@ -103,6 +102,10 @@ class GeminiHarvester(SpatialHarvester):
         # may raise Exception for errors
         package_dict = self.write_package_from_gemini_string(unicode_gemini_string, harvest_object)
 
+        if package_dict:
+            return True
+        else:
+            return 'unchanged'
 
     def write_package_from_gemini_string(self, content, harvest_object):
         '''Create or update a Package based on some content that has
