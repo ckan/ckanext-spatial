@@ -7,5 +7,6 @@ except ImportError:
     __path__ = pkgutil.extend_path(__path__, __name__)
 
 from ckanext.spatial.harvesters.csw import CSWHarvester
+from ckanext.spatial.harvesters.csw_fgdc import CSWFGDCHarvester
 from ckanext.spatial.harvesters.waf import WAFHarvester
 from ckanext.spatial.harvesters.doc import DocHarvester

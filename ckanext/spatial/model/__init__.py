@@ -8,3 +8,4 @@ except ImportError:
 
 from package_extent import *
 from harvested_metadata import *
+from harvested_metadata_fgdc import *

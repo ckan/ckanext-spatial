@@ -30,6 +30,7 @@ setup(
     spatial_harvest_metadata_api=ckanext.spatial.plugin:HarvestMetadataApi
 
     csw_harvester=ckanext.spatial.harvesters:CSWHarvester
+    csw_fgdc_harvester=ckanext.spatial.harvesters:CSWFGDCHarvester
     waf_harvester=ckanext.spatial.harvesters:WAFHarvester
     doc_harvester=ckanext.spatial.harvesters:DocHarvester
 

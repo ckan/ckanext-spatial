@@ -176,6 +176,8 @@ class CswService(OwsService):
         #md = csw._exml.find("/gmd:MD_Metadata")#, namespaces=namespaces)
         # Ordinary Python version's don't support the metadata argument
         md = csw._exml.find("/{http://www.isotc211.org/2005/gmd}MD_Metadata")
+        if outputschema == 'fgdc':
+            md = csw._exml.find("/metadata")
         mdtree = etree.ElementTree(md)
         try:
             record["xml"] = etree.tostring(mdtree, pretty_print=True, encoding=unicode)
