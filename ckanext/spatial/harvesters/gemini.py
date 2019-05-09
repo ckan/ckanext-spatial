@@ -722,7 +722,7 @@ class GeminiWafHarvester(GeminiHarvester, SingletonPlugin):
             return None
         ids = []
         try:
-            for url in self._extract_urls(content,url):
+            for url in self._extract_urls(content, url):
                 try:
                     content = self._get_content_as_unicode(url)
                 except Exception as e:
@@ -784,16 +784,19 @@ class GeminiWafHarvester(GeminiHarvester, SingletonPlugin):
             if not url:
                 continue
             if '?' in url:
-                log.debug('Ignoring link in WAF because it has "?": %s', url)
+                self.log_error('Ignoring link in WAF because it has "?": {}', url)
                 continue
             if '/' in url:
-                log.debug('Ignoring link in WAF because it has "/": %s', url)
+                self.log_error('Ignoring link in WAF because it has "/": {}', url)
                 continue
             if '#' in url:
-                log.debug('Ignoring link in WAF because it has "#": %s', url)
+                self.log_error('Ignoring link in WAF because it has "#": {}', url)
                 continue
             if 'mailto:' in url:
-                log.debug('Ignoring link in WAF because it has "mailto:": %s', url)
+                self.log_error('Ignoring link in WAF because it has "mailto": {}', url)
+                continue
+            if 'tel:' in url:
+                self.log_error('Ignoring link in WAF because it has "tel": {}', url)
                 continue
             log.debug('WAF contains file: %s', url)
             urls.append(url)
@@ -804,3 +807,12 @@ class GeminiWafHarvester(GeminiHarvester, SingletonPlugin):
         base_url += '/'
         log.debug('WAF base URL: %s', base_url)
         return [base_url + i for i in urls]
+
+    def log_error(self, msg, url):
+        msg = msg.format(url)
+        log.debug(msg)
+
+        # potential GEMINI doc which may have invalid characters 
+        # as part of the URL should be reported back to users to fix
+        if url.endswith('.xml'):
+            self._save_gather_error(msg, self.harvest_job)
