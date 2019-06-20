@@ -17,7 +17,7 @@ class TestValidation(object):
             validation_test_filename
         )
         xml = etree.parse(validation_test_filepath)
-        is_valid, errors = validator.is_valid(xml)
+        _, errors = validator.is_valid(xml)
 
         return ";".join([e[0] for e in errors])
 
@@ -74,23 +74,20 @@ class TestValidation(object):
         assert len(errors) > 0
         assert_in("Descriptive keywords are mandatory", errors)
 
-    def assert_passes_all_gemini2_1_validation(self, xml_filepath):
-        errs = self.get_validation_errors(
-            validation.ISO19139EdenSchema, xml_filepath
-        )
-        assert not errs, "ISO19139EdenSchema: " + errs
-        errs = self.get_validation_errors(
-            validation.ConstraintsSchematron14, xml_filepath
-        )
-        assert not errs, "ConstraintsSchematron14: " + errs
-        errs = self.get_validation_errors(
-            validation.Gemini2Schematron, xml_filepath
-        )
-        assert not errs, "Gemini2Schematron: " + errs
+    def assert_passes_all_gemini2_validation(self, xml_filepath, gemini_schematron=validation.Gemini2Schematron):
+        errs = self.get_validation_errors(validation.ISO19139EdenSchema,
+                                          xml_filepath)
+        assert not errs, 'ISO19139EdenSchema: ' + errs
+        errs = self.get_validation_errors(validation.ConstraintsSchematron14,
+                                          xml_filepath)
+        assert not errs, 'ConstraintsSchematron14: ' + errs
+        errs = self.get_validation_errors(gemini_schematron,
+                                          xml_filepath)
+        assert not errs, 'Gemini2Schematron: ' + errs
 
     def test_04_dataset_valid(self):
-        self.assert_passes_all_gemini2_1_validation(
-            "gemini2.1/validation/04_Dataset_Valid.xml"
+        self.assert_passes_all_gemini2_validation(
+            'gemini2.1/validation/04_Dataset_Valid.xml'
         )
 
     def test_05_series_fail_iso19139_schema(self):
@@ -125,7 +122,7 @@ class TestValidation(object):
         assert_in("Descriptive keywords are mandatory", errors)
 
     def test_08_series_valid(self):
-        self.assert_passes_all_gemini2_1_validation(
+        self.assert_passes_all_gemini2_validation(
             "gemini2.1/validation/08_Series_Valid.xml"
         )
 
@@ -164,7 +161,7 @@ class TestValidation(object):
         )
 
     def test_12_service_valid(self):
-        self.assert_passes_all_gemini2_1_validation(
+        self.assert_passes_all_gemini2_validation(
             "gemini2.1/validation/12_Service_Valid.xml"
         )
 
@@ -180,6 +177,24 @@ class TestValidation(object):
             "Element '{http://www.isotc211.org/2005/srv}SV_ServiceIdentification': This element is not expected.",
             errors,
         )
+
+    def test_14_gemini23_service_valid(self):
+        # BGSds-example1c.xml has validation errors, this may be intentional
+        for filename in ['1042-sv.xml', '1044-ds.xml', 'BGSsv-examplea1.xml']:
+            self.assert_passes_all_gemini2_validation(
+                'gemini2.3/validation/{}'.format(filename),
+                gemini_schematron=validation.Gemini2Schematron3)
+
+    def test_15_gemini23_service_invalid(self):
+        errors = self.get_validation_errors(validation.Gemini2Schematron3,
+                 'gemini2.3/validation/InvalidGemini2_3.xml')
+        assert_in('MI-4b (Abstract): Abstract is too short. GEMINI 2.3', errors)
+        assert_in('MI-33 (Metadata Language): Metadata language is mandatory', errors)
+        assert_in('MI-41a (Conformity): There must be at least one gmd:DQ_ConformanceResult', errors)
+        assert_in('MI-48a (Quality Scope): There must be at least one', errors)
+        assert_in('MI-48d (Quality Scope): There shall be exactly one', errors)
+        assert_in('AT-8: There must be at least two Legal Constraints sections (gmd:resourceConstraints/gmd:MD_LegalConstraints) in the metadata but we have 1', errors)
+        assert_in('AT-7: There shall not be more than one revision date.', errors)
 
     def test_schematron_error_extraction(self):
         validation_error_xml = """
