@@ -1049,31 +1049,38 @@ class TestValidation(HarvestFixtureBase):
     @classmethod
     def setup_class(cls):
 
-        # TODO: Fix these tests, broken since 27c4ee81e
-        raise SkipTest('Validation tests not working since 27c4ee81e')
-
         SpatialHarvester._validator = Validators(profiles=['iso19139eden', 'constraints', 'gemini2'])
         HarvestFixtureBase.setup_class()
 
-    def get_validation_errors(self, validation_test_filename):
+    def get_validation_errors(self, validation_test_filename, source_fixture=None):
         # Create source
-        source_fixture = {
-            'title': 'Test Source',
-            'name': 'test-source',
-            'url': u'http://127.0.0.1:8999/gemini2.1/validation/%s' % validation_test_filename,
-            'source_type': u'gemini-single'
-        }
+        if not source_fixture:
+            source_fixture = {
+                'title': 'Test Source',
+                'name': 'test-source',
+                'url': u'http://127.0.0.1:8999/gemini2.1/validation/%s' % validation_test_filename,
+                'source_type': u'gemini-single'
+            }
 
         source, job = self._create_source_and_job(source_fixture)
 
         harvester = GeminiDocHarvester()
 
-        # Gather stage for GeminiDocHarvester includes validation
+        # Gather stage for GeminiDocHarvester includes some validation
         object_ids = harvester.gather_stage(job)
-
-
-        # Check the validation errors
+        
         errors = '; '.join([gather_error.message for gather_error in job.gather_errors])
+
+        # to get additional validation errors we need to do the import stage
+        if object_ids:
+            obj = HarvestObject.get(object_ids[0])
+            harvester.import_stage(obj)
+
+            validation_errors = '; '.join([obj_error.message for obj_error in obj.errors])
+            if errors:
+                errors += '; ' + validation_errors
+            else:
+                errors = validation_errors
         return errors
 
     def test_01_dataset_fail_iso19139_schema(self):
