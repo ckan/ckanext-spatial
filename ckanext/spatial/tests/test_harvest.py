@@ -1145,3 +1145,28 @@ class TestValidation(HarvestFixtureBase):
         errors = self.get_validation_errors('13_Dataset_Invalid_Element_srv.xml')
         assert len(errors) > 0
         assert_in('Element \'{http://www.isotc211.org/2005/srv}SV_ServiceIdentification\': This element is not expected.', errors)
+
+    def test_14_gemini2_3_dataset_valid(self):
+        SpatialHarvester._validator = Validators(profiles=['iso19139eden', 'constraints', 'gemini2-3'])
+        source_fixture = {
+            'title': 'Test Source',
+            'name': 'test-source',
+            'url': u'http://127.0.0.1:8999/gemini2.3/validation/BGSsv-examplea1.xml',
+            'source_type': u'gemini-single'
+        }
+
+        errors = self.get_validation_errors('InvalidGemini2_3.xml', source_fixture=source_fixture)
+        assert not errors
+
+    def test_15_gemini2_3_dataset_invalid(self):
+        SpatialHarvester._validator = Validators(profiles=['iso19139eden', 'constraints', 'gemini2-3'])
+        source_fixture = {
+            'title': 'Test Source',
+            'name': 'test-source',
+            'url': u'http://127.0.0.1:8999/gemini2.3/validation/InvalidGemini2_3.xml',
+            'source_type': u'gemini-single'
+        }
+
+        errors = self.get_validation_errors('InvalidGemini2_3.xml', source_fixture=source_fixture)
+        assert errors
+        assert_in('Error Message: "MI-4b (Abstract): Abstract is too short. GEMINI 2.3 requires', errors)

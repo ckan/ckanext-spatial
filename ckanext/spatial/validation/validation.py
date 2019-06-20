@@ -1,4 +1,6 @@
 import os
+import requests
+
 from pkg_resources import resource_stream
 from ckanext.spatial.model import ISODocument
 
@@ -257,7 +259,9 @@ class SchematronValidator(BaseValidator):
             "xml/schematron/iso_svrl_for_xslt1.xsl",
             ]
         if isinstance(schema, file):
-            compiled = etree.parse(schema)
+            parser = etree.XMLParser(load_dtd=True)
+            parser.resolvers.add(SchDocumentResolver())
+            compiled = etree.parse(schema, parser)
         else:
             compiled = schema
         for filename in transforms:
@@ -316,6 +320,18 @@ class Gemini2Schematron13(SchematronValidator):
                              "xml/gemini2/Gemini2_R1r3.sch") as schema:
             return [cls.schematron(schema)]
 
+
+class Gemini2Schematron3(SchematronValidator):
+    name = 'gemini2-3'
+    title = 'GEMINI 2.3 Schematron 1.0'
+
+    @classmethod
+    def get_schematrons(cls):
+        with resource_stream(__name__,
+                             "xml/gemini2/GEMINI_2.3_Schematron_Schema-v1.0.sch") as schema:
+            return [cls.schematron(schema)]
+
+
 all_validators = (ISO19139Schema,
                   ISO19139EdenSchema,
                   ISO19139NGDCSchema,
@@ -323,7 +339,8 @@ all_validators = (ISO19139Schema,
                   ConstraintsSchematron,
                   ConstraintsSchematron14,
                   Gemini2Schematron,
-                  Gemini2Schematron13)
+                  Gemini2Schematron13,
+                  Gemini2Schematron3)
 
 
 class Validators(object):
@@ -385,3 +402,11 @@ if __name__ == '__main__':
     v = Validators(profiles)
     result = v.is_valid(etree.parse(open(argv[1])))
     pprint(result)
+
+
+class SchDocumentResolver(etree.Resolver):
+    def resolve(self, url, id, context):
+        log.debug("Resolving URL '%s'" % url)
+        response = requests.get(url)
+        res = self.resolve_string(response.text, context)
+        return res
