@@ -95,12 +95,30 @@ class TestValidation(object):
             validation.ISO19139EdenSchema,
             "gemini2.1/validation/05_Series_Invalid_XSD_No_Such_Element.xml",
         )
-        assert len(errors) > 0
-        assert_in("(gmx.xsd)", errors)
-        assert_in(
-            "'{http://www.isotc211.org/2005/gmd}nosuchelement': This element is not expected.",
-            errors,
-        )
+
+    # def assert_passes_all_gemini2_validation(self, xml_filepath, gemini_schematron=validation.Gemini2Schematron):
+    #     _, errs = self.get_validation_errors(validation.ISO19139EdenSchema,
+    #                                       xml_filepath)
+    #     assert not errs, 'ISO19139EdenSchema: ' + errs
+    #     _, errs = self.get_validation_errors(validation.ConstraintsSchematron14,
+    #                                       xml_filepath)
+    #     assert not errs, 'ConstraintsSchematron14: ' + errs
+    #     _, errs = self.get_validation_errors(gemini_schematron,
+    #                                       xml_filepath)
+    #     assert not errs, 'Gemini2Schematron: ' + errs
+
+    # def test_04_dataset_valid(self):
+    #     self.assert_passes_all_gemini2_validation('gemini2.1/validation/04_Dataset_Valid.xml')
+
+    # def test_05_series_fail_iso19139_schema(self):
+    #     _, errors = self.get_validation_errors(validation.ISO19139EdenSchema,
+    #          'gemini2.1/validation/05_Series_Invalid_XSD_No_Such_Element.xml')
+    #     assert len(errors) > 0
+    #     assert_in("(gmx.xsd)", errors)
+    #     assert_in(
+    #         "'{http://www.isotc211.org/2005/gmd}nosuchelement': This element is not expected.",
+    #         errors,
+    #     )
 
     def test_06_series_fail_constraints_schematron(self):
         errors = self.get_validation_errors(
