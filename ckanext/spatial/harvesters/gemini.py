@@ -62,6 +62,8 @@ class GeminiHarvester(SpatialHarvester):
             log.error('No harvest object received')
             return False
 
+        self._set_source_config(harvest_object.source.config)
+
         # Save a reference
         self.obj = harvest_object
 
