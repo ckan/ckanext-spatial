@@ -1052,7 +1052,7 @@ class TestValidation(HarvestFixtureBase):
         SpatialHarvester._validator = Validators(profiles=['iso19139eden', 'constraints', 'gemini2'])
         HarvestFixtureBase.setup_class()
 
-    def get_validation_errors(self, validation_test_filename, source_fixture=None):
+    def get_validation_errors(self, validation_test_filename, source_fixture=None, config=None):
         # Create source
         if not source_fixture:
             source_fixture = {
@@ -1065,6 +1065,10 @@ class TestValidation(HarvestFixtureBase):
         source, job = self._create_source_and_job(source_fixture)
 
         harvester = GeminiDocHarvester()
+        if config:
+            if hasattr(SpatialHarvester, '_validator'):
+                del SpatialHarvester._validator
+            job.source.config = config
 
         # Gather stage for GeminiDocHarvester includes some validation
         object_ids = harvester.gather_stage(job)
@@ -1147,7 +1151,7 @@ class TestValidation(HarvestFixtureBase):
         assert_in('Element \'{http://www.isotc211.org/2005/srv}SV_ServiceIdentification\': This element is not expected.', errors)
 
     def test_14_gemini2_3_dataset_valid(self):
-        SpatialHarvester._validator = Validators(profiles=['iso19139eden', 'constraints', 'gemini2-3'])
+        config = '{"validator_profiles": ["iso19139eden", "constraints-1.4", "gemini2-3"]}'
         source_fixture = {
             'title': 'Test Source',
             'name': 'test-source',
@@ -1155,11 +1159,11 @@ class TestValidation(HarvestFixtureBase):
             'source_type': u'gemini-single'
         }
 
-        errors = self.get_validation_errors('InvalidGemini2_3.xml', source_fixture=source_fixture)
+        errors = self.get_validation_errors('InvalidGemini2_3.xml', source_fixture=source_fixture, config=config)
         assert not errors
 
     def test_15_gemini2_3_dataset_invalid(self):
-        SpatialHarvester._validator = Validators(profiles=['iso19139eden', 'constraints', 'gemini2-3'])
+        config = '{"validator_profiles": ["iso19139eden", "constraints-1.4", "gemini2-3"]}'
         source_fixture = {
             'title': 'Test Source',
             'name': 'test-source',
@@ -1167,6 +1171,6 @@ class TestValidation(HarvestFixtureBase):
             'source_type': u'gemini-single'
         }
 
-        errors = self.get_validation_errors('InvalidGemini2_3.xml', source_fixture=source_fixture)
+        errors = self.get_validation_errors('InvalidGemini2_3.xml', source_fixture=source_fixture, config=config)
         assert errors
         assert_in('Error Message: "MI-4b (Abstract): Abstract is too short. GEMINI 2.3 requires', errors)
