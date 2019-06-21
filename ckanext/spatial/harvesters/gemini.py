@@ -101,7 +101,11 @@ class GeminiHarvester(SpatialHarvester):
             log.error('Errors found for object with GUID %s:' % self.obj.guid)
             self._save_object_error(out,self.obj,'Import')
 
-        unicode_gemini_string = etree.tostring(xml, encoding='utf8', pretty_print=True)
+        if datetime.today() > datetime(2019, 12, 1) and hasattr(self, '_validator'):
+            if any(schema in ['gemini2', 'gemini2-1.3'] for schema in self._validator.profiles):
+                self._save_object_error('gemini2/gemini2-1.3 will be deprecated, please use gemin2-3', self.obj, 'Validation')
+
+        unicode_gemini_string = etree.tostring(xml, encoding=unicode, pretty_print=True)
 
         # may raise Exception for errors
         package_dict = self.write_package_from_gemini_string(unicode_gemini_string, harvest_object)
