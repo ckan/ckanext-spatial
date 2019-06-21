@@ -3,6 +3,7 @@ from datetime import datetime, date
 import lxml
 import json
 from uuid import uuid4
+from freezegun import freeze_time
 from nose.plugins.skip import SkipTest
 from nose.tools import assert_equal, assert_in, assert_raises
 
@@ -1101,6 +1102,7 @@ class TestValidation(HarvestFixtureBase):
         errors = self.get_validation_errors('03_Dataset_Invalid_GEMINI_Missing_Keyword.xml')
         assert len(errors) > 0
         assert_in('Descriptive keywords are mandatory', errors)
+        assert_in('gemini2/gemini 2-1.3 will be deprecated, please use gemin2-3', errors)
 
     def test_04_dataset_valid(self):
         errors = self.get_validation_errors('04_Dataset_Valid.xml')
@@ -1159,7 +1161,7 @@ class TestValidation(HarvestFixtureBase):
             'source_type': u'gemini-single'
         }
 
-        errors = self.get_validation_errors('InvalidGemini2_3.xml', source_fixture=source_fixture, config=config)
+        errors = self.get_validation_errors('BGSsv-examplea1.xml', source_fixture=source_fixture, config=config)
         assert not errors
 
     def test_15_gemini2_3_dataset_invalid(self):
@@ -1174,3 +1176,21 @@ class TestValidation(HarvestFixtureBase):
         errors = self.get_validation_errors('InvalidGemini2_3.xml', source_fixture=source_fixture, config=config)
         assert errors
         assert_in('Error Message: "MI-4b (Abstract): Abstract is too short. GEMINI 2.3 requires', errors)
+
+    @freeze_time("2019-12-10T00:00:00")
+    def test_16_deprecation_message(self):
+        errors = self.get_validation_errors('04_Dataset_Valid.xml')
+        assert len(errors) > 0
+        assert_in('gemini2/gemini2-1.3 will be deprecated, please use gemin2-3', errors)
+
+    @freeze_time("2019-12-10T00:00:00")
+    def test_17_no_deprecation_message_for_gemini_2_3(self):
+        config = '{"validator_profiles": ["iso19139eden", "constraints-1.4", "gemini2-3"]}'
+        source_fixture = {
+            'title': 'Test Source',
+            'name': 'test-source',
+            'url': u'http://127.0.0.1:8999/gemini2.3/validation/BGSsv-examplea1.xml',
+            'source_type': u'gemini-single'
+        }
+        errors = self.get_validation_errors('BGSsv-examplea1.xml', source_fixture=source_fixture, config=config)
+        assert not errors
