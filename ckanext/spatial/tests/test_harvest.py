@@ -73,6 +73,7 @@ class HarvestFixtureBase(SpatialTestBase):
 
         source_dict=get_action('harvest_source_create')(context,source_fixture)
         source = HarvestSource.get(source_dict['id'])
+        print(source.__dict__)
         assert source
 
         job = self._create_job(source.id)
@@ -1047,13 +1048,16 @@ class TestImportStageTools:
 
 class TestValidation(HarvestFixtureBase):
 
-    @classmethod
-    def setup_class(cls):
-
-        SpatialHarvester._validator = Validators(profiles=['iso19139eden', 'constraints', 'gemini2'])
+    def get_validation_errors(
+        self,
+        validation_test_filename,
+        source_fixture=None,
+        gemini_profile='gemini2'
+    ):
+        profiles = ['iso19139eden', 'constraints', gemini_profile]
+        SpatialHarvester._validator = Validators(profiles=profiles)
         HarvestFixtureBase.setup_class()
-
-    def get_validation_errors(self, validation_test_filename, source_fixture=None, config=None):
+    
         # Create source
         if not source_fixture:
             source_fixture = {
@@ -1066,10 +1070,6 @@ class TestValidation(HarvestFixtureBase):
         source, job = self._create_source_and_job(source_fixture)
 
         harvester = GeminiDocHarvester()
-        if config:
-            if hasattr(SpatialHarvester, '_validator'):
-                del SpatialHarvester._validator
-            job.source.config = config
 
         # Gather stage for GeminiDocHarvester includes some validation
         object_ids = harvester.gather_stage(job)
@@ -1102,7 +1102,6 @@ class TestValidation(HarvestFixtureBase):
         errors = self.get_validation_errors('03_Dataset_Invalid_GEMINI_Missing_Keyword.xml')
         assert len(errors) > 0
         assert_in('Descriptive keywords are mandatory', errors)
-        assert_in('gemini2/gemini 2-1.3 will be deprecated, please use gemin2-3', errors)
 
     def test_04_dataset_valid(self):
         errors = self.get_validation_errors('04_Dataset_Valid.xml')
@@ -1152,8 +1151,25 @@ class TestValidation(HarvestFixtureBase):
         assert len(errors) > 0
         assert_in('Element \'{http://www.isotc211.org/2005/srv}SV_ServiceIdentification\': This element is not expected.', errors)
 
-    def test_14_gemini2_3_dataset_valid(self):
-        config = '{"validator_profiles": ["iso19139eden", "constraints-1.4", "gemini2-3"]}'
+    @freeze_time("2019-12-10T00:00:00")
+    def test_14_deprecation_message(self):
+        errors = self.get_validation_errors('04_Dataset_Valid.xml')
+        assert len(errors) > 0
+        assert_in('gemini2/gemini2-1.3 will be deprecated, please use gemin2-3', errors)
+
+    @freeze_time("2019-12-10T00:00:00")
+    def test_15_no_deprecation_message_for_gemini_2_3(self):
+        source_fixture = {
+            'title': 'Test Source',
+            'name': 'test-source',
+            'url': u'http://127.0.0.1:8999/gemini2.3/validation/BGSsv-examplea1.xml',
+            'source_type': u'gemini-single',
+        }
+        errors = self.get_validation_errors(
+            'BGSsv-examplea1.xml', source_fixture=source_fixture, gemini_profile='gemini2-3')
+        assert not errors
+
+    def test_16_gemini2_3_dataset_valid(self):
         source_fixture = {
             'title': 'Test Source',
             'name': 'test-source',
@@ -1161,11 +1177,11 @@ class TestValidation(HarvestFixtureBase):
             'source_type': u'gemini-single'
         }
 
-        errors = self.get_validation_errors('BGSsv-examplea1.xml', source_fixture=source_fixture, config=config)
+        errors = self.get_validation_errors(
+            'BGSsv-examplea1.xml', source_fixture=source_fixture, gemini_profile='gemini2-3')
         assert not errors
 
-    def test_15_gemini2_3_dataset_invalid(self):
-        config = '{"validator_profiles": ["iso19139eden", "constraints-1.4", "gemini2-3"]}'
+    def test_17_gemini2_3_dataset_invalid(self):
         source_fixture = {
             'title': 'Test Source',
             'name': 'test-source',
@@ -1173,24 +1189,7 @@ class TestValidation(HarvestFixtureBase):
             'source_type': u'gemini-single'
         }
 
-        errors = self.get_validation_errors('InvalidGemini2_3.xml', source_fixture=source_fixture, config=config)
+        errors = self.get_validation_errors(
+            'InvalidGemini2_3.xml', source_fixture=source_fixture, gemini_profile='gemini2-3')
         assert errors
         assert_in('Error Message: "MI-4b (Abstract): Abstract is too short. GEMINI 2.3 requires', errors)
-
-    @freeze_time("2019-12-10T00:00:00")
-    def test_16_deprecation_message(self):
-        errors = self.get_validation_errors('04_Dataset_Valid.xml')
-        assert len(errors) > 0
-        assert_in('gemini2/gemini2-1.3 will be deprecated, please use gemin2-3', errors)
-
-    @freeze_time("2019-12-10T00:00:00")
-    def test_17_no_deprecation_message_for_gemini_2_3(self):
-        config = '{"validator_profiles": ["iso19139eden", "constraints-1.4", "gemini2-3"]}'
-        source_fixture = {
-            'title': 'Test Source',
-            'name': 'test-source',
-            'url': u'http://127.0.0.1:8999/gemini2.3/validation/BGSsv-examplea1.xml',
-            'source_type': u'gemini-single'
-        }
-        errors = self.get_validation_errors('BGSsv-examplea1.xml', source_fixture=source_fixture, config=config)
-        assert not errors
