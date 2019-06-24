@@ -735,7 +735,6 @@ class SpatialHarvester(HarvesterBase):
                     if custom_validator not in all_validators:
                         self._validator.add_validator(custom_validator)
 
-
         return self._validator
 
     def _get_user_name(self):
