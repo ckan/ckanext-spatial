@@ -22,6 +22,14 @@ Full documentation, including installation instructions, can be found at:
 
 http://docs.ckan.org/projects/ckanext-spatial
 
+Gemini 2.3 schema
+-----------------
+
+In order to try out a Gemini 2.3 file with the validator add this to the harvest source config -
+
+.. code-block:: json
+
+    {"validator_profiles": ["iso19139eden", "constraints-1.4", "gemini2-3"]}
 
 Community
 ---------
@@ -54,4 +62,3 @@ http://www.fsf.org/licensing/licenses/agpl-3.0.html
 .. _pycsw: http://pycsw.org
 .. _GeoJSON: http://geojson.org
 .. _ckanext-geoview: https://github.com/ckan/ckanext-geoview
-
