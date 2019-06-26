@@ -1,0 +1,582 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd"
+    xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gml="http://www.opengis.net/gml/3.2"
+    xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gsr="http://www.isotc211.org/2005/gsr"
+    xmlns:gss="http://www.isotc211.org/2005/gss" xmlns:gts="http://www.isotc211.org/2005/gts"
+    xmlns:srv="http://www.isotc211.org/2005/srv" xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:geonet="http://www.fao.org/geonetwork"
+    xsi:schemaLocation="http://www.isotc211.org/2005/gmd http://inspire.ec.europa.eu/draft-schemas/inspire-md-schemas/apiso-inspire/apiso-inspire.xsd">
+    <gmd:fileIdentifier>
+        <gco:CharacterString>ae0e855d-f0a2-438e-855c-6ef5400f4ef3</gco:CharacterString>
+    </gmd:fileIdentifier>
+    <gmd:language>
+        <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/php/code_list.php" codeListValue="eng">eng</gmd:LanguageCode>
+    </gmd:language>
+    <gmd:hierarchyLevel>
+        <gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset">dataset</gmd:MD_ScopeCode>
+    </gmd:hierarchyLevel>
+    <gmd:contact>
+        <gmd:CI_ResponsibleParty>
+            <gmd:organisationName>
+                <gco:CharacterString>Ordnance Survey, Great Britain</gco:CharacterString>
+            </gmd:organisationName>
+            <gmd:positionName>
+                <gco:CharacterString>Customer Services</gco:CharacterString>
+            </gmd:positionName>
+            <gmd:contactInfo>
+                <gmd:CI_Contact>
+                    <gmd:phone>
+                        <gmd:CI_Telephone>
+                            <gmd:voice>
+                                <gco:CharacterString>+44 (0)8456 050505</gco:CharacterString>
+                            </gmd:voice>
+                        </gmd:CI_Telephone>
+                    </gmd:phone>
+                    <gmd:address>
+                        <gmd:CI_Address>
+                            <gmd:deliveryPoint>
+                                <gco:CharacterString>Explorer House, Adanac Drive</gco:CharacterString>
+                            </gmd:deliveryPoint>
+                            <gmd:city>
+                                <gco:CharacterString>Southampton</gco:CharacterString>
+                            </gmd:city>
+                            <gmd:postalCode>
+                                <gco:CharacterString>SO16 0AS</gco:CharacterString>
+                            </gmd:postalCode>
+                            <gmd:country>
+                                <gco:CharacterString>United Kingdom</gco:CharacterString>
+                            </gmd:country>
+                            <gmd:electronicMailAddress>
+                                <gco:CharacterString>customerservices@ordnancesurvey.co.uk</gco:CharacterString>
+                            </gmd:electronicMailAddress>
+                        </gmd:CI_Address>
+                    </gmd:address>
+                </gmd:CI_Contact>
+            </gmd:contactInfo>
+            <gmd:role>
+                <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact">pointOfContact</gmd:CI_RoleCode>
+            </gmd:role>
+        </gmd:CI_ResponsibleParty>
+    </gmd:contact>
+    <gmd:dateStamp>
+        <gco:DateTime>2010-12-02T11:39:34</gco:DateTime>
+    </gmd:dateStamp>
+    <gmd:referenceSystemInfo>
+        <gmd:MD_ReferenceSystem>
+            <gmd:referenceSystemIdentifier>
+                <gmd:RS_Identifier>
+                    <gmd:code>
+                        <gco:CharacterString> http://www.opengis.net/def/crs/EPSG/0/27700</gco:CharacterString>
+                    </gmd:code>
+                </gmd:RS_Identifier>
+            </gmd:referenceSystemIdentifier>
+        </gmd:MD_ReferenceSystem>
+    </gmd:referenceSystemInfo>
+    <gmd:identificationInfo>
+        <gmd:MD_DataIdentification>
+            <gmd:citation>
+                <gmd:CI_Citation>
+                    <gmd:title>
+                        <gco:CharacterString>Boundary-Line™</gco:CharacterString>
+                    </gmd:title>
+                    <gmd:date>
+                        <gmd:CI_Date>
+                            <gmd:date>
+                                <gco:Date>1996-04-01</gco:Date>
+                            </gmd:date>
+                            <gmd:dateType>
+                                <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="creation">creation</gmd:CI_DateTypeCode>
+                            </gmd:dateType>
+                        </gmd:CI_Date>
+                    </gmd:date>
+                    <gmd:identifier>
+                        <gmd:RS_Identifier>
+                            <gmd:code>
+                                <gco:CharacterString>Boundary-Line™</gco:CharacterString>
+                            </gmd:code>
+                        </gmd:RS_Identifier>
+                    </gmd:identifier>
+                </gmd:CI_Citation>
+            </gmd:citation>
+            <gmd:abstract>
+                <gco:CharacterString>Boundary-Line is a specialist 1:10 000 scale boundaries dataset. It contains all levels of electoral and administrative boundaries, from district, wards and civil parishes (or communities) up to parliamentary, assembly and European constituencies.
+ 
+
+The information is represented as vector digital data.  
+
+ 
+
+The boundary information is updated twice a year, in May and October. The May release contains the boundaries that have become live in the first week of May, in the year of release. The October release contains the May boundaries plus additional information. Customers can choose either May or October releases.
+
+ 
+
+    * County - The named  county, district, district ward, civil parish, county electoral division (ED).
+
+    * European constituencies - The named European region.
+
+    * Greater London Authority  - The Greater London Authority, Greater London Authority Assembly constituency, London borough, London borough ward.
+
+    * Metropolitan districts - The named metropolitan district, metropolitan district ward, civil parish where appropriate.
+
+    * Scottish parliamentary electoral region - The named Scottish Parliamentary electoral region, Scottish parliamentary constituency.
+
+    * Unitary authorities- The named unitary authority, unitary authority ward or unitary authority ED as appropriate, civil parish where appropriate, together with community in Wales.
+
+    * Welsh Assembly Electoral Region - The named Welsh Assembly electoral region, Welsh assembly constituency.
+
+    * Westminster constituencies - The named Westminster constituency.
+
+    * Extent of the realm -  Low water mark or seaward boundary extension.
+
+    * High water mark
+
+    * Unique identifiers -   For administrative areas, polygons and links.
+
+    * Area measurements
+
+    * Definitive names
+
+    * Census codes</gco:CharacterString>
+            </gmd:abstract>
+            <gmd:pointOfContact>
+                <gmd:CI_ResponsibleParty>
+
+                    <gmd:organisationName>
+                        <gco:CharacterString>Ordnance Survey, Great Britain</gco:CharacterString>
+                    </gmd:organisationName>
+                    <gmd:positionName>
+                        <gco:CharacterString>Customer Services</gco:CharacterString>
+                    </gmd:positionName>
+                    <gmd:contactInfo>
+                        <gmd:CI_Contact>
+                            <gmd:phone>
+                                <gmd:CI_Telephone>
+                                    <gmd:voice>
+                                        <gco:CharacterString>+44 (0)8456 050505</gco:CharacterString>
+                                    </gmd:voice>
+                                </gmd:CI_Telephone>
+                            </gmd:phone>
+                            <gmd:address>
+                                <gmd:CI_Address>
+                                    <gmd:deliveryPoint>
+                                        <gco:CharacterString>Explorer House, Adanac Drive</gco:CharacterString>
+                                    </gmd:deliveryPoint>
+                                    <gmd:city>
+                                        <gco:CharacterString>Southampton</gco:CharacterString>
+                                    </gmd:city>
+                                    <gmd:postalCode>
+                                        <gco:CharacterString>SO16 0AS</gco:CharacterString>
+                                    </gmd:postalCode>
+                                    <gmd:country>
+                                        <gco:CharacterString>United Kingdom</gco:CharacterString>
+                                    </gmd:country>
+                                    <gmd:electronicMailAddress>
+                                        <gco:CharacterString>customerservices@ordnancesurvey.co.uk</gco:CharacterString>
+                                    </gmd:electronicMailAddress>
+                                </gmd:CI_Address>
+                            </gmd:address>
+                            <gmd:onlineResource>
+
+                                <gmd:CI_OnlineResource>
+
+                                    <gmd:linkage>
+
+                                        <gmd:URL>http://www.ordnancesurvey.co.uk/</gmd:URL>
+
+                                    </gmd:linkage>
+
+                                    <gmd:description>
+
+                                        <gco:CharacterString>Ordnance Survey, Great Britain top level website</gco:CharacterString>
+
+                                    </gmd:description>
+
+                                </gmd:CI_OnlineResource>
+
+                            </gmd:onlineResource>
+
+                        </gmd:CI_Contact>
+
+                    </gmd:contactInfo>
+
+                    <gmd:role>
+
+                        <gmd:CI_RoleCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="publisher">publisher</gmd:CI_RoleCode>
+
+                    </gmd:role>
+
+                </gmd:CI_ResponsibleParty>
+
+            </gmd:pointOfContact>
+
+            <gmd:resourceMaintenance>
+
+                <gmd:MD_MaintenanceInformation>
+
+                    <gmd:maintenanceAndUpdateFrequency>
+
+                        <gmd:MD_MaintenanceFrequencyCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#MD_MaintenanceFrequencyCode" codeListValue="biannually">biannually</gmd:MD_MaintenanceFrequencyCode>
+
+                    </gmd:maintenanceAndUpdateFrequency>
+
+                </gmd:MD_MaintenanceInformation>
+
+            </gmd:resourceMaintenance>
+
+            <gmd:graphicOverview>
+
+                <gmd:MD_BrowseGraphic>
+
+                    <gmd:fileName>
+
+                        <gco:CharacterString>BoundaryLine_s.png</gco:CharacterString>
+
+                    </gmd:fileName>
+
+                    <gmd:fileDescription>
+
+                        <gco:CharacterString>thumbnail</gco:CharacterString>
+
+                    </gmd:fileDescription>
+
+                    <gmd:fileType>
+
+                        <gco:CharacterString>png</gco:CharacterString>
+
+                    </gmd:fileType>
+
+                </gmd:MD_BrowseGraphic>
+
+            </gmd:graphicOverview>
+            <gmd:descriptiveKeywords>
+
+                <gmd:MD_Keywords>
+
+                    <gmd:keyword>
+
+                        <gco:CharacterString>Geographical names</gco:CharacterString>
+
+                    </gmd:keyword>
+
+                    <gmd:thesaurusName>
+
+                        <gmd:CI_Citation>
+
+                            <gmd:title>
+
+                                <gco:CharacterString>GEMET - INSPIRE themes, version 1.0</gco:CharacterString>
+
+                            </gmd:title>
+
+                            <gmd:date>
+
+                                <gmd:CI_Date>
+
+                                    <gmd:date>
+
+                                        <gco:Date>2008-06-01</gco:Date>
+
+                                    </gmd:date>
+
+                                    <gmd:dateType>
+
+                                        <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication">publication</gmd:CI_DateTypeCode>
+
+                                    </gmd:dateType>
+
+                                </gmd:CI_Date>
+
+                            </gmd:date>
+
+                        </gmd:CI_Citation>
+
+                    </gmd:thesaurusName>
+
+                </gmd:MD_Keywords>
+
+            </gmd:descriptiveKeywords>
+
+            <gmd:descriptiveKeywords>
+
+                <gmd:MD_Keywords>
+
+                    <gmd:keyword>
+
+                        <gco:CharacterString>Legal government boundaries</gco:CharacterString>
+
+                    </gmd:keyword>
+
+                    <gmd:keyword>
+
+                        <gco:CharacterString>Mapping</gco:CharacterString>
+
+                    </gmd:keyword>
+
+                    <gmd:keyword>
+
+                        <gco:CharacterString>Mid-Scales</gco:CharacterString>
+
+                    </gmd:keyword>
+
+                    <gmd:keyword>
+
+                        <gco:CharacterString>Electorial Boundaries</gco:CharacterString>
+
+                    </gmd:keyword>
+
+                    <gmd:keyword>
+
+                        <gco:CharacterString>administrative boundaries</gco:CharacterString>
+
+                    </gmd:keyword>
+
+                    <gmd:keyword>
+
+                        <gco:CharacterString>GSS codes</gco:CharacterString>
+
+                    </gmd:keyword>
+
+                    <gmd:keyword>
+
+                        <gco:CharacterString>Ordnance Survey</gco:CharacterString>
+
+                    </gmd:keyword>
+
+                    <gmd:keyword>
+
+                        <gco:CharacterString>OS</gco:CharacterString>
+
+                    </gmd:keyword>
+
+                </gmd:MD_Keywords>
+
+            </gmd:descriptiveKeywords>
+            <gmd:resourceConstraints>
+                <gmd:MD_LegalConstraints>
+                    <gmd:accessConstraints>
+                        <gmd:MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#MD_RestrictionCode" codeListValue="otherRestrictions">otherRestrictions</gmd:MD_RestrictionCode>
+                    </gmd:accessConstraints>
+                    <gmd:otherConstraints>
+                        <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/INSPIRE_Directive_Article13_1e">Public access to spatial data sets and services would adversely affect intellectual property rights.</gmx:Anchor>
+                    </gmd:otherConstraints>
+                    <gmd:otherConstraints>
+                        <gco:CharacterString>For further details on licensing see http://www.ordnancesurvey.co.uk/oswebsite/business/licences/index.html</gco:CharacterString>
+                    </gmd:otherConstraints>
+                </gmd:MD_LegalConstraints>
+            </gmd:resourceConstraints>
+            <gmd:resourceConstraints>
+                <gmd:MD_LegalConstraints>
+                    <gmd:useConstraints>
+                        <gmd:MD_RestrictionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#MD_RestrictionCode" codeListValue="otherRestrictions">otherRestrictions</gmd:MD_RestrictionCode>
+                    </gmd:useConstraints>
+                    <gmd:otherConstraints>
+                        <gmx:Anchor xlink:href="https://os.uk/business/licences/index.html">Use limitation dependent upon licence</gmx:Anchor>
+                    </gmd:otherConstraints>
+                </gmd:MD_LegalConstraints>
+            </gmd:resourceConstraints>
+            <gmd:spatialRepresentationType>
+                <gmd:MD_SpatialRepresentationTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#MD_SpatialRepresentationTypeCode" codeListValue="vector"/>
+            </gmd:spatialRepresentationType>
+            <gmd:spatialResolution>
+
+                <gmd:MD_Resolution>
+
+                    <gmd:equivalentScale>
+
+                        <gmd:MD_RepresentativeFraction>
+
+                            <gmd:denominator>
+
+                                <gco:Integer>10000</gco:Integer>
+
+                            </gmd:denominator>
+
+                        </gmd:MD_RepresentativeFraction>
+
+                    </gmd:equivalentScale>
+
+                </gmd:MD_Resolution>
+
+            </gmd:spatialResolution>
+
+            <gmd:language>
+                <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/php/code_list.php" codeListValue="eng">English</gmd:LanguageCode>
+            </gmd:language>
+
+            <gmd:topicCategory>
+                <gmd:MD_TopicCategoryCode>boundaries</gmd:MD_TopicCategoryCode>
+            </gmd:topicCategory>
+
+            <gmd:extent>
+
+                <gmd:EX_Extent>
+
+                    <gmd:geographicElement>
+
+                        <gmd:EX_GeographicBoundingBox>
+
+                            <gmd:westBoundLongitude>
+
+                                <gco:Decimal>-8.45</gco:Decimal>
+
+                            </gmd:westBoundLongitude>
+
+                            <gmd:eastBoundLongitude>
+
+                                <gco:Decimal>1.78</gco:Decimal>
+
+                            </gmd:eastBoundLongitude>
+
+                            <gmd:southBoundLatitude>
+
+                                <gco:Decimal>49.86</gco:Decimal>
+
+                            </gmd:southBoundLatitude>
+
+                            <gmd:northBoundLatitude>
+
+                                <gco:Decimal>60.86</gco:Decimal>
+
+                            </gmd:northBoundLatitude>
+
+                        </gmd:EX_GeographicBoundingBox>
+
+                    </gmd:geographicElement>
+
+                    <gmd:temporalElement>
+
+                        <gmd:EX_TemporalExtent>
+
+                            <gmd:extent>
+
+                                <gml:TimePeriod gml:id="T1">
+
+                                    <gml:beginPosition>2010-06-01</gml:beginPosition>
+
+                                    <gml:endPosition>2010-09-30</gml:endPosition>
+
+                                </gml:TimePeriod>
+
+                            </gmd:extent>
+
+                        </gmd:EX_TemporalExtent>
+
+                    </gmd:temporalElement>
+
+                </gmd:EX_Extent>
+
+            </gmd:extent>
+
+        </gmd:MD_DataIdentification>
+
+    </gmd:identificationInfo>
+
+    <gmd:distributionInfo>
+
+        <gmd:MD_Distribution>
+
+            <gmd:distributionFormat>
+
+                <gmd:MD_Format>
+
+                    <gmd:name>
+
+                        <gco:CharacterString>ESRI® Spatial data format (Shapefile)</gco:CharacterString>
+
+                    </gmd:name>
+
+                    <gmd:version>
+
+                        <gco:CharacterString>1.0</gco:CharacterString>
+
+                    </gmd:version>
+
+                </gmd:MD_Format>
+
+            </gmd:distributionFormat>
+
+            <gmd:transferOptions>
+
+                <gmd:MD_DigitalTransferOptions>
+
+                    <gmd:onLine>
+                        <gmd:CI_OnlineResource>
+                            <gmd:linkage>
+                                <gmd:URL>http://www.ordnancesurvey.co.uk/oswebsite/products/boundaryline/</gmd:URL>
+                            </gmd:linkage>
+                            <gmd:name>
+                                <gco:CharacterString>Ordnance Survey boundaryline</gco:CharacterString>
+                            </gmd:name>
+                            <gmd:description>
+                                <gco:CharacterString>From Euro constituencies to council wards, Boundary-Line™ maps every administrative boundary in detail for you. And what's more, it's completely free to download and use</gco:CharacterString>
+                            </gmd:description>
+                            <gmd:function>
+                                <gmd:CI_OnLineFunctionCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#CI_OnLineFunctionCode" codeListValue="information">information</gmd:CI_OnLineFunctionCode>
+                            </gmd:function>
+                            
+                        </gmd:CI_OnlineResource>
+                    </gmd:onLine>
+                </gmd:MD_DigitalTransferOptions>
+
+            </gmd:transferOptions>
+
+        </gmd:MD_Distribution>
+
+    </gmd:distributionInfo>
+
+    <gmd:dataQualityInfo>
+        <gmd:DQ_DataQuality>
+            <gmd:scope>
+                <gmd:DQ_Scope>
+                    <gmd:level>
+                        <gmd:MD_ScopeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset">dataset</gmd:MD_ScopeCode>
+                    </gmd:level>
+                </gmd:DQ_Scope>
+            </gmd:scope>
+            <gmd:report>
+                <gmd:DQ_DomainConsistency>
+                    <gmd:result>
+                        <gmd:DQ_ConformanceResult>
+                            <gmd:specification>
+                                <gmd:CI_Citation>
+                                    <gmd:title>
+                                        <gmx:Anchor xlink:href="http://data.europa.eu/eli/reg/2010/1089">Commission Regulation (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services</gmx:Anchor>
+                                    </gmd:title>
+                                    <gmd:date>
+                                        <gmd:CI_Date>
+                                            <gmd:date>
+                                                <gco:Date>2010-12-08</gco:Date>
+                                            </gmd:date>
+                                            <gmd:dateType>
+                                                <gmd:CI_DateTypeCode codeList="http://standards.iso.org/ittf/PubliclyAvailableStandards/ISO_19139_Schemas/resources/codelist/gmxCodelists.xml#CI_DateTypeCode" codeListValue="publication"/>
+                                            </gmd:dateType>
+                                        </gmd:CI_Date>
+                                    </gmd:date>
+                                </gmd:CI_Citation>
+                            </gmd:specification>
+                            <!-- Explanation is a required element but can be empty -->
+                            <gmd:explanation gco:nilReason="inapplicable"/>
+                            <!-- If not tested then -->
+                            <gmd:pass gco:nilReason="unknown"/>
+                        </gmd:DQ_ConformanceResult>
+                    </gmd:result>
+                </gmd:DQ_DomainConsistency>
+            </gmd:report>
+            <gmd:lineage>
+                <gmd:LI_Lineage>
+                    <gmd:statement>
+
+                        <gco:CharacterString>Captured and maintained solely from legal boundary changes</gco:CharacterString>
+
+                    </gmd:statement>
+
+                </gmd:LI_Lineage>
+
+            </gmd:lineage>
+
+        </gmd:DQ_DataQuality>
+
+    </gmd:dataQualityInfo>
+
+</gmd:MD_Metadata>

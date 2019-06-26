@@ -61,6 +61,8 @@ class GeminiHarvester(SpatialHarvester):
             log.error('No harvest object received')
             return False
 
+        self._set_source_config(harvest_object.source.config)
+
         # Save a reference
         self.obj = harvest_object
 
@@ -96,6 +98,10 @@ class GeminiHarvester(SpatialHarvester):
             out = errors[0][0] + ':\n' + '\n'.join(e[0] for e in errors[1:])
             log.error('Errors found for object with GUID %s:' % self.obj.guid)
             self._save_object_error(out,self.obj,'Import')
+
+        if datetime.today() > datetime(2019, 12, 1) and hasattr(self, '_validator'):
+            if any(schema in ['gemini2', 'gemini2-1.3'] for schema in self._validator.profiles):
+                self._save_object_error('gemini2/gemini2-1.3 will be deprecated, please use gemin2-3', self.obj, 'Validation')
 
         unicode_gemini_string = etree.tostring(xml, encoding=unicode, pretty_print=True)
 

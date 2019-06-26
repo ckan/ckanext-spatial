@@ -3,6 +3,7 @@ from datetime import datetime, date
 import lxml
 import json
 from uuid import uuid4
+from freezegun import freeze_time
 from nose.plugins.skip import SkipTest
 from nose.tools import assert_equal, assert_in, assert_raises
 
@@ -72,6 +73,7 @@ class HarvestFixtureBase(SpatialTestBase):
 
         source_dict=get_action('harvest_source_create')(context,source_fixture)
         source = HarvestSource.get(source_dict['id'])
+        print(source.__dict__)
         assert source
 
         job = self._create_job(source.id)
@@ -1046,34 +1048,44 @@ class TestImportStageTools:
 
 class TestValidation(HarvestFixtureBase):
 
-    @classmethod
-    def setup_class(cls):
-
-        # TODO: Fix these tests, broken since 27c4ee81e
-        raise SkipTest('Validation tests not working since 27c4ee81e')
-
-        SpatialHarvester._validator = Validators(profiles=['iso19139eden', 'constraints', 'gemini2'])
+    def get_validation_errors(
+        self,
+        validation_test_filename,
+        source_fixture=None,
+        gemini_profile='gemini2'
+    ):
+        profiles = ['iso19139eden', 'constraints', gemini_profile]
+        SpatialHarvester._validator = Validators(profiles=profiles)
         HarvestFixtureBase.setup_class()
-
-    def get_validation_errors(self, validation_test_filename):
+    
         # Create source
-        source_fixture = {
-            'title': 'Test Source',
-            'name': 'test-source',
-            'url': u'http://127.0.0.1:8999/gemini2.1/validation/%s' % validation_test_filename,
-            'source_type': u'gemini-single'
-        }
+        if not source_fixture:
+            source_fixture = {
+                'title': 'Test Source',
+                'name': 'test-source',
+                'url': u'http://127.0.0.1:8999/gemini2.1/validation/%s' % validation_test_filename,
+                'source_type': u'gemini-single'
+            }
 
         source, job = self._create_source_and_job(source_fixture)
 
         harvester = GeminiDocHarvester()
 
-        # Gather stage for GeminiDocHarvester includes validation
+        # Gather stage for GeminiDocHarvester includes some validation
         object_ids = harvester.gather_stage(job)
-
-
-        # Check the validation errors
+        
         errors = '; '.join([gather_error.message for gather_error in job.gather_errors])
+
+        # to get additional validation errors we need to do the import stage
+        if object_ids:
+            obj = HarvestObject.get(object_ids[0])
+            harvester.import_stage(obj)
+
+            validation_errors = '; '.join([obj_error.message for obj_error in obj.errors])
+            if errors:
+                errors += '; ' + validation_errors
+            else:
+                errors = validation_errors
         return errors
 
     def test_01_dataset_fail_iso19139_schema(self):
@@ -1138,3 +1150,46 @@ class TestValidation(HarvestFixtureBase):
         errors = self.get_validation_errors('13_Dataset_Invalid_Element_srv.xml')
         assert len(errors) > 0
         assert_in('Element \'{http://www.isotc211.org/2005/srv}SV_ServiceIdentification\': This element is not expected.', errors)
+
+    @freeze_time("2019-12-10T00:00:00")
+    def test_14_deprecation_message(self):
+        errors = self.get_validation_errors('04_Dataset_Valid.xml')
+        assert len(errors) > 0
+        assert_in('gemini2/gemini2-1.3 will be deprecated, please use gemin2-3', errors)
+
+    @freeze_time("2019-12-10T00:00:00")
+    def test_15_no_deprecation_message_for_gemini_2_3(self):
+        source_fixture = {
+            'title': 'Test Source',
+            'name': 'test-source',
+            'url': u'http://127.0.0.1:8999/gemini2.3/validation/BGSsv-examplea1.xml',
+            'source_type': u'gemini-single',
+        }
+        errors = self.get_validation_errors(
+            'BGSsv-examplea1.xml', source_fixture=source_fixture, gemini_profile='gemini2-3')
+        assert not errors
+
+    def test_16_gemini2_3_dataset_valid(self):
+        source_fixture = {
+            'title': 'Test Source',
+            'name': 'test-source',
+            'url': u'http://127.0.0.1:8999/gemini2.3/validation/BGSsv-examplea1.xml',
+            'source_type': u'gemini-single'
+        }
+
+        errors = self.get_validation_errors(
+            'BGSsv-examplea1.xml', source_fixture=source_fixture, gemini_profile='gemini2-3')
+        assert not errors
+
+    def test_17_gemini2_3_dataset_invalid(self):
+        source_fixture = {
+            'title': 'Test Source',
+            'name': 'test-source',
+            'url': u'http://127.0.0.1:8999/gemini2.3/validation/InvalidGemini2_3.xml',
+            'source_type': u'gemini-single'
+        }
+
+        errors = self.get_validation_errors(
+            'InvalidGemini2_3.xml', source_fixture=source_fixture, gemini_profile='gemini2-3')
+        assert errors
+        assert_in('Error Message: "MI-4b (Abstract): Abstract is too short. GEMINI 2.3 requires', errors)
