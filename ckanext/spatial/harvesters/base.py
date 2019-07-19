@@ -4,6 +4,7 @@ from six.moves.urllib.request import urlopen
 
 import re
 import cgitb
+import lxml.html
 import warnings
 import requests
 import sys
@@ -672,14 +673,14 @@ class SpatialHarvester(HarvesterBase):
     def _is_wms(self, url):
         '''
         Checks if the provided URL actually points to a Web Map Service.
-        Uses owslib WMS reader to parse the response.
         '''
         try:
-            capabilities_url = wms.WMSCapabilitiesReader().capabilities_url(url)
-            res = requests.get(capabilities_url)
-            xml = res.text
-
-            s = wms.WebMapService(url, xml=xml)
+            # as WebMapService rejects unicode use urllib2 in _get_content
+            # identify the version first otherwise OWSLib will default to 1.1.1
+            xml = self._get_content(url)
+            doc = lxml.html.fromstring(xml)
+            version = doc.xpath("./@version")
+            s = wms.WebMapService(url, xml=xml, version=None if not version else version[0])
             return isinstance(s.contents, dict) and s.contents != {}
         except Exception as e:
             log.error('WMS check for %s failed with exception: %s' % (url, six.text_type(e)))
