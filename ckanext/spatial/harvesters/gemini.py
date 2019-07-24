@@ -154,6 +154,8 @@ class GeminiHarvester(SpatialHarvester):
         if last_harvested_object:
             # We've previously harvested this (i.e. it's an update)
 
+            self.force_import = getattr(harvest_object, 'force_import', False)
+
             # Use metadata modified date instead of content to determine if the package
             # needs to be updated
             if last_harvested_object.metadata_modified_date is None \
@@ -300,8 +302,7 @@ class GeminiHarvester(SpatialHarvester):
                     resource = {}
                     if extras['resource-type'] == 'service':
                         # Check if the service is a view service
-                        test_url = url.split('?')[0] if '?' in url else url
-                        if self._is_wms(test_url):
+                        if self._is_wms(url):
                             resource['verified'] = True
                             resource['verified_date'] = datetime.now().isoformat()
                             resource_format = 'WMS'

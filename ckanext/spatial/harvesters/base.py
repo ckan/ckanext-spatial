@@ -1,5 +1,6 @@
 import re
 import cgitb
+import lxml.html
 import warnings
 import urllib2
 import requests
@@ -667,14 +668,14 @@ class SpatialHarvester(HarvesterBase):
     def _is_wms(self, url):
         '''
         Checks if the provided URL actually points to a Web Map Service.
-        Uses owslib WMS reader to parse the response.
         '''
         try:
-            capabilities_url = wms.WMSCapabilitiesReader().capabilities_url(url)
-
             # as WebMapService rejects unicode use urllib2 in _get_content
-            xml = self._get_content(capabilities_url)
-            s = wms.WebMapService(url, xml=xml)
+            # identify the version first otherwise OWSLib will default to 1.1.1
+            xml = self._get_content(url)
+            doc = lxml.html.fromstring(xml)
+            version = doc.xpath("./@version")
+            s = wms.WebMapService(url, xml=xml, version=None if not version else version[0])
             return isinstance(s.contents, dict) and s.contents != {}
         except Exception, e:
             log.error('WMS check for %s failed with exception: %s' % (url, str(e)))
