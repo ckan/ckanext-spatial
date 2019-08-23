@@ -180,6 +180,7 @@ class ISOResourceLocator(ISOElement):
             name="name",
             search_paths=[
                 "gmd:name/gco:CharacterString/text()",
+                "gmd:name/gmx:MimeFileType/text()",
             ],
             multiplicity="0..1",
         ),
