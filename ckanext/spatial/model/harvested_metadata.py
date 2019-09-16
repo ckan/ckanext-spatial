@@ -483,6 +483,7 @@ class ISODocument(MappedXmlDocument):
             search_paths=[
                 "gmd:language/gmd:LanguageCode/@codeListValue",
                 "gmd:language/gmd:LanguageCode/text()",
+                "gmd:language/gco:CharacterString/text()",
             ],
             multiplicity="0..1",
         ),
