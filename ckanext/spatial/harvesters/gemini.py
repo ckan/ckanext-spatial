@@ -304,7 +304,7 @@ class GeminiHarvester(SpatialHarvester):
                     resource = {}
                     if extras['resource-type'] == 'service':
                         # Check if the service is a view service
-                        if self._is_wms(url):
+                        if self._is_wms(url, harvest_object=harvest_object):
                             resource['verified'] = True
                             resource['verified_date'] = datetime.now().isoformat()
                             resource_format = 'WMS'
