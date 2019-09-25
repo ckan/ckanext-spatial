@@ -665,7 +665,7 @@ class SpatialHarvester(HarvesterBase):
         return True
     ##
 
-    def _is_wms(self, url):
+    def _is_wms(self, url, harvest_object=None):
         '''
         Checks if the provided URL actually points to a Web Map Service.
         '''
@@ -678,7 +678,11 @@ class SpatialHarvester(HarvesterBase):
             s = wms.WebMapService(url, xml=xml, version=None if not version else version[0])
             return isinstance(s.contents, dict) and s.contents != {}
         except Exception, e:
-            log.error('WMS check for %s failed with exception: %s' % (url, str(e)))
+            message = 'WMS check for %s failed with exception: %s' % (url, str(e))
+            if harvest_object:
+                self._save_object_error(message, harvest_object, 'Import')
+            else:
+                log.error(message)
         return False
 
     def _get_object_extra(self, harvest_object, key):
