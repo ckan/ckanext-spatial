@@ -679,7 +679,7 @@ class SpatialHarvester(HarvesterBase):
             # identify the version first otherwise OWSLib will default to 1.1.1
             xml = self._get_content(url)
             doc = lxml.html.fromstring(xml)
-            version = doc.xpath("./@version")
+            version = doc.xpath("//@version")
             s = wms.WebMapService(url, xml=xml, version=None if not version else version[0])
             return isinstance(s.contents, dict) and s.contents != {}
         except Exception as e:
