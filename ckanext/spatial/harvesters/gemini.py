@@ -154,7 +154,7 @@ class GeminiHarvester(SpatialHarvester):
         if last_harvested_object:
             # We've previously harvested this (i.e. it's an update)
 
-            self.force_import = getattr(harvest_object, 'force_import', False)
+            self.force_import = self.force_import or getattr(harvest_object, 'force_import', False)
 
             # Use metadata modified date instead of content to determine if the package
             # needs to be updated
