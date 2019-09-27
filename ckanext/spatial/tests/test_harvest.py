@@ -1,6 +1,5 @@
 import os
 from mock import patch, Mock
-import urllib2
 from datetime import datetime, date
 import lxml
 import json
@@ -75,7 +74,6 @@ class HarvestFixtureBase(SpatialTestBase):
 
         source_dict=get_action('harvest_source_create')(context,source_fixture)
         source = HarvestSource.get(source_dict['id'])
-        print(source.__dict__)
         assert source
 
         job = self._create_job(source.id)
@@ -428,7 +426,10 @@ class TestHarvest(HarvestFixtureBase):
         assert job.gather_errors[0].harvest_job_id == job.id
         assert 'Unable to get content for URL' in job.gather_errors[0].message
 
-    def test_harvest_error_validation(self):
+    @patch('owslib.wms.WebMapService')
+    @patch('ckanext.spatial.harvesters.base.SpatialHarvester._get_content')
+    def test_harvest_error_validation(self, mock_get_content, mock_wms):
+        mock_valid_wms(mock_get_content, mock_wms)
 
         # Create source
         source_fixture = {
@@ -607,8 +608,10 @@ class TestHarvest(HarvestFixtureBase):
         assert third_package_dict['state'] == u'active'
 
 
-
-    def test_harvest_different_sources_same_document(self):
+    @patch('owslib.wms.WebMapService')
+    @patch('ckanext.spatial.harvesters.base.SpatialHarvester._get_content')
+    def test_harvest_different_sources_same_document(self, mock_get_content, mock_wms):
+        mock_valid_wms(mock_get_content, mock_wms)
 
         # Create source1
         source1_fixture = {
@@ -674,7 +677,10 @@ class TestHarvest(HarvestFixtureBase):
         assert first_obj.current == False
 
 
-    def test_harvest_different_sources_same_document_but_deleted_inbetween(self):
+    @patch('owslib.wms.WebMapService')
+    @patch('ckanext.spatial.harvesters.base.SpatialHarvester._get_content')
+    def test_harvest_different_sources_same_document_but_deleted_inbetween(self, mock_get_content, mock_wms):
+        mock_valid_wms(mock_get_content, mock_wms)
 
         # Create source1
         source1_fixture = {
@@ -1133,15 +1139,10 @@ class TestValidation(HarvestFixtureBase):
         assert len(errors) > 0
         assert_in('Could not get the GUID', errors)
 
-    def mock_valid_wms(self, mock_get_content, mock_wms):
-        http_response = urllib2.urlopen('http://127.0.0.1:8999/gemini2.1/validation/valid_wms_1_3.xml')
-        mock_get_content.return_value = http_response.read()
-        mock_wms.return_value = Mock()
-
     @patch('owslib.wms.WebMapService')
     @patch('ckanext.spatial.harvesters.base.SpatialHarvester._get_content')
     def test_10_service_fail_constraints_schematron(self, mock_get_content, mock_wms):
-        self.mock_valid_wms(mock_get_content, mock_wms)
+        mock_valid_wms(mock_get_content, mock_wms)
         errors = self.get_validation_errors('10_Service_Invalid_19139_Level_Description.xml')
         assert len(errors) > 0
         assert_in("DQ_Scope: 'levelDescription' is mandatory if 'level' notEqual 'dataset' or 'series'.", errors)
@@ -1149,7 +1150,7 @@ class TestValidation(HarvestFixtureBase):
     @patch('owslib.wms.WebMapService')
     @patch('ckanext.spatial.harvesters.base.SpatialHarvester._get_content')
     def test_11_service_fail_gemini_schematron(self, mock_get_content, mock_wms):
-        self.mock_valid_wms(mock_get_content, mock_wms)
+        mock_valid_wms(mock_get_content, mock_wms)
         errors = self.get_validation_errors('11_Service_Invalid_GEMINI_Service_Type.xml')
         assert len(errors) > 0
         assert_in("Service type shall be one of 'discovery', 'view', 'download', 'transformation', 'invoke' or 'other' following INSPIRE generic names.", errors)
@@ -1157,7 +1158,7 @@ class TestValidation(HarvestFixtureBase):
     @patch('owslib.wms.WebMapService')
     @patch('ckanext.spatial.harvesters.base.SpatialHarvester._get_content')
     def test_12_service_valid(self, mock_get_content, mock_wms):
-        self.mock_valid_wms(mock_get_content, mock_wms)
+        mock_valid_wms(mock_get_content, mock_wms)
         errors = self.get_validation_errors('12_Service_Valid.xml')
         assert len(errors) == 0, errors
 
@@ -1177,7 +1178,7 @@ class TestValidation(HarvestFixtureBase):
     @patch('ckanext.spatial.harvesters.base.SpatialHarvester._get_content')
     @freeze_time("2019-12-10T00:00:00")
     def test_15_no_deprecation_message_for_gemini_2_3(self, mock_get_content, mock_wms):
-        self.mock_valid_wms(mock_get_content, mock_wms)
+        mock_valid_wms(mock_get_content, mock_wms)
         source_fixture = {
             'title': 'Test Source',
             'name': 'test-source',
@@ -1191,7 +1192,7 @@ class TestValidation(HarvestFixtureBase):
     @patch('owslib.wms.WebMapService')
     @patch('ckanext.spatial.harvesters.base.SpatialHarvester._get_content')
     def test_16_gemini2_3_dataset_valid(self, mock_get_content, mock_wms):
-        self.mock_valid_wms(mock_get_content, mock_wms)
+        mock_valid_wms(mock_get_content, mock_wms)
         source_fixture = {
             'title': 'Test Source',
             'name': 'test-source',
@@ -1215,3 +1216,18 @@ class TestValidation(HarvestFixtureBase):
             'InvalidGemini2_3.xml', source_fixture=source_fixture, gemini_profile='gemini2-3')
         assert errors
         assert_in('Error Message: "MI-4b (Abstract): Abstract is too short. GEMINI 2.3 requires', errors)
+
+    @patch('ckanext.spatial.harvesters.base.SpatialHarvester._save_object_error')
+    def test_18_unsupported_version_reported(self, mock_save_object_error):
+        harvester = SpatialHarvester()
+        harvester._is_wms('http://127.0.0.1:8999/gemini2.1/validation/14_Unsupported_version.xml', Mock())
+
+        assert 'The WMS version (1.1.0) you requested is not implemented. Please use 1.1.1 or 1.3.0.' \
+            in mock_save_object_error.call_args[0][0]
+
+
+def mock_valid_wms(mock_get_content, mock_wms):
+    # directory changed to tests/xml directory in xml_file_server.py
+    with open("gemini2.1/validation/valid_wms_1_3.xml", "r") as f:
+        mock_get_content.return_value = f.read()
+    mock_wms.return_value = Mock()
