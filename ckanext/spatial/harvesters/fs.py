@@ -128,7 +128,7 @@ class FileSystemHarvester(SpatialHarvester, SingletonPlugin):
 
         for location in delete:
             obj = HarvestObject(job=harvest_job,
-                                extras=create_extras('','', 'delete'),
+                                extras=create_extras('', '', '', 'delete'),
                                 guid=url_to_ids[location][0],
                                 package_id=url_to_ids[location][1],
                                )
