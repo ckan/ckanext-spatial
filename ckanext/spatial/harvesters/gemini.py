@@ -32,7 +32,7 @@ from ckan.logic import get_action, ValidationError
 from ckan.lib.navl.validators import not_empty
 
 from ckanext.harvest.interfaces import IHarvester
-from ckanext.harvest.model import HarvestObject
+from ckanext.harvest.model import HarvestObject, HarvestObjectExtra
 
 from ckanext.spatial.model import GeminiDocument
 from ckanext.spatial.lib.csw_client import CswService
@@ -151,6 +151,34 @@ class GeminiHarvester(SpatialHarvester):
             last_harvested_object = last_harvested_object[0]
         elif len(last_harvested_object) > 1:
                 raise Exception('Application Error: more than one current record for GUID %s' % gemini_guid)
+
+        if last_harvested_object and last_harvested_object.harvest_source_id == harvest_object.harvest_source_id:
+            def get_harvest_object_url(harvest_object_id):
+                return Session.query(HarvestObjectExtra.value) \
+                    .filter(HarvestObjectExtra.harvest_object_id==harvest_object_id) \
+                    .filter(HarvestObjectExtra.key=='url') \
+                    .scalar()
+
+            existing_source_url = get_harvest_object_url(last_harvested_object.id)
+            new_source_url = get_harvest_object_url(harvest_object.id)
+
+            if existing_source_url != new_source_url:
+                if last_harvested_object.package.state == u'deleted':
+                    last_harvested_object.current = False
+                    last_harvested_object.save()
+
+                    last_harvested_object = None
+                else:
+                    raise Exception('Harvest object %s%s has a GUID %s already in use by %s%s in harvest source %s' %
+                        (
+                            harvest_object.id,
+                            ' (%s)' % new_source_url,
+                            gemini_guid,
+                            last_harvested_object.id,
+                            ' (%s)' % existing_source_url,
+                            harvest_object.harvest_source_id
+                        )
+                    )
 
         reactivate_package = False
         if last_harvested_object:
@@ -692,7 +720,8 @@ class GeminiDocHarvester(GeminiHarvester, SingletonPlugin):
                 # have it, we might as well save a request
                 obj = HarvestObject(guid=gemini_guid,
                                     job=harvest_job,
-                                    content=gemini_string)
+                                    content=gemini_string,
+                                    extras=[HarvestObjectExtra(key='url', value=url)])
                 obj.save()
 
                 log.info('Got GUID %s' % gemini_guid)
@@ -763,7 +792,8 @@ class GeminiWafHarvester(GeminiHarvester, SingletonPlugin):
                             # have it, we might as well save a request
                             obj = HarvestObject(guid=gemini_guid,
                                                 job=harvest_job,
-                                                content=gemini_string)
+                                                content=gemini_string,
+                                                extras=[HarvestObjectExtra(key='url', value=url)])
                             obj.save()
 
                             ids.append(obj.id)
