@@ -6,7 +6,6 @@ import io
 import requests
 from lxml import etree
 
-# use pycsw 2.4.0
 from pycsw.core import metadata, repository, util
 import pycsw.core.config
 import pycsw.core.admin
