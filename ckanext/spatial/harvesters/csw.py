@@ -237,6 +237,9 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
                     return False
                 status_extra.value = 'delete'
                 status_extra.save()
+
+                # Should not be processed further
+                return 'unchanged'
             else:
                 log.info("Found tagged record with guid %s" % identifier)
 
@@ -251,6 +254,9 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
                     return False
                 status_extra.value = 'delete'
                 status_extra.save()
+
+                # Should not be processed further
+                return 'unchanged'
             else:
                 log.info("Found tagged record with guid %s" % identifier)
 
