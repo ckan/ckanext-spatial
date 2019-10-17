@@ -19,7 +19,7 @@ try:
 except ImportError:
     from ckan.tests.helpers import call_action
 
-from ckanext.harvest.model import (HarvestSource, HarvestJob, HarvestObject)
+from ckanext.harvest.model import (HarvestSource, HarvestJob, HarvestObject, HarvestObjectExtra)
 from ckanext.spatial.validation import Validators
 from ckanext.spatial.harvesters.gemini import (GeminiDocHarvester,
                                                GeminiWafHarvester,
@@ -51,13 +51,13 @@ class HarvestFixtureBase(SpatialTestBase):
     def teardown(self):
        model.repo.rebuild_db()
 
-    def _create_job(self,source_id):
+    def _create_job(self, source_id):
         # Create a job
         context ={'model':model,
                  'session':Session,
                  'user':u'harvest'}
 
-        job_dict=get_action('harvest_job_create')(context,{'source_id':source_id})
+        job_dict=get_action('harvest_job_create')(context, {'source_id':source_id})
         job = HarvestJob.get(job_dict['id'])
         assert job
 
@@ -85,7 +85,6 @@ class HarvestFixtureBase(SpatialTestBase):
         harvester = GeminiDocHarvester()
 
         harvester.force_import = force_import
-
 
         object_ids = harvester.gather_stage(job)
         assert object_ids, len(object_ids) == 1
@@ -566,17 +565,17 @@ class TestHarvest(HarvestFixtureBase):
         # and remain deleted
         first_job.status = u'Finished'
         first_job.save()
-        second_job = self._create_job(source.id)
 
+        second_job = self._create_job(source.id)
         second_obj = self._run_job_for_single_document(second_job)
 
-        second_package_dict = get_action('package_show')(self.context,{'id':first_obj.package_id})
+        # First package was not updated
+        first_package_dict_2 = get_action('package_show')(self.context,{'id':first_obj.package_id})
+        assert first_package_dict_2, updated_package_dict['id'] == first_package_dict_2['id']
 
-        # Package was not updated
-        assert second_package_dict, updated_package_dict['id'] == second_package_dict['id']
+        # second package not created
         assert not second_obj.package, not second_obj.package_id
         assert second_obj.current == False, first_obj.current == True
-
 
         # Harvest an updated document, with a more recent modified date, package should be
         # updated and reactivated
@@ -587,7 +586,7 @@ class TestHarvest(HarvestFixtureBase):
 
         third_obj = self._run_job_for_single_document(third_job)
 
-        third_package_dict = get_action('package_show')(self.context,{'id':first_obj.package_id})
+        third_package_dict = get_action('package_show')(self.context,{'id':third_obj.package_id})
 
         Session.remove()
         Session.add(first_obj)
@@ -599,7 +598,7 @@ class TestHarvest(HarvestFixtureBase):
         Session.refresh(third_obj)
 
         # Package was updated
-        assert third_package_dict, third_package_dict['id'] == second_package_dict['id']
+        assert third_package_dict, third_package_dict['id'] == first_package_dict_2['id']
         assert third_obj.package, third_obj.package
         assert third_obj.current == True, second_obj.current == False
         assert first_obj.current == False
@@ -759,7 +758,7 @@ class TestHarvest(HarvestFixtureBase):
 
         second_obj = self._run_job_for_single_document(second_job)
 
-        second_package_dict = get_action('package_show')(self.context,{'id':first_obj.package_id})
+        second_package_dict = get_action('package_show')(self.context,{'id':second_obj.package_id})
 
         # Now we have two packages
         assert second_package_dict, first_package_dict['id'] == second_package_dict['id']
@@ -817,9 +816,138 @@ class TestHarvest(HarvestFixtureBase):
         assert second_obj.current == False
         assert first_obj.current == True
 
-
         source_dict = get_action('harvest_source_show')(self.context,{'id':source.id})
         assert source_dict['status']['total_datasets'] == 1
+
+    @patch('ckanext.spatial.harvesters.base.SpatialHarvester._save_object_error')
+    def test_harvest_import_duplicate_guid_raises_error(self, mock_save_object_error):
+
+        # Create source
+        source_fixture = {
+            'title': 'Test Source',
+            'name': 'test-source',
+            'url': u'http://127.0.0.1:8999/gemini2.1-waf/index-duplicate.html',
+            'source_type': u'gemini-waf'
+        }
+
+        source, job = self._create_source_and_job(source_fixture)
+
+        harvester = GeminiWafHarvester()
+
+        # We need to send an actual job, not the dict
+        object_ids = harvester.gather_stage(job)
+
+        for object_id in object_ids:
+            obj = HarvestObject.get(object_id)
+            harvester.import_stage(obj)
+
+        existing_source_url = Session.query(HarvestObjectExtra) \
+            .filter(HarvestObjectExtra.harvest_object_id==object_ids[0]) \
+            .filter(HarvestObjectExtra.key=='url') \
+            .first()
+
+        new_source_url = Session.query(HarvestObjectExtra) \
+            .filter(HarvestObjectExtra.harvest_object_id==object_ids[1]) \
+            .filter(HarvestObjectExtra.key=='url') \
+            .first()
+
+        assert 'Error importing Gemini document: Harvest object %s (%s) has a ' \
+               'GUID 11edc4ec-5269-40b9-86c8-17201fa4e74e-new already in use by %s (%s) in harvest source %s' % (
+                   object_ids[1], new_source_url.value,
+                   object_ids[0], existing_source_url.value,
+                   source.id
+                ) in mock_save_object_error.call_args[0][0]
+
+    @patch('ckanext.spatial.harvesters.base.SpatialHarvester._save_object_error')
+    def test_harvest_deleted_dataset_then_reuse_guid_different_source_url(self, mock_save_object_error):
+
+        # Create source
+        source_fixture = {
+            'title': 'Test Source',
+            'name': 'test-source',
+            'url': u'http://127.0.0.1:8999/gemini2.1-waf/index-duplicate.html',
+            'source_type': u'gemini-waf'
+        }
+
+        source, job = self._create_source_and_job(source_fixture)
+
+        harvester = GeminiWafHarvester()
+
+        # We need to send an actual job, not the dict
+        object_ids = harvester.gather_stage(job)
+        objects = []
+
+        for object_id in object_ids:
+            obj = HarvestObject.get(object_id)
+            objects.append(obj)
+            harvester.import_stage(obj)
+
+        assert mock_save_object_error.call_count == 1
+
+        # set the first obj package/dataset state to deleted
+        Session.query(Package) \
+            .filter(Package.id == objects[0].package_id) \
+            .update({'state': u'deleted'})
+        Session.commit()
+
+        # check that second obj has no package/dataset
+        assert not objects[1].package_id
+
+        # do another import
+        for object_id in object_ids:
+            obj = HarvestObject.get(object_id)
+            harvester.import_stage(obj)
+
+        # no new exceptions logged
+        assert mock_save_object_error.call_count == 1
+
+        assert not objects[0].current
+        assert objects[1].current
+        assert objects[1].package_id
+        assert objects[1].package.state == 'active'
+
+    def test_harvest_deleted_dataset_then_reuse_guid_different_source_url_single_update(self):
+        context = {
+            'model': model,
+            'session': Session,
+            'user': u'harvest'
+        }
+
+        # Create source
+        source_fixture = {
+            'title': 'Test Source',
+            'name': 'test-source',
+            'url': u'http://127.0.0.1:8999/gemini2.1-waf/wales1.xml',
+            'source_type': u'gemini-single'
+        }
+
+        harvester = GeminiDocHarvester()
+
+        source, first_job = self._create_source_and_job(source_fixture)
+
+        first_obj = self._run_job_for_single_document(first_job)
+
+        harvester.import_stage(first_obj)
+
+        # set the first obj package/dataset state to deleted
+        Session.query(Package) \
+            .filter(Package.id == first_obj.package_id) \
+            .update({'state': u'deleted'})
+        Session.commit()
+
+        source.url = u'http://127.0.0.1:8999/gemini2.1-waf/wales1a.xml'
+        source.save()
+
+        second_job = self._create_job(source.id)
+
+        second_obj = self._run_job_for_single_document(second_job)
+
+        harvester.import_stage(second_obj)
+
+        assert not first_obj.current
+        assert second_obj.current
+        assert second_obj.package_id
+        assert second_obj.package.state == 'active'
 
     def test_clean_tags(self):
         
@@ -1065,7 +1193,7 @@ class TestValidation(HarvestFixtureBase):
         profiles = ['iso19139eden', 'constraints', gemini_profile]
         SpatialHarvester._validator = Validators(profiles=profiles)
         HarvestFixtureBase.setup_class()
-    
+
         # Create source
         if not source_fixture:
             source_fixture = {
