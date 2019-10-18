@@ -6,9 +6,9 @@ import io
 import requests
 from lxml import etree
 
-from pycsw import metadata, repository, util
-import pycsw.config
-import pycsw.admin
+from pycsw.core import metadata, repository, util
+import pycsw.core.config
+import pycsw.core.admin
 
 logging.basicConfig(format='%(message)s', level=logging.INFO)
 
@@ -27,7 +27,7 @@ def setup_db(pycsw_config):
         Column('ckan_modified', Text),
     ]
 
-    pycsw.admin.setup_db(database,
+    pycsw.core.admin.setup_db(database,
         table_name, '',
         create_plpythonu_functions=False,
         extra_columns=ckan_columns)
@@ -58,7 +58,7 @@ def load(pycsw_config, ckan_url):
     database = pycsw_config.get('repository', 'database')
     table_name = pycsw_config.get('repository', 'table', 'records')
 
-    context = pycsw.config.StaticContext()
+    context = pycsw.core.config.StaticContext()
     repo = repository.Repository(database, context, table=table_name)
 
     log.info('Started gathering CKAN datasets identifiers: {0}'.format(str(datetime.datetime.now())))
