@@ -160,7 +160,7 @@ class GeminiHarvester(SpatialHarvester):
             existing_source_url = get_harvest_object_url(last_harvested_object.id)
             new_source_url = get_harvest_object_url(harvest_object.id)
 
-            if existing_source_url != new_source_url:
+            if existing_source_url and existing_source_url != new_source_url:
                 if last_harvested_object.package.state == u'deleted':
                     last_harvested_object.current = False
                     last_harvested_object.save()
