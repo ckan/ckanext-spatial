@@ -949,6 +949,42 @@ class TestHarvest(HarvestFixtureBase):
         assert second_obj.package_id
         assert second_obj.package.state == 'active'
 
+    @patch('ckanext.spatial.harvesters.base.SpatialHarvester._save_object_error')
+    def test_harvest_dataset_without_source_url_doesnt_check_for_duplicates(self, mock_save_object_error):
+        context = {
+            'model': model,
+            'session': Session,
+            'user': u'harvest'
+        }
+
+        # Create source
+        source_fixture = {
+            'title': 'Test Source',
+            'name': 'test-source',
+            'url': u'http://127.0.0.1:8999/gemini2.1-waf/wales1.xml',
+            'source_type': u'gemini-single'
+        }
+
+        harvester = GeminiDocHarvester()
+
+        source, first_job = self._create_source_and_job(source_fixture)
+
+        first_obj = self._run_job_for_single_document(first_job)
+
+        harvester.import_stage(first_obj)
+
+        # remove the harvest object extra url info as it wasn't captured before
+        Session.query(HarvestObjectExtra.value) \
+            .filter(HarvestObjectExtra.harvest_object_id==first_obj.id) \
+            .filter(HarvestObjectExtra.key=='url') \
+            .delete()
+
+        second_job = self._create_job(source.id)
+        second_obj = self._run_job_for_single_document(second_job)
+        harvester.import_stage(second_obj)
+
+        assert not mock_save_object_error.called
+
     def test_clean_tags(self):
         
         # Create source
