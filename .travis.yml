@@ -5,7 +5,6 @@ python:
 cache: pip
 env:
     - CKANVERSION=master
-    - CKANVERSION=release-v2.5-latest
     - CKANVERSION=release-v2.6-latest
     - CKANVERSION=2.7
     - CKANVERSION=2.8
