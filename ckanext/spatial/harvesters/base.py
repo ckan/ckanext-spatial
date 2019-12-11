@@ -13,7 +13,6 @@ import dateutil
 import mimetypes
 
 
-from pylons import config
 from owslib import wms
 import requests
 from lxml import etree
@@ -32,6 +31,11 @@ from ckanext.harvest.model import HarvestObject
 from ckanext.spatial.validation import Validators, all_validators
 from ckanext.spatial.model import ISODocument
 from ckanext.spatial.interfaces import ISpatialHarvester
+
+if p.toolkit.check_ckan_version("2.9"):
+    config = p.toolkit.config
+else:
+    from pylons import config
 
 log = logging.getLogger(__name__)
 
@@ -203,7 +207,7 @@ class SpatialHarvester(HarvesterBase):
         :returns: A dataset dictionary (package_dict)
         :rtype: dict
         '''
-        
+
         tags = []
 
         if 'tags' in iso_values:

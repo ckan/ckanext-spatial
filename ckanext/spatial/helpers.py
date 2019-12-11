@@ -1,8 +1,12 @@
 import logging
-from pylons import config
 
 from ckan import plugins as p
 from ckan.lib import helpers as h
+
+if p.toolkit.check_ckan_version("2.9"):
+    config = p.toolkit.config
+else:
+    from pylons import config
 
 log = logging.getLogger(__name__)
 

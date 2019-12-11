@@ -390,6 +390,7 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
             search_results['results'] = pkgs
         return search_results
 
+
 class HarvestMetadataApi(HarvestMetadataApiMixin, p.SingletonPlugin):
     '''
     Harvest Metadata API

@@ -14,8 +14,9 @@ extent
 <div class="dataset-map" data-module="dataset-map" data-extent="{{ extent }}" data-module-site_url="{{ h.dump_json(h.url('/', locale='default', qualified=true)) }}" data-module-map_config="{{ h.dump_json(map_config) }}">
   <div id="dataset-map-container"></div>
   <div id="dataset-map-attribution">
-    {% snippet "spatial/snippets/map_attribution.html", map_config=map_config %}
+      {% snippet "spatial/snippets/map_attribution.html", map_config=map_config %}
   </div>
 </div>
 
-{% resource 'ckanext-spatial/dataset_map' %}
+{% set type = 'asset' if h.ckan_version() > '2.9' else 'resource' %}
+{% include 'spatial/snippets/dataset_map_' ~ type ~ '.html' %}
