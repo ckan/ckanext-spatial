@@ -1,7 +1,10 @@
+from __future__ import print_function
+from future import standard_library
+standard_library.install_aliases()
 import os
 
-import SimpleHTTPServer
-import SocketServer
+import http.server
+import socketserver
 from threading import Thread
 
 
@@ -14,14 +17,14 @@ def serve(port=PORT):
     os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)),
                           'xml'))
 
-    Handler = SimpleHTTPServer.SimpleHTTPRequestHandler
+    Handler = http.server.SimpleHTTPRequestHandler
     
-    class TestServer(SocketServer.TCPServer):
+    class TestServer(socketserver.TCPServer):
         allow_reuse_address = True
     
     httpd = TestServer(("", PORT), Handler)
     
-    print 'Serving test HTTP server at port', PORT
+    print('Serving test HTTP server at port', PORT)
 
     httpd_thread = Thread(target=httpd.serve_forever)
     httpd_thread.setDaemon(True)

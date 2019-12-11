@@ -1,3 +1,4 @@
+from __future__ import print_function
 import sys
 
 import logging
@@ -36,7 +37,7 @@ class Spatial(CkanCommand):
 
     def command(self):
         self._load_config()
-        print ''
+        print('')
 
         if len(self.args) == 0:
             self.parser.print_usage()
@@ -47,7 +48,7 @@ class Spatial(CkanCommand):
         elif cmd == 'extents':
             self.update_extents()
         else:
-            print 'Command %s not recognized' % cmd
+            print('Command %s not recognized' % cmd)
 
     def initdb(self):
         if len(self.args) >= 2:

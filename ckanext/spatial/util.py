@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import print_function
+from builtins import str
 import os
 import sys
 
@@ -20,17 +22,17 @@ def report(pkg=None):
     from ckanext.spatial.lib.reports import validation_report
 
     if pkg:
-        package_ref = unicode(pkg)
+        package_ref = str(pkg)
         pkg = model.Package.get(package_ref)
         if not pkg:
-            print 'Package ref "%s" not recognised' % package_ref
+            print('Package ref "%s" not recognised' % package_ref)
             sys.exit(1)
 
     report = validation_report(package_id=pkg.id)
     for row in report.get_rows_html_formatted():
-        print
+        print()
         for i, col_name in enumerate(report.column_names):
-            print '  %s: %s' % (col_name, row[i])
+            print('  %s: %s' % (col_name, row[i]))
 
 
 def validate_file(metadata_filepath):
@@ -38,18 +40,18 @@ def validate_file(metadata_filepath):
     from ckanext.spatial.model import ISODocument
 
     if not os.path.exists(metadata_filepath):
-        print 'Filepath %s not found' % metadata_filepath
+        print('Filepath %s not found' % metadata_filepath)
         sys.exit(1)
     with open(metadata_filepath, 'rb') as f:
         metadata_xml = f.read()
 
     validators = SpatialHarvester()._get_validator()
-    print 'Validators: %r' % validators.profiles
+    print('Validators: %r' % validators.profiles)
     try:
         xml_string = metadata_xml.encode("utf-8")
-    except UnicodeDecodeError, e:
-        print 'ERROR: Unicode Error reading file \'%s\': %s' % \
-              (metadata_filepath, e)
+    except UnicodeDecodeError as e:
+        print('ERROR: Unicode Error reading file \'%s\': %s' % \
+              (metadata_filepath, e))
         sys.exit(1)
         #import pdb; pdb.set_trace()
     xml = etree.fromstring(xml_string)
@@ -62,20 +64,20 @@ def validate_file(metadata_filepath):
         try:
             iso_document = ISODocument(xml_string)
             iso_values = iso_document.read_values()
-        except Exception, e:
+        except Exception as e:
             valid = False
             errors.append(
                 'CKAN exception reading values from ISODocument: %s' % e)
 
-    print '***************'
-    print 'Summary'
-    print '***************'
-    print 'File: \'%s\'' % metadata_filepath
-    print 'Valid: %s' % valid
+    print('***************')
+    print('Summary')
+    print('***************')
+    print('File: \'%s\'' % metadata_filepath)
+    print('Valid: %s' % valid)
     if not valid:
-        print 'Errors:'
-        print pprint(errors)
-    print '***************'
+        print('Errors:')
+        print(pprint(errors))
+    print('***************')
 
 
 def report_csv(csv_filepath):
@@ -87,13 +89,13 @@ def report_csv(csv_filepath):
 
 def initdb(srid=None):
     if srid:
-        srid = unicode(srid)
+        srid = str(srid)
 
     from ckanext.spatial.model import setup as db_setup
 
     db_setup(srid)
 
-    print 'DB tables created'
+    print('DB tables created')
 
 
 def update_extents():
@@ -112,10 +114,10 @@ def update_extents():
             geometry = json.loads(value)
 
             count += 1
-        except ValueError, e:
+        except ValueError as e:
             errors.append(u'Package %s - Error decoding JSON object: %s' %
                           (package.id, str(e)))
-        except TypeError, e:
+        except TypeError as e:
             errors.append(u'Package %s - Error decoding JSON object: %s' %
                           (package.id, str(e)))
 
@@ -125,9 +127,9 @@ def update_extents():
 
     if errors:
         msg = 'Errors were found:\n%s' % '\n'.join(errors)
-        print msg
+        print(msg)
 
     msg = "Done. Extents generated for %i out of %i packages" % (count,
                                                                  len(packages))
 
-    print msg
+    print(msg)

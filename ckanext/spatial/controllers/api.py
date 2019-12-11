@@ -1,9 +1,11 @@
+from future import standard_library
+standard_library.install_aliases()
 import logging
 
 try:
-    from cStringIO import StringIO
+    from io import StringIO
 except ImportError:
-    from StringIO import StringIO
+    from io import StringIO
 
 from pylons import response
 from pkg_resources import resource_stream

@@ -1,3 +1,4 @@
+from builtins import object
 import os
 from pkg_resources import resource_stream
 from ckanext.spatial.model import ISODocument

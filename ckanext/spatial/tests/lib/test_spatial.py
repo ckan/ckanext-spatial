@@ -1,3 +1,8 @@
+from __future__ import print_function
+from builtins import str
+from builtins import range
+from past.builtins import basestring
+from builtins import object
 import time
 import random
 
@@ -42,7 +47,7 @@ class TestCompareGeometries(SpatialTestBase):
 
 
 
-class TestValidateBbox:
+class TestValidateBbox(object):
     bbox_dict = {'minx': -4.96,
                  'miny': 55.70,
                  'maxx': -3.78,
@@ -133,17 +138,17 @@ class TestBboxQueryOrdered(SpatialQueryTestBase):
 class TestBboxQueryPerformance(SpatialQueryTestBase):
     # x values for the fixtures
     fixtures_x = [(random.uniform(0, 3), random.uniform(3,9)) \
-                   for x in xrange(10)] # increase the number to 1000 say
+                   for x in range(10)] # increase the number to 1000 say
     def test_query(self):
         bbox_dict = self.x_values_to_bbox((2, 7))
         t0 = time.time()
         q = bbox_query(bbox_dict)
         t1 = time.time()
-        print 'bbox_query took: ', t1-t0
+        print('bbox_query took: ', t1-t0)
 
     def test_query_ordered(self):
         bbox_dict = self.x_values_to_bbox((2, 7))
         t0 = time.time()
         q = bbox_query_ordered(bbox_dict)
         t1 = time.time()
-        print 'bbox_query_ordered took: ', t1-t0
+        print('bbox_query_ordered took: ', t1-t0)

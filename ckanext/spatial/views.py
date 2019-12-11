@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from future import standard_library
+standard_library.install_aliases()
 import logging
 
 from flask import Blueprint, make_response
@@ -16,9 +18,9 @@ from ckanext.spatial.lib import get_srid, validate_bbox, bbox_query
 
 
 try:
-    from cStringIO import StringIO
+    from io import StringIO
 except ImportError:
-    from StringIO import StringIO
+    from io import StringIO
 
 log = logging.getLogger(__name__)
 

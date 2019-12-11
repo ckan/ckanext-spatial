@@ -1,3 +1,5 @@
+from builtins import str
+from past.builtins import basestring
 import logging
 from string import Template
 
@@ -113,7 +115,7 @@ def validate_bbox(bbox_values):
         bbox['miny'] = float(bbox_values[1])
         bbox['maxx'] = float(bbox_values[2])
         bbox['maxy'] = float(bbox_values[3])
-    except ValueError,e:
+    except ValueError as e:
         return None
 
     return bbox

@@ -1,3 +1,4 @@
+from builtins import object
 import os
 
 from lxml import etree
@@ -7,7 +8,7 @@ from ckanext.spatial import validation
 
 # other validation tests are in test_harvest.py
 
-class TestValidation:
+class TestValidation(object):
 
     def _get_file_path(self, file_name):
        return os.path.join(os.path.dirname(__file__), 'xml', file_name)

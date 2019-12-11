@@ -13,7 +13,7 @@ def open_xml_fixture(xml_filename):
 
     try:
         xml_string = xml_string_raw.encode("utf-8")
-    except UnicodeDecodeError, e:
+    except UnicodeDecodeError as e:
         assert 0, 'ERROR: Unicode Error reading file \'%s\': %s' % \
                (metadata_filepath, e)
     return xml_string

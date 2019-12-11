@@ -3,10 +3,14 @@ Library for creating reports that can be displayed easily in an HTML table
 and then saved as a CSV.
 '''
 
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
 import datetime
 import csv
-try: from cStringIO import StringIO
-except ImportError: from StringIO import StringIO
+try: from io import StringIO
+except ImportError: from io import StringIO
 
 class ReportTable(object):
     def __init__(self, column_names):
@@ -51,7 +55,7 @@ class ReportTable(object):
             for cell in row:
                 if isinstance(cell, datetime.datetime):
                     cell = cell.strftime('%Y-%m-%d %H:%M')
-                elif isinstance(cell, (int, long)):
+                elif isinstance(cell, int):
                     cell = str(cell)
                 elif isinstance(cell, (list, tuple)):
                     cell = str(cell)
@@ -62,7 +66,7 @@ class ReportTable(object):
                 row_formatted.append(cell)
             try:
                 csvwriter.writerow(row_formatted)
-            except Exception, e:
+            except Exception as e:
                 raise Exception("%s: %s, %s"%(e, row, row_formatted))
         csvout.seek(0)
         return csvout.read()

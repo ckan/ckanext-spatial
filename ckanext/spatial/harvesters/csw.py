@@ -1,6 +1,9 @@
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
 import re
-import urllib
-import urlparse
+import urllib.request, urllib.parse, urllib.error
+import urllib.parse
 
 import logging
 
@@ -37,7 +40,7 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
                                     filter(HarvestObject.id==harvest_object_id).\
                                     first()
 
-        parts = urlparse.urlparse(obj.source.url)
+        parts = urllib.parse.urlparse(obj.source.url)
 
         params = {
             'SERVICE': 'CSW',
@@ -48,12 +51,12 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
             'ID': obj.guid
         }
 
-        url = urlparse.urlunparse((
+        url = urllib.parse.urlunparse((
             parts.scheme,
             parts.netloc,
             parts.path,
             None,
-            urllib.urlencode(params),
+            urllib.parse.urlencode(params),
             None
         ))
 
@@ -72,7 +75,7 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
 
         try:
             self._setup_csw_client(url)
-        except Exception, e:
+        except Exception as e:
             self._save_gather_error('Error contacting the CSW server: %s' % e, harvest_job)
             return None
 
@@ -100,12 +103,12 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
                         continue
 
                     guids_in_harvest.add(identifier)
-                except Exception, e:
+                except Exception as e:
                     self._save_gather_error('Error for the identifier %s [%r]' % (identifier,e), harvest_job)
                     continue
 
 
-        except Exception, e:
+        except Exception as e:
             log.error('Exception: %s' % text_traceback())
             self._save_gather_error('Error gathering the identifiers from the CSW server [%s]' % str(e), harvest_job)
             return None
@@ -157,7 +160,7 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
         url = harvest_object.source.url
         try:
             self._setup_csw_client(url)
-        except Exception, e:
+        except Exception as e:
             self._save_object_error('Error contacting the CSW server: %s' % e,
                                     harvest_object)
             return False
@@ -165,7 +168,7 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
         identifier = harvest_object.guid
         try:
             record = self.csw.getrecordbyid([identifier], outputschema=self.output_schema())
-        except Exception, e:
+        except Exception as e:
             self._save_object_error('Error getting the CSW record with GUID %s' % identifier, harvest_object)
             return False
 
@@ -182,7 +185,7 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
 
             harvest_object.content = content.strip()
             harvest_object.save()
-        except Exception,e:
+        except Exception as e:
             self._save_object_error('Error saving the harvest object for GUID %s [%r]' % \
                                     (identifier, e), harvest_object)
             return False

@@ -1,3 +1,5 @@
+from builtins import str
+from builtins import object
 from lxml import etree
 
 import logging
@@ -37,7 +39,7 @@ class MappedXmlDocument(MappedXmlObject):
     def get_xml_tree(self):
         if self.xml_tree is None:
             parser = etree.XMLParser(remove_blank_text=True)
-            if type(self.xml_str) == unicode:
+            if type(self.xml_str) == str:
                 xml_str = self.xml_str.encode('utf8')
             else:
                 xml_str = self.xml_str
@@ -95,7 +97,7 @@ class MappedXmlElement(MappedXmlObject):
         elif type(element) == etree._ElementStringResult:
             value = str(element)
         elif type(element) == etree._ElementUnicodeResult:
-            value = unicode(element)
+            value = str(element)
         else:
             value = self.element_tostring(element)
         return value
@@ -954,7 +956,7 @@ class ISODocument(MappedXmlDocument):
         for responsible_party in values['responsible-organisation']:
             if isinstance(responsible_party, dict) and \
                isinstance(responsible_party.get('contact-info'), dict) and \
-               responsible_party['contact-info'].has_key('email'):
+               'email' in responsible_party['contact-info']:
                 value = responsible_party['contact-info']['email']
                 if value:
                     break
