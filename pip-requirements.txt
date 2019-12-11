@@ -6,3 +6,4 @@ lxml>=2.3
 argparse
 pyparsing>=2.1.10
 requests>=1.1.0
+future>=0.18.2

@@ -46,5 +46,9 @@ setup(
     [ckan.test_plugins]
     test_spatial_plugin = ckanext.spatial.tests.test_plugin.plugin:TestSpatialPlugin
 
+    [console_scripts]
+    spatial = ckanext.spatial.cli:spatial
+    ckan-pycsw = ckanext.spatial.cli:ckan_pycsw
+    validation = ckanext.spatial.cli:validation
 	""",
 )
