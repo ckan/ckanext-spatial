@@ -48,7 +48,6 @@ setup(
 
     [console_scripts]
     spatial = ckanext.spatial.cli:spatial
-    ckan-pycsw = ckanext.spatial.cli:ckan_pycsw
     validation = ckanext.spatial.cli:validation
 	""",
 )
