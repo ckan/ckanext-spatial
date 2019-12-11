@@ -1,0 +1,37 @@
+dataset_map_js:
+  filter: rjsmin
+  output: ckanext-spatial/%(version)s_dataset_map.js
+  extra:
+    preload:
+      - base/main
+  contents:
+    - js/vendor/leaflet/leaflet.js
+    - js/common_map.js
+    - js/dataset_map.js
+
+dataset_map_css:
+  filters: cssrewrite
+  output: ckanext-spatial/%(version)s_dataset_map.css
+  contents:
+    - js/vendor/leaflet/leaflet.css
+    - css/dataset_map.css
+
+spatial_query_js:
+  filter: rjsmin
+  output: ckanext-spatial/%(version)s_spatial_query.js
+  extra:
+    preload:
+      - base/main
+  contents:
+    - js/vendor/leaflet/leaflet.js
+    - js/vendor/leaflet.draw/leaflet.draw.js
+    - js/common_map.js
+    - js/spatial_query.js
+
+spatial_query_css:
+  filters: cssrewrite
+  output: ckanext-spatial/%(version)s_spatial_query.css
+  contents:
+    - js/vendor/leaflet/leaflet.css
+    - js/vendor/leaflet.draw/leaflet.draw.css
+    - css/spatial_query.css
