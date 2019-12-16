@@ -364,7 +364,7 @@ class SpatialQuery(p.SingletonPlugin):
             # of datasets within the bbox
             bbox_query_ids = [extent.package_id for extent in extents]
 
-            q = search_params.get('q','').strip() or '""'
+            q = search_params.get('q','').strip()
             new_q = '%s AND ' % q if q else ''
             new_q += '(%s)' % ' OR '.join(['id:%s' % id for id in bbox_query_ids])
 
