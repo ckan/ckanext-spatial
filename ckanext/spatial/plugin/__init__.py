@@ -4,17 +4,18 @@ import re
 import mimetypes
 from logging import getLogger
 
-from pylons import config
 
 from ckan import plugins as p
 
 from ckan.lib.helpers import json
 
 if p.toolkit.check_ckan_version(min_version="2.9"):
+    config = p.toolkit.config
     from ckanext.spatial.plugin.flask_plugin import (
         SpatialQueryMixin, HarvestMetadataApiMixin
     )
 else:
+    from pylons import config
     from ckanext.spatial.plugin.pylons_plugin import (
         SpatialQueryMixin, HarvestMetadataApiMixin
     )
