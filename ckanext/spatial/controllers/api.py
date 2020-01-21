@@ -1,6 +1,7 @@
 from future import standard_library
 standard_library.install_aliases()
 import logging
+import six
 
 try:
     from io import StringIO
@@ -87,7 +88,7 @@ class HarvestMetadataApiController(BaseApiController):
             style_xml = etree.parse(style)
             transformer = etree.XSLT(style_xml)
 
-        xml = etree.parse(StringIO(content.encode('utf-8')))
+        xml = etree.parse(StringIO(content and six.ensure_text(content)))
         html = transformer(xml)
 
         response.headers['Content-Type'] = 'text/html; charset=utf-8'
