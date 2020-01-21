@@ -88,7 +88,7 @@ class HarvestMetadataApiController(BaseApiController):
             style_xml = etree.parse(style)
             transformer = etree.XSLT(style_xml)
 
-        xml = etree.parse(StringIO(content and six.ensure_text(content)))
+        xml = etree.parse(StringIO(content and six.text_type(content)))
         html = transformer(xml)
 
         response.headers['Content-Type'] = 'text/html; charset=utf-8'
