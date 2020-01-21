@@ -101,7 +101,7 @@ class GeminiHarvester(SpatialHarvester):
             log.error('Errors found for object with GUID %s:' % self.obj.guid)
             self._save_object_error(out,self.obj,'Import')
 
-        unicode_gemini_string = etree.tostring(xml, encoding=str, pretty_print=True)
+        unicode_gemini_string = etree.tostring(xml, encoding='utf8', pretty_print=True)
 
         # may raise Exception for errors
         package_dict = self.write_package_from_gemini_string(unicode_gemini_string)
@@ -799,5 +799,3 @@ class GeminiWafHarvester(GeminiHarvester, SingletonPlugin):
         base_url += '/'
         log.debug('WAF base URL: %s', base_url)
         return [base_url + i for i in urls]
-
-
