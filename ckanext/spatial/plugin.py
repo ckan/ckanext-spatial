@@ -43,7 +43,7 @@ def package_error_summary(error_dict):
     ''' Do some i18n stuff on the error_dict keys '''
 
     def prettify(field_name):
-        field_name = re.sub('(?<!\w)[Uu]rl(?!\w)', 'URL',
+        field_name = re.sub(r'(?<!\w)[Uu]rl(?!\w)', 'URL',
                             field_name.replace('_', ' ').capitalize())
         return p.toolkit._(field_name.replace('_', ' '))
 
