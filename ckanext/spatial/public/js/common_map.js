@@ -58,6 +58,7 @@
           baseLayerUrl = mapConfig['custom.url'];
           if (mapConfig.subdomains) leafletBaseLayerOptions.subdomains = mapConfig.subdomains;
           if (mapConfig.tms) leafletBaseLayerOptions.tms = mapConfig.tms;
+          if (mapConfig.zoomOffset) leafletBaseLayerOptions.zoomOffset = parseInt(mapConfig.zoomOffset);
           leafletBaseLayerOptions.attribution = mapConfig.attribution;
 
           baseLayer = new L.TileLayer(baseLayerUrl, leafletBaseLayerOptions);
