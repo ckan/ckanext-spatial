@@ -1,9 +1,9 @@
-from builtins import str
 import os
 import re
 import mimetypes
 from logging import getLogger
 
+import six
 
 from ckan import plugins as p
 
@@ -121,22 +121,22 @@ class SpatialMetadata(p.SingletonPlugin):
                         log.debug('Received: %r' % extra.value)
                         geometry = json.loads(extra.value)
                     except ValueError as e:
-                        error_dict = {'spatial':[u'Error decoding JSON object: %s' % str(e)]}
+                        error_dict = {'spatial':[u'Error decoding JSON object: %s' % six.text_type(e)]}
                         raise p.toolkit.ValidationError(error_dict, error_summary=package_error_summary(error_dict))
                     except TypeError as e:
-                        error_dict = {'spatial':[u'Error decoding JSON object: %s' % str(e)]}
+                        error_dict = {'spatial':[u'Error decoding JSON object: %s' % six.text_type(e)]}
                         raise p.toolkit.ValidationError(error_dict, error_summary=package_error_summary(error_dict))
 
                     try:
                         save_package_extent(package.id,geometry)
 
                     except ValueError as e:
-                        error_dict = {'spatial':[u'Error creating geometry: %s' % str(e)]}
+                        error_dict = {'spatial':[u'Error creating geometry: %s' % six.text_type(e)]}
                         raise p.toolkit.ValidationError(error_dict, error_summary=package_error_summary(error_dict))
                     except Exception as e:
                         if bool(os.getenv('DEBUG')):
                             raise
-                        error_dict = {'spatial':[u'Error: %s' % str(e)]}
+                        error_dict = {'spatial':[u'Error: %s' % six.text_type(e)]}
                         raise p.toolkit.ValidationError(error_dict, error_summary=package_error_summary(error_dict))
 
                 elif (extra.state == 'active' and not extra.value) or extra.state == 'deleted':

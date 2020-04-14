@@ -1,4 +1,3 @@
-from builtins import object
 import os
 import re
 
@@ -75,4 +74,3 @@ class SpatialTestBase(object):
     @classmethod
     def teardown_class(cls):
         repo.rebuild_db()
-

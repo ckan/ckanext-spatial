@@ -1,4 +1,3 @@
-from builtins import object
 import os
 
 from lxml import etree

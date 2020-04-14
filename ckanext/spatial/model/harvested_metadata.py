@@ -1,6 +1,5 @@
-from builtins import str
-from builtins import object
 from lxml import etree
+import six
 
 import logging
 log = logging.getLogger(__name__)
@@ -39,7 +38,7 @@ class MappedXmlDocument(MappedXmlObject):
     def get_xml_tree(self):
         if self.xml_tree is None:
             parser = etree.XMLParser(remove_blank_text=True)
-            if type(self.xml_str) == str:
+            if type(self.xml_str) == six.binary_type:
                 xml_str = self.xml_str.encode('utf8')
             else:
                 xml_str = self.xml_str

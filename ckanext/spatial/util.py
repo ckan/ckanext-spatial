@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import print_function
-from builtins import str
 import os
 import sys
+
+import six
 
 import logging
 from ckan.lib.helpers import json
@@ -22,7 +23,7 @@ def report(pkg=None):
     from ckanext.spatial.lib.reports import validation_report
 
     if pkg:
-        package_ref = str(pkg)
+        package_ref = six.text_type(pkg)
         pkg = model.Package.get(package_ref)
         if not pkg:
             print('Package ref "%s" not recognised' % package_ref)
@@ -89,7 +90,7 @@ def report_csv(csv_filepath):
 
 def initdb(srid=None):
     if srid:
-        srid = str(srid)
+        srid = six.text_type(srid)
 
     from ckanext.spatial.model import setup as db_setup
 
@@ -116,10 +117,10 @@ def update_extents():
             count += 1
         except ValueError as e:
             errors.append(u'Package %s - Error decoding JSON object: %s' %
-                          (package.id, str(e)))
+                          (package.id, six.text_type(e)))
         except TypeError as e:
             errors.append(u'Package %s - Error decoding JSON object: %s' %
-                          (package.id, str(e)))
+                          (package.id, six.text_type(e)))
 
         save_package_extent(package.id, geometry)
 

@@ -1,6 +1,4 @@
 from __future__ import absolute_import
-from builtins import str
-from builtins import object
 import os
 from datetime import datetime, date
 import lxml
@@ -815,7 +813,7 @@ class TestHarvest(HarvestFixtureBase):
         assert source_dict['status']['total_datasets'] == 1
 
     def test_clean_tags(self):
-        
+
         # Create source
         source_fixture = {
             'title': 'Test Source',
@@ -848,7 +846,7 @@ class TestHarvest(HarvestFixtureBase):
                                       context={'user': user_name},
                                       name='existing-group')
 
-        context = {'user': 'dummy'} 
+        context = {'user': 'dummy'}
         package_schema = default_update_package_schema()
         context['schema'] = package_schema
         package_dict = {'frequency': 'manual',
@@ -867,7 +865,7 @@ class TestHarvest(HarvestFixtureBase):
               'metadata_modified' : datetime.now(),
               'guid': str(uuid4()),
               'identifier': 'dummy'}
-        
+
         package_data = call_action('package_create', context=context, **package_dict)
 
         package = Package.get('fakename')
