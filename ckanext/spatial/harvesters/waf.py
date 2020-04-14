@@ -1,10 +1,10 @@
 from __future__ import print_function
-from future import standard_library
-standard_library.install_aliases()
-from builtins import str
+
+import six
+from six.moves.urllib.parse import urljoin
 import logging
 import hashlib
-from urllib.parse import urljoin
+
 import dateutil.parser
 import pyparsing as parse
 import requests
@@ -303,7 +303,7 @@ def _extract_waf(content, base_url, scraper, results = None, depth=0):
                 response = requests.get(new_url)
                 content = response.content
             except Exception as e:
-                print(str(e))
+                print(six.text_type(e))
                 continue
             _extract_waf(content, new_url, scraper, results, new_depth)
             continue
@@ -312,11 +312,10 @@ def _extract_waf(content, base_url, scraper, results = None, depth=0):
         date = record.date
         if date:
             try:
-                date = str(dateutil.parser.parse(date))
+                date = six.text_type(dateutil.parser.parse(date))
             except Exception as e:
                 raise
                 date = None
         results.append((urljoin(base_url, record.url), date))
 
     return results
-

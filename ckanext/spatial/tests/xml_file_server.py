@@ -1,29 +1,34 @@
 from __future__ import print_function
-from future import standard_library
-standard_library.install_aliases()
+
 import os
 
-import http.server
-import socketserver
+try:
+    from http.server import SimpleHTTPRequestHandler
+    from socketserver import TCPServer
+except ImportError:
+    from SimpleHTTPServer import SimpleHTTPRequestHandler
+    from SocketServer import TCPServer
+
 from threading import Thread
 
 
 PORT = 8999
 
+
 def serve(port=PORT):
     '''Serves test XML files over HTTP'''
-    
+
     # Make sure we serve from the tests' XML directory
     os.chdir(os.path.join(os.path.dirname(os.path.abspath(__file__)),
                           'xml'))
 
-    Handler = http.server.SimpleHTTPRequestHandler
-    
-    class TestServer(socketserver.TCPServer):
+    Handler = SimpleHTTPRequestHandler
+
+    class TestServer(TCPServer):
         allow_reuse_address = True
-    
+
     httpd = TestServer(("", PORT), Handler)
-    
+
     print('Serving test HTTP server at port', PORT)
 
     httpd_thread = Thread(target=httpd.serve_forever)

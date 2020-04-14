@@ -1,8 +1,6 @@
 from __future__ import print_function
-from builtins import str
-from builtins import range
-from past.builtins import basestring
-from builtins import object
+import six
+
 import time
 import random
 
@@ -25,7 +23,7 @@ from ckanext.spatial.tests.base import SpatialTestBase
 class TestCompareGeometries(SpatialTestBase):
 
     def _get_extent_object(self, geometry):
-        if isinstance(geometry, basestring):
+        if isinstance(geometry, six.string_types):
             geometry = json.loads(geometry)
         shape = asShape(geometry)
         return PackageExtent(package_id='xxx',
@@ -44,7 +42,6 @@ class TestCompareGeometries(SpatialTestBase):
         extent2 = self._get_extent_object(self.geojson_examples['point_2'])
 
         assert not compare_geometry_fields(extent1.the_geom, extent2.the_geom)
-
 
 
 class TestValidateBbox(object):
@@ -69,8 +66,10 @@ class TestValidateBbox(object):
         res = validate_bbox('random')
         assert_equal(res, None)
 
+
 def bbox_2_geojson(bbox_dict):
     return '{"type":"Polygon","coordinates":[[[%(minx)s, %(miny)s],[%(minx)s, %(maxy)s], [%(maxx)s, %(maxy)s], [%(maxx)s, %(miny)s], [%(minx)s, %(miny)s]]]}' % bbox_dict
+
 
 class SpatialQueryTestBase(SpatialTestBase):
     '''Base class for tests of spatial queries'''
@@ -83,8 +82,8 @@ class SpatialQueryTestBase(SpatialTestBase):
         for fixture_x in cls.fixtures_x:
             bbox = cls.x_values_to_bbox(fixture_x)
             bbox_geojson = bbox_2_geojson(bbox)
-            cls.create_package(name=munge_title_to_name(str(fixture_x)),
-                               title=str(fixture_x),
+            cls.create_package(name=munge_title_to_name(six.text_type(fixture_x)),
+                               title=six.text_type(fixture_x),
                                extras=[{'key': 'spatial',
                                         'value': bbox_geojson}])
 
@@ -105,6 +104,7 @@ class SpatialQueryTestBase(SpatialTestBase):
     def x_values_to_bbox(cls, x_tuple):
         return {'minx': x_tuple[0], 'maxx': x_tuple[1],
                 'miny': cls.miny, 'maxy': cls.maxy}
+
 
 class TestBboxQuery(SpatialQueryTestBase):
     # x values for the fixtures

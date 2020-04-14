@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from future import standard_library
-standard_library.install_aliases()
 import logging
 
 from flask import Blueprint, make_response
@@ -16,11 +14,7 @@ from ckan.views.api import _finish_ok, _finish_bad_request
 
 from ckanext.spatial.lib import get_srid, validate_bbox, bbox_query
 
-
-try:
-    from io import StringIO
-except ImportError:
-    from io import StringIO
+from six import StringIO
 
 log = logging.getLogger(__name__)
 
@@ -31,7 +25,7 @@ def spatial_query(register):
     error_400_msg = \
         'Please provide a suitable bbox parameter [minx,miny,maxx,maxy]'
 
-    if not 'bbox' in request.args:
+    if 'bbox' not in request.args:
         return _finish_bad_request(error_400_msg)
 
     bbox = validate_bbox(request.params['bbox'])
@@ -43,8 +37,6 @@ def spatial_query(register):
         request.args else None
 
     extents = bbox_query(bbox, srid)
-
-    format = request.args.get('format', '')
 
     ids = [extent.package_id for extent in extents]
     output = dict(count=len(ids), results=ids)
@@ -68,11 +60,12 @@ def harvest_object_redirect_html(id):
 def _get_original_content(id):
     from ckanext.harvest.model import HarvestObject, HarvestObjectExtra
 
-    extra = Session.query(HarvestObjectExtra).join(HarvestObject) \
-                    .filter(HarvestObject.id == id) \
-                    .filter(
-                        HarvestObjectExtra.key == 'original_document'
-                    ).first()
+    extra = Session.query(
+        HarvestObjectExtra
+    ).join(HarvestObject).filter(HarvestObject.id == id).filter(
+        HarvestObjectExtra.key == 'original_document'
+    ).first()
+
     if extra:
         return extra.value
     else:
@@ -81,8 +74,7 @@ def _get_original_content(id):
 
 def _get_content(id):
     from ckanext.harvest.model import HarvestObject
-    obj = Session.query(HarvestObject) \
-                    .filter(HarvestObject.id == id).first()
+    obj = Session.query(HarvestObject).filter(HarvestObject.id == id).first()
     if obj:
         return obj.content
     else:
@@ -140,9 +132,9 @@ def display_xml_original(id):
 
     headers = {'Content-Type': 'application/xml; charset=utf-8'}
 
-    if not '<?xml' in content.split('\n')[0]:
+    if '<?xml' not in content.split('\n')[0]:
         content = u'<?xml version="1.0" encoding="UTF-8"?>\n' + content
-    response = make_response((content, 200, headers))
+    return make_response((content, 200, headers))
 
 
 def display_html(id):
@@ -154,7 +146,7 @@ def display_html(id):
 
     xslt_package, xslt_path = _get_xslt()
     content = _transform_to_html(content, xslt_package, xslt_path)
-    response = make_response((content, 200, headers))
+    return make_response((content, 200, headers))
 
 
 def display_html_original(id):
@@ -166,7 +158,7 @@ def display_html_original(id):
 
     xslt_package, xslt_path = _get_xslt(original=True)
     content = _transform_to_html(content, xslt_package, xslt_path)
-    response = make_response((content, 200, headers))
+    return make_response((content, 200, headers))
 
 
 harvest_metadata.add_url_rule('/api/2/rest/harvestobject/<id>/xml',

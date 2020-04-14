@@ -1,9 +1,6 @@
-from future import standard_library
-standard_library.install_aliases()
-from builtins import str
 import re
-import urllib.request, urllib.parse, urllib.error
-import urllib.parse
+import six
+from six.moves.urllib.parse import urlparse, urlunparse, urlencode
 
 import logging
 
@@ -25,7 +22,7 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
     '''
     implements(IHarvester)
 
-    csw=None
+    csw = None
 
     def info(self):
         return {
@@ -34,13 +31,12 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
             'description': 'A server that implements OGC\'s Catalog Service for the Web (CSW) standard'
             }
 
-
     def get_original_url(self, harvest_object_id):
         obj = model.Session.query(HarvestObject).\
                                     filter(HarvestObject.id==harvest_object_id).\
                                     first()
 
-        parts = urllib.parse.urlparse(obj.source.url)
+        parts = urlparse(obj.source.url)
 
         params = {
             'SERVICE': 'CSW',
@@ -51,12 +47,12 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
             'ID': obj.guid
         }
 
-        url = urllib.parse.urlunparse((
+        url = urlunparse((
             parts.scheme,
             parts.netloc,
             parts.path,
             None,
-            urllib.parse.urlencode(params),
+            urlencode(params),
             None
         ))
 
@@ -107,10 +103,9 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
                     self._save_gather_error('Error for the identifier %s [%r]' % (identifier,e), harvest_job)
                     continue
 
-
         except Exception as e:
             log.error('Exception: %s' % text_traceback())
-            self._save_gather_error('Error gathering the identifiers from the CSW server [%s]' % str(e), harvest_job)
+            self._save_gather_error('Error gathering the identifiers from the CSW server [%s]' % six.text_type(e), harvest_job)
             return None
 
         new = guids_in_harvest - guids_in_db
@@ -195,4 +190,3 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
 
     def _setup_csw_client(self, url):
         self.csw = CswService(url)
-

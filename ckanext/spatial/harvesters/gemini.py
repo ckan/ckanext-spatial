@@ -8,12 +8,9 @@ but can be easily adapted for other INSPIRE/ISO19139 XML metadata
     - GeminiWafHarvester - An index page with links to GEMINI resources
 
 '''
-from future import standard_library
-standard_library.install_aliases()
-from builtins import str
-from past.builtins import basestring
+import six
 import os
-from urllib.parse import urlparse
+from six.moves.urllib.parse import urlparse
 from datetime import datetime
 from numbers import Number
 import uuid
@@ -76,10 +73,10 @@ class GeminiHarvester(SpatialHarvester):
             return True
         except Exception as e:
             log.error('Exception during import: %s' % text_traceback())
-            if not str(e).strip():
+            if not six.text_type(e).strip():
                 self._save_object_error('Error importing Gemini document.', harvest_object, 'Import')
             else:
-                self._save_object_error('Error importing Gemini document: %s' % str(e), harvest_object, 'Import')
+                self._save_object_error('Error importing Gemini document: %s' % six.text_type(e), harvest_object, 'Import')
             raise
             if debug_exception_mode:
                 raise
@@ -278,7 +275,7 @@ class GeminiHarvester(SpatialHarvester):
         if package is None or package.title != gemini_values['title']:
             name = self.gen_new_name(gemini_values['title'])
             if not name:
-                name = self.gen_new_name(str(gemini_guid))
+                name = self.gen_new_name(six.text_type(gemini_guid))
             if not name:
                 raise Exception('Could not generate a unique name from the title or the GUID. Please choose a more unique title.')
             package_dict['name'] = name
@@ -323,7 +320,7 @@ class GeminiHarvester(SpatialHarvester):
 
         extras_as_dict = []
         for key,value in extras.items():
-            if isinstance(value,(basestring,Number)):
+            if isinstance(value, six.string_types + (Number,)):
                 extras_as_dict.append({'key':key,'value':value})
             else:
                 extras_as_dict.append({'key':key,'value':json.dumps(value)})
@@ -416,8 +413,8 @@ class GeminiHarvester(SpatialHarvester):
         else:
             counter = 1
             while counter < 101:
-                if name+str(counter) not in taken:
-                    return name+str(counter)
+                if name+six.text_type(counter) not in taken:
+                    return name+six.text_type(counter)
                 counter = counter + 1
             return None
 
@@ -457,7 +454,7 @@ class GeminiHarvester(SpatialHarvester):
 
         # The default package schema does not like Upper case tags
         tag_schema = logic.schema.default_tags_schema()
-        tag_schema['name'] = [not_empty,str]
+        tag_schema['name'] = [not_empty,six.text_type]
         package_schema['tags'] = tag_schema
 
         # TODO: user
@@ -470,8 +467,8 @@ class GeminiHarvester(SpatialHarvester):
         if not package:
             # We need to explicitly provide a package ID, otherwise ckanext-spatial
             # won't be be able to link the extent to the package.
-            package_dict['id'] = str(uuid.uuid4())
-            package_schema['id'] = [str]
+            package_dict['id'] = six.text_type(uuid.uuid4())
+            package_schema['id'] = [six.text_type]
 
             action_function = get_action('package_create')
         else:
@@ -481,7 +478,7 @@ class GeminiHarvester(SpatialHarvester):
         try:
             package_dict = action_function(context, package_dict)
         except ValidationError as e:
-            raise Exception('Validation Error: %s' % str(e.error_summary))
+            raise Exception('Validation Error: %s' % six.text_type(e.error_summary))
             if debug_exception_mode:
                 raise
 
@@ -575,7 +572,7 @@ class GeminiCswHarvester(GeminiHarvester, SingletonPlugin):
 
         except Exception as e:
             log.error('Exception: %s' % text_traceback())
-            self._save_gather_error('Error gathering the identifiers from the CSW server [%s]' % str(e), harvest_job)
+            self._save_gather_error('Error gathering the identifiers from the CSW server [%s]' % six.text_type(e), harvest_job)
             return None
 
         if len(ids) == 0:
