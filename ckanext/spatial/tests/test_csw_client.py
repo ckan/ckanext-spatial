@@ -3,8 +3,9 @@ from six.moves.urllib.request import urlopen
 from six.moves.urllib.error import URLError
 import os
 
-from pylons import config
-from nose.plugins.skip import SkipTest
+import pytest
+
+from ckan.plugins.toolkit import config
 
 from ckan.model import engine_is_sqlite
 
@@ -59,7 +60,7 @@ class CkanProcess(CkanServerCase):
     @classmethod
     def setup_class(cls):
         if engine_is_sqlite():
-            raise SkipTest("Non-memory database needed for this test")
+            return pytest.skip("Non-memory database needed for this test")
 
         cls.pid = cls._start_ckan_server()
         ## Don't need to init database, since it is same database as this process uses

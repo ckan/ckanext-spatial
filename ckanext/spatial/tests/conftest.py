@@ -4,9 +4,8 @@ import pytest
 import os
 import re
 from sqlalchemy import Table
-from nose.plugins.skip import SkipTest
 
-from ckan.model import Session, repo, meta, engine_is_sqlite
+from ckan.model import Session, meta
 from ckanext.spatial.geoalchemy_common import postgis_version
 from ckanext.spatial.model.package_extent import setup as spatial_db_setup
 from ckanext.harvest.model import setup as harvest_model_setup

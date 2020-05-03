@@ -5,13 +5,13 @@ import pytest
 from ckan.model import Session
 from ckan.lib.helpers import url_for
 
-import ckan.tests.helpers as helpers
 import ckan.tests.factories as factories
 
 from ckanext.spatial.model import PackageExtent
 from ckanext.spatial.tests.base import SpatialTestBase
 
 
+@pytest.mark.usefixtures("clean_db")
 class TestSpatialExtra(SpatialTestBase):
     def test_spatial_extra_base(self, app):
 

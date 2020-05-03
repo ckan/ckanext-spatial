@@ -22,7 +22,6 @@ geojson_examples = {
 }
 
 
-@pytest.mark.usefixtures("clean_db")
 class SpatialTestBase(object):
     db_srid = 4326
     geojson_examples = geojson_examples

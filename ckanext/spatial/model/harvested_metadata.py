@@ -38,10 +38,7 @@ class MappedXmlDocument(MappedXmlObject):
     def get_xml_tree(self):
         if self.xml_tree is None:
             parser = etree.XMLParser(remove_blank_text=True)
-            if type(self.xml_str) == six.binary_type:
-                xml_str = self.xml_str.encode('utf8')
-            else:
-                xml_str = self.xml_str
+            xml_str = six.ensure_str(self.xml_str)
             self.xml_tree = etree.fromstring(xml_str, parser=parser)
         return self.xml_tree
 
