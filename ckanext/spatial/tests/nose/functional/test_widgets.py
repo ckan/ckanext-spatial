@@ -1,6 +1,6 @@
 from ckan.lib.helpers import url_for
 
-from ckanext.spatial.tests.base import SpatialTestBase
+from ckanext.spatial.tests.nose.base import SpatialTestBase
 
 try:
     import ckan.new_tests.helpers as helpers

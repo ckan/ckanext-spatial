@@ -24,7 +24,7 @@ from ckanext.spatial.harvesters.gemini import (GeminiDocHarvester,
                                                GeminiWafHarvester,
                                                GeminiHarvester)
 from ckanext.spatial.harvesters.base import SpatialHarvester
-from ckanext.spatial.tests.base import SpatialTestBase
+from ckanext.spatial.tests.nose.base import SpatialTestBase
 
 from .xml_file_server import serve
 

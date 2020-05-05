@@ -10,7 +10,7 @@ except ImportError:
     import ckan.tests.helpers as helpers
     import ckan.tests.factories as factories
 
-from ckanext.spatial.tests.base import SpatialTestBase
+from ckanext.spatial.tests.nose.base import SpatialTestBase
 
 extents = {
     'nz': '{"type":"Polygon","coordinates":[[[174,-38],[176,-38],[176,-40],[174,-40],[174,-38]]]}',

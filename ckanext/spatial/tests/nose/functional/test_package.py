@@ -13,7 +13,7 @@ except ImportError:
 
 from ckanext.spatial.model import PackageExtent
 from ckanext.spatial.geoalchemy_common import legacy_geoalchemy
-from ckanext.spatial.tests.base import SpatialTestBase
+from ckanext.spatial.tests.nose.base import SpatialTestBase
 
 
 class TestSpatialExtra(SpatialTestBase, helpers.FunctionalTestBase):

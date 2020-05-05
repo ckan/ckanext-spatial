@@ -29,6 +29,11 @@ fi
 
 python setup.py develop
 
+if [ -f requirement-setuptools.txt ]
+then
+    pip install -r requirement-setuptools.txt
+fi
+
 if [ -f requirements-py2.txt ] && [ $PYTHONVERSION = 2 ]
 then
     grep -v psycopg2 < requirements-py2.txt > reqs.txt

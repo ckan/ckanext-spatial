@@ -10,7 +10,7 @@ except ImportError:
 
 from ckanext.spatial.model import PackageExtent
 from ckanext.spatial.geoalchemy_common import WKTElement, legacy_geoalchemy
-from ckanext.spatial.tests.base import SpatialTestBase
+from ckanext.spatial.tests.nose.base import SpatialTestBase
 
 
 class TestPackageExtent(SpatialTestBase):
