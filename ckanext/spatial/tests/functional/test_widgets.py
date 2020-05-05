@@ -1,6 +1,7 @@
 from ckan.lib.helpers import url_for
 
 from ckanext.spatial.tests.base import SpatialTestBase
+from ckanext.spatial.tests.functional import legacy_routing
 
 try:
     import ckan.new_tests.helpers as helpers
@@ -21,7 +22,11 @@ class TestSpatialWidgets(SpatialTestBase, helpers.FunctionalTestBase):
             extras=[{'key': 'spatial',
                      'value': self.geojson_examples['point']}]
         )
-        offset = url_for(controller='package', action='read', id=dataset['id'])
+        if legacy_routing:
+            offset = url_for(controller='package', action='read',
+                             id=dataset['id'])
+        else:
+            offset = url_for('dataset.read', id=dataset['name'])
         res = app.get(offset)
 
         assert 'data-module="dataset-map"' in res
@@ -31,7 +36,10 @@ class TestSpatialWidgets(SpatialTestBase, helpers.FunctionalTestBase):
 
         app = self._get_test_app()
 
-        offset = url_for(controller='package', action='search')
+        if legacy_routing:
+            offset = url_for(controller='package', action='search')
+        else:
+            offset = url_for('dataset.search')
         res = app.get(offset)
 
         assert 'data-module="spatial-query"' in res
