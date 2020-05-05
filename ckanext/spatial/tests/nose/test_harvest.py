@@ -261,7 +261,6 @@ class TestHarvest(HarvestFixtureBase):
             'resource_locator_function': 'download',
             'resource_locator_protocol': 'OGC:WMS-1.3.0-http-get-capabilities',
             'url': u'http://127.0.0.1:8999/wms/capabilities.xml',
-            'verified': 'True',
         }
 
         resource = package_dict['resources'][0]
