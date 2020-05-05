@@ -131,7 +131,7 @@ It adds a XML attribute codeSpace to a term, where the value of the codeSpace at
 It is recommended that the symbol be an identifier for a unit of measure as specified in the "Unified Code of Units of Measure" (UCUM) (http://aurora.regenstrief.org/UCUM). This provides a set of symbols and a grammar for constructing identifiers for units of measure that are unique, and may be easily entered with a keyboard supporting the limited character set known as 7-bit ASCII. ISO 2955 formerly provided a specification with this scope, but was withdrawn in 2001. UCUM largely follows ISO 2955 with modifications to remove ambiguities and other problems.</documentation>
 		</annotation>
 		<restriction base="string">
-			<pattern value="[^: \n\r\t]+"/>
+			<pattern value="[^:\s]+"/>
 		</restriction>
 	</simpleType>
 	<simpleType name="UomURI">
