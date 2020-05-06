@@ -81,6 +81,10 @@ git clone https://github.com/ckan/ckanext-harvest
 cd ckanext-harvest
 python setup.py develop
 pip install -r pip-requirements.txt
+if [ $CKANVERSION \< '2.9' ]
+then
+    paster harvester initdb -c ../ckan/test-core.ini
+fi
 
 cd -
 
@@ -95,7 +99,6 @@ mv test.ini subdir
 
 if [ $CKANVERSION \< '2.9' ]
 then
-    paster harvester initdb -c subdir/test.ini
     paster spatial initdb -c subdir/test.ini
 else
     ckan -c subdir/test.ini harvester initdb

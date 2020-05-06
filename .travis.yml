@@ -9,10 +9,10 @@ services:
     - redis
     - postgresql
 addons:
-  postgresql: 11.2
+  postgresql: 9.6
   apt:
     packages:
-    - postgresql-11.2-postgis-2.5
+    - postgresql-9.6-postgis-2.3
 
 script: bash bin/travis-run.bash
 before_install:
