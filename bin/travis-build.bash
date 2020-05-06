@@ -82,7 +82,13 @@ cd ckanext-harvest
 python setup.py develop
 pip install -r pip-requirements.txt
 
-paster harvester initdb -c ../ckan/test-core.ini
+if [ $CKANVERSION \< '2.9' ]
+then
+    paster harvester initdb -c ../ckan/test-core.ini
+else
+    ckan -c test-core.ini harvester initdb
+fi
+
 cd -
 
 echo "Installing ckanext-spatial and its requirements..."
@@ -94,6 +100,11 @@ echo "Moving test.ini into a subdir..."
 mkdir subdir
 mv test.ini subdir
 
-paster spatial initdb -c subdir/test.ini
+if [ $CKANVERSION \< '2.9' ]
+then
+    paster spatial initdb -c subdir/test.ini
+else
+    ckan -c test-core.ini spatial initdb
+fi
 
 echo "travis-build.bash is done."
