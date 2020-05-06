@@ -87,7 +87,7 @@ cd -
 echo "Installing ckanext-spatial and its requirements..."
 pip install -r pip-requirements.txt
 python setup.py develop
-
+pip install pycsw
 
 echo "Moving test.ini into a subdir..."
 mkdir subdir
