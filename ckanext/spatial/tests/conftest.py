@@ -35,7 +35,7 @@ def create_postgis_tables():
 
 
 @pytest.fixture
-def clean_db(reset_db):
+def spatial_clean_db(reset_db):
     reset_db()
 
     # This will create the PostGIS tables (geometry_columns and

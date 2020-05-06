@@ -7,7 +7,7 @@ import ckan.tests.factories as factories
 
 
 class TestSpatialWidgets(SpatialTestBase):
-    @pytest.mark.usefixtures("clean_db")
+    @pytest.mark.usefixtures("spatial_clean_db")
     def test_dataset_map(self, app):
         dataset = factories.Dataset(
             extras=[

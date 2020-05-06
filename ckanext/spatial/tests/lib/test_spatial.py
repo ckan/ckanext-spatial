@@ -38,7 +38,7 @@ def create_package(**package_dict):
     return context.get("id")
 
 
-@pytest.mark.usefixtures("clean_db")
+@pytest.mark.usefixtures("spatial_clean_db")
 class TestCompareGeometries(SpatialTestBase):
     def _get_extent_object(self, geometry):
         if isinstance(geometry, six.string_types):
@@ -99,7 +99,7 @@ class SpatialQueryTestBase(SpatialTestBase):
     maxy = 1
 
     @pytest.fixture(autouse=True)
-    def initial_data(self, clean_db):
+    def initial_data(self, spatial_clean_db):
         for fixture_x in self.fixtures_x:
             bbox = self.x_values_to_bbox(fixture_x)
             bbox_geojson = bbox_2_geojson(bbox)

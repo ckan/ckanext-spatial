@@ -12,7 +12,7 @@ from ckanext.spatial.geoalchemy_common import WKTElement, legacy_geoalchemy
 from ckanext.spatial.tests.base import SpatialTestBase
 
 
-@pytest.mark.usefixtures("clean_db")
+@pytest.mark.usefixtures("spatial_clean_db")
 class TestPackageExtent(SpatialTestBase):
     def test_create_extent(self):
 
