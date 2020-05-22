@@ -303,7 +303,8 @@ class SpatialQuery(p.SingletonPlugin):
                    add({area_search}, mul(sub({y22}, {y21}), sub({x22}, {x21})))
                 )'''.format(**variables).replace('\n','').replace(' ','')
 
-        search_params['fq_list'] = ['{!frange incl=false l=0 u=1}%s' % bf]
+        search_params['fq_list'] = search_params.get('fq_list', [])
+        search_params['fq_list'].append('{!frange incl=false l=0 u=1}%s' % bf)
 
         search_params['bf'] = bf
         search_params['defType'] = 'edismax'
