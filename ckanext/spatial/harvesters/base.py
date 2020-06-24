@@ -1,7 +1,9 @@
 import re
 import cgitb
+import lxml.html
 import warnings
 import urllib2
+import requests
 import sys
 import logging
 from string import Template
@@ -203,7 +205,7 @@ class SpatialHarvester(HarvesterBase):
         :returns: A dataset dictionary (package_dict)
         :rtype: dict
         '''
-        
+
         tags = []
 
         if 'tags' in iso_values:
@@ -663,20 +665,24 @@ class SpatialHarvester(HarvesterBase):
         return True
     ##
 
-    def _is_wms(self, url):
+    def _is_wms(self, url, harvest_object=None):
         '''
         Checks if the provided URL actually points to a Web Map Service.
-        Uses owslib WMS reader to parse the response.
         '''
         try:
-            capabilities_url = wms.WMSCapabilitiesReader().capabilities_url(url)
-            res = urllib2.urlopen(capabilities_url, None, 10)
-            xml = res.read()
-
-            s = wms.WebMapService(url, xml=xml)
+            # as WebMapService rejects unicode use urllib2 in _get_content
+            # identify the version first otherwise OWSLib will default to 1.1.1
+            xml = self._get_content(url)
+            doc = lxml.html.fromstring(xml)
+            version = doc.xpath("//@version")
+            s = wms.WebMapService(url, xml=xml, version=None if not version else version[0])
             return isinstance(s.contents, dict) and s.contents != {}
         except Exception, e:
-            log.error('WMS check for %s failed with exception: %s' % (url, str(e)))
+            message = 'WMS check for %s failed with exception: %s' % (url, str(e))
+            if harvest_object:
+                self._save_object_error(message, harvest_object, 'Import')
+            else:
+                log.error(message)
         return False
 
     def _get_object_extra(self, harvest_object, key):
@@ -728,7 +734,6 @@ class SpatialHarvester(HarvesterBase):
                 for custom_validator in custom_validators:
                     if custom_validator not in all_validators:
                         self._validator.add_validator(custom_validator)
-
 
         return self._validator
 
@@ -787,6 +792,8 @@ class SpatialHarvester(HarvesterBase):
         '''
         url = url.replace(' ', '%20')
         response = requests.get(url, timeout=10)
+
+        response.raise_for_status() 
 
         content = response.text
 

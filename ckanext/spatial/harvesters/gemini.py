@@ -15,6 +15,7 @@ from numbers import Number
 import uuid
 import logging
 import difflib
+import re
 
 from lxml import etree
 from sqlalchemy.sql import update, bindparam
@@ -30,7 +31,7 @@ from ckan.logic import get_action, ValidationError
 from ckan.lib.navl.validators import not_empty
 
 from ckanext.harvest.interfaces import IHarvester
-from ckanext.harvest.model import HarvestObject
+from ckanext.harvest.model import HarvestObject, HarvestObjectExtra
 
 from ckanext.spatial.model import GeminiDocument
 from ckanext.spatial.lib.csw_client import CswService
@@ -61,6 +62,8 @@ class GeminiHarvester(SpatialHarvester):
             log.error('No harvest object received')
             return False
 
+        self._set_source_config(harvest_object.source.config)
+
         # Save a reference
         self.obj = harvest_object
 
@@ -68,19 +71,18 @@ class GeminiHarvester(SpatialHarvester):
             self._save_object_error('Empty content for object %s' % harvest_object.id,harvest_object,'Import')
             return False
         try:
-            self.import_gemini_object(harvest_object.content)
-            return True
+            return self.import_gemini_object(harvest_object)
         except Exception, e:
             log.error('Exception during import: %s' % text_traceback())
             if not str(e).strip():
                 self._save_object_error('Error importing Gemini document.', harvest_object, 'Import')
             else:
                 self._save_object_error('Error importing Gemini document: %s' % str(e), harvest_object, 'Import')
-            raise
+
             if debug_exception_mode:
                 raise
 
-    def import_gemini_object(self, gemini_string):
+    def import_gemini_object(self, harvest_object):
         '''Imports the Gemini metadata into CKAN.
 
         The harvest_source_reference is an ID that the harvest_source uses
@@ -89,6 +91,7 @@ class GeminiHarvester(SpatialHarvester):
 
         Some errors raise Exceptions.
         '''
+        gemini_string = harvest_object.content
         log = logging.getLogger(__name__ + '.import')
         xml = etree.fromstring(gemini_string)
         valid, profile, errors = self._get_validator().is_valid(xml)
@@ -97,13 +100,21 @@ class GeminiHarvester(SpatialHarvester):
             log.error('Errors found for object with GUID %s:' % self.obj.guid)
             self._save_object_error(out,self.obj,'Import')
 
+        if datetime.today() > datetime(2019, 12, 1) and hasattr(self, '_validator'):
+            if any(schema in ['gemini2', 'gemini2-1.3'] for schema in self._validator.profiles):
+                self._save_object_error('gemini2/gemini2-1.3 will be deprecated, please use gemin2-3', self.obj, 'Validation')
+
         unicode_gemini_string = etree.tostring(xml, encoding=unicode, pretty_print=True)
 
         # may raise Exception for errors
-        package_dict = self.write_package_from_gemini_string(unicode_gemini_string)
+        package_dict = self.write_package_from_gemini_string(unicode_gemini_string, harvest_object)
 
+        if package_dict:
+            return True
+        else:
+            return 'unchanged'
 
-    def write_package_from_gemini_string(self, content):
+    def write_package_from_gemini_string(self, content, harvest_object):
         '''Create or update a Package based on some content that has
         come from a URL.
 
@@ -139,9 +150,39 @@ class GeminiHarvester(SpatialHarvester):
         elif len(last_harvested_object) > 1:
                 raise Exception('Application Error: more than one current record for GUID %s' % gemini_guid)
 
+        if last_harvested_object and last_harvested_object.harvest_source_id == harvest_object.harvest_source_id:
+            def get_harvest_object_url(harvest_object_id):
+                return Session.query(HarvestObjectExtra.value) \
+                    .filter(HarvestObjectExtra.harvest_object_id==harvest_object_id) \
+                    .filter(HarvestObjectExtra.key=='url') \
+                    .scalar()
+
+            existing_source_url = get_harvest_object_url(last_harvested_object.id)
+            new_source_url = get_harvest_object_url(harvest_object.id)
+
+            if existing_source_url and existing_source_url != new_source_url:
+                if last_harvested_object.package.state == u'deleted':
+                    last_harvested_object.current = False
+                    last_harvested_object.save()
+
+                    last_harvested_object = None
+                else:
+                    raise Exception('Harvest object %s%s has a GUID %s already in use by %s%s in harvest source %s' %
+                        (
+                            harvest_object.id,
+                            ' (%s)' % new_source_url,
+                            gemini_guid,
+                            last_harvested_object.id,
+                            ' (%s)' % existing_source_url,
+                            harvest_object.harvest_source_id
+                        )
+                    )
+
         reactivate_package = False
         if last_harvested_object:
             # We've previously harvested this (i.e. it's an update)
+
+            self.force_import = self.force_import or getattr(harvest_object, 'force_import', False)
 
             # Use metadata modified date instead of content to determine if the package
             # needs to be updated
@@ -149,7 +190,7 @@ class GeminiHarvester(SpatialHarvester):
                 or last_harvested_object.metadata_modified_date < self.obj.metadata_modified_date \
                 or self.force_import \
                 or (last_harvested_object.metadata_modified_date == self.obj.metadata_modified_date and
-                    last_harvested_object.source.active is False):
+                    (last_harvested_object.content != self.obj.content or last_harvested_object.source.active is False)):
 
                 if self.force_import:
                     log.info('Import forced for object %s with GUID %s' % (self.obj.id,gemini_guid))
@@ -169,16 +210,8 @@ class GeminiHarvester(SpatialHarvester):
                          return None
 
             else:
-                if last_harvested_object.content != self.obj.content and \
-                 last_harvested_object.metadata_modified_date == self.obj.metadata_modified_date:
-                    diff_generator = difflib.unified_diff(
-                        last_harvested_object.content.split('\n'),
-                        self.obj.content.split('\n'))
-                    diff = '\n'.join([line for line in diff_generator])
-                    raise Exception('The contents of document with GUID %s changed, but the metadata date has not been updated.\nDiff:\n%s' % (gemini_guid, diff))
-                else:
-                    # The content hasn't changed, no need to update the package
-                    log.info('Document with GUID %s unchanged, skipping...' % (gemini_guid))
+                # The content hasn't changed, no need to update the package
+                log.info('Document with GUID %s unchanged, skipping...' % (gemini_guid))
                 return None
         else:
             log.info('No package with GEMINI guid %s found, let\'s create one' % gemini_guid)
@@ -264,6 +297,12 @@ class GeminiHarvester(SpatialHarvester):
             'resources':[]
         }
 
+        # We need to get the owner organization (if any) from the harvest
+        # source dataset
+        source_dataset = Package.get(harvest_object.source.id)
+        if source_dataset.owner_org:
+            package_dict['owner_org'] = source_dataset.owner_org
+
         if self.obj.source.publisher_id:
             package_dict['groups'] = [{'id':self.obj.source.publisher_id}]
 
@@ -291,8 +330,7 @@ class GeminiHarvester(SpatialHarvester):
                     resource = {}
                     if extras['resource-type'] == 'service':
                         # Check if the service is a view service
-                        test_url = url.split('?')[0] if '?' in url else url
-                        if self._is_wms(test_url):
+                        if self._is_wms(url, harvest_object=harvest_object):
                             resource['verified'] = True
                             resource['verified_date'] = datetime.now().isoformat()
                             resource_format = 'WMS'
@@ -404,18 +442,34 @@ class GeminiHarvester(SpatialHarvester):
         name = munge_title_to_name(title).replace('_', '-')
         while '--' in name:
             name = name.replace('--', '-')
-        like_q = u'%s%%' % name
-        pkg_query = Session.query(Package).filter(Package.name.ilike(like_q)).limit(100)
-        taken = [pkg.name for pkg in pkg_query]
-        if name not in taken:
-            return name
-        else:
-            counter = 1
-            while counter < 101:
-                if name+str(counter) not in taken:
-                    return name+str(counter)
+        like_q = "{}%".format(name)
+
+        pkg_query = Session.query(
+            Package
+        ).filter(
+            Package.name.ilike(like_q)
+        ).order_by(
+            Package.metadata_created.desc()
+        ).first()
+
+        if pkg_query:
+            match = re.match(r"\D+(\d+)$", pkg_query.name)
+            counter = int(match.group(1)) if match else 0
+
+            while True:
                 counter = counter + 1
-            return None
+                new_name = name + str(counter)
+
+                have_name = Session.query(
+                    Package
+                ).filter(
+                    Package.name.ilike(new_name)
+                ).first()
+
+                if not have_name:
+                    return new_name
+
+        return name
 
     @classmethod
     def _extract_first_licence_url(self, licences):
@@ -456,10 +510,9 @@ class GeminiHarvester(SpatialHarvester):
         tag_schema['name'] = [not_empty,unicode]
         package_schema['tags'] = tag_schema
 
-        # TODO: user
         context = {'model':model,
                    'session':Session,
-                   'user':'harvest',
+                   'user': self._get_user_name(),
                    'schema':package_schema,
                    'extras_as_string':True,
                    'api_version': '2'}
@@ -526,7 +579,7 @@ class GeminiCswHarvester(GeminiHarvester, SingletonPlugin):
 
     def info(self):
         return {
-            'name': 'csw',
+            'name': 'gemini-csw',
             'title': 'CSW Server',
             'description': 'A server that implements OGC\'s Catalog Service for the Web (CSW) standard'
             }
@@ -605,8 +658,13 @@ class GeminiCswHarvester(GeminiHarvester, SingletonPlugin):
             return False
 
         try:
-            # Save the fetch contents in the HarvestObject
-            harvest_object.content = record['xml']
+            # Contents come from csw_client already declared and encoded as utf-8
+            # Remove original XML declaration
+            # (copied from csw.py:179
+
+            content = re.sub('<\?xml(.*)\?>', '', record['xml'])
+
+            harvest_object.content = content.strip()
             harvest_object.save()
         except Exception,e:
             self._save_object_error('Error saving the harvest object for GUID %s [%r]' % \
@@ -645,7 +703,7 @@ class GeminiDocHarvester(GeminiHarvester, SingletonPlugin):
 
         # Get contents
         try:
-            content = self._get_content(url)
+            content = self._get_content_as_unicode(url)
         except Exception,e:
             self._save_gather_error('Unable to get content for URL: %s: %r' % \
                                         (url, e),harvest_job)
@@ -660,7 +718,8 @@ class GeminiDocHarvester(GeminiHarvester, SingletonPlugin):
                 # have it, we might as well save a request
                 obj = HarvestObject(guid=gemini_guid,
                                     job=harvest_job,
-                                    content=gemini_string)
+                                    content=gemini_string,
+                                    extras=[HarvestObjectExtra(key='url', value=url)])
                 obj.save()
 
                 log.info('Got GUID %s' % gemini_guid)
@@ -706,16 +765,16 @@ class GeminiWafHarvester(GeminiHarvester, SingletonPlugin):
 
         # Get contents
         try:
-            content = self._get_content(url)
+            content = self._get_content_as_unicode(url)
         except Exception,e:
             self._save_gather_error('Unable to get content for URL: %s: %r' % \
                                         (url, e),harvest_job)
             return None
         ids = []
         try:
-            for url in self._extract_urls(content,url):
+            for url in self._extract_urls(content, url):
                 try:
-                    content = self._get_content(url)
+                    content = self._get_content_as_unicode(url)
                 except Exception, e:
                     msg = 'Couldn\'t harvest WAF link: %s: %s' % (url, e)
                     self._save_gather_error(msg,harvest_job)
@@ -731,7 +790,8 @@ class GeminiWafHarvester(GeminiHarvester, SingletonPlugin):
                             # have it, we might as well save a request
                             obj = HarvestObject(guid=gemini_guid,
                                                 job=harvest_job,
-                                                content=gemini_string)
+                                                content=gemini_string,
+                                                extras=[HarvestObjectExtra(key='url', value=url)])
                             obj.save()
 
                             ids.append(obj.id)
@@ -741,7 +801,7 @@ class GeminiWafHarvester(GeminiHarvester, SingletonPlugin):
                         msg = 'Could not get GUID for source %s: %r' % (url,e)
                         self._save_gather_error(msg,harvest_job)
                         continue
-        except Exception,e:
+        except Exception, e:
             msg = 'Error extracting URLs from %s' % url
             self._save_gather_error(msg,harvest_job)
             return None
@@ -775,16 +835,19 @@ class GeminiWafHarvester(GeminiHarvester, SingletonPlugin):
             if not url:
                 continue
             if '?' in url:
-                log.debug('Ignoring link in WAF because it has "?": %s', url)
+                self.log_error('Ignoring link in WAF because it has "?": {}', url)
                 continue
             if '/' in url:
-                log.debug('Ignoring link in WAF because it has "/": %s', url)
+                self.log_error('Ignoring link in WAF because it has "/": {}', url)
                 continue
             if '#' in url:
-                log.debug('Ignoring link in WAF because it has "#": %s', url)
+                self.log_error('Ignoring link in WAF because it has "#": {}', url)
                 continue
             if 'mailto:' in url:
-                log.debug('Ignoring link in WAF because it has "mailto:": %s', url)
+                self.log_error('Ignoring link in WAF because it has "mailto": {}', url)
+                continue
+            if 'tel:' in url:
+                self.log_error('Ignoring link in WAF because it has "tel": {}', url)
                 continue
             log.debug('WAF contains file: %s', url)
             urls.append(url)
@@ -796,4 +859,11 @@ class GeminiWafHarvester(GeminiHarvester, SingletonPlugin):
         log.debug('WAF base URL: %s', base_url)
         return [base_url + i for i in urls]
 
+    def log_error(self, msg, url):
+        msg = msg.format(url)
+        log.debug(msg)
 
+        # potential GEMINI doc which may have invalid characters 
+        # as part of the URL should be reported back to users to fix
+        if url.endswith('.xml'):
+            self._save_gather_error(msg, self.harvest_job)

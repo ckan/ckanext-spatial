@@ -5,3 +5,6 @@ syntax: glob
 *~
 dist
 build
+
+# local files
+.DS_Store
