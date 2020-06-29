@@ -579,10 +579,10 @@ class SpatialHarvester(HarvesterBase):
         if self._site_user and context['user'] == self._site_user['name']:
             context['ignore_auth'] = True
 
-
-        # The default package schema does not like Upper case tags
         tag_schema = logic.schema.default_tags_schema()
-        tag_schema['name'] = [not_empty, unicode]
+
+        if not config.get('ckan.spatial.validator.use_default_tag_schema'):
+            tag_schema['name'] = [not_empty, unicode]
 
         # Flag this object as the current one
         harvest_object.current = True

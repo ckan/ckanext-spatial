@@ -21,6 +21,7 @@ from lxml import etree
 from sqlalchemy.sql import update, bindparam
 
 from ckan import model
+from ckan.lib.base import config
 from ckan.model import Session, Package
 from ckan.lib.munge import munge_title_to_name
 from ckan.plugins.core import SingletonPlugin, implements
@@ -505,9 +506,9 @@ class GeminiHarvester(SpatialHarvester):
         else:
             package_schema = logic.schema.default_update_package_schema()
 
-        # The default package schema does not like Upper case tags
         tag_schema = logic.schema.default_tags_schema()
-        tag_schema['name'] = [not_empty,unicode]
+        if not config.get('ckan.spatial.validator.use_default_tag_schema'):
+            tag_schema['name'] = [not_empty,unicode]
         package_schema['tags'] = tag_schema
 
         context = {'model':model,
@@ -529,7 +530,7 @@ class GeminiHarvester(SpatialHarvester):
 
         try:
             package_dict = action_function(context, package_dict)
-        except ValidationError,e:
+        except ValidationError as e:
             raise Exception('Validation Error: %s' % str(e.error_summary))
             if debug_exception_mode:
                 raise

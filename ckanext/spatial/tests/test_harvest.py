@@ -8,6 +8,7 @@ from freezegun import freeze_time
 from nose.plugins.skip import SkipTest
 from nose.tools import assert_equal, assert_in, assert_raises
 
+from ckan.tests import helpers
 from ckan.lib.base import config
 from ckan import model
 from ckan.model import Session, Package, Group, User
@@ -1389,6 +1390,38 @@ class TestValidation(HarvestFixtureBase):
         assert 'The WMS version (1.1.0) you requested is not implemented. Please use 1.1.1 or 1.3.0.' \
             in mock_save_object_error.call_args[0][0]
 
+    @helpers.change_config('ckan.spatial.validator.use_default_tag_schema', 'true')
+    @patch('owslib.wms.WebMapService')
+    @patch('ckanext.spatial.harvesters.base.SpatialHarvester._get_content')
+    def test_19_validation_error_using_default_tag_schema(self, mock_get_content, mock_wms):
+        mock_valid_wms(mock_get_content, mock_wms)
+        source_fixture = {
+            'title': 'Test Source',
+            'name': 'test-source',
+            'url': u'http://127.0.0.1:8999/gemini2.3/validation/BGSsv-examplea1-invalid-tags.xml',
+            'source_type': u'gemini-single'
+        }
+
+        errors = self.get_validation_errors(
+            'BGSsv-examplea1-invalid-tags.xml', source_fixture=source_fixture, gemini_profile='gemini2-3')
+        
+        assert "Error importing Gemini document: Validation Error: " \
+            "{u'Tags': u'Tag \"Geology(*invalid*)\" must be alphanumeric characters or symbols: -_.'}" in errors
+
+    @patch('owslib.wms.WebMapService')
+    @patch('ckanext.spatial.harvesters.base.SpatialHarvester._get_content')
+    def test_20_no_validation_error_using_spatial_tag_schema(self, mock_get_content, mock_wms):
+        mock_valid_wms(mock_get_content, mock_wms)
+        source_fixture = {
+            'title': 'Test Source',
+            'name': 'test-source',
+            'url': u'http://127.0.0.1:8999/gemini2.3/validation/BGSsv-examplea1-invalid-tags.xml',
+            'source_type': u'gemini-single'
+        }
+
+        errors = self.get_validation_errors(
+            'BGSsv-examplea1-invalid-tags.xml', source_fixture=source_fixture, gemini_profile='gemini2-3')
+        assert not errors
 
 def mock_valid_wms(mock_get_content, mock_wms):
     # directory changed to tests/xml directory in xml_file_server.py
