@@ -2,13 +2,13 @@
 <!-- Open Data JSON transformed using ckanext-spatial/ckanext/spatial/templates/ckanext/spatial/datajson2iso.xml -->
 {#
 
-Open Data Common Core Metadata JSON to ISO 19115:2003 XML (ISO 19139:2007) Transformation
+Open Data DCAT-US JSON Schema to ISO 19115:2003 XML (ISO 19139:2007) Transformation
 
-Open Data Common Core Metadata: http://project-open-data.github.io/schema/
+Open Data DCAT-US Metadata: https://resources.data.gov/schemas/dcat-us/v1.1/
 
 Notes:
-- supports "Common Core" Required Fields: http://project-open-data.github.io/schema/#common-core-required-fields
- - mappings to ISO 19115:2003: http://project-open-data.github.io/metadata-resources/#iso-191152003
+- supports DCAT-US Required Fields: https://resources.data.gov/schemas/dcat-us/v1.1/
+ - mappings to ISO 19115:2003: https://resources.data.gov/schemas/dcat-us/v1.1/metadata-resources/#crosswalks-for-geospatial-metadata
 - produces valid XML against http://www.isotc211.org/2005/gmd/gmd.xsd
 - operates on a single dataset record
 
@@ -16,7 +16,7 @@ Additions:
 - //gmd:hierarchyLevel is always 'dataset'
 - //gmd:MD_KeywordTypeCode is always 'theme'
 - //gmd:MD_DataIdentification/gmd:language is specified (required by ISO MD_DataIdentification). Since
- it is not required by "Common Core" Required Fields, if missing, gco:nilReason is used, else the the
+ it is not required by DCAT-US Required Fields, if missing, gco:nilReason is used, else the the
  language value is displayed
 
 Sample implementation (Python)
