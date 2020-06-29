@@ -25,6 +25,7 @@ from ckan import model
 from ckan.lib.helpers import json
 from ckan import logic
 from ckan.lib.navl.validators import not_empty
+from ckan.lib.navl.dictization_functions import validate
 from ckan.lib.search.index import PackageSearchIndex
 from ckanext.harvest.harvesters.base import munge_tag
 
@@ -584,10 +585,9 @@ class SpatialHarvester(HarvesterBase):
         if self._site_user and context['user'] == self._site_user['name']:
             context['ignore_auth'] = True
 
-
-        # The default package schema does not like Upper case tags
         tag_schema = logic.schema.default_tags_schema()
         tag_schema['name'] = [not_empty, six.text_type]
+        self.validate_tags(package_dict)
 
         # Flag this object as the current one
         harvest_object.current = True
@@ -839,3 +839,26 @@ class SpatialHarvester(HarvesterBase):
                 self._save_object_error(error[0], harvest_object, 'Validation', line=error[1])
 
         return valid, profile, errors
+
+
+    def validate_tags(self, package_dict):
+        if not config.get('ckan.spatial.validator.use_default_tag_schema'):
+            return
+
+        invalid_tags = []
+        for tag in package_dict['tags']:
+            _, errors = validate(tag, logic.schema.default_tags_schema())
+
+            if not errors:
+                continue
+
+            for key, key_errors in errors.items():
+                for error in key_errors:
+                    self._save_object_error(error, self.obj, 'Validation')
+
+            invalid_tags.append(tag['name'])
+
+        if invalid_tags:
+            for t in list(package_dict.get('tags')):
+                if t['name'] in invalid_tags:
+                    package_dict['tags'].remove(t)

@@ -507,7 +507,6 @@ class GeminiHarvester(SpatialHarvester):
         else:
             package_schema = logic.schema.default_update_package_schema()
 
-        # The default package schema does not like Upper case tags
         tag_schema = logic.schema.default_tags_schema()
         tag_schema['name'] = [not_empty,six.text_type]
         package_schema['tags'] = tag_schema
@@ -528,6 +527,8 @@ class GeminiHarvester(SpatialHarvester):
         else:
             action_function = get_action('package_update')
             package_dict['id'] = package.id
+
+        self.validate_tags(package_dict)
 
         try:
             package_dict = action_function(context, package_dict)
