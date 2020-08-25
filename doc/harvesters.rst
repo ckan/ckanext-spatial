@@ -18,6 +18,8 @@ previous version to CKAN 2.0 see legacy_harvesters_):
 * ``waf_harvester`` - WAF (Web Accessible Folder): An online accessible index
   page with links to metadata documents
 * ``doc_harvester`` - A single online accessible metadata document.
+* ``fs_harvester`` - A directory in the local filesystem containing metadata
+  documents.
 
 Have a look at the `ckanext-harvest documentation`_ if you want to have an
 overview of how the CKAN harvesters work, but basically there are three
