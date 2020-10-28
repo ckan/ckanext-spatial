@@ -1,4 +1,5 @@
 argparse
+configparser
 enum34==1.1.6
 freezegun==0.3.12
 GeoAlchemy>=0.6
@@ -8,6 +9,7 @@ lxml>=2.3
 ndg-httpsclient==0.5.1
 OWSLib==0.18.0
 pyasn1==0.4.4
+pycsw==2.4.0
 pyOpenSSL==18.0.0
 pyparsing>=2.1.10
 pyproj==2.2.2

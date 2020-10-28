@@ -38,6 +38,10 @@ setup(
     gemini_doc_harvester=ckanext.spatial.harvesters.gemini:GeminiDocHarvester
     gemini_waf_harvester=ckanext.spatial.harvesters.gemini:GeminiWafHarvester
 
+		[ckan.click_command]
+		spatial = ckanext.spatial.commands.spatial:spatial
+		spatial_csw = ckanext.spatial.commands.csw:spatial_csw
+
     [paste.paster_command]
     spatial=ckanext.spatial.commands.spatial:Spatial
     ckan-pycsw=ckanext.spatial.commands.csw:Pycsw

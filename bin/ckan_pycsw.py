@@ -2,6 +2,10 @@ import sys
 import logging
 import datetime
 import io
+import os
+import argparse
+
+from configparser import SafeConfigParser
 
 import requests
 from lxml import etree
@@ -10,17 +14,24 @@ from pycsw.core import metadata, repository, util
 import pycsw.core.config
 import pycsw.core.admin
 
+import ckan.plugins.toolkit as tk
+
 logging.basicConfig(format='%(message)s', level=logging.INFO)
 
 log = logging.getLogger(__name__)
 
+
 def setup_db(pycsw_config):
     """Setup database tables and indexes"""
+
+    if sys.version_info < (3, 0):
+        log.info("Please upgrade to CKAN 2.9 and python 3")
+        return
 
     from sqlalchemy import Column, Text
 
     database = pycsw_config.get('repository', 'database')
-    table_name = pycsw_config.get('repository', 'table', 'records')
+    table_name = pycsw_config.get('repository', 'table')
 
     ckan_columns = [
         Column('ckan_id', Text, index=True),
@@ -35,6 +46,10 @@ def setup_db(pycsw_config):
 
 def set_keywords(pycsw_config_file, pycsw_config, ckan_url, limit=20):
     """set pycsw service metadata keywords from top limit CKAN tags"""
+
+    if sys.version_info < (3, 0):
+        log.info("Please upgrade to CKAN 2.9 and python 3")
+        return
 
     log.info('Fetching tags from %s', ckan_url)
     url = ckan_url + 'api/tag_counts'
@@ -55,39 +70,51 @@ def set_keywords(pycsw_config_file, pycsw_config, ckan_url, limit=20):
 
 def load(pycsw_config, ckan_url):
 
+    if sys.version_info < (3, 0):
+        log.info("Please upgrade to CKAN 2.9 and python 3")
+        return
+
     database = pycsw_config.get('repository', 'database')
-    table_name = pycsw_config.get('repository', 'table', 'records')
+    table_name = pycsw_config.get('repository', 'table')
 
     context = pycsw.core.config.StaticContext()
     repo = repository.Repository(database, context, table=table_name)
 
     log.info('Started gathering CKAN datasets identifiers: {0}'.format(str(datetime.datetime.now())))
 
-    query = 'api/search/dataset?qjson={"fl":"id,metadata_modified,extras_harvest_object_id,extras_metadata_source", "q":"harvest_object_id:[\\"\\" TO *]", "limit":1000, "start":%s}'
+    query = 'api/search/dataset?fl=id,metadata_modified,extras_harvest_object_id,' \
+            'extras_metadata_source&q=harvest_object_id:[\\"\\"%20TO%20*]&start={start}&rows={limit}'
 
-    start = 0
+    limit = 1000
+    new_count = delete_count = change_count = error_count = gather_count = start = 0
 
     gathered_records = {}
 
     while True:
-        url = ckan_url + query % start
+        try:
+            url = ckan_url + query.format(start=start, limit=limit)
 
-        response = requests.get(url)
-        listing = response.json()
-        if not isinstance(listing, dict):
-            raise RuntimeError('Wrong API response: %s' % listing)
-        results = listing.get('results')
-        if not results:
-            break
-        for result in results:
-            gathered_records[result['id']] = {
-                'metadata_modified': result['metadata_modified'],
-                'harvest_object_id': result['extras']['harvest_object_id'],
-                'source': result['extras'].get('metadata_source')
-            }
+            response = requests.get(url)
+            listing = response.json()
+            if not isinstance(listing, dict):
+                raise (RuntimeError, 'Wrong API response: %s' % listing)
 
-        start = start + 1000
-        log.debug('Gathered %s' % start)
+            r = listing.get('result')
+            results = r.get('results')
+            if not results:
+                break
+            for result in results:
+                gathered_records[result['id']] = {
+                    'metadata_modified': result['metadata_modified'],
+                    'harvest_object_id': result['harvest_object_id'],
+                    'source': result.get('metadata_source')
+                }
+            start = start + limit
+            log.debug('Gathered %s' % start)
+            gather_count += len(results)
+        except Exception as e:
+            log.error("Error gathering: %r", e)
+            error_count += 1
 
     log.info('Gather finished ({0} datasets): {1}'.format(
         len(gathered_records.keys()),
@@ -111,51 +138,70 @@ def load(pycsw_config, ckan_url):
     for ckan_id in deleted:
         try:
             repo.session.begin()
-            repo.session.query(repo.dataset.ckan_id).filter_by(
-            ckan_id=ckan_id).delete()
+            repo.session.query(repo.dataset.ckan_id).filter_by(ckan_id=ckan_id).delete()
             log.info('Deleted %s' % ckan_id)
             repo.session.commit()
+            delete_count += 1
         except Exception as err:
             repo.session.rollback()
-            raise
+            error_count += 1
 
     for ckan_id in new:
         ckan_info = gathered_records[ckan_id]
-        record = get_record(context, repo, ckan_url, ckan_id, ckan_info)
-        if not record:
-            log.info('Skipped record %s' % ckan_id)
-            continue
         try:
+            record = get_record(context, repo, ckan_url, ckan_id, ckan_info)
+            if not record:
+                log.info('Skipped record %s' % ckan_id)
+                continue
             repo.insert(record, 'local', util.get_today_and_now())
             log.info('Inserted %s' % ckan_id)
+            new_count += 1
         except Exception as err:
             log.error('ERROR: not inserted %s Error:%s' % (ckan_id, err))
+            error_count += 1
 
     for ckan_id in changed:
-        ckan_info = gathered_records[ckan_id]
-        record = get_record(context, repo, ckan_url, ckan_id, ckan_info)
+        try:
+            ckan_info = gathered_records[ckan_id]
+            record = get_record(context, repo, ckan_url, ckan_id, ckan_info)
+        except Exception as e:
+            log.error("Error: %r", e)
+            error_count += 1
+
         if not record:
             continue
-        update_dict = dict([(getattr(repo.dataset, key),
-        getattr(record, key)) \
-        for key in record.__dict__.keys() if key != '_sa_instance_state'])
+        update_dict = dict(
+            [(getattr(repo.dataset, key), getattr(record, key)) \
+            for key in record.__dict__.keys() if key != '_sa_instance_state']
+        )
         try:
             repo.session.begin()
-            repo.session.query(repo.dataset).filter_by(
-            ckan_id=ckan_id).update(update_dict)
+            repo.session.query(repo.dataset).filter_by(ckan_id=ckan_id).update(update_dict)
             repo.session.commit()
             log.info('Changed %s' % ckan_id)
+            change_count += 1
         except Exception as err:
             repo.session.rollback()
-            raise RuntimeError('ERROR: %s' % str(err))
+            log.error(RuntimeError, 'ERROR: %s' % str(err))
+            error_count += 1
+
+    log.info("Loading completed: {gather_count} gathered, {new_count} added, "
+             "{change_count} changed, {delete_count} deleted, {error_count} errored".format(
+                gather_count=gather_count, new_count=new_count,
+                change_count=change_count, delete_count=delete_count,
+                error_count=error_count))
 
 
 def clear(pycsw_config):
 
+    if sys.version_info < (3, 0):
+        log.info("Please upgrade to CKAN 2.9 and python 3")
+        return
+
     from sqlalchemy import create_engine, MetaData, Table
 
     database = pycsw_config.get('repository', 'database')
-    table_name = pycsw_config.get('repository', 'table', 'records')
+    table_name = pycsw_config.get('repository', 'table')
 
     log.debug('Creating engine')
     engine = create_engine(database)
@@ -165,6 +211,11 @@ def clear(pycsw_config):
 
 
 def get_record(context, repo, ckan_url, ckan_id, ckan_info):
+
+    if sys.version_info < (3, 0):
+        log.info("Please upgrade to CKAN 2.9 and python 3")
+        return
+
     query = ckan_url + 'harvest/object/%s'
     url = query % ckan_info['harvest_object_id']
     response = requests.get(url)
@@ -176,13 +227,13 @@ def get_record(context, repo, ckan_url, ckan_id, ckan_info):
         xml = etree.parse(io.BytesIO(response.content))
     except Exception as err:
         log.error('Could not pass xml doc from %s, Error: %s' % (ckan_id, err))
-        return
+        raise
 
     try:
         record = metadata.parse_record(context, xml, repo)[0]
     except Exception as err:
         log.error('Could not extract metadata from %s, Error: %s' % (ckan_id, err))
-        return
+        raise
 
     if not record.identifier:
         record.identifier = ckan_id
@@ -229,11 +280,6 @@ def _load_config(file_path):
 
     return config
 
-
-
-import os
-import argparse
-from ConfigParser import SafeConfigParser
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
