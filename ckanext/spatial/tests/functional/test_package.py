@@ -11,7 +11,7 @@ from ckanext.spatial.model import PackageExtent
 from ckanext.spatial.tests.base import SpatialTestBase
 
 
-@pytest.mark.usefixtures("spatial_clean_db")
+@pytest.mark.usefixtures("with_plugins", "spatial_clean_db")
 class TestSpatialExtra(SpatialTestBase):
     def test_spatial_extra_base(self, app):
 
