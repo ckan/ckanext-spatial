@@ -1,0 +1,99 @@
+name: ckanext-spatial ci
+on: [push, pull_request]
+
+jobs:
+  # Label of the container job
+  container-job:
+    # Containers must run in Linux based operating systems
+    runs-on: ubuntu-latest
+    # Docker Hub image that `container-job` executes in
+    container: 
+      image: python:3-stretch
+      env:
+        CKAN_DATASTORE_POSTGRES_DB: datastore_test
+        CKAN_DATASTORE_POSTGRES_READ_USER: datastore_read
+        CKAN_DATASTORE_POSTGRES_READ_PWD: pass
+        CKAN_DATASTORE_POSTGRES_WRITE_USER: datastore_write
+        CKAN_DATASTORE_POSTGRES_WRITE_PWD: pass
+        CKAN_POSTGRES_DB: ckan_test
+        CKAN_POSTGRES_USER: ckan_default
+        CKAN_POSTGRES_PWD: pass
+        PGPASSWORD: ckan
+
+    # Service containers to run with `container-job`
+    services:
+      # Label used to access the service container
+      ckan-postgres:
+        # Docker Hub image
+        image: postgis/postgis:12-3.0
+        # Provide the user and password for postgres
+        env:
+          POSTGRES_PASSWORD: ckan
+          POSTGRES_USER: ckan
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      ckan-redis:
+        # Docker Hub image
+        image: redis:3
+
+    steps:
+      # Downloads a copy of the code in your repository before running CI tests
+      - name: Check out repository code
+        uses: actions/checkout@v2
+
+      - name: Install node js and dependency
+        run: | 
+          curl -sL https://deb.nodesource.com/setup_10.x | bash -
+          apt install -y nodejs
+          apt install -y libgtk2.0-0 libgtk-3-0 libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
+          apt install -y postgresql-client solr-jetty openjdk-8-jdk
+      
+      - name: install and setup ckan
+        run: |
+          git clone https://github.com/ckan/ckan
+          cd ckan
+          pip install -r requirement-setuptools.txt
+          pip install -r requirements.txt
+          pip install -r dev-requirements.txt
+          python setup.py develop
+          # SOLR config
+          cp config/solr/schema.xml /etc/solr/config/schema.xml
+          service jetty9 restart || true # erroring out but does seem to work
+          # Database Creation
+          psql --host=ckan-postgres --username=ckan --command="CREATE USER ${CKAN_POSTGRES_USER} WITH PASSWORD '${CKAN_POSTGRES_PWD}' NOSUPERUSER NOCREATEDB NOCREATEROLE;"
+          createdb --encoding=utf-8 --host=ckan-postgres --username=ckan --owner=${CKAN_POSTGRES_USER} ${CKAN_POSTGRES_DB}
+          psql --host=ckan-postgres --username=ckan --command="CREATE USER ${CKAN_DATASTORE_POSTGRES_READ_USER} WITH PASSWORD '${CKAN_DATASTORE_POSTGRES_READ_PWD}' NOSUPERUSER NOCREATEDB NOCREATEROLE;"
+          psql --host=ckan-postgres --username=ckan --command="CREATE USER ${CKAN_DATASTORE_POSTGRES_WRITE_USER} WITH PASSWORD '${CKAN_DATASTORE_POSTGRES_WRITE_PWD}' NOSUPERUSER NOCREATEDB NOCREATEROLE;"
+          createdb --encoding=utf-8 --host=ckan-postgres --username=ckan --owner=${CKAN_DATASTORE_POSTGRES_WRITE_USER} ${CKAN_DATASTORE_POSTGRES_DB}
+        
+          # Database Initialization
+          ckan -c test-core-circle-ci.ini datastore set-permissions | psql --host=ckan-postgres --username=ckan
+          ckan -c test-core-circle-ci.ini db init
+
+      - name: install ckanext-harvest
+        run: |
+          git clone https://github.com/ckan/ckanext-harvest
+          cd ckanext-harvest
+          python setup.py develop
+          pip install -r pip-requirements.txt
+
+      - name: install ckanext-spatial
+        run: |
+          pip install -r pip-requirements.txt
+          python setup.py develop
+          pip install pycsw
+
+          mkdir subdir
+          mv test-github-actions.ini subdir
+
+          ckan -c subdir/test-github-actions.ini harvester initdb
+          ckan -c subdir/test-github-actions.ini spatial initdb
+
+
+      - name: run ci
+        run: |
+          pytest --ckan-ini=subdir/test-github-actions.ini ckanext/spatial/tests
