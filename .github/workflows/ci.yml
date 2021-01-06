@@ -73,7 +73,6 @@ jobs:
         
           # Database Initialization
           ckan -c test-core-circle-ci.ini datastore set-permissions | psql --host=ckan-postgres --username=ckan
-          ckan -c test-core-circle-ci.ini db init
 
       - name: install ckanext-harvest
         run: |
@@ -96,10 +95,11 @@ jobs:
           psql --host=ckan-postgres --username=ckan -d ckan_test --command="ALTER VIEW geometry_columns OWNER TO ckan_default;"
           psql --host=ckan-postgres --username=ckan -d ckan_test --command="ALTER TABLE spatial_ref_sys OWNER TO ckan_default;"
 
+          ckan -c subdir/test-github-actions.ini db init
           ckan -c subdir/test-github-actions.ini harvester initdb
           ckan -c subdir/test-github-actions.ini spatial initdb
 
 
       - name: run ci
         run: |
-          pytest -v --capture=no --ckan-ini=subdir/test-github-actions.ini --reset-db ckanext/spatial/tests
+          pytest -v --capture=no --ckan-ini=subdir/test-github-actions.ini ckanext/spatial/tests
