@@ -51,8 +51,8 @@ def create_postgis_tables():
 @pytest.fixture
 def spatial_clean_db(reset_db):
     # reset_db will fail to drop table spatial_ref_sys
-    if postgis_version()[:1] == "3":
-        _drop_postgis_extension()
+    Session.close_all()
+    _drop_postgis_extension()
     reset_db()
 
     # This will create the PostGIS tables (geometry_columns and
