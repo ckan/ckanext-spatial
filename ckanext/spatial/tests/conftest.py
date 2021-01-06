@@ -23,6 +23,18 @@ def _execute_script(script_path):
     Session.commit()
 
 
+def _create_postgis_extension():
+    conn = Session.connection()
+    conn.execute("create extension postgis;")
+    Session.commit()
+
+
+def _drop_postgis_extension():
+    conn = Session.connection()
+    conn.execute("drop extension postgis;")
+    Session.commit()
+
+
 def create_postgis_tables():
     scripts_path = os.path.join(
         os.path.dirname(os.path.abspath(__file__)), "scripts"
@@ -30,12 +42,17 @@ def create_postgis_tables():
     if postgis_version()[:1] == "1":
         _execute_script(os.path.join(scripts_path, "spatial_ref_sys.sql"))
         _execute_script(os.path.join(scripts_path, "geometry_columns.sql"))
-    else:
+    elif postgis_version()[:1] == "2":
         _execute_script(os.path.join(scripts_path, "spatial_ref_sys.sql"))
+    else:
+        _create_postgis_extension()
 
 
 @pytest.fixture
 def spatial_clean_db(reset_db):
+    # reset_db will fail to drop table spatial_ref_sys
+    if postgis_version()[:1] == "3":
+        _drop_postgis_extension()
     reset_db()
 
     # This will create the PostGIS tables (geometry_columns and
