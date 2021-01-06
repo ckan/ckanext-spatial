@@ -25,7 +25,7 @@ jobs:
       # Label used to access the service container
       ckan-postgres:
         # Docker Hub image
-        image: postgis/postgis:12-3.0
+        image: postgis/postgis:12-2.5
         # Provide the user and password for postgres
         env:
           POSTGRES_PASSWORD: ckan
