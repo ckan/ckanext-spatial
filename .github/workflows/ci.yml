@@ -102,4 +102,4 @@ jobs:
 
       - name: run ci
         run: |
-          pytest --reset-db -v --capture=no --ckan-ini=subdir/test-github-actions.ini ckanext/spatial/tests
+          pytest -v --capture=no --ckan-ini=subdir/test-github-actions.ini --reset-db ckanext/spatial/tests
