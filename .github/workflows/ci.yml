@@ -91,6 +91,7 @@ jobs:
           mv test-github-actions.ini subdir
 
           # setup spatial table
+          psql --host=ckan-postgres --username=ckan -d ckan_test --command="CREATE EXTENSION postgis;"
           psql --host=ckan-postgres --username=ckan -d ckan_test --command="ALTER VIEW geometry_columns OWNER TO ckan_default;"
           psql --host=ckan-postgres --username=ckan -d ckan_test --command="ALTER TABLE spatial_ref_sys OWNER TO ckan_default;"
 
