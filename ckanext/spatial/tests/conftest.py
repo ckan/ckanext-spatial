@@ -36,11 +36,6 @@ def create_postgis_tables():
 
 @pytest.fixture
 def spatial_clean_db(reset_db):
-    # reset_db will fail to drop table spatial_ref_sys
-    print("debug: spatial_clean_db")
-    if "spatial_ref_sys" in meta.metadata.tables:
-        print("debug: remove spatial_ref_sys from meta.metadata")
-        meta.metadata.remove(meta.metadata.tables["spatial_ref_sys"])
     reset_db()
 
     # This will create the PostGIS tables (geometry_columns and
