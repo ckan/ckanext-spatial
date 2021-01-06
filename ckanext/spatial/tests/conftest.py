@@ -31,7 +31,7 @@ def _create_postgis_extension():
 
 def _drop_postgis_extension():
     conn = Session.connection()
-    conn.execute("drop extension postgis;")
+    conn.execute("drop extension postgis cascade;")
     Session.commit()
 
 
