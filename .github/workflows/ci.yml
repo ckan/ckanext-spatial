@@ -61,7 +61,7 @@ jobs:
           pip install -r dev-requirements.txt
           python setup.py develop
           # SOLR config
-          cp ckan/config/solr/schema.xml /etc/solr/config/schema.xml
+          cp ckan/config/solr/schema.xml /etc/solr/conf/schema.xml
           service jetty9 restart || true # erroring out but does seem to work
           # Database Creation
           psql --host=ckan-postgres --username=ckan --command="CREATE USER ${CKAN_POSTGRES_USER} WITH PASSWORD '${CKAN_POSTGRES_PWD}' NOSUPERUSER NOCREATEDB NOCREATEROLE;"
