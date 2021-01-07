@@ -12,18 +12,6 @@ from ckanext.harvest.model import setup as harvest_model_setup
 import ckanext.harvest.model as harvest_model
 
 
-def _execute_script(script_path):
-
-    conn = Session.connection()
-    script = open(script_path, "r").read()
-    for cmd in script.split(";"):
-        cmd = re.sub(r"--(.*)|[\n\t]", "", cmd)
-        if len(cmd):
-            conn.execute(cmd)
-
-    Session.commit()
-
-
 def _create_postgis_extension():
     Session.execute("CREATE EXTENSION IF NOT EXISTS postgis")
     Session.commit()
@@ -31,14 +19,6 @@ def _create_postgis_extension():
 
 def create_postgis_tables():
     _create_postgis_extension()
-    scripts_path = os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), "scripts"
-    )
-    if postgis_version()[:1] == "1":
-        _execute_script(os.path.join(scripts_path, "spatial_ref_sys.sql"))
-        _execute_script(os.path.join(scripts_path, "geometry_columns.sql"))
-    else:
-        _execute_script(os.path.join(scripts_path, "spatial_ref_sys.sql"))
 
 
 @pytest.fixture
