@@ -89,9 +89,6 @@ jobs:
           mkdir subdir
           mv test-github-actions.ini subdir
 
-          # setup postgis
-          PGPASSWORD='${CKAN_POSTGRES_PWD}' psql --host=ckan-postgres --username='${CKAN_POSTGRES_USER}' -d ckan_test --command="CREATE EXTENSION postgis;"
-
           ckan -c subdir/test-github-actions.ini db init
           ckan -c subdir/test-github-actions.ini harvester initdb
           ckan -c subdir/test-github-actions.ini spatial initdb
