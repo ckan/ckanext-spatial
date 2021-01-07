@@ -71,11 +71,4 @@ def spatial_setup():
     if not table.exists():
         create_postgis_tables()
 
-    # When running the tests with the --reset-db option for some
-    # reason the metadata holds a reference to the `package_extent`
-    # table after being deleted, causing an InvalidRequestError
-    # exception when trying to recreate it further on
-    if "package_extent" in meta.metadata.tables:
-        meta.metadata.remove(meta.metadata.tables["package_extent"])
-
     spatial_db_setup()
