@@ -99,7 +99,7 @@ jobs:
           ckan -c subdir/test-github-actions.ini harvester initdb
           ckan -c subdir/test-github-actions.ini spatial initdb
           # Start server
-          ckan -c subdir/test-core-circle-ci.ini run
+          ckan -c subdir/test-github-actions.ini run
 
       - name: run ci
         run: |
