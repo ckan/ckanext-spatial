@@ -90,10 +90,7 @@ jobs:
           mv test-github-actions.ini subdir
 
           # setup postgis
-          psql --host=ckan-postgres --username=ckan -d ckan_test --command="ALTER ROLE ckan_default WITH superuser;"
-          psql --host=ckan-postgres --username=ckan -d ckan_test --command="CREATE EXTENSION postgis;"
-          psql --host=ckan-postgres --username=ckan -d ckan_test --command="ALTER VIEW geometry_columns OWNER TO ckan_default;"
-          psql --host=ckan-postgres --username=ckan -d ckan_test --command="ALTER TABLE spatial_ref_sys OWNER TO ckan_default;"
+          PGPASSWORD='${CKAN_POSTGRES_PWD}' psql --host=ckan-postgres --username='${CKAN_POSTGRES_USER}' -d ckan_test --command="CREATE EXTENSION postgis;"
 
           ckan -c subdir/test-github-actions.ini db init
           ckan -c subdir/test-github-actions.ini harvester initdb

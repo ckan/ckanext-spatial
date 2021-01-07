@@ -43,7 +43,7 @@ def create_postgis_tables():
 
 @pytest.fixture
 def clean_postgis():
-    Session.execute("DROP EXTENSION IF EXISTS postgis")
+    Session.execute("DROP EXTENSION IF EXISTS postgis CASCADE")
     Session.commit()
 
 
