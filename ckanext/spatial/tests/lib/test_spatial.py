@@ -38,7 +38,7 @@ def create_package(**package_dict):
     return context.get("id")
 
 
-@pytest.mark.usefixtures("with_plugins", "clean_db")
+@pytest.mark.usefixtures('with_plugins', 'clean_db', 'clean_index', 'harvest_setup', 'spatial_setup')
 class TestCompareGeometries(SpatialTestBase):
     def _get_extent_object(self, geometry):
         if isinstance(geometry, six.string_types):
