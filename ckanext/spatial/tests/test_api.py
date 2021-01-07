@@ -16,7 +16,7 @@ extents = {
 }
 
 
-@pytest.mark.usefixtures("clean_db")
+@pytest.mark.usefixtures('with_plugins', 'clean_db', 'clean_index', 'harvest_setup')
 class TestAction(SpatialTestBase):
     def test_spatial_query(self):
         dataset = factories.Dataset(
@@ -155,7 +155,7 @@ class TestAction(SpatialTestBase):
         assert(result["results"][0]["id"] == dataset["id"])
 
 
-@pytest.mark.usefixtures("clean_db")
+@pytest.mark.usefixtures('with_plugins', 'clean_db', 'clean_index', 'harvest_setup')
 class TestHarvestedMetadataAPI(SpatialTestBase):
     def test_api(self, app):
         try:
