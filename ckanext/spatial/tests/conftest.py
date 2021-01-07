@@ -77,5 +77,7 @@ def spatial_setup():
         # exception when trying to recreate it further on
         if "package_extent" in meta.metadata.tables:
             meta.metadata.remove(meta.metadata.tables["package_extent"])
+            Session.execute("DROP INDEX idx_package_extent_the_geom")
+            Session.commit()
 
     spatial_db_setup()
