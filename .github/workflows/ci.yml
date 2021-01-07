@@ -102,4 +102,4 @@ jobs:
 
       - name: run ci
         run: |
-          pytest -v --capture=no --ckan-ini=subdir/test-github-actions.ini ckanext/spatial/tests
+          pytest --ckan-ini=subdir/test-github-actions.ini ckanext/spatial/tests
