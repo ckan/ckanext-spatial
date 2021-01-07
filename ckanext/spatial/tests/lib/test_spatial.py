@@ -127,7 +127,7 @@ class TestBboxQuery(SpatialQueryTestBase):
         bbox_dict = self.x_values_to_bbox((2, 5))
         package_ids = [res.package_id for res in bbox_query(bbox_dict)]
         package_titles = [model.Package.get(id_).title for id_ in package_ids]
-        assert(set(package_titles) == set(("(0, 3)", "(0, 4)", "(4, 5)")))
+        assert(set(package_titles) == {"(0, 3)", "(0, 4)", "(4, 5)"})
 
 
 class TestBboxQueryOrdered(SpatialQueryTestBase):
