@@ -54,9 +54,9 @@ jobs:
       
       - name: install and setup ckan
         run: |
-          git clone https://github.com/smellman/ckan
+          git clone https://github.com/ckan/ckan
           cd ckan
-          git checkout pass_spatial_ref_sys
+          # git checkout pass_spatial_ref_sys
           pip install -r requirement-setuptools.txt
           pip install -r requirements.txt
           pip install -r dev-requirements.txt
