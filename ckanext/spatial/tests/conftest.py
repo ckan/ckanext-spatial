@@ -9,6 +9,7 @@ from ckan.model import Session, meta
 from ckanext.spatial.geoalchemy_common import postgis_version
 from ckanext.spatial.model.package_extent import setup as spatial_db_setup
 from ckanext.harvest.model import setup as harvest_model_setup
+import ckanext.harvest.model as harvest_model
 
 
 def _execute_script(script_path):
@@ -55,3 +56,8 @@ def spatial_clean_db(reset_db):
 
     # Setup the harvest tables
     harvest_model_setup()
+
+
+@pytest.fixture
+def harvest_setup():
+    harvest_model.setup()
