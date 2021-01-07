@@ -24,6 +24,11 @@ def _execute_script(script_path):
     Session.commit()
 
 
+def _create_postgis_extension():
+    Session.execute("CREATE EXTENSION IF NOT EXISTS postgis")
+    Session.commit()
+
+
 def create_postgis_tables():
     scripts_path = os.path.join(
         os.path.dirname(os.path.abspath(__file__)), "scripts"
@@ -32,7 +37,14 @@ def create_postgis_tables():
         _execute_script(os.path.join(scripts_path, "spatial_ref_sys.sql"))
         _execute_script(os.path.join(scripts_path, "geometry_columns.sql"))
     else:
+        _create_postgis_extension()
         _execute_script(os.path.join(scripts_path, "spatial_ref_sys.sql"))
+
+
+@pytest.fixture
+def clean_postgis():
+    Session.execute("DROP EXTENSION IF EXISTS postgis")
+    Session.commit()
 
 
 @pytest.fixture
