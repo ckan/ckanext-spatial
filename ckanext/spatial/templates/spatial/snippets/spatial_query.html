@@ -27,5 +27,4 @@ e.g.
 </section>
 
 
-{% set type = 'asset' if h.ckan_version() > '2.9' else 'resource' %}
-{% include 'spatial/snippets/spatial_query_' ~ type ~ '.html' %}
+{% include 'spatial/snippets/spatial_query_asset.html' %}
