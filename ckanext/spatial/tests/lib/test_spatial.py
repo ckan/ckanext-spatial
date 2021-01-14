@@ -99,7 +99,7 @@ class SpatialQueryTestBase(SpatialTestBase):
     maxy = 1
 
     @pytest.fixture(autouse=True)
-    def initial_data(self, clean_db):
+    def initial_data(self):
         for fixture_x in self.fixtures_x:
             bbox = self.x_values_to_bbox(fixture_x)
             bbox_geojson = bbox_2_geojson(bbox)
