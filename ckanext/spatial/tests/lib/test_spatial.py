@@ -98,7 +98,6 @@ class SpatialQueryTestBase(SpatialTestBase):
     miny = 0
     maxy = 1
 
-    @pytest.fixture(autouse=True)
     def initial_data(self):
         for fixture_x in self.fixtures_x:
             bbox = self.x_values_to_bbox(fixture_x)
@@ -125,6 +124,7 @@ class TestBboxQuery(SpatialQueryTestBase):
     fixtures_x = [(0, 1), (0, 3), (0, 4), (4, 5), (6, 7)]
 
     def test_query(self):
+        self.initial_data()
         bbox_dict = self.x_values_to_bbox((2, 5))
         package_ids = [res.package_id for res in bbox_query(bbox_dict)]
         package_titles = [model.Package.get(id_).title for id_ in package_ids]
@@ -137,6 +137,7 @@ class TestBboxQueryOrdered(SpatialQueryTestBase):
     fixtures_x = [(0, 9), (1, 8), (2, 7), (3, 6), (4, 5), (8, 9)]
 
     def test_query(self):
+        self.initial_data()
         bbox_dict = self.x_values_to_bbox((2, 7))
         q = bbox_query_ordered(bbox_dict)
         package_ids = [res.package_id for res in q]
