@@ -38,7 +38,7 @@ def create_package(**package_dict):
     return context.get("id")
 
 
-@pytest.mark.usefixtures('with_plugins', 'clean_db', 'clean_index', 'harvest_setup', 'spatial_setup')
+@pytest.mark.usefixtures('with_plugins',  'clean_postgis', 'clean_db', 'clean_index', 'harvest_setup', 'spatial_setup')
 class TestCompareGeometries(SpatialTestBase):
     def _get_extent_object(self, geometry):
         if isinstance(geometry, six.string_types):
@@ -119,6 +119,7 @@ class SpatialQueryTestBase(SpatialTestBase):
         }
 
 
+@pytest.mark.usefixtures('with_plugins',  'clean_postgis', 'clean_db', 'clean_index', 'harvest_setup', 'spatial_setup')
 class TestBboxQuery(SpatialQueryTestBase):
     # x values for the fixtures
     fixtures_x = [(0, 1), (0, 3), (0, 4), (4, 5), (6, 7)]
@@ -130,6 +131,7 @@ class TestBboxQuery(SpatialQueryTestBase):
         assert(set(package_titles) == {"(0, 3)", "(0, 4)", "(4, 5)"})
 
 
+@pytest.mark.usefixtures('with_plugins',  'clean_postgis', 'clean_db', 'clean_index', 'harvest_setup', 'spatial_setup')
 class TestBboxQueryOrdered(SpatialQueryTestBase):
     # x values for the fixtures
     fixtures_x = [(0, 9), (1, 8), (2, 7), (3, 6), (4, 5), (8, 9)]
@@ -150,6 +152,7 @@ class TestBboxQueryOrdered(SpatialQueryTestBase):
         )
 
 
+@pytest.mark.usefixtures('with_plugins',  'clean_postgis', 'clean_db', 'clean_index', 'harvest_setup', 'spatial_setup')
 class TestBboxQueryPerformance(SpatialQueryTestBase):
     # x values for the fixtures
     fixtures_x = [
