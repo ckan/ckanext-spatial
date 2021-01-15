@@ -63,7 +63,15 @@ jobs:
     - name: Install dependency
       run: |
         cd /srv/app
-        apk add --no-cache --virtual .build-deps geos geos-dev proj-util
+        apk add --no-cache \
+          geos \
+          proj-util \
+          libxml2 \
+          libxslt
+        apk add --no-cache --virtual .build-deps \
+          gcc \
+          libxml2-dev \
+          libxslt-dev
     - name: Install requirements
       run: |
         pip install -r pip-requirements.txt
