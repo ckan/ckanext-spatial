@@ -95,6 +95,12 @@ jobs:
         pip install -e .
         # Replace default path to CKAN core config file with the one on the container
         sed -i -e 's/use = config:.*/use = config:\/srv\/app\/src\/ckan\/test-core.ini/' test.ini
+    - name: setup postgis
+      run: |
+        psql --host=postgres --username=postgres -d ckan_test --command="ALTER ROLE ckan_default WITH superuser;"
+        psql --host=postgres --username=postgres -d ckan_test --command="CREATE EXTENSION postgis;"
+        psql --host=postgres --username=postgres -d ckan_test --command="ALTER VIEW geometry_columns OWNER TO ckan_default;"
+        psql --host=postgres --username=postgres -d ckan_test --command="ALTER TABLE spatial_ref_sys OWNER TO ckan_default;"
     - name: Setup extension (CKAN >= 2.9)
       if: ${{ matrix.ckan-version != '2.7' && matrix.ckan-version != '2.8' }}
       run: |
