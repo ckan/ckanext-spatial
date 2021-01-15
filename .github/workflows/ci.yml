@@ -63,7 +63,7 @@ jobs:
     - name: Install dependency
       run: |
         cd /srv/app
-        apk add --no-cache --virtual .build-deps geos geos-dev proj
+        apk add --no-cache --virtual .build-deps geos geos-dev proj-util
     - name: Install requirements
       run: |
         pip install -r pip-requirements.txt
