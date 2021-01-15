@@ -60,6 +60,10 @@ jobs:
         pip install -r pip-requirements.txt
         pip install -r dev-requirements.txt
         pip install -e .
+    - name: Install dependency
+      run: |
+        cd /srv/app
+        apk add --no-cache --virtual .build-deps geos geos-dev
     - name: Install requirements
       run: |
         pip install -r pip-requirements.txt
