@@ -48,8 +48,8 @@ jobs:
     - uses: actions/checkout@v2
     - name: Create Database
       run: |
-        psql --host=postgres --username=postgres --command="CREATE USER ckan WITH PASSWORD 'pass' NOSUPERUSER NOCREATEDB NOCREATEROLE;"
-        createdb --encoding=utf-8 --host=postgres --username=postgres --owner=ckan ckan_default
+        psql --host=postgres --username=postgres --command="CREATE USER ckan_default WITH PASSWORD 'pass' NOSUPERUSER NOCREATEDB NOCREATEROLE;"
+        createdb --encoding=utf-8 --host=postgres --username=postgres --owner=ckan_default ckan_test
         psql --host=postgres --username=postgres --command="CREATE USER datastore_write WITH PASSWORD 'pass' NOSUPERUSER NOCREATEDB NOCREATEROLE;"
         psql --host=postgres --username=postgres --command="CREATE USER datastore_read WITH PASSWORD 'pass' NOSUPERUSER NOCREATEDB NOCREATEROLE;"
         createdb --encoding=utf-8 --host=postgres --username=postgres --owner=datastore_write datastore_test
