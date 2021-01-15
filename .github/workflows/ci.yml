@@ -2,103 +2,83 @@ name: ckanext-spatial ci
 on: [push, pull_request]
 
 jobs:
-  # Label of the container job
-  container-job:
-    # Containers must run in Linux based operating systems
+  lint:
     runs-on: ubuntu-latest
-    # Docker Hub image that `container-job` executes in
-    container: 
-      image: python:3-stretch
-      env:
-        CKAN_DATASTORE_POSTGRES_DB: datastore_test
-        CKAN_DATASTORE_POSTGRES_READ_USER: datastore_read
-        CKAN_DATASTORE_POSTGRES_READ_PWD: pass
-        CKAN_DATASTORE_POSTGRES_WRITE_USER: datastore_write
-        CKAN_DATASTORE_POSTGRES_WRITE_PWD: pass
-        CKAN_POSTGRES_DB: ckan_test
-        CKAN_POSTGRES_USER: ckan_default
-        CKAN_POSTGRES_PWD: pass
-        PGPASSWORD: ckan
-
-    # Service containers to run with `container-job`
-    services:
-      # Label used to access the service container
-      ckan-postgres:
-        # Docker Hub image
-        image: postgis/postgis:12-2.5
-        # Provide the user and password for postgres
-        env:
-          POSTGRES_PASSWORD: ckan
-          POSTGRES_USER: ckan
-        # Set health checks to wait until postgres has started
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-      ckan-redis:
-        # Docker Hub image
-        image: redis:3
-
     steps:
-      # Downloads a copy of the code in your repository before running CI tests
-      - name: Check out repository code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.6'
+      - name: Install requirements
+        run: pip install flake8 pycodestyle
+      - name: Check syntax
+        run: flake8 . --count --select=E901,E999,F821,F822,F823 --show-source --statistics --exclude ckan
+  test:
+    needs: lint
+    strategy:
+      matrix:
+        ckan-version: [2.9, 2.9-py2, 2.8, 2.7]
+      fail-fast: false
+    
+    name: CKAN ${{ matrix.ckan-version }}
+    runs-on: ubuntu-latest
+    container:
+      image: openknowledge/ckan-dev:${{ matrix.ckan-version }}
+    services:
+      solr:
+        image: ckan/ckan-solr-dev:${{ matrix.ckan-version }}
+      postgres:
+        image: postgis/postgis:12-2.5
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+      redis:
+        image: redis:3
+    env:
+      CKAN_SQLALCHEMY_URL: postgresql://ckan_default:pass@postgres/ckan_test
+      CKAN_DATASTORE_WRITE_URL: postgresql://datastore_write:pass@postgres/datastore_test
+      CKAN_DATASTORE_READ_URL: postgresql://datastore_read:pass@postgres/datastore_test
+      CKAN_SOLR_URL: http://solr:8983/solr/ckan
+      CKAN_REDIS_URL: redis://redis:6379/1
+      PGPASSWORD: postgres
+    
+    steps:
+    - uses: actions/checkout@v2
+    - name: Create Database
+      run: |
+        psql --host=postgres --username=postgres --command="CREATE USER ckan WITH PASSWORD 'pass' NOSUPERUSER NOCREATEDB NOCREATEROLE;"
+        createdb --encoding=utf-8 --host=postgres --username=postgres --owner=ckan ckan_default
+        psql --host=postgres --username=ckan --command="CREATE USER datastore_write WITH PASSWORD 'pass' NOSUPERUSER NOCREATEDB NOCREATEROLE;"
+        psql --host=postgres --username=ckan --command="CREATE USER datastore_read WITH PASSWORD 'pass' NOSUPERUSER NOCREATEDB NOCREATEROLE;"
+        createdb --encoding=utf-8 --host=ckan-postgres --username=ckan --owner=datastore_write datastore_test
+    - name: Install harvester
+      run: |
+        git clone https://github.com/ckan/ckanext-harvest
+        cd ckanext-harvest
+        python setup.py develop
+        pip install -r pip-requirements.txt
+    - name: Install requirements
+      run: |
+        pip install -r pip-requirements.txt
+        pip install -r dev-requirements.txt
+        pip install -e .
+        # Replace default path to CKAN core config file with the one on the container
+        sed -i -e 's/use = config:.*/use = config:\/srv\/app\/src\/ckan\/test-core.ini/' test.ini
+    - name: Setup extension (CKAN >= 2.9)
+      if: ${{ matrix.ckan-version != '2.7' && matrix.ckan-version != '2.8' }}
+      run: |
+        ckan -c test.ini db init
+        ckan -c test.ini harvester initdb
+        ckan -c init.ini spatial initdb
+    - name: Setup extension (CKAN < 2.9)
+      if: ${{ matrix.ckan-version == '2.7' || matrix.ckan-version == '2.8' }}
+      run: |
+        paster --plugin=ckan db init -c test.ini
+        paster --plugin=ckanext-harvest harvester initdb -c test.ini
+        paster --plugin=ckanext-spatial spatial initdb -c test.ini
+    - name: Run tests
+      run: pytest --ckan-ini=test.ini --cov=ckanext.harvest --disable-warnings ckanext/spatial/tests
 
-      - name: Install node js and dependency
-        run: | 
-          curl -sL https://deb.nodesource.com/setup_10.x | bash -
-          apt install -y nodejs
-          apt install -y libgtk2.0-0 libgtk-3-0 libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
-          apt install -y postgresql-client solr-jetty openjdk-8-jdk
-      
-      - name: install and setup ckan
-        run: |
-          git clone https://github.com/ckan/ckan
-          cd ckan
-          pip install -r requirement-setuptools.txt
-          pip install -r requirements.txt
-          pip install -r dev-requirements.txt
-          python setup.py develop
-          # SOLR config
-          cp ckan/config/solr/schema.xml /etc/solr/conf/schema.xml
-          service jetty9 restart || true # erroring out but does seem to work
-          # Database Creation
-          psql --host=ckan-postgres --username=ckan --command="CREATE USER ${CKAN_POSTGRES_USER} WITH PASSWORD '${CKAN_POSTGRES_PWD}' NOSUPERUSER NOCREATEDB NOCREATEROLE;"
-          createdb --encoding=utf-8 --host=ckan-postgres --username=ckan --owner=${CKAN_POSTGRES_USER} ${CKAN_POSTGRES_DB}
-          psql --host=ckan-postgres --username=ckan --command="CREATE USER ${CKAN_DATASTORE_POSTGRES_READ_USER} WITH PASSWORD '${CKAN_DATASTORE_POSTGRES_READ_PWD}' NOSUPERUSER NOCREATEDB NOCREATEROLE;"
-          psql --host=ckan-postgres --username=ckan --command="CREATE USER ${CKAN_DATASTORE_POSTGRES_WRITE_USER} WITH PASSWORD '${CKAN_DATASTORE_POSTGRES_WRITE_PWD}' NOSUPERUSER NOCREATEDB NOCREATEROLE;"
-          createdb --encoding=utf-8 --host=ckan-postgres --username=ckan --owner=${CKAN_DATASTORE_POSTGRES_WRITE_USER} ${CKAN_DATASTORE_POSTGRES_DB}
-        
-          # Database Initialization
-          ckan -c test-core-circle-ci.ini datastore set-permissions | psql --host=ckan-postgres --username=ckan
 
-      - name: install ckanext-harvest
-        run: |
-          git clone https://github.com/ckan/ckanext-harvest
-          cd ckanext-harvest
-          python setup.py develop
-          pip install -r pip-requirements.txt
-
-      - name: install ckanext-spatial
-        run: |
-          pip install -r pip-requirements.txt
-          python setup.py develop
-          pip install pycsw
-
-          mkdir subdir
-          mv test-github-actions.ini subdir
-
-          # setup postgis
-          psql --host=ckan-postgres --username=ckan -d ckan_test --command="ALTER ROLE ckan_default WITH superuser;"
-          psql --host=ckan-postgres --username=ckan -d ckan_test --command="CREATE EXTENSION postgis;"
-          psql --host=ckan-postgres --username=ckan -d ckan_test --command="ALTER VIEW geometry_columns OWNER TO ckan_default;"
-          psql --host=ckan-postgres --username=ckan -d ckan_test --command="ALTER TABLE spatial_ref_sys OWNER TO ckan_default;"
-
-          ckan -c subdir/test-github-actions.ini db init
-          ckan -c subdir/test-github-actions.ini harvester initdb
-          ckan -c subdir/test-github-actions.ini spatial initdb
-
-      - name: run ci
-        run: |
-          pytest --ckan-ini=subdir/test-github-actions.ini ckanext/spatial/tests
