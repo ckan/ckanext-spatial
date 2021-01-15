@@ -57,12 +57,12 @@ jobs:
       run: |
         git clone https://github.com/ckan/ckanext-harvest
         cd ckanext-harvest
-        python setup.py develop
         pip install -r pip-requirements.txt
+        pip install -r dev-requirements.txt
+        pip install -e .
     - name: Install requirements
       run: |
         pip install -r pip-requirements.txt
-        pip install -r dev-requirements.txt
         pip install -e .
         # Replace default path to CKAN core config file with the one on the container
         sed -i -e 's/use = config:.*/use = config:\/srv\/app\/src\/ckan\/test-core.ini/' test.ini
