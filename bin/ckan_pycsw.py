@@ -75,7 +75,7 @@ def load(pycsw_config, ckan_url):
         response = requests.get(url)
         listing = response.json()
         if not isinstance(listing, dict):
-            raise RuntimeError, 'Wrong API response: %s' % listing
+            raise RuntimeError('Wrong API response: %s' % listing)
         results = listing.get('results')
         if not results:
             break
@@ -115,7 +115,7 @@ def load(pycsw_config, ckan_url):
             ckan_id=ckan_id).delete()
             log.info('Deleted %s' % ckan_id)
             repo.session.commit()
-        except Exception, err:
+        except Exception as err:
             repo.session.rollback()
             raise
 
@@ -128,7 +128,7 @@ def load(pycsw_config, ckan_url):
         try:
             repo.insert(record, 'local', util.get_today_and_now())
             log.info('Inserted %s' % ckan_id)
-        except Exception, err:
+        except Exception as err:
             log.error('ERROR: not inserted %s Error:%s' % (ckan_id, err))
 
     for ckan_id in changed:
@@ -145,9 +145,9 @@ def load(pycsw_config, ckan_url):
             ckan_id=ckan_id).update(update_dict)
             repo.session.commit()
             log.info('Changed %s' % ckan_id)
-        except Exception, err:
+        except Exception as err:
             repo.session.rollback()
-            raise RuntimeError, 'ERROR: %s' % str(err)
+            raise RuntimeError('ERROR: %s' % str(err))
 
 
 def clear(pycsw_config):
@@ -174,13 +174,13 @@ def get_record(context, repo, ckan_url, ckan_id, ckan_info):
 
     try:
         xml = etree.parse(io.BytesIO(response.content))
-    except Exception, err:
+    except Exception as err:
         log.error('Could not pass xml doc from %s, Error: %s' % (ckan_id, err))
         return
 
     try:
         record = metadata.parse_record(context, xml, repo)[0]
-    except Exception, err:
+    except Exception as err:
         log.error('Could not extract metadata from %s, Error: %s' % (ckan_id, err))
         return
 
@@ -270,5 +270,5 @@ if __name__ == '__main__':
     elif arg.command == 'clear':
         clear(pycsw_config)
     else:
-        print 'Unknown command {0}'.format(arg.command)
+        print('Unknown command {0}'.format(arg.command))
         sys.exit(1)
