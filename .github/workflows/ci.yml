@@ -77,7 +77,7 @@ jobs:
       run: |
         cd /srv/app
         apk add --no-cache --virtual .build-deps \
-          python-dev
+          python2-dev
     - name: Install dependency (python3)
       if: ${{ matrix.ckan-version != '2.9' }}
       run: |
