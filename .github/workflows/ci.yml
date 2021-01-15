@@ -64,7 +64,9 @@ jobs:
       run: |
         apk add --no-cache \
           geos \
+          geos-dev \
           proj-util \
+          proj-dev \
           libxml2 \
           libxslt \
           gcc \
