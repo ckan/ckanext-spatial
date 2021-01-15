@@ -60,7 +60,7 @@ jobs:
         pip install -r pip-requirements.txt
         pip install -r dev-requirements.txt
         pip install -e .
-    - name: Install dependency
+    - name: Install dependency (common)
       run: |
         cd /srv/app
         apk add --no-cache \
@@ -72,6 +72,18 @@ jobs:
           gcc \
           libxml2-dev \
           libxslt-dev
+    - name: Install dependency (python2)
+      if: ${{ matrix.ckan-version != '2.9' }}
+      run: |
+        cd /srv/app
+        apk add --no-cache --virtual .build-deps \
+          python-dev
+    - name: Install dependency (python3)
+      if: ${{ matrix.ckan-version != '2.9' }}
+      run: |
+        cd /srv/app
+        apk add --no-cache --virtual .build-deps \
+          python3-dev
     - name: Install requirements
       run: |
         pip install -r pip-requirements.txt
