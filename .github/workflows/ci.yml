@@ -62,27 +62,23 @@ jobs:
         pip install -e .
     - name: Install dependency (common)
       run: |
-        cd /srv/app
         apk add --no-cache \
           geos \
           proj-util \
           libxml2 \
-          libxslt
-        apk add --no-cache --virtual .build-deps \
+          libxslt \
           gcc \
           libxml2-dev \
           libxslt-dev
     - name: Install dependency (python2)
       if: ${{ matrix.ckan-version != '2.9' }}
       run: |
-        cd /srv/app
-        apk add --no-cache --virtual .build-deps \
+        apk add --no-cache \
           python2-dev
     - name: Install dependency (python3)
       if: ${{ matrix.ckan-version != '2.9' }}
       run: |
-        cd /srv/app
-        apk add --no-cache --virtual .build-deps \
+        apk add --no-cache \
           python3-dev
     - name: Install requirements
       run: |
