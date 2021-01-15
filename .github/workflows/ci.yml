@@ -114,6 +114,4 @@ jobs:
         paster --plugin=ckanext-harvest harvester initdb -c test.ini
         paster --plugin=ckanext-spatial spatial initdb -c test.ini
     - name: Run tests
-      run: pytest --ckan-ini=test.ini --cov=ckanext.harvest --disable-warnings ckanext/spatial/tests
-
-
+      run: pytest --ckan-ini=test.ini ckanext/spatial/tests
