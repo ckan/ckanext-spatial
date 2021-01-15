@@ -28,7 +28,7 @@ jobs:
       solr:
         image: ckan/ckan-solr-dev:${{ matrix.ckan-version }}
       postgres:
-        image: postgis/postgis:12-2.5
+        image: postgis/postgis:9.6-2.5
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
