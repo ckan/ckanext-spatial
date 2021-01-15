@@ -78,13 +78,20 @@ jobs:
         apk add --no-cache \
           python2-dev
     - name: Install dependency (python3)
-      if: ${{ matrix.ckan-version != '2.9' }}
+      if: ${{ matrix.ckan-version == '2.9' }}
       run: |
         apk add --no-cache \
           python3-dev
-    - name: Install requirements
+    - name: Install requirements (python2)
+      if: ${{ matrix.ckan-version != '2.9' }}
       run: |
         pip install -r pip-requirements.txt
+    - name: Install requirements (python3)
+      if: ${{ matrix.ckan-version == '2.9' }}
+      run: |
+        pip install -r pip3-requirements.txt
+    - name: Install requirements
+      run: |
         pip install -e .
         # Replace default path to CKAN core config file with the one on the container
         sed -i -e 's/use = config:.*/use = config:\/srv\/app\/src\/ckan\/test-core.ini/' test.ini
