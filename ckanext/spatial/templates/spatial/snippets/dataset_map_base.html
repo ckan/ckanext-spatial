@@ -18,4 +18,5 @@ extent
   </div>
 </div>
 
-{% include 'spatial/snippets/dataset_map_asset.html' %}
+{% set type = 'asset' if h.ckan_version() > '2.9' else 'resource' %}
+{% include 'spatial/snippets/dataset_map_' ~ type ~ '.html' %}
