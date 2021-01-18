@@ -27,30 +27,6 @@ def clean_postgis():
     Session.execute("DROP EXTENSION IF EXISTS postgis CASCADE")
     Session.commit()
 
-
-@pytest.fixture
-def spatial_clean_db(reset_db):
-    reset_db()
-
-    # This will create the PostGIS tables (geometry_columns and
-    # spatial_ref_sys) which were deleted when rebuilding the database
-    table = Table("spatial_ref_sys", meta.metadata)
-    if not table.exists():
-        create_postgis_tables()
-
-        # When running the tests with the --reset-db option for some
-        # reason the metadata holds a reference to the `package_extent`
-        # table after being deleted, causing an InvalidRequestError
-        # exception when trying to recreate it further on
-        if "package_extent" in meta.metadata.tables:
-            meta.metadata.remove(meta.metadata.tables["package_extent"])
-
-    spatial_db_setup()
-
-    # Setup the harvest tables
-    harvest_model_setup()
-
-
 @pytest.fixture
 def harvest_setup():
     harvest_model.setup()
@@ -70,7 +46,5 @@ def spatial_setup():
     # exception when trying to recreate it further on
     if "package_extent" in meta.metadata.tables:
         meta.metadata.remove(meta.metadata.tables["package_extent"])
-        Session.execute("DROP INDEX IF EXISTS idx_package_extent_the_geom")
-        Session.commit()
 
     spatial_db_setup()
