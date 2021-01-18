@@ -358,6 +358,7 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
         else:
             extents = bbox_query(bbox)
             are_no_results = extents.count() == 0
+        print(extents)
 
         if are_no_results:
             # We don't need to perform the search
@@ -373,7 +374,8 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
             new_q += '(%s)' % ' OR '.join(['id:%s' % id for id in bbox_query_ids])
 
             search_params['q'] = new_q
-
+        print("search_params")
+        print(search_params)
         return search_params
 
     def after_search(self, search_results, search_params):
