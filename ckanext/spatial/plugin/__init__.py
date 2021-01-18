@@ -328,6 +328,7 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
     def _params_for_postgis_search(self, bbox, search_params):
         from ckanext.spatial.lib import   bbox_query, bbox_query_ordered
         from ckan.lib.search import SearchError
+        print("_params_for_postgis_search")
 
         # Note: This will be deprecated at some point in favour of the
         # Solr 4 spatial sorting capabilities
