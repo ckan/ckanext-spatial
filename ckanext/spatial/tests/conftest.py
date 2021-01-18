@@ -34,17 +34,5 @@ def harvest_setup():
 
 @pytest.fixture
 def spatial_setup():
-    # This will create the PostGIS tables (geometry_columns and
-    # spatial_ref_sys) which were deleted when rebuilding the database
-    table = Table("spatial_ref_sys", meta.metadata)
-    if not table.exists():
-        create_postgis_tables()
-
-    # When running the tests with the --reset-db option for some
-    # reason the metadata holds a reference to the `package_extent`
-    # table after being deleted, causing an InvalidRequestError
-    # exception when trying to recreate it further on
-    if "package_extent" in meta.metadata.tables:
-        meta.metadata.remove(meta.metadata.tables["package_extent"])
-
+    create_postgis_tables()
     spatial_db_setup()
