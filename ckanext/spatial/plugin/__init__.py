@@ -383,7 +383,10 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
 
         # Note: This will be deprecated at some point in favour of the
         # Solr 4 spatial sorting capabilities
-
+        print("search_results")
+        print(search_results)
+        print("search_params")
+        print(search_params)
         if search_params.get('extras', {}).get('ext_spatial') and \
            p.toolkit.asbool(config.get('ckanext.spatial.use_postgis_sorting', 'False')):
             # Apply the spatial sort
