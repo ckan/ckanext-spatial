@@ -15,9 +15,8 @@ extents = {
     "dateline2": '{"type":"Polygon","coordinates":[[[170,60],[-170,60],[-170,70],[170,70],[170,60]]]}',
 }
 
-
-@pytest.mark.usefixtures('clean_postgis', 'clean_db', 'clean_index', 'harvest_setup', 'spatial_setup')
 class TestAction(SpatialTestBase):
+    @pytest.mark.usefixtures('clean_postgis', 'clean_db', 'clean_index', 'harvest_setup', 'spatial_setup')
     def test_spatial_query(self):
         dataset = factories.Dataset(
             extras=[
@@ -35,6 +34,7 @@ class TestAction(SpatialTestBase):
         assert(result["count"] == 1)
         assert(result["results"][0]["id"] == dataset["id"])
 
+    @pytest.mark.usefixtures('clean_postgis', 'clean_db', 'clean_index', 'harvest_setup', 'spatial_setup')
     def test_spatial_query_outside_bbox(self):
 
         factories.Dataset(
@@ -49,6 +49,7 @@ class TestAction(SpatialTestBase):
 
         assert(result["count"] == 0)
 
+    @pytest.mark.usefixtures('clean_postgis', 'clean_db', 'clean_index', 'harvest_setup', 'spatial_setup')
     def test_spatial_query_wrong_bbox(self):
         with pytest.raises(SearchError):
             helpers.call_action(
@@ -56,6 +57,7 @@ class TestAction(SpatialTestBase):
                 extras={"ext_bbox": "-10,-20,10,a"},
             )
 
+    @pytest.mark.usefixtures('clean_postgis', 'clean_db', 'clean_index', 'harvest_setup', 'spatial_setup')
     def test_spatial_query_nz(self):
         dataset = factories.Dataset(
             extras=[{"key": "spatial", "value": extents["nz"]}]
@@ -68,6 +70,7 @@ class TestAction(SpatialTestBase):
         assert(result["count"] == 1)
         assert(result["results"][0]["id"] == dataset["id"])
 
+    @pytest.mark.usefixtures('clean_postgis', 'clean_db', 'clean_index', 'harvest_setup', 'spatial_setup')
     def test_spatial_query_nz_wrap(self):
         dataset = factories.Dataset(
             extras=[{"key": "spatial", "value": extents["nz"]}]
@@ -79,6 +82,7 @@ class TestAction(SpatialTestBase):
         assert(result["count"] == 1)
         assert(result["results"][0]["id"] == dataset["id"])
 
+    @pytest.mark.usefixtures('clean_postgis', 'clean_db', 'clean_index', 'harvest_setup', 'spatial_setup')
     def test_spatial_query_ohio(self):
 
         dataset = factories.Dataset(
@@ -92,6 +96,7 @@ class TestAction(SpatialTestBase):
         assert(result["count"] == 1)
         assert(result["results"][0]["id"] == dataset["id"])
 
+    @pytest.mark.usefixtures('clean_postgis', 'clean_db', 'clean_index', 'harvest_setup', 'spatial_setup')
     def test_spatial_query_ohio_wrap(self):
 
         dataset = factories.Dataset(
@@ -105,6 +110,7 @@ class TestAction(SpatialTestBase):
         assert(result["count"] == 1)
         assert(result["results"][0]["id"] == dataset["id"])
 
+    @pytest.mark.usefixtures('clean_postgis', 'clean_db', 'clean_index', 'harvest_setup', 'spatial_setup')
     def test_spatial_query_dateline_1(self):
 
         dataset = factories.Dataset(
@@ -118,6 +124,7 @@ class TestAction(SpatialTestBase):
         assert(result["count"] == 1)
         assert(result["results"][0]["id"] == dataset["id"])
 
+    @pytest.mark.usefixtures('clean_postgis', 'clean_db', 'clean_index', 'harvest_setup', 'spatial_setup')
     def test_spatial_query_dateline_2(self):
 
         dataset = factories.Dataset(
@@ -131,6 +138,7 @@ class TestAction(SpatialTestBase):
         assert(result["count"] == 1)
         assert(result["results"][0]["id"] == dataset["id"])
 
+    @pytest.mark.usefixtures('clean_postgis', 'clean_db', 'clean_index', 'harvest_setup', 'spatial_setup')
     def test_spatial_query_dateline_3(self):
 
         dataset = factories.Dataset(
@@ -144,6 +152,7 @@ class TestAction(SpatialTestBase):
         assert(result["count"] == 1)
         assert(result["results"][0]["id"] == dataset["id"])
 
+    @pytest.mark.usefixtures('clean_postgis', 'clean_db', 'clean_index', 'harvest_setup', 'spatial_setup')
     def test_spatial_query_dateline_4(self):
 
         dataset = factories.Dataset(
