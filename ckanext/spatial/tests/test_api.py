@@ -16,7 +16,7 @@ extents = {
 }
 
 
-@pytest.mark.usefixtures('with_plugins', 'clean_postgis', 'clean_db', 'clean_index', 'harvest_setup', 'spatial_setup')
+@pytest.mark.usefixtures('clean_postgis', 'clean_db', 'clean_index', 'harvest_setup', 'spatial_setup')
 class TestAction(SpatialTestBase):
     def test_spatial_query(self):
         dataset = factories.Dataset(
