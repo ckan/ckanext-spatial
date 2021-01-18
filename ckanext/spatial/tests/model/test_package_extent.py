@@ -106,19 +106,3 @@ class TestPackageExtent(SpatialTestBase):
             )
             assert(package_extent.the_geom.srid == self.db_srid)
 
-    def test_spatial_query(self):
-        dataset = factories.Dataset(
-            extras=[
-                {"key": "spatial", "value": self.geojson_examples["point"]}
-            ]
-        )
-
-        result = helpers.call_action("package_search")
-        assert(result["count"] == 1)
-
-        result = helpers.call_action(
-            "package_search", extras={"ext_bbox": "-180,-90,180,90"}
-        )
-
-        assert(result["count"] == 1)
-        assert(result["results"][0]["id"] == dataset["id"])
