@@ -99,11 +99,5 @@ jobs:
       run: |
         psql --host=postgres --username=postgres -d ckan_test --command="ALTER ROLE ckan_default WITH superuser;"
         psql --host=postgres --username=postgres -d ckan_test --command="CREATE EXTENSION postgis;"
-    - name: Setup extension (CKAN < 2.9)
-      if: ${{ matrix.ckan-version == '2.7' || matrix.ckan-version == '2.8' }}
-      run: |
-        paster --plugin=ckan db init -c test.ini
-        paster --plugin=ckanext-harvest harvester initdb -c test.ini
-        paster --plugin=ckanext-spatial spatial initdb -c test.ini
     - name: Run tests
       run: pytest --ckan-ini=test.ini ckanext/spatial/tests
