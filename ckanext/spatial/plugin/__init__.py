@@ -361,6 +361,7 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
         if are_no_results:
             # We don't need to perform the search
             search_params['abort_search'] = True
+            print("abort_search")
         else:
             # We'll perform the existing search but also filtering by the ids
             # of datasets within the bbox
