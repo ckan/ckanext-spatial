@@ -358,6 +358,7 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
         else:
             extents = bbox_query(bbox)
             are_no_results = extents.count() == 0
+        print("extents")
         print(extents)
 
         if are_no_results:
