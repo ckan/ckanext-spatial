@@ -369,6 +369,8 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
             # We'll perform the existing search but also filtering by the ids
             # of datasets within the bbox
             bbox_query_ids = [extent.package_id for extent in extents]
+            print("bbox_query_ids")
+            print(bbox_query_ids)
 
             q = search_params.get('q','').strip() or '""'
             new_q = '%s AND ' % q if q else ''
