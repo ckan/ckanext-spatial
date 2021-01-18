@@ -25,6 +25,9 @@ class TestAction(SpatialTestBase):
             ]
         )
 
+        result = helpers.call_action("package_search")
+        assert(result["count"] == 1)
+
         result = helpers.call_action(
             "package_search", extras={"ext_bbox": "-180,-90,180,90"}
         )
