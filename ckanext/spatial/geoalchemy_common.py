@@ -72,6 +72,7 @@ def setup_spatial_table(package_extent_class, db_srid=None):
             Column('package_id', types.UnicodeText, primary_key=True),
             Column('the_geom', Geometry('GEOMETRY', srid=db_srid,
                                         management=management)),
+            extend_existing=True
         )
 
         meta.mapper(package_extent_class, package_extent_table)
