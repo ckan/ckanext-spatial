@@ -367,7 +367,8 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
             bbox_query_ids = [extent.package_id for extent in extents]
 
             q = search_params.get('q','').strip() or '""'
-            new_q = '%s AND ' % q if q != '""' else ''
+            # Note: `"" AND` query doesn't work in github ci 
+            new_q = '%s AND ' % q if q and q != '""' else ''
             new_q += '(%s)' % ' OR '.join(['id:%s' % id for id in bbox_query_ids])
 
             search_params['q'] = new_q
