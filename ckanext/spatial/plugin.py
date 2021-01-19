@@ -317,6 +317,9 @@ class SpatialQuery(p.SingletonPlugin):
             +spatial_geom:"Intersects(ENVELOPE({minx}, {miny}, {maxx}, {maxy}))
 
         '''
+        if bbox['maxx'] > 180:
+            bbox['maxx'] = -180 + (bbox['maxx'] - 180)
+
         search_params['fq_list'] = search_params.get('fq_list', [])
         search_params['fq_list'].append('+spatial_geom:"Intersects(ENVELOPE({minx}, {maxx}, {maxy}, {miny}))"'
                                         .format(minx=bbox['minx'], miny=bbox['miny'], maxx=bbox['maxx'], maxy=bbox['maxy']))
