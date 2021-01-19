@@ -24,15 +24,11 @@ class TestAction(SpatialTestBase):
             ]
         )
 
-        result = helpers.call_action("package_search")
-        assert(result["count"] == 1)
-        print(result)
-
         result = helpers.call_action(
             "package_search", extras={"ext_bbox": "-180,-90,180,90"}
         )
 
-        assert(result["count"] == 2)
+        assert(result["count"] == 1)
         assert(result["results"][0]["id"] == dataset["id"])
 
     @pytest.mark.usefixtures('clean_postgis', 'clean_db', 'clean_index', 'harvest_setup', 'spatial_setup')

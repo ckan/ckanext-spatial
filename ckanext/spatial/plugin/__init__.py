@@ -328,7 +328,6 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
     def _params_for_postgis_search(self, bbox, search_params):
         from ckanext.spatial.lib import   bbox_query, bbox_query_ordered
         from ckan.lib.search import SearchError
-        print("_params_for_postgis_search")
 
         # Note: This will be deprecated at some point in favour of the
         # Solr 4 spatial sorting capabilities
@@ -358,27 +357,21 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
         else:
             extents = bbox_query(bbox)
             are_no_results = extents.count() == 0
-        print("extents")
-        print(extents)
 
         if are_no_results:
             # We don't need to perform the search
             search_params['abort_search'] = True
-            print("abort_search")
         else:
             # We'll perform the existing search but also filtering by the ids
             # of datasets within the bbox
             bbox_query_ids = [extent.package_id for extent in extents]
-            print("bbox_query_ids")
-            print(bbox_query_ids)
 
             q = search_params.get('q','').strip() or '""'
             new_q = '%s AND ' % q if q != '""' else ''
             new_q += '(%s)' % ' OR '.join(['id:%s' % id for id in bbox_query_ids])
 
             search_params['q'] = new_q
-        print("search_params")
-        print(search_params)
+
         return search_params
 
     def after_search(self, search_results, search_params):
@@ -386,10 +379,6 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
 
         # Note: This will be deprecated at some point in favour of the
         # Solr 4 spatial sorting capabilities
-        print("search_results")
-        print(search_results)
-        print("search_params")
-        print(search_params)
         if search_params.get('extras', {}).get('ext_spatial') and \
            p.toolkit.asbool(config.get('ckanext.spatial.use_postgis_sorting', 'False')):
             # Apply the spatial sort

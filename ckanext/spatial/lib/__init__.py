@@ -158,7 +158,6 @@ def bbox_query(bbox,srid=None):
               .filter(PackageExtent.package_id==Package.id) \
               .filter(PackageExtent.the_geom.intersects(input_geometry)) \
               .filter(Package.state==u'active')
-    print(extents)
     return extents
 
 def bbox_query_ordered(bbox, srid=None):
