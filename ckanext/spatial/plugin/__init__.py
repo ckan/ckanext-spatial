@@ -373,7 +373,7 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
             print(bbox_query_ids)
 
             q = search_params.get('q','').strip() or '""'
-            new_q = '%s AND ' % q if q else ''
+            new_q = '%s AND ' % q if q != '""' else ''
             new_q += '(%s)' % ' OR '.join(['id:%s' % id for id in bbox_query_ids])
 
             search_params['q'] = new_q
