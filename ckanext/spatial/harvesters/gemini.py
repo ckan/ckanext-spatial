@@ -652,7 +652,7 @@ class GeminiDocHarvester(GeminiHarvester, SingletonPlugin):
         # Get contents
         try:
             content = self._get_content_as_unicode(url)
-        except Exception,e:
+        except Exception as e:
             self._save_gather_error('Unable to get content for URL: %s: %r' % \
                                         (url, e),harvest_job)
             return None
@@ -713,7 +713,7 @@ class GeminiWafHarvester(GeminiHarvester, SingletonPlugin):
         # Get contents
         try:
             content = self._get_content_as_unicode(url)
-        except Exception,e:
+        except Exception as e:
             self._save_gather_error('Unable to get content for URL: %s: %r' % \
                                         (url, e),harvest_job)
             return None
@@ -722,7 +722,7 @@ class GeminiWafHarvester(GeminiHarvester, SingletonPlugin):
             for url in self._extract_urls(content,url):
                 try:
                     content = self._get_content_as_unicode(url)
-                except Exception, e:
+                except Exception as e:
                     msg = 'Couldn\'t harvest WAF link: %s: %s' % (url, e)
                     self._save_gather_error(msg,harvest_job)
                     continue
