@@ -670,7 +670,7 @@
                     <gmd:onLine>
                         <gmd:CI_OnlineResource>
                             <gmd:linkage>
-                                <gmd:URL>http://mapapps2.bgs.ac.uk/ArcGIS/services/GeoIndex_Offshore/Offshore_GeoIndex_Cultural/MapServer/WMSServer?service=WMS&amp;request=GetCapabilities</gmd:URL>
+                                <gmd:URL>http://localhost:8999/gemini2.3/validation/valid_wms_1.3.0.xml</gmd:URL>
                             </gmd:linkage>
                             <gmd:protocol>
                                 <gco:CharacterString>OGC:WMS-1.3.0-http-get-capabilities</gco:CharacterString>
@@ -693,7 +693,7 @@
                     <gmd:onLine>
                         <gmd:CI_OnlineResource>
                             <gmd:linkage>
-                                <gmd:URL>http://mapapps2.bgs.ac.uk/ArcGIS/services/GeoIndex_Offshore/Offshore_GeoIndex_Cultural/MapServer/WMSServer?</gmd:URL>
+                                <gmd:URL>http://localhost:8999/gemini2.3/validation/valid_wms_1.3.0.xml</gmd:URL>
                             </gmd:linkage>
                             <gmd:protocol>
                                 <gco:CharacterString>OGC:WMS-1.3.0-http-get-capabilities</gco:CharacterString>
@@ -716,7 +716,7 @@
                     <gmd:onLine>
                         <gmd:CI_OnlineResource>
                             <gmd:linkage>
-                                <gmd:URL>http://mapapps2.bgs.ac.uk/ArcGIS/services/GeoIndex_Offshore/Offshore_GeoIndex_Cultural/MapServer/WMSServer?service=WMS&amp;request=GetCapabilities&amp;version=1.1.1&amp;</gmd:URL>
+                                <gmd:URL>http://localhost:8999/gemini2.3/validation/valid_wms_1.1.1.xml</gmd:URL>
                             </gmd:linkage>
                             <gmd:protocol>
                                 <gco:CharacterString>OGC:WMS-1.1.1-http-get-capabilities</gco:CharacterString>

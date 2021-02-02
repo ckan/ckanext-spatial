@@ -275,7 +275,7 @@
             <gmd:onLine>
               <gmd:CI_OnlineResource>
                 <gmd:linkage>
-                  <gmd:URL>http://sedsh13.sedsh.gov.uk/ArcGIS/services/OSG/OSG/MapServer/WMSServer?request=GetCapabilities&amp;service=WMS</gmd:URL>
+                  <gmd:URL>http://localhost:8999/gemini2.1/fcs_admin_boundaries.xml</gmd:URL>
                 </gmd:linkage>
               <gmd:name>
                 <gco:CharacterString>Web Map Service (WMS)</gco:CharacterString>

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<WMS_Capabilities version="1.3.0" xmlns="http://www.opengis.net/wms" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:inspire_common="http://inspire.ec.europa.eu/schemas/common/1.0" xmlns:inspire_vs="http://inspire.ec.europa.eu/schemas/inspire_vs/1.0" xsi:schemaLocation="http://www.opengis.net/wms http://schemas.opengis.net/wms/1.3.0/capabilities_1_3_0.xsd">
+	<Service>
+		<Name>WMS</Name>
+		<Title><![CDATA[FCS_Admin_Boundaries]]></Title>
+		<Abstract><![CDATA[
+This interactive map service contains the following Forestry Commission Scotland administrative boundaries:
+
+FC Forest District boundaries
+FCS Conservancy boundaries
+Woodlands In &amp; Around Towns (WIAT)
+Central Scotland Green Network Boundary
+
+The layers can be switched on and off independently of each other.  
+Please note that the Forest District boundaries have both been generalised in order to speed screen refresh response time.
+
+Forestry Commission Scotland would like to thank Scottish Natural Heritage for their co-operation in hosting this web service on behalf of FCS.]]>
+		</Abstract>
+		<KeywordList>
+			<Keyword>Conservancy Boundaries</Keyword>
+			<Keyword>WIAT</Keyword>
+			<Keyword>Woodlands In &amp; Around Towns</Keyword>
+			<Keyword>Forest District Boundaries</Keyword>
+		</KeywordList>
+		<OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://www.forestry.gov.uk/scotland"/>
+		<ContactInformation>
+			<ContactPersonPrimary>
+				<ContactPerson>Geo-Information Services Delivery Manager</ContactPerson>
+				<ContactOrganization>Forestry Commission Scotland</ContactOrganization>
+			</ContactPersonPrimary>
+			<ContactPosition>Geo-Information Services Delivery Manager</ContactPosition>
+			<ContactAddress>
+				<AddressType>postal</AddressType>
+				<Address>Silvan House, 231 Corstorphine Road</Address>
+				<City>Edinburgh</City>
+				<StateOrProvince/>
+				<PostCode>EH12 7AT</PostCode>
+				<Country>UK</Country>
+			</ContactAddress>
+			<ContactVoiceTelephone>0131 334 0303</ContactVoiceTelephone>
+			<ContactFacsimileTelephone/>
+			<ContactElectronicMailAddress>geoinformationservices@forestry.gsi.gov.uk</ContactElectronicMailAddress>
+		</ContactInformation>
+		<Fees>none</Fees>
+		<AccessConstraints>Copyright (Copyright Forestry Commission Scotland)</AccessConstraints>
+		<MaxWidth>2048</MaxWidth>
+		<MaxHeight>2048</MaxHeight>
+	</Service>
+	<Capability>
+		<Request>
+			<GetCapabilities>
+				<Format>application/vnd.ogc.wms_xml</Format>
+				<Format>text/xml</Format>
+				<DCPType>
+					<HTTP><Get><OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://cagmap.snh.gov.uk/arcgis/services/fcs_admin_boundaries/MapServer/WMSServer"/></Get></HTTP>
+				</DCPType>
+			</GetCapabilities>
+			<GetMap>
+				<Format>image/bmp</Format>
+				<Format>image/jpeg</Format>
+				<Format>image/tiff</Format>
+				<Format>image/png</Format>
+				<Format>image/gif</Format>
+				<Format>image/svg+xml</Format>
+				<DCPType>
+					<HTTP><Get><OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://cagmap.snh.gov.uk/arcgis/services/fcs_admin_boundaries/MapServer/WMSServer"/></Get></HTTP>
+				</DCPType>
+			</GetMap>
+			<GetFeatureInfo>
+				<Format>application/vnd.esri.wms_raw_xml</Format>
+				<Format>application/vnd.esri.wms_featureinfo_xml</Format>
+				<Format>application/vnd.ogc.wms_xml</Format>
+				<Format>text/xml</Format>
+				<Format>text/html</Format>
+				<Format>text/plain</Format>
+				<DCPType>
+					<HTTP><Get><OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://cagmap.snh.gov.uk/arcgis/services/fcs_admin_boundaries/MapServer/WMSServer"/></Get></HTTP>
+				</DCPType>
+			</GetFeatureInfo>
+		</Request>
+		<Exception>
+			<Format>application/vnd.ogc.se_xml</Format>
+			<Format>application/vnd.ogc.se_inimage</Format>
+			<Format>application/vnd.ogc.se_blank</Format>
+			<Format>text/xml</Format>
+			<Format>XML</Format>
+		</Exception>
+		<inspire_vs:ExtendedCapabilities>
+			<inspire_common:MetadataUrl xsi:type="inspire_common:resourceLocatorType">
+				<inspire_common:URL>http://www.spatialdata.gov.scot/geonetwork/srv/eng/xml.metadata.get?uuid=dc628f2b-bb1c-4cee-a347-855a7c9e46b0</inspire_common:URL>
+				<inspire_common:MediaType>application/vnd.iso.19139+xml</inspire_common:MediaType>
+			</inspire_common:MetadataUrl>
+			<inspire_common:SupportedLanguages>
+				<inspire_common:DefaultLanguage>
+					<inspire_common:Language>eng</inspire_common:Language>
+				</inspire_common:DefaultLanguage>
+			</inspire_common:SupportedLanguages>
+			<inspire_common:ResponseLanguage>
+				<inspire_common:Language>eng</inspire_common:Language>
+			</inspire_common:ResponseLanguage>
+		</inspire_vs:ExtendedCapabilities>
+		<Layer>
+			<Title><![CDATA[FCS Administrative Boundaries]]></Title>
+			<CRS>CRS:84</CRS>
+			<CRS>EPSG:4326</CRS>
+			<CRS>EPSG:4258</CRS>
+			<CRS>EPSG:27700</CRS>
+			<CRS>EPSG:3857</CRS>
+			<EX_GeographicBoundingBox>
+				<westBoundLongitude>-9.496386754</westBoundLongitude>
+				<eastBoundLongitude>3.634744235</eastBoundLongitude>
+				<southBoundLatitude>49.76185811</southBoundLatitude>
+				<northBoundLatitude>61.581679301</northBoundLatitude>
+			</EX_GeographicBoundingBox>
+			<BoundingBox CRS="CRS:84" minx="-9.496386754" miny="49.766185811" maxx="3.634744235" maxy="61.581679301"/>
+			<BoundingBox CRS="EPSG:4326" minx="49.766185811" miny="-9.496386754" maxx="61.581679301" maxy="3.634744235"/>
+			<BoundingBox CRS="EPSG:4258" minx="49.766185811" miny="-9.496386754" maxx="61.581679301" maxy="3.634744235"/>
+			<BoundingBox CRS="EPSG:3857" minx="49.766185811" miny="-9.496386754" maxx="61.581679301" maxy="3.634744235"/>
+			<BoundingBox CRS="EPSG:27700" minx="0" miny="0" maxx="700000" maxy="1300000"/>
+			<Layer queryable="1">
+				<Name>0</Name>
+				<Title><![CDATA[FC Forest District Boundaries]]></Title>
+				<MetadataURL type="TC211">
+					<Format>text/xml</Format>
+					<OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://www.spatialdata.gov.scot/geonetwork/srv/eng/xml.metadata.get?uuid=4D736B5E-9518-441C-ACC4-920D1971145E"/>
+				</MetadataURL>
+				<Abstract><![CDATA[FC Forest District Boundaries]]></Abstract>
+				<Style>
+					<Name>inspire_common:DEFAULT</Name>
+					<Title><![CDATA[FC Forest District Boundaries]]></Title>
+					<LegendURL width="214" height="16">
+						<Format>image/png</Format>
+						<OnlineResource xlink:href="https://cagmap.snh.gov.uk/legend/FCS_Legends/FCS_AdministrativeBoundaries/FCS_Forest_District_Boundaries_legend.png" xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink"/>
+					</LegendURL>
+				</Style>
+			</Layer>
+			<Layer queryable="1">
+				<Name>1</Name>
+				<Title><![CDATA[FCS Conservancy Boundaries]]></Title>
+				<MetadataURL type="TC211">
+					<Format>text/xml</Format>
+					<OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://www.spatialdata.gov.scot/geonetwork/srv/eng/xml.metadata.get?uuid=B8A22DF4-B0DC-4F0B-A713-0CF5F8784A28"/>
+				</MetadataURL>
+				<Abstract><![CDATA[FCS Conservancy Boundaries]]></Abstract>
+				<Style>
+					<Name>inspire_common:DEFAULT</Name>
+					<Title><![CDATA[FCS Conservancy Boundaries]]></Title>
+					<LegendURL width="218" height="16">
+						<Format>image/png</Format>
+						<OnlineResource xlink:href="https://cagmap.snh.gov.uk/legend/FCS_Legends/FCS_AdministrativeBoundaries/FCS_Conservancy_Boundaries_Legend.png" xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink"/>
+					</LegendURL>
+				</Style>
+			</Layer>
+			<Layer queryable="1">
+				<Name>2</Name>
+				<Title><![CDATA[FCS Woodlands In and Around Towns]]></Title>
+				<MetadataURL type="TC211">
+					<Format>text/xml</Format>
+					<OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://www.spatialdata.gov.scot/geonetwork/srv/eng/xml.metadata.get?uuid=10F62548-6198-46D4-9B47-DF3D237E33A8"/>
+				</MetadataURL>
+				<Abstract><![CDATA[FCS Woodlands In and Around Towns]]></Abstract>
+				<Style>
+					<Name>default</Name>
+					<Title><![CDATA[FCS Woodlands In and Around Towns]]></Title>
+					<LegendURL width="374" height="39">
+						<Format>image/png</Format>
+						<OnlineResource xlink:href="https://cagmap.snh.gov.uk/legend/FCS_Legends/FCS_AdministrativeBoundaries/FCS_Woodlands_In_and_Around_Towns_Legend.png" xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink"/>
+					</LegendURL>
+				</Style>
+			</Layer>
+			<Layer queryable="1">
+				<Name>3</Name>
+				<Title><![CDATA[Central Scotland Green Network Boundary]]></Title>
+				<MetadataURL type="TC211">
+					<Format>text/xml</Format>
+					<OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="https://www.spatialdata.gov.scot/geonetwork/srv/eng/xml.metadata.get?uuid=545d7b3f-90f2-4237-8b72-7a41c3606126"/>
+				</MetadataURL>
+				<Abstract><![CDATA[Central Scotland Green Network Boundary]]></Abstract>
+				<Style>
+					<Name>default</Name>
+					<Title><![CDATA[Central Scotland Green Network Boundary]]></Title>
+					<LegendURL width="374" height="39">
+						<Format>image/png</Format>
+						<OnlineResource xlink:href="https://cagmap.snh.gov.uk/legend/FCS_Legends/FCS_AdministrativeBoundaries/FCS_Central_Scotland_Green_Network_Boundary_Legend.png" xlink:type="simple" xmlns:xlink="http://www.w3.org/1999/xlink"/>
+					</LegendURL>
+				</Style>
+			</Layer>
+		</Layer>
+	</Capability>
+</WMS_Capabilities>

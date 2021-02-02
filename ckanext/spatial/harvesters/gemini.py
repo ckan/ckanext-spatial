@@ -94,19 +94,14 @@ class GeminiHarvester(SpatialHarvester):
         '''
         gemini_string = harvest_object.content
         log = logging.getLogger(__name__ + '.import')
-        gemini_string = harvest_object.content
-        xml = etree.fromstring(gemini_string.encode('utf-8'))
+        xml = etree.fromstring(gemini_string)
         valid, profile, errors = self._get_validator().is_valid(xml)
         if not valid:
             out = errors[0][0] + ':\n' + '\n'.join(e[0] for e in errors[1:])
             log.error('Errors found for object with GUID %s:' % self.obj.guid)
             self._save_object_error(out,self.obj,'Import')
 
-        if datetime.today() > datetime(2019, 12, 1) and hasattr(self, '_validator'):
-            if any(schema in ['gemini2', 'gemini2-1.3'] for schema in self._validator.profiles):
-                self._save_object_error('gemini2/gemini2-1.3 will be deprecated, please use gemin2-3', self.obj, 'Validation')
-
-        unicode_gemini_string = etree.tostring(xml, encoding=unicode, pretty_print=True)
+        unicode_gemini_string = etree.tostring(xml, encoding='utf-8', pretty_print=True)
 
         # may raise Exception for errors
         package_dict = self.write_package_from_gemini_string(unicode_gemini_string, harvest_object)
@@ -150,7 +145,7 @@ class GeminiHarvester(SpatialHarvester):
         if len(last_harvested_object) == 1:
             last_harvested_object = last_harvested_object[0]
         elif len(last_harvested_object) > 1:
-                raise Exception('Application Error: more than one current record for GUID %s' % gemini_guid)
+            raise Exception('Application Error: more than one current record for GUID %s' % gemini_guid)
 
         if last_harvested_object and last_harvested_object.harvest_source_id == harvest_object.harvest_source_id:
             def get_harvest_object_url(harvest_object_id):
@@ -563,7 +558,7 @@ class GeminiHarvester(SpatialHarvester):
         if gemini_xml is None:
             self._save_gather_error('Content is not a valid Gemini document without the gmd:MD_Metadata element', self.harvest_job)
 
-        gemini_string = etree.tostring(gemini_xml)
+        gemini_string = etree.tostring(gemini_xml).decode('utf-8')
         gemini_document = GeminiDocument(gemini_string)
         try:
             gemini_guid = gemini_document.read_value('guid')

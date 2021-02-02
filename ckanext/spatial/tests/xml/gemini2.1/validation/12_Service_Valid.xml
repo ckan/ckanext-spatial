@@ -391,7 +391,7 @@ http://eden.ign.fr/xsd/isotc211/isofull/20090316/srv/srv.xsd" xmlns:gss="http://
           <srv:connectPoint>
             <gmd:CI_OnlineResource>
               <gmd:linkage>
-                <gmd:URL>http://lasigpublic.nerc-lancaster.ac.uk/ArcGIS/services/LandCoverMap/LCM2007_GB_1k_DOM_TAR/MapServer/WMSServer</gmd:URL>
+                <gmd:URL>http://localhost:8999/gemini2.1/validation/12_valid_wms.xml</gmd:URL>
               </gmd:linkage>
             </gmd:CI_OnlineResource>
           </srv:connectPoint>
@@ -408,7 +408,7 @@ http://eden.ign.fr/xsd/isotc211/isofull/20090316/srv/srv.xsd" xmlns:gss="http://
           <srv:connectPoint>
             <gmd:CI_OnlineResource>
               <gmd:linkage>
-                <gmd:URL>http://lasigpublic.nerc-lancaster.ac.uk/ArcGIS/services/LandCoverMap/LCM2007_GB_1k_DOM_TAR/MapServer/WMSServer</gmd:URL>
+                <gmd:URL>http://localhost:8999/gemini2.1/validation/12_valid_wms.xml</gmd:URL>
               </gmd:linkage>
             </gmd:CI_OnlineResource>
           </srv:connectPoint>
@@ -475,7 +475,7 @@ http://eden.ign.fr/xsd/isotc211/isofull/20090316/srv/srv.xsd" xmlns:gss="http://
           <gmd:onLine>
             <gmd:CI_OnlineResource>
               <gmd:linkage>
-                <gmd:URL>http://lasigpublic.nerc-lancaster.ac.uk/ArcGIS/services/LandCoverMap/LCM2007_GB_1k_DOM_TAR/MapServer/WMSServer?request=getCapabilities&amp;service=WMS</gmd:URL>
+                <gmd:URL>http://localhost:8999/gemini2.1/validation/12_valid_wms.xml</gmd:URL>
               </gmd:linkage>
               <gmd:name>
                 <gco:CharacterString>WMS Service</gco:CharacterString>
@@ -492,7 +492,7 @@ http://eden.ign.fr/xsd/isotc211/isofull/20090316/srv/srv.xsd" xmlns:gss="http://
           <gmd:onLine>
             <gmd:CI_OnlineResource>
               <gmd:linkage>
-                <gmd:URL>http://cs2007.ceh.ac.uk/sites/default/files/LCM2007%20Final%20Report%20-%20vCS%20Web.pdf</gmd:URL>
+                <gmd:URL>http://localhost:8999/gemini2.1/validation/12_valid_wms.xml</gmd:URL>
               </gmd:linkage>
               <gmd:name>
                 <gco:CharacterString>CS Technical Report</gco:CharacterString>

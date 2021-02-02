@@ -1,0 +1,127 @@
+<?xml version='1.0' encoding="ISO-8859-1" standalone="no" ?>
+<WMT_MS_Capabilities version="1.1.1">
+
+<!-- MapServer version 5.6.5 OUTPUT=GIF OUTPUT=PNG OUTPUT=JPEG OUTPUT=WBMP OUTPUT=SWF OUTPUT=SVG SUPPORTS=PROJ SUPPORTS=AGG SUPPORTS=FREETYPE SUPPORTS=ICONV SUPPORTS=FRIBIDI SUPPORTS=WMS_SERVER SUPPORTS=WMS_CLIENT SUPPORTS=WFS_SERVER SUPPORTS=WFS_CLIENT SUPPORTS=WCS_SERVER SUPPORTS=SOS_SERVER SUPPORTS=FASTCGI SUPPORTS=THREADS SUPPORTS=GEOS SUPPORTS=RGBA_PNG INPUT=EPPL7 INPUT=POSTGIS INPUT=OGR INPUT=GDAL INPUT=SHAPEFILE -->
+
+<Service>
+  <Name>OGC:WMS</Name>
+  <Title>Wikipedia articles</Title>
+  <Abstract>This service provides access to a subset of the georeferenced articles of the English version of Wikipedia.The features were extracted from the DBpedia Geographic Coordinates dataset corresponding to the English version of Wikipedia. The original Wikipedia dump from where it was derived was generated on October 2010.</Abstract>
+        <KeywordList>
+          <Keyword>Wikipedia</Keyword>
+          <Keyword>Articles</Keyword>
+          <Keyword>World</Keyword>
+        </KeywordList>
+  <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://flentic.net/wms/wikipedia?"/>
+  <ContactInformation>
+  </ContactInformation>
+  <Fees>Free</Fees>
+  <AccessConstraints>No restrictions, but please don&#39;t abuse the server!</AccessConstraints>
+</Service>
+
+<Capability>
+  <Request>
+    <GetCapabilities>
+      <Format>application/vnd.ogc.wms_xml</Format>
+      <DCPType>
+        <HTTP>
+          <Get><OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://flentic.net/wms/wikipedia?"/></Get>
+          <Post><OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://flentic.net/wms/wikipedia?"/></Post>
+        </HTTP>
+      </DCPType>
+    </GetCapabilities>
+    <GetMap>
+      <Format>image/gif</Format>
+      <Format>image/png</Format>
+      <Format>image/png; mode=24bit</Format>
+      <Format>image/jpeg</Format>
+      <Format>image/vnd.wap.wbmp</Format>
+      <Format>image/tiff</Format>
+      <Format>image/svg+xml</Format>
+      <DCPType>
+        <HTTP>
+          <Get><OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://flentic.net/wms/wikipedia?"/></Get>
+          <Post><OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://flentic.net/wms/wikipedia?"/></Post>
+        </HTTP>
+      </DCPType>
+    </GetMap>
+    <GetFeatureInfo>
+      <Format>text/plain</Format>
+      <Format>application/vnd.ogc.gml</Format>
+      <DCPType>
+        <HTTP>
+          <Get><OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://flentic.net/wms/wikipedia?"/></Get>
+          <Post><OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://flentic.net/wms/wikipedia?"/></Post>
+        </HTTP>
+      </DCPType>
+    </GetFeatureInfo>
+    <DescribeLayer>
+      <Format>text/xml</Format>
+      <DCPType>
+        <HTTP>
+          <Get><OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://flentic.net/wms/wikipedia?"/></Get>
+          <Post><OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://flentic.net/wms/wikipedia?"/></Post>
+        </HTTP>
+      </DCPType>
+    </DescribeLayer>
+    <GetLegendGraphic>
+      <Format>image/gif</Format>
+      <Format>image/png</Format>
+      <Format>image/png; mode=24bit</Format>
+      <Format>image/jpeg</Format>
+      <Format>image/vnd.wap.wbmp</Format>
+      <DCPType>
+        <HTTP>
+          <Get><OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://flentic.net/wms/wikipedia?"/></Get>
+          <Post><OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://flentic.net/wms/wikipedia?"/></Post>
+        </HTTP>
+      </DCPType>
+    </GetLegendGraphic>
+    <GetStyles>
+      <Format>text/xml</Format>
+      <DCPType>
+        <HTTP>
+          <Get><OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://flentic.net/wms/wikipedia?"/></Get>
+          <Post><OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://flentic.net/wms/wikipedia?"/></Post>
+        </HTTP>
+      </DCPType>
+    </GetStyles>
+  </Request>
+  <Exception>
+    <Format>application/vnd.ogc.se_xml</Format>
+    <Format>application/vnd.ogc.se_inimage</Format>
+    <Format>application/vnd.ogc.se_blank</Format>
+  </Exception>
+  <VendorSpecificCapabilities />
+  <UserDefinedSymbolization SupportSLD="1" UserLayer="0" UserStyle="1" RemoteWFS="0"/>
+  <Layer>
+    <Name>wikipedia</Name>
+    <Title>Wikipedia articles</Title>
+    <Abstract>This service provides access to a subset of the georeferenced articles of the English version of Wikipedia.The features were extracted from the DBpedia Geographic Coordinates dataset corresponding to the English version of Wikipedia. The original Wikipedia dump from where it was derived was generated on October 2010.</Abstract>
+    <KeywordList>
+     <Keyword>Wikipedia</Keyword>
+     <Keyword>Articles</Keyword>
+     <Keyword>World</Keyword>
+    </KeywordList>
+    <SRS>EPSG:4326</SRS>
+    <SRS>EPSG:3857</SRS>
+    <LatLonBoundingBox minx="-180" miny="-90" maxx="180" maxy="90" />
+    <Layer queryable="1" opaque="0" cascaded="0">
+        <Name>articles</Name>
+        <Title>Wikipedia articles</Title>
+        <SRS>EPSG:4326</SRS>
+        <SRS>EPSG:3857</SRS>
+        <LatLonBoundingBox minx="-180" miny="-90" maxx="90" maxy="180" />
+        <Style>
+          <Name>default</Name>
+          <Title>default</Title>
+          <LegendURL width="166" height="25">
+             <Format>image/png</Format>
+             <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://flentic.net/wms/wikipedia?version=1.1.1&amp;service=WMS&amp;request=GetLegendGraphic&amp;layer=articles&amp;format=image/png&amp;STYLE=default"/>
+          </LegendURL>
+        </Style>
+        <ScaleHint min="0" max="249.451424214819" />
+    </Layer>
+  </Layer>
+</Capability>
+</WMT_MS_Capabilities>
