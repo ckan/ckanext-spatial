@@ -1,19 +1,20 @@
+import six
+from six.moves.urllib.parse import urlparse
+from six.moves.urllib.request import urlopen
+
 import re
 import cgitb
 import warnings
-import urllib2
+
 import sys
 import logging
 from string import Template
-from urlparse import urlparse
 from datetime import datetime
 import uuid
 import hashlib
 import dateutil
 import mimetypes
 
-
-from pylons import config
 from owslib import wms
 import requests
 from lxml import etree
@@ -32,6 +33,11 @@ from ckanext.harvest.model import HarvestObject
 from ckanext.spatial.validation import Validators, all_validators
 from ckanext.spatial.model import ISODocument
 from ckanext.spatial.interfaces import ISpatialHarvester
+
+if p.toolkit.check_ckan_version("2.9"):
+    config = p.toolkit.config
+else:
+    from pylons import config
 
 log = logging.getLogger(__name__)
 
@@ -87,7 +93,7 @@ def guess_resource_format(url, use_mimetypes=True):
         'arcgis_rest': ('arcgis/rest/services',),
     }
 
-    for resource_type, parts in resource_types.iteritems():
+    for resource_type, parts in resource_types.items():
         if any(part in url for part in parts):
             return resource_type
 
@@ -97,7 +103,7 @@ def guess_resource_format(url, use_mimetypes=True):
         'gml': ('gml',),
     }
 
-    for file_type, extensions in file_types.iteritems():
+    for file_type, extensions in file_types.items():
         if any(url.endswith(extension) for extension in extensions):
             return file_type
 
@@ -155,7 +161,7 @@ class SpatialHarvester(HarvesterBase):
                     if not isinstance(source_config_obj[key],bool):
                         raise ValueError('%s must be boolean' % key)
 
-        except ValueError, e:
+        except ValueError as e:
             raise e
 
         return source_config
@@ -203,7 +209,7 @@ class SpatialHarvester(HarvesterBase):
         :returns: A dataset dictionary (package_dict)
         :rtype: dict
         '''
-        
+
         tags = []
 
         if 'tags' in iso_values:
@@ -235,7 +241,7 @@ class SpatialHarvester(HarvesterBase):
         if package is None or package.title != iso_values['title']:
             name = self._gen_new_name(iso_values['title'])
             if not name:
-                name = self._gen_new_name(str(iso_values['guid']))
+                name = self._gen_new_name(six.text_type(iso_values['guid']))
             if not name:
                 raise Exception('Could not generate a unique name from the title or the GUID. Please choose a more unique title.')
             package_dict['name'] = name
@@ -334,7 +340,7 @@ class SpatialHarvester(HarvesterBase):
                         parties[party['organisation-name']].append(party['role'])
                 else:
                     parties[party['organisation-name']] = [party['role']]
-            extras['responsible-party'] = [{'name': k, 'roles': v} for k, v in parties.iteritems()]
+            extras['responsible-party'] = [{'name': k, 'roles': v} for k, v in parties.items()]
 
         if len(iso_values['bbox']) > 0:
             bbox = iso_values['bbox'][0]
@@ -348,8 +354,8 @@ class SpatialHarvester(HarvesterBase):
                 xmax = float(bbox['east'])
                 ymin = float(bbox['south'])
                 ymax = float(bbox['north'])
-            except ValueError, e:
-                self._save_object_error('Error parsing bounding box value: {0}'.format(str(e)),
+            except ValueError as e:
+                self._save_object_error('Error parsing bounding box value: {0}'.format(six.text_type(e)),
                                     harvest_object, 'Import')
             else:
                 # Construct a GeoJSON extent so ckanext-spatial can register the extent geometry
@@ -402,11 +408,11 @@ class SpatialHarvester(HarvesterBase):
         default_extras = self.source_config.get('default_extras',{})
         if default_extras:
            override_extras = self.source_config.get('override_extras',False)
-           for key,value in default_extras.iteritems():
+           for key,value in default_extras.items():
               log.debug('Processing extra %s', key)
               if not key in extras or override_extras:
                  # Look for replacement strings
-                 if isinstance(value,basestring):
+                 if isinstance(value,six.string_types):
                     value = value.format(harvest_source_id=harvest_object.job.source.id,
                              harvest_source_url=harvest_object.job.source.url.strip('/'),
                              harvest_source_title=harvest_object.job.source.title,
@@ -415,7 +421,7 @@ class SpatialHarvester(HarvesterBase):
                  extras[key] = value
 
         extras_as_dict = []
-        for key, value in extras.iteritems():
+        for key, value in extras.items():
             if isinstance(value, (list, dict)):
                 extras_as_dict.append({'key': key, 'value': json.dumps(value)})
             else:
@@ -509,8 +515,8 @@ class SpatialHarvester(HarvesterBase):
 
             iso_parser = ISODocument(harvest_object.content)
             iso_values = iso_parser.read_values()
-        except Exception, e:
-            self._save_object_error('Error parsing ISO document for object {0}: {1}'.format(harvest_object.id, str(e)),
+        except Exception as e:
+            self._save_object_error('Error parsing ISO document for object {0}: {1}'.format(harvest_object.id, six.text_type(e)),
                                     harvest_object, 'Import')
             return False
 
@@ -580,7 +586,7 @@ class SpatialHarvester(HarvesterBase):
 
         # The default package schema does not like Upper case tags
         tag_schema = logic.schema.default_tags_schema()
-        tag_schema['name'] = [not_empty, unicode]
+        tag_schema['name'] = [not_empty, six.text_type]
 
         # Flag this object as the current one
         harvest_object.current = True
@@ -593,8 +599,8 @@ class SpatialHarvester(HarvesterBase):
 
             # We need to explicitly provide a package ID, otherwise ckanext-spatial
             # won't be be able to link the extent to the package.
-            package_dict['id'] = unicode(uuid.uuid4())
-            package_schema['id'] = [unicode]
+            package_dict['id'] = six.text_type(uuid.uuid4())
+            package_schema['id'] = [six.text_type]
 
             # Save reference to the package on the object
             harvest_object.package_id = package_dict['id']
@@ -608,8 +614,8 @@ class SpatialHarvester(HarvesterBase):
             try:
                 package_id = p.toolkit.get_action('package_create')(context, package_dict)
                 log.info('Created new package %s with guid %s', package_id, harvest_object.guid)
-            except p.toolkit.ValidationError, e:
-                self._save_object_error('Validation Error: %s' % str(e.error_summary), harvest_object, 'Import')
+            except p.toolkit.ValidationError as e:
+                self._save_object_error('Validation Error: %s' % six.text_type(e.error_summary), harvest_object, 'Import')
                 return False
 
         elif status == 'change':
@@ -654,8 +660,8 @@ class SpatialHarvester(HarvesterBase):
                 try:
                     package_id = p.toolkit.get_action('package_update')(context, package_dict)
                     log.info('Updated package %s with guid %s', package_id, harvest_object.guid)
-                except p.toolkit.ValidationError, e:
-                    self._save_object_error('Validation Error: %s' % str(e.error_summary), harvest_object, 'Import')
+                except p.toolkit.ValidationError as e:
+                    self._save_object_error('Validation Error: %s' % six.text_type(e.error_summary), harvest_object, 'Import')
                     return False
 
         model.Session.commit()
@@ -670,13 +676,13 @@ class SpatialHarvester(HarvesterBase):
         '''
         try:
             capabilities_url = wms.WMSCapabilitiesReader().capabilities_url(url)
-            res = urllib2.urlopen(capabilities_url, None, 10)
+            res = urlopen(capabilities_url, None, 10)
             xml = res.read()
 
             s = wms.WebMapService(url, xml=xml)
             return isinstance(s.contents, dict) and s.contents != {}
-        except Exception, e:
-            log.error('WMS check for %s failed with exception: %s' % (url, str(e)))
+        except Exception as e:
+            log.error('WMS check for %s failed with exception: %s' % (url, six.text_type(e)))
         return False
 
     def _get_object_extra(self, harvest_object, key):
@@ -767,7 +773,7 @@ class SpatialHarvester(HarvesterBase):
         DEPRECATED: Use _get_content_as_unicode instead
         '''
         url = url.replace(' ', '%20')
-        http_response = urllib2.urlopen(url)
+        http_response = urlopen(url)
         return http_response.read()
 
     def _get_content_as_unicode(self, url):
@@ -818,8 +824,8 @@ class SpatialHarvester(HarvesterBase):
 
         try:
             xml = etree.fromstring(document_string)
-        except etree.XMLSyntaxError, e:
-            self._save_object_error('Could not parse XML file: {0}'.format(str(e)), harvest_object, 'Import')
+        except etree.XMLSyntaxError as e:
+            self._save_object_error('Could not parse XML file: {0}'.format(six.text_type(e)), harvest_object, 'Import')
             return False, None, []
 
         valid, profile, errors = validator.is_valid(xml)

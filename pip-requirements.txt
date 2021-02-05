@@ -1,8 +1,9 @@
 GeoAlchemy>=0.6
 GeoAlchemy2==0.5.0
 Shapely>=1.2.13
-OWSLib==0.8.6
+OWSLib==0.18.0
 lxml>=2.3
 argparse
 pyparsing>=2.1.10
 requests>=1.1.0
+six

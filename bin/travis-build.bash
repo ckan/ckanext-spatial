@@ -7,25 +7,41 @@ echo "Installing the packages that CKAN requires..."
 sudo apt-get update -qq
 sudo apt-get install solr-jetty
 
+
+if python -c 'import sys;exit(sys.version_info < (3,))'
+then
+    PYTHONVERSION=3
+else
+    PYTHONVERSION=2
+fi
+
 echo "Installing CKAN and its Python dependencies..."
 git clone https://github.com/ckan/ckan
 cd ckan
-if [ $CKANVERSION != 'master' ]
+if [ $CKANVERSION == 'master' ]
 then
-    git checkout $CKANVERSION
+    echo "CKAN version: master"
+else
+    CKAN_TAG=$(git tag | grep ^ckan-$CKANVERSION | sort --version-sort | tail -n 1)
+    git checkout $CKAN_TAG
+    echo "CKAN version: ${CKAN_TAG#ckan-}"
 fi
 
-# Unpin CKAN's psycopg2 dependency get an important bugfix
-# https://stackoverflow.com/questions/47044854/error-installing-psycopg2-2-6-2
-sed -i '/psycopg2/c\psycopg2' requirements.txt
+if [ -f requirement-setuptools.txt ]
+then
+    pip install -r requirement-setuptools.txt
+fi
 
 python setup.py develop
-if [ -f requirements-py2.txt ]
+
+if [ -f requirements-py2.txt ] && [ $PYTHONVERSION = 2 ]
 then
-    pip install -r requirements-py2.txt
+    grep -v psycopg2 < requirements-py2.txt > reqs.txt
 else
-    pip install -r requirements.txt
+    grep -v psycopg2 < requirements.txt > reqs.txt
 fi
+pip install psycopg2==2.7.7  # workaround travis 10 psycopg2 incompatibility
+pip install -r reqs.txt
 pip install -r dev-requirements.txt
 cd -
 
@@ -52,7 +68,12 @@ sudo apt-get install python-dev libxml2-dev libxslt1-dev libgeos-c1
 
 echo "Initialising the database..."
 cd ckan
-paster db init -c test-core.ini
+if [ $CKANVERSION \< '2.9' ]
+then
+    paster db init -c test-core.ini
+else
+    ckan -c test-core.ini db init
+fi
 cd -
 
 echo "Installing ckanext-harvest and its requirements..."
@@ -60,19 +81,28 @@ git clone https://github.com/ckan/ckanext-harvest
 cd ckanext-harvest
 python setup.py develop
 pip install -r pip-requirements.txt
+if [ $CKANVERSION \< '2.9' ]
+then
+    paster harvester initdb -c ../ckan/test-core.ini
+fi
 
-paster harvester initdb -c ../ckan/test-core.ini
 cd -
 
 echo "Installing ckanext-spatial and its requirements..."
 pip install -r pip-requirements.txt
 python setup.py develop
-
+pip install pycsw
 
 echo "Moving test.ini into a subdir..."
 mkdir subdir
 mv test.ini subdir
 
-paster spatial initdb -c subdir/test.ini
+if [ $CKANVERSION \< '2.9' ]
+then
+    paster spatial initdb -c subdir/test.ini
+else
+    ckan -c subdir/test.ini harvester initdb
+    ckan -c subdir/test.ini spatial initdb
+fi
 
 echo "travis-build.bash is done."
