@@ -104,6 +104,13 @@ def validate_bbox(bbox_values):
 
     if isinstance(bbox_values,six.string_types):
         bbox_values = bbox_values.split(',')
+    elif isinstance(bbox_values,six.binary_type):
+        # Can be bytes srting, so lets try to decode and if not, just pass.
+        try:
+            bbox_values = bbox_values.decode()
+            bbox_values = bbox_values.split(',')
+        except (UnicodeDecodeError, AttributeError):
+            pass
 
     if len(bbox_values) is not 4:
         return None
