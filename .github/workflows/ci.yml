@@ -42,7 +42,9 @@ jobs:
       CKAN_DATASTORE_READ_URL: postgresql://datastore_read:pass@postgres/datastore_test
       CKAN_SOLR_URL: http://solr:8983/solr/ckan
       CKAN_REDIS_URL: redis://redis:6379/1
+      CKAN_DATAPUSHER_URL: http://datapusher:8800
       PGPASSWORD: postgres
+      CRYPTOGRAPHY_DONT_BUILD_RUST: 1
     
     steps:
     - uses: actions/checkout@v2
@@ -53,6 +55,12 @@ jobs:
         psql --host=postgres --username=postgres --command="CREATE USER datastore_write WITH PASSWORD 'pass' NOSUPERUSER NOCREATEDB NOCREATEROLE;"
         psql --host=postgres --username=postgres --command="CREATE USER datastore_read WITH PASSWORD 'pass' NOSUPERUSER NOCREATEDB NOCREATEROLE;"
         createdb --encoding=utf-8 --host=postgres --username=postgres --owner=datastore_write datastore_test
+    - name: Init Database 2.9
+      if: ${{ contains(matrix.ckan-version, '2.9') }}
+      run: ckan db init
+    - name: Init Database 2.7, 2.8
+      if: ${{ !contains(matrix.ckan-version, '2.9') }}
+      run: paster --plugin=ckan db init
     - name: Install harvester
       run: |
         git clone https://github.com/ckan/ckanext-harvest
