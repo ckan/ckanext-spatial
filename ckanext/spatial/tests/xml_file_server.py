@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 import os
+import sys
 
 try:
     from http.server import SimpleHTTPRequestHandler
@@ -27,7 +28,7 @@ class MyHttpRequestHandler(SimpleHTTPRequestHandler):
         with open(path, 'rb') as f:
             content = f.read().decode('utf-8')
 
-        self.wfile.write(bytes(content, "utf-8"))
+        self.wfile.write(content.encode('utf-8') if sys.version_info < (3, 0) else bytes(content, "utf-8"))
 
         return
 

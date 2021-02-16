@@ -259,7 +259,8 @@ class SchematronValidator(BaseValidator):
             "xml/schematron/iso_abstract_expand.xsl",
             "xml/schematron/iso_svrl_for_xslt1.xsl",
             ]
-        if isinstance(schema, IOBase):
+
+        if hasattr(schema, 'read'):
             parser = etree.XMLParser(load_dtd=True)
             parser.resolvers.add(SchDocumentResolver())
             compiled = etree.parse(schema, parser)
