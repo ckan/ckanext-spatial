@@ -5,16 +5,13 @@ from nose.tools import assert_raises
 
 from ckanext.spatial.harvesters.gemini import GeminiWafHarvester, GeminiHarvester
 
+WAF_FILE_PATH = os.path.join(os.path.dirname(
+    os.path.realpath(__file__)), '..', '..', 'data', 'sample-waf.html')
+
 
 @patch('ckanext.spatial.harvesters.gemini.GeminiHarvester._save_gather_error')
 def test_gemini_waf_extract_urls_report_link_errors(mock_save_gather_error):
-    with open(
-        os.path.join(os.path.dirname(os.path.realpath(__file__)),
-        '..',
-        '..',
-        'data',
-        'sample-waf.html')
-    ) as f:
+    with open(WAF_FILE_PATH) as f:
         gemini = GeminiWafHarvester()
         gemini.harvest_job = Mock()
         urls = gemini._extract_urls(f.read(), 'http://test.co.uk/xml')
