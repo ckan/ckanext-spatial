@@ -75,15 +75,15 @@ class TestValidation(object):
         assert_in("Descriptive keywords are mandatory", errors)
 
     def assert_passes_all_gemini2_validation(self, xml_filepath, gemini_schematron=validation.Gemini2Schematron):
-        errs = self.get_validation_errors(validation.ISO19139EdenSchema,
+        errors = self.get_validation_errors(validation.ISO19139EdenSchema,
                                           xml_filepath)
-        assert not errs, 'ISO19139EdenSchema: ' + errs
-        errs = self.get_validation_errors(validation.ConstraintsSchematron14,
+        assert not errors, 'ISO19139EdenSchema: ' + errors
+        errors = self.get_validation_errors(validation.ConstraintsSchematron14,
                                           xml_filepath)
-        assert not errs, 'ConstraintsSchematron14: ' + errs
-        errs = self.get_validation_errors(gemini_schematron,
+        assert not errors, 'ConstraintsSchematron14: ' + errors
+        errors = self.get_validation_errors(gemini_schematron,
                                           xml_filepath)
-        assert not errs, 'Gemini2Schematron: ' + errs
+        assert not errors, 'Gemini2Schematron: ' + errors
 
     def test_04_dataset_valid(self):
         self.assert_passes_all_gemini2_validation(
