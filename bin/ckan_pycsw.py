@@ -25,7 +25,7 @@ def setup_db(pycsw_config):
     """Setup database tables and indexes"""
 
     if sys.version_info < (3, 0):
-        log.info("Please upgrade to CKAN 2.9 and python 3")
+        log.info("Python 2 detected: Please upgrade to CKAN 2.9 and python 3")
         return
 
     from sqlalchemy import Column, Text
@@ -48,7 +48,7 @@ def set_keywords(pycsw_config_file, pycsw_config, ckan_url, limit=20):
     """set pycsw service metadata keywords from top limit CKAN tags"""
 
     if sys.version_info < (3, 0):
-        log.info("Please upgrade to CKAN 2.9 and python 3")
+        log.info("Python 2 detected:  Please upgrade to CKAN 2.9 and python 3")
         return
 
     log.info('Fetching tags from %s', ckan_url)
@@ -68,27 +68,15 @@ def set_keywords(pycsw_config_file, pycsw_config, ckan_url, limit=20):
         pycsw_config.write(configfile)
 
 
-def load(pycsw_config, ckan_url):
-
-    if sys.version_info < (3, 0):
-        log.info("Please upgrade to CKAN 2.9 and python 3")
-        return
-
-    database = pycsw_config.get('repository', 'database')
-    table_name = pycsw_config.get('repository', 'table')
-
-    context = pycsw.core.config.StaticContext()
-    repo = repository.Repository(database, context, table=table_name)
+def _get_gathered_records(ckan_url):
+    gathered_records = {}
+    limit = 1000
+    error_count = start = 0
 
     log.info('Started gathering CKAN datasets identifiers: {0}'.format(str(datetime.datetime.now())))
 
     query = 'api/search/dataset?fl=id,metadata_modified,extras_harvest_object_id,' \
-            'extras_metadata_source&q=harvest_object_id:[\\"\\"%20TO%20*]&start={start}&rows={limit}'
-
-    limit = 1000
-    new_count = delete_count = change_count = error_count = gather_count = start = 0
-
-    gathered_records = {}
+            'extras_metadata_source&q=harvest_object_id:[\\\\"\\\\"%20TO%20*]&start={start}&rows={limit}'
 
     while True:
         try:
@@ -111,7 +99,6 @@ def load(pycsw_config, ckan_url):
                 }
             start = start + limit
             log.debug('Gathered %s' % start)
-            gather_count += len(results)
         except Exception as e:
             log.error("Error gathering: %r", e)
             error_count += 1
@@ -120,6 +107,10 @@ def load(pycsw_config, ckan_url):
         len(gathered_records.keys()),
         str(datetime.datetime.now())))
 
+    return gathered_records, error_count
+
+
+def _get_existing_records(repo):
     existing_records = {}
 
     query = repo.session.query(repo.dataset.ckan_id, repo.dataset.ckan_modified)
@@ -127,14 +118,11 @@ def load(pycsw_config, ckan_url):
         existing_records[row[0]] = row[1]
     repo.session.close()
 
-    new = set(gathered_records) - set(existing_records)
-    deleted = set(existing_records) - set(gathered_records)
-    changed = set()
+    return existing_records
 
-    for key in set(gathered_records) & set(existing_records):
-        if gathered_records[key]['metadata_modified'] > existing_records[key]:
-            changed.add(key)
 
+def _delete_records(deleted, repo, error_count):
+    delete_count = 0
     for ckan_id in deleted:
         try:
             repo.session.begin()
@@ -146,6 +134,11 @@ def load(pycsw_config, ckan_url):
             repo.session.rollback()
             error_count += 1
 
+    return delete_count, error_count
+
+
+def _create_records(new, gathered_records, repo, ckan_url, context, error_count):
+    new_count = 0
     for ckan_id in new:
         ckan_info = gathered_records[ckan_id]
         try:
@@ -159,7 +152,11 @@ def load(pycsw_config, ckan_url):
         except Exception as err:
             log.error('ERROR: not inserted %s Error:%s' % (ckan_id, err))
             error_count += 1
+    return new_count, error_count
 
+
+def _update_records(changed, gathered_records, repo, context, error_count):
+    change_count = 0
     for ckan_id in changed:
         try:
             ckan_info = gathered_records[ckan_id]
@@ -184,10 +181,46 @@ def load(pycsw_config, ckan_url):
             repo.session.rollback()
             log.error(RuntimeError, 'ERROR: %s' % str(err))
             error_count += 1
+    return change_count, error_count
+
+
+def load(pycsw_config, ckan_url):
+
+    if sys.version_info < (3, 0):
+        log.info("Python 2 detected: Please upgrade to CKAN 2.9 and python 3")
+        return
+
+    database = pycsw_config.get('repository', 'database')
+    table_name = pycsw_config.get('repository', 'table')
+
+    context = pycsw.core.config.StaticContext()
+    repo = repository.Repository(database, context, table=table_name)
+
+    new_count = delete_count = change_count = 0
+
+    gathered_records, error_count = _get_gathered_records(ckan_url)
+
+    existing_records = _get_existing_records(repo)
+
+    new = set(gathered_records) - set(existing_records)
+    deleted = set(existing_records) - set(gathered_records)
+    changed = set()
+
+    for key in set(gathered_records) & set(existing_records):
+        if gathered_records[key]['metadata_modified'] > existing_records[key]:
+            changed.add(key)
+
+    delete_count, error_count = _delete_records(deleted, repo, error_count)
+
+    new_count, error_count = _create_records(
+        new, gathered_records, ckan_url, repo, context, error_count)
+
+    change_count, error_count = _update_records(
+        changed, gathered_records, repo, context, error_count)
 
     log.info("Loading completed: {gather_count} gathered, {new_count} added, "
              "{change_count} changed, {delete_count} deleted, {error_count} errored".format(
-                gather_count=gather_count, new_count=new_count,
+                gather_count=len(gathered_records), new_count=new_count,
                 change_count=change_count, delete_count=delete_count,
                 error_count=error_count))
 
@@ -195,7 +228,7 @@ def load(pycsw_config, ckan_url):
 def clear(pycsw_config):
 
     if sys.version_info < (3, 0):
-        log.info("Please upgrade to CKAN 2.9 and python 3")
+        log.info("Python 2 detected:  Please upgrade to CKAN 2.9 and python 3")
         return
 
     from sqlalchemy import create_engine, MetaData, Table
@@ -213,7 +246,7 @@ def clear(pycsw_config):
 def get_record(context, repo, ckan_url, ckan_id, ckan_info):
 
     if sys.version_info < (3, 0):
-        log.info("Please upgrade to CKAN 2.9 and python 3")
+        log.info("Python 2 detected: Please upgrade to CKAN 2.9 and python 3")
         return
 
     query = ckan_url + 'harvest/object/%s'
