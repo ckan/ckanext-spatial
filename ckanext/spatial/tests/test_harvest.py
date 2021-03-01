@@ -1,17 +1,18 @@
-import os
 from datetime import datetime, date
 import lxml
 import json
+import os
+import pytest
 from uuid import uuid4
+
 from nose.plugins.skip import SkipTest
 from nose.tools import assert_equal, assert_in, assert_raises
-import pytest
 
-from ckan.lib.base import config
 from ckan import model
-from ckan.model import Session, Package, Group, User
+from ckan.lib.base import config
 from ckan.logic.schema import default_update_package_schema, default_create_package_schema
 from ckan.logic import get_action
+from ckan.model import Session, Package, Group, User
 
 try:
     from ckan.new_tests.helpers import call_action
@@ -19,14 +20,13 @@ except ImportError:
     from ckan.tests.helpers import call_action
 
 from ckanext.harvest.model import (HarvestSource, HarvestJob, HarvestObject)
-from ckanext.spatial.validation import Validators
+from ckanext.spatial.harvesters.base import SpatialHarvester
 from ckanext.spatial.harvesters.gemini import (GeminiDocHarvester,
                                                GeminiWafHarvester,
                                                GeminiHarvester)
-from ckanext.spatial.harvesters.base import SpatialHarvester
 from ckanext.spatial.tests.base import SpatialTestBase
-
 from ckanext.spatial.tests.xml_file_server import serve
+from ckanext.spatial.validation import Validators
 
 # Start simple HTTP server that serves XML test files
 serve()
@@ -52,7 +52,6 @@ class HarvestFixtureBase(SpatialTestBase):
        model.repo.rebuild_db()
 
     def _create_job(self,source_id):
-        # Create a job
         context ={'model':model,
                  'session':Session,
                  'user':u'harvest'}
@@ -980,7 +979,8 @@ class TestImportStageTools:
                                     {'organisation-name': 'Maps Ltd',
                                      'role': 'distributor'}]
         name, arr = GeminiHarvester._process_responsible_organisation(responsible_organisation)
-        assert (name, set(arr)) == ('Ordnance Survey', set(['Maps Ltd (distributor)', 'Ordnance Survey (owner)']))
+        assert name == 'Ordnance Survey'
+        assert set(arr) == set(['Maps Ltd (distributor)', 'Ordnance Survey (owner)'])
 
     def test_responsible_organisation_publisher(self):
         # no owner, so falls back to publisher
@@ -989,7 +989,8 @@ class TestImportStageTools:
                                     {'organisation-name': 'Maps Ltd',
                                      'role': 'distributor'}]
         name, arr = GeminiHarvester._process_responsible_organisation(responsible_organisation)
-        assert (name, set(arr)) == ('Ordnance Survey', set(['Maps Ltd (distributor)', 'Ordnance Survey (publisher)']))
+        assert name == 'Ordnance Survey'
+        assert set(arr) == set(['Maps Ltd (distributor)', 'Ordnance Survey (publisher)'])
 
     def test_responsible_organisation_owner(self):
         # provider is the owner (ignores publisher)
@@ -1000,8 +1001,8 @@ class TestImportStageTools:
                                     {'organisation-name': 'Maps Ltd',
                                      'role': 'distributor'}]
         name, arr = GeminiHarvester._process_responsible_organisation(responsible_organisation)
-        assert (name, set(arr)) == (
-            'Owner', set(['Owner (owner)', 'Maps Ltd (distributor)', 'Ordnance Survey (publisher)']))
+        assert name == 'Owner'
+        assert set(arr) == set(['Owner (owner)', 'Maps Ltd (distributor)', 'Ordnance Survey (publisher)'])
 
     def test_responsible_organisation_multiple_roles(self):
         # provider is the owner (ignores publisher)
@@ -1012,10 +1013,8 @@ class TestImportStageTools:
                                     {'organisation-name': 'Distributor',
                                      'role': 'distributor'}]
         name, arr = GeminiHarvester._process_responsible_organisation(responsible_organisation)
-        assert (name, set(arr)) == (
-            'Ordnance Survey',
-            set(['Distributor (distributor)', 'Ordnance Survey (publisher, custodian)'])
-        )
+        assert name == 'Ordnance Survey'
+        assert set(arr) == set(['Distributor (distributor)', 'Ordnance Survey (publisher, custodian)'])
 
     def test_responsible_organisation_blank_provider(self):
         # no owner or publisher, so blank provider
@@ -1024,29 +1023,25 @@ class TestImportStageTools:
                                     {'organisation-name': 'Maps Ltd',
                                      'role': 'distributor'}]
         name, arr = GeminiHarvester._process_responsible_organisation(responsible_organisation)
-        assert (name, set(arr)) == (
-            '',
-            set(['Maps Ltd (distributor)', 'Ordnance Survey (resourceProvider)'])
-        )
+        assert name == ''
+        assert set(arr) == set(['Maps Ltd (distributor)', 'Ordnance Survey (resourceProvider)'])
 
     def test_responsible_organisation_blank(self):
         # no owner or publisher, so blank provider
         responsible_organisation = []
         name, arr = GeminiHarvester._process_responsible_organisation(responsible_organisation)
-        assert (name, arr) == ('',[])
+        assert name == ''
+        assert arr == []
 
 
-# @pytest.mark.usefixtures('clean_index', 'harvest_setup', 'spatial_setup')
 class TestValidation(HarvestFixtureBase):
 
     @classmethod
     def setup_class(cls):
 
         SpatialHarvester._validator = Validators(profiles=['iso19139eden', 'constraints', 'gemini2'])
-        # HarvestFixtureBase.setup_class()
 
     def get_validation_errors(self, validation_test_filename, source_fixture=None):
-        # Create source
         if not source_fixture:
             source_fixture = {
                 'title': 'Test Source',
