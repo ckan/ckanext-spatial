@@ -28,7 +28,10 @@ class MyHttpRequestHandler(SimpleHTTPRequestHandler):
         with open(path, 'rb') as f:
             content = f.read().decode('utf-8')
 
-        self.wfile.write(content.encode('utf-8') if sys.version_info < (3, 0) else bytes(content, "utf-8"))
+        if sys.version_info < (3, 0):
+            self.wfile.write(content.encode('utf-8'))
+        else:
+            self.wfile.write(bytes(content, "utf-8"))
 
         return
 
