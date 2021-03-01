@@ -17,7 +17,7 @@ class TestValidation(object):
             validation_test_filename
         )
         xml = etree.parse(validation_test_filepath)
-        _, errors = validator.is_valid(xml)
+        _is_valid, errors = validator.is_valid(xml)
 
         return ";".join([e[0] for e in errors])
 
