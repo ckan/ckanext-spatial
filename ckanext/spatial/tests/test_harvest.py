@@ -32,7 +32,8 @@ from ckanext.spatial.validation import Validators
 serve()
 
 
-@pytest.mark.usefixtures('clean_db', 'clean_index', 'harvest_setup', 'spatial_setup')
+@pytest.mark.usefixtures('with_plugins', 'clean_postgis', 'clean_db', 'clean_index', 'harvest_setup', 'spatial_setup')
+@pytest.mark.ckan_config('ckan.plugins', 'harvest')
 class HarvestFixtureBase(SpatialTestBase):
 
     def setup(self):
@@ -71,7 +72,7 @@ class HarvestFixtureBase(SpatialTestBase):
            and not 'publisher_id' in source_fixture:
            source_fixture['publisher_id'] = self.publisher.id
 
-        source_dict=get_action('harvest_source_create')(context,source_fixture)
+        source_dict=get_action('harvest_source_create')(context, source_fixture)
         source = HarvestSource.get(source_dict['id'])
         assert source
 
@@ -109,6 +110,9 @@ class HarvestFixtureBase(SpatialTestBase):
 
         return obj
 
+
+@pytest.mark.usefixtures('with_plugins', 'clean_postgis', 'clean_db', 'clean_index', 'harvest_setup', 'spatial_setup')
+@pytest.mark.ckan_config('ckan.plugins', 'harvest gemini_waf_harvester gemini_doc_harvester')
 class TestHarvest(HarvestFixtureBase):
 
     @classmethod
@@ -911,7 +915,8 @@ GUID = 'e269743a-cfda-4632-a939-0c8416ae801e'
 GEMINI_MISSING_GUID = '''<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:gco="http://www.isotc211.org/2005/gco"/>'''
 
 
-@pytest.mark.usefixtures('clean_index', 'harvest_setup', 'spatial_setup')
+@pytest.mark.usefixtures('with_plugins', 'harvest_setup', 'clean_postgis', 'spatial_setup')
+@pytest.mark.ckan_config('ckan.plugins', 'harvest gemini_doc_harvester')
 class TestGatherMethods(HarvestFixtureBase):
     def setup(self):
         HarvestFixtureBase.setup(self)
@@ -1034,6 +1039,8 @@ class TestImportStageTools:
         assert arr == []
 
 
+@pytest.mark.usefixtures('with_plugins', 'harvest_setup', 'clean_postgis', 'spatial_setup')
+@pytest.mark.ckan_config('ckan.plugins', 'harvest gemini_doc_harvester')
 class TestValidation(HarvestFixtureBase):
 
     @classmethod
