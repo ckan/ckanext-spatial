@@ -10,6 +10,8 @@ from ckan.lib.cli import CkanCommand
 
 log = logging.getLogger(__name__)
 
+from io import open
+
 class Validation(CkanCommand):
     '''Validation commands
 
@@ -68,7 +70,7 @@ class Validation(CkanCommand):
                 print '  %s: %s' % (col_name, row[i])
 
     def validate_file(self):
-        from ckanext.spatial.harvesters import SpatialHarvester
+        from ckanext.spatial.harvesters.base import SpatialHarvester
         from ckanext.spatial.model import ISODocument
 
         if len(self.args) > 2:
@@ -81,7 +83,7 @@ class Validation(CkanCommand):
         if not os.path.exists(metadata_filepath):
             print 'Filepath %s not found' % metadata_filepath
             sys.exit(1)
-        with open(metadata_filepath, 'rb') as f:
+        with open(metadata_filepath, 'r', encoding="utf-8") as f:
             metadata_xml = f.read()
 
         validators = SpatialHarvester()._get_validator()
@@ -96,7 +98,7 @@ class Validation(CkanCommand):
         xml = etree.fromstring(xml_string)
 
         # XML validation
-        valid, errors = validators.is_valid(xml)
+        valid, validator_name, errors = validators.is_valid(xml)
 
         # CKAN read of values
         if valid:
@@ -112,6 +114,7 @@ class Validation(CkanCommand):
         print '***************'
         print 'File: \'%s\'' % metadata_filepath
         print 'Valid: %s' % valid
+        print 'Validator: %s' % validator_name
         if not valid:
             print 'Errors:'
             print pprint(errors)
