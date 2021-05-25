@@ -37,7 +37,6 @@ class Spatial(CkanCommand):
 
     def command(self):
         self._load_config()
-        print('')
 
         if len(self.args) == 0:
             self.parser.print_usage()
