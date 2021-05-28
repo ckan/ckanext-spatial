@@ -41,7 +41,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'ckanext-spatial'
-copyright = u'2015, Open Knowledge'
+copyright = u'&copy; 2011-2021 <a href="https://okfn.org/">Open Knowledge Foundation</a> and <a href="https://github.com/ckan/ckanext-spatial/graphs/contributors">contributors</a>.'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

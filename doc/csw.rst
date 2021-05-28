@@ -55,7 +55,7 @@ All necessary tasks are done with the ``ckan-pycsw`` command. To get more
 details of its usage, run the following::
 
     cd /usr/lib/ckan/default/src/ckanext-spatial
-    paster ckan-pycsw --help
+    python bin/ckan_pycsw.py --help
 
 
 Setup
@@ -114,11 +114,11 @@ Setup
 
    The rest of the options are described `here <http://docs.pycsw.org/en/latest/configuration.html>`_.
 
-4. Setup the pycsw table. This is done with the ``ckan-pycsw`` paster command
+4. Setup the pycsw table. This is done with the ``ckan-pycsw`` script
    (Remember to have the virtualenv activated when running it)::
 
     cd /usr/lib/ckan/default/src/ckanext-spatial
-    paster ckan-pycsw setup -p /etc/ckan/default/pycsw.cfg
+    python bin/ckan_pycsw.py setup -p /etc/ckan/default/pycsw.cfg
 
    At this point you should be ready to run pycsw with the wsgi script that it
    includes::
@@ -135,7 +135,7 @@ Setup
    command for this::
 
     cd /usr/lib/ckan/default/src/ckanext-spatial
-    paster ckan-pycsw load -p /etc/ckan/default/pycsw.cfg
+    python bin/ckan_pycsw.py load -p /etc/ckan/default/pycsw.cfg
 
    When the loading is finished, check that results are returned when visiting
    this link:
@@ -155,7 +155,7 @@ values can be set in the pycsw configuration ``metadata:main`` section.  If you
 would like the CSW service metadata keywords to be reflective of the CKAN
 tags, run the following convenience command::
 
-    paster ckan-pycsw set_keywords -p /etc/ckan/default/pycsw.cfg
+    python ckan_pycsw.py set_keywords -p /etc/ckan/default/pycsw.cfg
 
 Note that you must have privileges to write to the pycsw configuration file.
 
@@ -170,7 +170,7 @@ keep CKAN and pycsw in sync, and serve pycsw with Apache + mod_wsgi like CKAN.
   and copy the following lines::
 
     # m h  dom mon dow   command
-    0 *  *   *   *     /usr/lib/ckan/default/bin/paster --plugin=ckanext-spatial ckan-pycsw load -p /etc/ckan/default/pycsw.cfg
+    0 *  *   *   *     /var/lib/ckan/default/bin/python /var/lib/ckan/default/src/ckanext-spatial/bin/ckan_pycsw.py load -p /etc/ckan/default/pycsw.cfg
 
   This particular example will run the load command every hour. You can of
   course modify this periodicity, for instance reducing it for huge instances.

@@ -45,6 +45,5 @@ setup(
 
     [ckan.test_plugins]
     test_spatial_plugin = ckanext.spatial.tests.test_plugin.plugin:TestSpatialPlugin
-
 	""",
 )
