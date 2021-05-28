@@ -77,19 +77,13 @@ jobs:
       run: |
         apk add --no-cache \
           python2-dev
+        pip install -r requirements-py2.txt
     - name: Install dependency (python3)
       if: ${{ matrix.ckan-version == '2.9' }}
       run: |
         apk add --no-cache \
           python3-dev
-    - name: Install requirements (python2)
-      if: ${{ matrix.ckan-version != '2.9' }}
-      run: |
-        pip install -r pip-requirements.txt
-    - name: Install requirements (python3)
-      if: ${{ matrix.ckan-version == '2.9' }}
-      run: |
-        pip install -r pip3-requirements.txt
+        pip install -r requirements.txt
     - name: Install requirements
       run: |
         pip install -e .
