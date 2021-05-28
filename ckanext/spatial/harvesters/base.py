@@ -33,11 +33,7 @@ from ckanext.harvest.model import HarvestObject
 from ckanext.spatial.validation import Validators, all_validators
 from ckanext.spatial.model import ISODocument
 from ckanext.spatial.interfaces import ISpatialHarvester
-
-if p.toolkit.check_ckan_version("2.9"):
-    config = p.toolkit.config
-else:
-    from pylons import config
+from ckantoolkit import config
 
 log = logging.getLogger(__name__)
 

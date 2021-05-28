@@ -56,7 +56,6 @@ def validate_file(metadata_filepath):
         print('ERROR: Unicode Error reading file \'%s\': %s' % \
               (metadata_filepath, e))
         sys.exit(1)
-        #import pdb; pdb.set_trace()
     xml = etree.fromstring(xml_string)
 
     # XML validation

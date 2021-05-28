@@ -3,10 +3,7 @@ import logging
 from ckan import plugins as p
 from ckan.lib import helpers as h
 
-if p.toolkit.check_ckan_version("2.9"):
-    config = p.toolkit.config
-else:
-    from pylons import config
+from ckantoolkit import config
 
 log = logging.getLogger(__name__)
 

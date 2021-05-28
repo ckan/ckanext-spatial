@@ -3,19 +3,16 @@ import logging
 from string import Template
 
 from ckan.model import Session, Package
-import ckan.plugins.toolkit as tk
+import ckantoolkit as tk
 
 from ckanext.spatial.model import PackageExtent
 from shapely.geometry import asShape
 
-if tk.check_ckan_version("2.9"):
-    config = tk.config
-else:
-    from ckan.lib.base import config
 
 from ckanext.spatial.geoalchemy_common import (WKTElement, ST_Transform,
                                                compare_geometry_fields,
                                                )
+config = tk.config
 
 log = logging.getLogger(__name__)
 
