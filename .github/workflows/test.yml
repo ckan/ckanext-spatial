@@ -1,4 +1,4 @@
-name: ckanext-spatial ci
+name: Tests
 on: [push, pull_request]
 
 jobs:
@@ -94,4 +94,9 @@ jobs:
         psql --host=postgres --username=postgres -d ckan_test --command="ALTER ROLE ckan_default WITH superuser;"
         psql --host=postgres --username=postgres -d ckan_test --command="CREATE EXTENSION postgis;"
     - name: Run tests
-      run: pytest --ckan-ini=test.ini ckanext/spatial/tests
+      run: pytest --ckan-ini=test.ini --cov=ckanext.spatial --cov-report=xml --cov-append --disable-warnings ckanext/spatial/tests
+
+    - name: Upload coverage report to codecov
+      uses: codecov/codecov-action@v1
+      with:
+        file: ./coverage.xml
