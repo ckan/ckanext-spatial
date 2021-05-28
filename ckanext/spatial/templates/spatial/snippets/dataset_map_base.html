@@ -18,5 +18,5 @@ extent
   </div>
 </div>
 
-{% set type = 'asset' if h.ckan_version() > '2.9' else 'resource' %}
+{% set type = 'asset' if h.ckan_version().split('.')[1] | int >= 9 else 'resource' %}
 {% include 'spatial/snippets/dataset_map_' ~ type ~ '.html' %}
