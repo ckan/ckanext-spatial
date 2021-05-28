@@ -6,21 +6,25 @@ import sys
 
 import six
 
+from pkg_resources import resource_stream
 import logging
 from ckan.lib.helpers import json
 from lxml import etree
 from pprint import pprint
 
+from ckan import model
 from ckanext.spatial.lib import save_package_extent
+from ckanext.spatial.lib.reports import validation_report
+from ckanext.spatial.harvesters import SpatialHarvester
+from ckanext.spatial.model import ISODocument
+
+from ckantoolkit import config
 
 
 log = logging.getLogger(__name__)
 
 
 def report(pkg=None):
-    from ckan import model
-    from ckanext.harvest.model import HarvestObject
-    from ckanext.spatial.lib.reports import validation_report
 
     if pkg:
         package_ref = six.text_type(pkg)
@@ -37,8 +41,6 @@ def report(pkg=None):
 
 
 def validate_file(metadata_filepath):
-    from ckanext.spatial.harvesters import SpatialHarvester
-    from ckanext.spatial.model import ISODocument
 
     if not os.path.exists(metadata_filepath):
         print('Filepath %s not found' % metadata_filepath)
@@ -134,3 +136,71 @@ def update_extents():
                                                                  len(packages))
 
     print(msg)
+
+
+def get_xslt(original=False):
+    if original:
+        config_option = \
+            'ckanext.spatial.harvest.xslt_html_content_original'
+    else:
+        config_option = 'ckanext.spatial.harvest.xslt_html_content'
+
+    xslt_package = None
+    xslt_path = None
+    xslt = config.get(config_option, None)
+    if xslt:
+        if ':' in xslt:
+            xslt = xslt.split(':')
+            xslt_package = xslt[0]
+            xslt_path = xslt[1]
+        else:
+            log.error(
+                'XSLT should be defined in the form <package>:<path>'
+                ', eg ckanext.myext:templates/my.xslt')
+
+    return xslt_package, xslt_path
+
+
+def get_harvest_object_original_content(id):
+    from ckanext.harvest.model import HarvestObject, HarvestObjectExtra
+
+    extra = model.Session.query(
+        HarvestObjectExtra
+    ).join(HarvestObject).filter(HarvestObject.id == id).filter(
+        HarvestObjectExtra.key == 'original_document'
+    ).first()
+
+    if extra:
+        return extra.value
+    else:
+        return None
+
+
+def get_harvest_object_content(id):
+    from ckanext.harvest.model import HarvestObject
+    obj = model.Session.query(HarvestObject).filter(HarvestObject.id == id).first()
+    if obj:
+        return obj.content
+    else:
+        return None
+
+
+def _transform_to_html(content, xslt_package=None, xslt_path=None):
+
+    xslt_package = xslt_package or __name__
+    xslt_path = xslt_path or \
+        '../templates/ckanext/spatial/gemini2-html-stylesheet.xsl'
+
+    # optimise -- read transform only once and compile rather
+    # than at each request
+    with resource_stream(xslt_package, xslt_path) as style:
+        style_xml = etree.parse(style)
+        transformer = etree.XSLT(style_xml)
+
+    xml = etree.parse(six.StringIO(content and six.text_type(content)))
+    html = transformer(xml)
+
+    result = etree.tostring(html, pretty_print=True)
+
+    return result
+
