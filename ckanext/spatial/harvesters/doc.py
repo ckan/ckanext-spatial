@@ -52,7 +52,7 @@ class DocHarvester(SpatialHarvester, SingletonPlugin):
         # Get contents
         try:
             content = self._get_content_as_unicode(url)
-        except Exception,e:
+        except Exception as e:
             self._save_gather_error('Unable to get content for URL: %s: %r' % \
                                         (url, e),harvest_job)
             return None
