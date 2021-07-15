@@ -55,7 +55,7 @@ All necessary tasks are done with the ``ckan-pycsw`` command. To get more
 details of its usage, run the following::
 
     cd /usr/lib/ckan/default/src/ckanext-spatial
-    paster ckan-pycsw --help
+    python bin/ckan_pycsw.py --help
 
 
 Setup
@@ -64,8 +64,8 @@ Setup
 1. Install pycsw. There are several options for this, depending on your
    server setup, check the `pycsw documentation`_.
 
-   .. note:: CKAN integration requires at least pycsw version 1.8.0. Make sure
-             to install at least this version.
+   .. note:: CKAN integration requires least pycsw version 1.8.0. In general,
+             use the latest stable version.
 
    The following instructions assume that you have installed CKAN via a
    `package install`_ and should be run as root, but the steps are the same if
@@ -78,8 +78,8 @@ Setup
 
     git clone https://github.com/geopython/pycsw.git
     cd pycsw
-    # Remember to use at least pycsw 1.8.0
-    git checkout 1.8.0
+    # always use the latest stable version
+    git checkout 1.10.4
     pip install -e .
     python setup.py build
     python setup.py install
@@ -114,11 +114,11 @@ Setup
 
    The rest of the options are described `here <http://docs.pycsw.org/en/latest/configuration.html>`_.
 
-4. Setup the pycsw table. This is done with the ``ckan-pycsw`` paster command
+4. Setup the pycsw table. This is done with the ``ckan-pycsw`` script
    (Remember to have the virtualenv activated when running it)::
 
     cd /usr/lib/ckan/default/src/ckanext-spatial
-    paster ckan-pycsw setup -p /etc/ckan/default/pycsw.cfg
+    python bin/ckan_pycsw.py setup -p /etc/ckan/default/pycsw.cfg
 
    At this point you should be ready to run pycsw with the wsgi script that it
    includes::
@@ -135,7 +135,7 @@ Setup
    command for this::
 
     cd /usr/lib/ckan/default/src/ckanext-spatial
-    paster ckan-pycsw load -p /etc/ckan/default/pycsw.cfg
+    python bin/ckan_pycsw.py load -p /etc/ckan/default/pycsw.cfg
 
    When the loading is finished, check that results are returned when visiting
    this link:
@@ -155,7 +155,7 @@ values can be set in the pycsw configuration ``metadata:main`` section.  If you
 would like the CSW service metadata keywords to be reflective of the CKAN
 tags, run the following convenience command::
 
-    paster ckan-pycsw set_keywords -p /etc/ckan/default/pycsw.cfg
+    python ckan_pycsw.py set_keywords -p /etc/ckan/default/pycsw.cfg
 
 Note that you must have privileges to write to the pycsw configuration file.
 
@@ -170,7 +170,7 @@ keep CKAN and pycsw in sync, and serve pycsw with Apache + mod_wsgi like CKAN.
   and copy the following lines::
 
     # m h  dom mon dow   command
-    0 *  *   *   *     /usr/lib/ckan/default/bin/paster --plugin=ckanext-spatial ckan-pycsw load -p /etc/ckan/default/pycsw.cfg
+    0 *  *   *   *     /var/lib/ckan/default/bin/python /var/lib/ckan/default/src/ckanext-spatial/bin/ckan_pycsw.py load -p /etc/ckan/default/pycsw.cfg
 
   This particular example will run the load command every hour. You can of
   course modify this periodicity, for instance reducing it for huge instances.
@@ -198,66 +198,6 @@ keep CKAN and pycsw in sync, and serve pycsw with Apache + mod_wsgi like CKAN.
       service apache2 restart
 
     pycsw should be now accessible at http://localhost/csw
-
-
-Legacy plugins and libraries
-----------------------------
-
-
-Old CSW Server
-++++++++++++++
-
-.. warning:: **Deprecated:** The old csw plugin has been deprecated, please see `ckan-pycsw`_
-    for details on how to integrate with pycsw.
-
-To activate it, add the ``csw_server`` plugin to your ini file.
-
-Only harvested datasets are served by this CSW Server. This is because
-the harvested document is the one that is served, not something derived
-from the CKAN Dataset object. Datasets that are created in CKAN by methods
-other than harvesting are not served.
-
-The currently supported methods with this CSW Server are:
- * GetCapabilities
- * GetRecords
- * GetRecordById
-
-For example you can ask the capabilities of the CSW server installed into CKAN
-running on 127.0.0.1:5000 like this::
-
- curl 'http://127.0.0.1:5000/csw?request=GetCapabilities&service=CSW&version=2.0.2'
-
-And get a list of the records like this::
-
- curl 'http://127.0.0.1:5000/csw?request=GetRecords&service=CSW&resultType=results&elementSetName=full&version=2.0.2'
-
-The standard CSW response is in XML format.
-
-cswinfo
-+++++++
-
-The command-line tool ``cswinfo`` allows to make queries on CSW servers and
-returns the info in nicely formatted JSON. This may be more convenient to type
-than using, for example, curl.
-
-Currently available queries are:
- * getcapabilities
- * getidentifiers
- * getrecords
- * getrecordbyid
-
-For details, type::
-
- cswinfo csw -h
-
-There are options for querying by only certain types, keywords and typenames
-as well as configuring the ElementSetName.
-
-The equivalent example to the one above for asking the cabailities is::
-
- $ cswinfo csw getcapabilities http://127.0.0.1:5000/csw
-
-OWSLib is the library used to actually perform the queries.
 
 .. _pycsw: http://pycsw.org 
 .. _pycsw documentation: http://docs.pycsw.org/en/latest/installation.html

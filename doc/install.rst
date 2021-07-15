@@ -9,8 +9,8 @@ Check the Troubleshooting_ section if you get errors at any stage.
 Install PostGIS and system packages
 -----------------------------------
 
-.. warning:: If you are looking for the geospatial preview plugins to render eg GeoJSON
-          or WMS services, these are now located in ckanext-geoview_. They have a much simpler
+.. warning:: If you are looking for the geospatial preview plugins to render (eg GeoJSON
+          or WMS services), these are now located in ckanext-geoview_. They have a much simpler
           installation, so you can skip all the following steps if you just want the previews.
 
 
@@ -24,7 +24,7 @@ Ubuntu 14.04 (PostgreSQL 9.3 and PostGIS 2.1)
 
 #. Install PostGIS::
 
-        sudo apt-get install postgresql-9.3-postgis
+        sudo apt-get install postgresql-9.3-postgis-2.1
 
 #. Run the following commands. The first one will create the necessary
    tables and functions in the database, and the second will populate
@@ -33,7 +33,7 @@ Ubuntu 14.04 (PostgreSQL 9.3 and PostGIS 2.1)
         sudo -u postgres psql -d ckan_default -f /usr/share/postgresql/9.3/contrib/postgis-2.1/postgis.sql
         sudo -u postgres psql -d ckan_default -f /usr/share/postgresql/9.3/contrib/postgis-2.1/spatial_ref_sys.sql
 
-#. Change the owner to spatial tables to the CKAN user to avoid errors later
+#. Change the owner of spatial tables to the CKAN user to avoid errors later
    on::
 
         sudo -u postgres psql -d ckan_default -c 'ALTER VIEW geometry_columns OWNER TO ckan_default;'
@@ -107,15 +107,21 @@ Ubuntu 12.04 (PostgreSQL 9.1 and PostGIS 1.5)
 Install the extension
 ---------------------
 
-1. Install this extension into your python environment (where CKAN is also
-   installed)::
+1. Activate your CKAN virtual environment, for example::
 
-    (pyenv) $ pip install -e "git+https://github.com/okfn/ckanext-spatial.git#egg=ckanext-spatial"
+     . /usr/lib/ckan/default/bin/activate
 
+2. Install the ckanext-spatial Python package into your virtual environment::
 
-2. Install the rest of python modules required by the extension::
+     pip install -e "git+https://github.com/ckan/ckanext-spatial.git#egg=ckanext-spatial"
 
-     (pyenv) $ pip install -r pip-requirements.txt
+3. Install the rest of Python modules required by the extension::
+
+     pip install -r /usr/lib/ckan/default/src/ckanext-spatial/pip-requirements.txt
+
+4. Restart CKAN. For example if you've deployed CKAN with Apache on Ubuntu::
+
+     sudo service apache2 reload
 
 To use the :doc:`harvesters`, you will need to install and configure the
 harvester extension: `ckanext-harvest`_. Follow the install instructions on
@@ -125,7 +131,7 @@ its documentation for details on how to set it up.
 Configuration
 -------------
 
-Once PostGIS is installed and configured in the database the extension needs
+Once PostGIS is installed and configured in the database, the extension needs
 to create a table to store the datasets extent, called ``package_extent``.
 
 This will happen automatically the next CKAN is restarted after adding the
@@ -133,6 +139,10 @@ plugins on the configuration ini file (eg when restarting Apache).
 
 If for some reason you need to explicitly create the table beforehand, you can
 do it with the following command (with the virtualenv activated)::
+
+  (pyenv) $ ckan --config=mysite.ini spatial initdb [srid]
+
+On CKAN 2.8 and below use::
 
   (pyenv) $ paster --plugin=ckanext-spatial spatial initdb [srid] --config=mysite.ini
 
@@ -150,6 +160,11 @@ extents are stored in the database with the following option. Use the EPSG code
 as an integer (e.g 4326, 4258, 27700, etc). It defaults to 4326::
 
     ckan.spatial.srid = 4326
+
+As with any configuration change, for it to take effect you need to restart
+CKAN. For example if you've deployed CKAN with Apache on Ubuntu::
+
+    sudo service apache2 reload
 
 
 Troubleshooting
@@ -387,7 +402,7 @@ Configure with the SO directory you found before::
 Now make it and install it::
 
     $ make
-  $ sudo make install
+    $ sudo make install
 
 Now check the install by running xmllint::
 

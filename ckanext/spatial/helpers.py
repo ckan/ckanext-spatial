@@ -1,10 +1,12 @@
 import logging
-from pylons import config
 
 from ckan import plugins as p
 from ckan.lib import helpers as h
 
+from ckantoolkit import config
+
 log = logging.getLogger(__name__)
+
 
 def get_reference_date(date_str):
     '''
@@ -30,6 +32,7 @@ def get_reference_date(date_str):
     except (ValueError, TypeError):
         return date_str
 
+
 def get_responsible_party(value):
     '''
         Gets a responsible party extra created by the harvesters and formats it
@@ -53,11 +56,12 @@ def get_responsible_party(value):
         out = []
         parties = h.json.loads(value)
         for party in parties:
-            roles = [formatted[role] if role in formatted.keys() else p.toolkit._(role.capitalize()) for role in party['roles']]
+            roles = [formatted[role] if role in list(formatted.keys()) else p.toolkit._(role.capitalize()) for role in party['roles']]
             out.append('{0} ({1})'.format(party['name'], ', '.join(roles)))
         return '; '.join(out)
     except (ValueError, TypeError):
         return value
+
 
 def get_common_map_config():
     '''
@@ -65,4 +69,4 @@ def get_common_map_config():
         base map (ie those starting with 'ckanext.spatial.common_map.')
     '''
     namespace = 'ckanext.spatial.common_map.'
-    return dict([(k.replace(namespace, ''), v) for k, v in config.iteritems() if k.startswith(namespace)])
+    return dict([(k.replace(namespace, ''), v) for k, v in config.items() if k.startswith(namespace)])

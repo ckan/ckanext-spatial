@@ -3,8 +3,8 @@ Spatial Search
 ==============
 
 The spatial extension allows to index datasets with spatial information so they
-can be filtered via a spatial query. This includes both via the web interface
-(see the `Spatial Search Widget`_) or via the `action API`_, e.g.::
+can be filtered via a spatial search query. This includes both via the web
+interface (see the `Spatial Search Widget`_) or via the `action API`_, e.g.::
 
     POST http://localhost:5000/api/action/package_search
         { "q": "Pollution",
@@ -24,7 +24,7 @@ can be filtered via a spatial query. This includes both via the web interface
 Setup
 -----
 
-To enable the spatial query you need to add the ``spatial_query`` plugin to
+To enable the spatial search you need to add the ``spatial_query`` plugin to
 your ini file. This plugin requires the ``spatial_metadata`` plugin, eg::
 
   ckan.plugins = [other plugins] spatial_metadata spatial_query
@@ -39,7 +39,7 @@ Geo-Indexing your datasets
 --------------------------
 
 Regardless of the backend that you are using, in order to make a dataset
-queryable by location, an special extra must be defined, with its key named
+searchable by location, it must have a special extra, with its key named
 'spatial'. The value must be a valid GeoJSON_ geometry, for example::
 
     {
@@ -57,6 +57,16 @@ or::
 
 Every time a dataset is created, updated or deleted, the extension will
 synchronize the information stored in the extra with the geometry table.
+
+If you already have datasets when you enable Spatial Search then you'll need to
+reindex them:
+
+   ckan --config=/etc/ckan/default/development.ini search-index rebuild
+
+..note:: For CKAN 2.8 and below use:
+
+   paster --plugin=ckan search-index rebuild --config=/etc/ckan/default/development.ini
+
 
 Choosing a backend for the spatial search
 +++++++++++++++++++++++++++++++++++++++++
@@ -125,9 +135,10 @@ details about the available options:
             <!-- ... -->
             <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType"
                 spatialContextFactory="com.spatial4j.core.context.jts.JtsSpatialContextFactory"
+                autoIndex="true"
                 distErrPct="0.025"
                 maxDistErr="0.000009"
-                units="degrees" />
+                distanceUnits="degrees" />
         </types>
         <fields>
             <!-- ... -->
@@ -156,9 +167,11 @@ Spatial Search Widget
 The extension provides a snippet to add a map widget to the search form, which
 allows filtering results by an area of interest.
 
-To add the map widget to the to the sidebar of the search page, add this to the
-dataset search page template
-(``myproj/ckanext/myproj/templates/package/search.html``)::
+To add the map widget to the sidebar of the search page, add the following
+block to the dataset search page template
+(``myproj/ckanext/myproj/templates/package/search.html``). If your custom
+theme is simply extending the CKAN default theme, you will need to add ``{% ckan_extends %}``
+to the start of your custom search.html, then continue with this::
 
     {% block secondary_content %}
 
