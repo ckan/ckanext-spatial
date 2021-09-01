@@ -93,7 +93,7 @@ def _transform_to_html(content, xslt_package=None, xslt_path=None):
         style_xml = etree.parse(style)
         transformer = etree.XSLT(style_xml)
 
-    xml = etree.parse(StringIO(content.encode('utf-8')))
+    xml = etree.fromstring(content.encode('utf-8'))
     html = transformer(xml)
 
     result = etree.tostring(html, pretty_print=True)
