@@ -5,6 +5,7 @@ from six.moves.urllib.parse import urlparse, urlunparse, urlencode
 import logging
 
 from ckan import model
+from ckan.lib.helpers import json
 
 from ckan.plugins.core import SingletonPlugin, implements
 
@@ -33,7 +34,7 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
 
     def get_original_url(self, harvest_object_id):
         obj = model.Session.query(HarvestObject).\
-                                    filter(HarvestObject.id==harvest_object_id).\
+                                    filter(HarvestObject.id == harvest_object_id).\
                                     first()
 
         parts = urlparse(obj.source.url)
@@ -43,7 +44,7 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
             'VERSION': '2.0.2',
             'REQUEST': 'GetRecordById',
             'OUTPUTSCHEMA': 'http://www.isotc211.org/2005/gmd',
-            'OUTPUTFORMAT':'application/xml' ,
+            'OUTPUTFORMAT': 'application/xml',
             'ID': obj.guid
         }
 
@@ -61,6 +62,42 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
     def output_schema(self):
         return 'gmd'
 
+    def validate_config(self, source_config):
+        source_config = super(CSWHarvester, self).validate_config(source_config)
+        if not source_config:
+            return source_config
+
+        try:
+            source_config_obj = json.loads(source_config)
+
+            require_keywords = source_config_obj.get('require_keywords', None)
+            if require_keywords is not None:
+                if not isinstance(require_keywords, list):
+                    raise ValueError('require_keywords must be a list')
+                for keyword in require_keywords:
+                    if not isinstance(keyword, basestring):
+                        raise ValueError('require_keyword values must be strings')
+
+            require_in_abstract = source_config_obj.get('require_in_abstract', None)
+            if require_in_abstract is not None:
+                if not isinstance(require_in_abstract, basestring):
+                    raise ValueError('require_in_abstract must be string')
+
+            identifier_schema = source_config_obj.get('identifier_schema', None)
+            if identifier_schema is not None:
+                if not isinstance(identifier_schema, basestring):
+                    raise ValueError('identifier_schema must be string')
+
+            esn = source_config_obj.get('esn', None)
+            if esn is not None:
+                if not isinstance(esn, basestring):
+                    raise ValueError('esn must be string')
+
+        except ValueError, e:
+            raise e
+
+        return source_config
+
     def gather_stage(self, harvest_job):
         log = logging.getLogger(__name__ + '.CSW.gather')
         log.debug('CswHarvester gather_stage for job: %r', harvest_job)
@@ -75,9 +112,10 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
             self._save_gather_error('Error contacting the CSW server: %s' % e, harvest_job)
             return None
 
-        query = model.Session.query(HarvestObject.guid, HarvestObject.package_id).\
-                                    filter(HarvestObject.current==True).\
-                                    filter(HarvestObject.harvest_source_id==harvest_job.source.id)
+        query = model.Session.query(HarvestObject.guid, HarvestObject.package_id). \
+            filter(HarvestObject.harvest_source_id == harvest_job.source.id).\
+            filter(HarvestObject.current == True) # noqa
+
         guid_to_package_id = {}
 
         for guid, package_id in query:
@@ -90,8 +128,11 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
 
         log.debug('Starting gathering for %s' % url)
         guids_in_harvest = set()
+
+        identifier_schema = self.source_config.get('identifier_schema', self.output_schema())
+
         try:
-            for identifier in self.csw.getidentifiers(page=10, outputschema=self.output_schema(), cql=cql):
+            for identifier in self.csw.getidentifiers(page=10, outputschema=identifier_schema, cql=cql):
                 try:
                     log.info('Got identifier %s from the CSW', identifier)
                     if identifier is None:
@@ -129,8 +170,8 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
                                 package_id=guid_to_package_id[guid],
                                 extras=[HOExtra(key='status', value='delete')])
             model.Session.query(HarvestObject).\
-                  filter_by(guid=guid).\
-                  update({'current': False}, False)
+                filter_by(guid=guid).\
+                update({'current': False}, False)
             obj.save()
             ids.append(obj.id)
 
@@ -140,7 +181,13 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
 
         return ids
 
-    def fetch_stage(self,harvest_object):
+    def _get_extra(self, harvest_object, key):
+        for extra in harvest_object.extras:
+            if extra.key == key:
+                return extra
+        return None
+
+    def fetch_stage(self, harvest_object):
 
         # Check harvest object status
         status = self._get_object_extra(harvest_object, 'status')
@@ -161,6 +208,7 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
             return False
 
         identifier = harvest_object.guid
+        esn = self.source_config.get('esn', 'full')
         try:
             record = self.csw.getrecordbyid([identifier], outputschema=self.output_schema())
         except Exception as e:
@@ -172,11 +220,51 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
                                     harvest_object)
             return False
 
+        source_config = json.loads(harvest_object.source.config) if harvest_object.source.config else {}
+        require_keywords = source_config.get('require_keywords', None)
+        if require_keywords:
+            record_keywords = set()
+            for keyword_container in record.get('identification', {}).get('keywords', []):
+                keywords = keyword_container.get('keywords', None)
+                if keywords and isinstance(keywords, list):
+                    record_keywords.update(keywords)
+
+            if not set(require_keywords).issubset(record_keywords):
+                status_extra = self._get_extra(harvest_object, 'status')
+                if status_extra is None:
+                    self._save_object_error('No status set for object with GUID %s' % identifier,
+                                            harvest_object)
+                    return False
+                status_extra.value = 'delete'
+                status_extra.save()
+
+                # Should not be processed further
+                return 'unchanged'
+            else:
+                log.info("Found tagged record with guid %s" % identifier)
+
+        require_in_abstract = source_config.get('require_in_abstract', None)
+        if require_in_abstract:
+            if not record.get('identification', {}).get('abstract', '') or\
+                    require_in_abstract not in record.get('identification', {}).get('abstract', ""):
+                status_extra = self._get_extra(harvest_object, 'status')
+                if status_extra is None:
+                    self._save_object_error('No status set for object with GUID %s' % identifier,
+                                            harvest_object)
+                    return False
+                status_extra.value = 'delete'
+                status_extra.save()
+
+                # Should not be processed further
+                return 'unchanged'
+            else:
+                log.info("Found tagged record with guid %s" % identifier)
+
         try:
             # Save the fetch contents in the HarvestObject
             # Contents come from csw_client already declared and encoded as utf-8
             # Remove original XML declaration
-            content = re.sub('<\?xml(.*)\?>', '', record['xml'])
+            content = re.sub(r'<\?xml(.*)\?>', '', record['xml'])
 
             harvest_object.content = content.strip()
             harvest_object.save()

@@ -9,6 +9,7 @@ import ckanext.spatial.util as util
 
 log = logging.getLogger(__name__)
 
+
 class Spatial(CkanCommand):
     '''Performs spatially related operations.
 

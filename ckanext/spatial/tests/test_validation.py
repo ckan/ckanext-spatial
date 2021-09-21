@@ -184,9 +184,15 @@ class TestValidation(object):
     def test_schematron_error_extraction(self):
         validation_error_xml = """
 <root xmlns:svrl="http://purl.oclc.org/dsdl/svrl">
-  <svrl:failed-assert test="srv:serviceType/*[1] = 'discovery' or srv:serviceType/*[1] = 'view' or srv:serviceType/*[1] = 'download' or srv:serviceType/*[1] = 'transformation' or srv:serviceType/*[1] = 'invoke' or srv:serviceType/*[1] = 'other'" location="/*[local-name()='MD_Metadata' and namespace-uri()='http://www.isotc211.org/2005/gmd']/*[local-name()='identificationInfo' and namespace-uri()='http://www.isotc211.org/2005/gmd']/*[local-name()='SV_ServiceIdentification' and namespace-uri()='http://www.isotc211.org/2005/srv']">
+  <svrl:failed-assert test="srv:serviceType/*[1] = 'discovery' or srv:serviceType/*[1] =
+   'view' or srv:serviceType/*[1] = 'download' or srv:serviceType/*[1] = 'transformation'
+    or srv:serviceType/*[1] = 'invoke' or srv:serviceType/*[1] = 'other'" location="/*[local-name()='MD_Metadata'
+     and namespace-uri()='http://www.isotc211.org/2005/gmd']/*[local-name()='identificationInfo'
+      and namespace-uri()='http://www.isotc211.org/2005/gmd']/*[local-name()='SV_ServiceIdentification'
+       and namespace-uri()='http://www.isotc211.org/2005/srv']">
     <svrl:text>
-        Service type shall be one of 'discovery', 'view', 'download', 'transformation', 'invoke' or 'other' following INSPIRE generic names.
+        Service type shall be one of 'discovery', 'view', 'download', 'transformation',
+         'invoke' or 'other' following INSPIRE generic names.
       </svrl:text>
   </svrl:failed-assert>
 </root>

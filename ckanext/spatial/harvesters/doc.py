@@ -27,18 +27,16 @@ class DocHarvester(SpatialHarvester, SingletonPlugin):
             'description': 'A single spatial metadata document'
             }
 
-
     def get_original_url(self, harvest_object_id):
         obj = model.Session.query(HarvestObject).\
-                                    filter(HarvestObject.id==harvest_object_id).\
+                                    filter(HarvestObject.id == harvest_object_id).\
                                     first()
         if not obj:
             return None
 
         return obj.source.url
 
-
-    def gather_stage(self,harvest_job):
+    def gather_stage(self, harvest_job):
         log = logging.getLogger(__name__ + '.individual.gather')
         log.debug('DocHarvester gather_stage for job: %r', harvest_job)
 
@@ -57,29 +55,26 @@ class DocHarvester(SpatialHarvester, SingletonPlugin):
                                         (url, e),harvest_job)
             return None
 
-        existing_object = model.Session.query(HarvestObject.guid, HarvestObject.package_id).\
-                                    filter(HarvestObject.current==True).\
-                                    filter(HarvestObject.harvest_source_id==harvest_job.source.id).\
-                                    first()
+        existing_object = model.Session.query(HarvestObject.guid, HarvestObject.package_id). \
+            filter(HarvestObject.harvest_source_id == harvest_job.source.id). \
+            filter(HarvestObject.current == True).first() # noqa
 
         def create_extras(url, status):
             return [HOExtra(key='doc_location', value=url),
                     HOExtra(key='status', value=status)]
 
         if not existing_object:
-            guid=hashlib.md5(url.encode('utf8', 'ignore')).hexdigest()
+            guid = hashlib.md5(url.encode('utf8', 'ignore')).hexdigest()
             harvest_object = HarvestObject(job=harvest_job,
-                                extras=create_extras(url,
-                                                     'new'),
-                                guid=guid
-                               )
+                                           extras=create_extras(url, 'new'),
+                                           guid=guid
+                                           )
         else:
             harvest_object = HarvestObject(job=harvest_job,
-                                extras=create_extras(url,
-                                                     'change'),
-                                guid=existing_object.guid,
-                                package_id=existing_object.package_id
-                               )
+                                           extras=create_extras(url, 'change'),
+                                           guid=existing_object.guid,
+                                           package_id=existing_object.package_id
+                                           )
 
         harvest_object.add()
 
@@ -104,10 +99,6 @@ class DocHarvester(SpatialHarvester, SingletonPlugin):
 
         return [harvest_object.id]
 
-
-
-
-    def fetch_stage(self,harvest_object):
+    def fetch_stage(self, harvest_object):
         # The fetching was already done in the previous stage
         return True
-

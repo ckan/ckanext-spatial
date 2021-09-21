@@ -88,4 +88,3 @@ class ISpatialHarvester(Interface):
 
         '''
         return None
-

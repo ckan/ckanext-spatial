@@ -37,14 +37,15 @@ def check_geoalchemy_requirement():
 
     if tk.check_ckan_version(min_version='2.3'):
         try:
-            import geoalchemy2
+            import geoalchemy2 # noqa
         except ImportError:
             raise ImportError(msg.format('geoalchemy2'))
     else:
         try:
-            import geoalchemy
+            import geoalchemy # noqa
         except ImportError:
             raise ImportError(msg.format('geoalchemy'))
+
 
 check_geoalchemy_requirement()
 
@@ -55,7 +56,7 @@ def package_error_summary(error_dict):
     ''' Do some i18n stuff on the error_dict keys '''
 
     def prettify(field_name):
-        field_name = re.sub('(?<!\w)[Uu]rl(?!\w)', 'URL',
+        field_name = re.sub(r'(?<!\w)[Uu]rl(?!\w)', 'URL',
                             field_name.replace('_', ' ').capitalize())
         return tk._(field_name.replace('_', ' '))
 
@@ -71,6 +72,7 @@ def package_error_summary(error_dict):
         else:
             summary[tk._(prettify(key))] = error[0]
     return summary
+
 
 class SpatialMetadata(p.SingletonPlugin):
 
@@ -105,7 +107,7 @@ class SpatialMetadata(p.SingletonPlugin):
     def edit(self, package):
         self.check_spatial_extra(package)
 
-    def check_spatial_extra(self,package):
+    def check_spatial_extra(self, package):
         '''
         For a given package, looks at the spatial extent (as given in the
         extra "spatial" in GeoJSON format) and records it in PostGIS.
@@ -131,7 +133,7 @@ class SpatialMetadata(p.SingletonPlugin):
                         raise tk.ValidationError(error_dict, error_summary=package_error_summary(error_dict))
 
                     try:
-                        save_package_extent(package.id,geometry)
+                        save_package_extent(package.id, geometry)
 
                     except ValueError as e:
                         error_dict = {'spatial':[u'Error creating geometry: %s' % six.text_type(e)]}
@@ -144,23 +146,22 @@ class SpatialMetadata(p.SingletonPlugin):
 
                 elif (extra.state == 'active' and not extra.value) or extra.state == 'deleted':
                     # Delete extent from table
-                    save_package_extent(package.id,None)
+                    save_package_extent(package.id, None)
 
                 break
 
-
     def delete(self, package):
         from ckanext.spatial.lib import save_package_extent
-        save_package_extent(package.id,None)
+        save_package_extent(package.id, None)
 
-    ## ITemplateHelpers
+    # ITemplateHelpers
 
     def get_helpers(self):
         from ckanext.spatial import helpers as spatial_helpers
         return {
-                'get_reference_date' : spatial_helpers.get_reference_date,
+                'get_reference_date': spatial_helpers.get_reference_date,
                 'get_responsible_party': spatial_helpers.get_responsible_party,
-                'get_common_map_config' : spatial_helpers.get_common_map_config,
+                'get_common_map_config': spatial_helpers.get_common_map_config,
                 }
 
 class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
@@ -194,7 +195,8 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
                 if not (geometry['type'] == 'Polygon'
                    and len(geometry['coordinates']) == 1
                    and len(geometry['coordinates'][0]) == 5):
-                    log.error('Solr backend only supports bboxes (Polygons with 5 points), ignoring geometry {0}'.format(pkg_dict['extras_spatial']))
+                    log.error('Solr backend only supports bboxes (Polygons with 5 points), ignoring geometry {0}'
+                              .format(pkg_dict['extras_spatial']))
                     return pkg_dict
 
                 coords = geometry['coordinates']
@@ -237,11 +239,10 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
 
                 pkg_dict['spatial_geom'] = wkt
 
-
         return pkg_dict
 
     def before_search(self, search_params):
-        from ckanext.spatial.lib import  validate_bbox
+        from ckanext.spatial.lib import validate_bbox
         from ckan.lib.search import SearchError
 
         if search_params.get('extras', None) and search_params['extras'].get('ext_bbox', None):
@@ -287,7 +288,7 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
 
         '''
 
-        variables =dict(
+        variables = dict(
             x11=bbox['minx'],
             x12=bbox['maxx'],
             y11=bbox['miny'],
@@ -296,7 +297,7 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
             x22='maxx',
             y21='miny',
             y22='maxy',
-            area_search = abs(bbox['maxx'] - bbox['minx']) * abs(bbox['maxy'] - bbox['miny'])
+            area_search=abs(bbox['maxx'] - bbox['minx']) * abs(bbox['maxy'] - bbox['miny'])
         )
 
         bf = '''div(
@@ -306,7 +307,7 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
                        ),
                    2),
                    add({area_search}, mul(sub({y22}, {y21}), sub({x22}, {x21})))
-                )'''.format(**variables).replace('\n','').replace(' ','')
+                )'''.format(**variables).replace('\n', '').replace(' ', '')
 
         search_params['fq_list'] = ['{!frange incl=false l=0 u=1}%s' % bf]
 
@@ -329,7 +330,7 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
         return search_params
 
     def _params_for_postgis_search(self, bbox, search_params):
-        from ckanext.spatial.lib import   bbox_query, bbox_query_ordered
+        from ckanext.spatial.lib import bbox_query, bbox_query_ordered
         from ckan.lib.search import SearchError
 
         # Note: This will be deprecated at some point in favour of the
@@ -349,13 +350,13 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
             # they are in the wrong order anyway. We just need this SOLR
             # query to get the count and facet counts.
             rows = 0
-            search_params['sort'] = None # SOLR should not sort.
+            search_params['sort'] = None  # SOLR should not sort.
             # Store the rankings of the results for this page, so for
             # after_search to construct the correctly sorted results
             rows = search_params['extras']['ext_rows'] = search_params['rows']
             start = search_params['extras']['ext_start'] = search_params['start']
             search_params['extras']['ext_spatial'] = [
-                (extent.package_id, extent.spatial_ranking) \
+                (extent.package_id, extent.spatial_ranking)
                 for extent in extents[start:start+rows]]
         else:
             extents = bbox_query(bbox)

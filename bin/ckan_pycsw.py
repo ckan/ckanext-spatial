@@ -74,7 +74,8 @@ def load(pycsw_config, ckan_url):
         )
     )
 
-    query = 'api/search/dataset?qjson={"fl":"id,metadata_modified,extras_harvest_object_id,extras_metadata_source", "q":"harvest_object_id:[\\"\\" TO *]", "limit":1000, "start":%s}'
+    query = 'api/search/dataset?qjson={"fl":"id,metadata_modified,extras_harvest_object_id,' \
+            'extras_metadata_source", "q":"harvest_object_id:[\\"\\" TO *]", "limit":1000, "start":%s}'
 
     start = 0
 
@@ -235,6 +236,7 @@ The load command requires a CKAN URL from where the datasets will be pulled:
     python ckan_pycsw.py load -p /etc/ckan/default/pycsw.cfg -u http://localhost
 
 """
+
 
 
 def _load_config(file_path):

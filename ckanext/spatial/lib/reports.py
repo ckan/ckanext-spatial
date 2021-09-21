@@ -7,6 +7,7 @@ from ckanext.spatial.lib.report import ReportTable
 from ckan import model
 from ckanext.harvest.model import HarvestObject
 
+
 def validation_report(package_id=None):
     '''
     Looks at every harvested metadata record and compares the
@@ -21,11 +22,11 @@ def validation_report(package_id=None):
     log.debug('Validators: %r', validators.profiles)
 
     query = model.Session.query(HarvestObject).\
-            filter_by(current=True).\
-            order_by(HarvestObject.fetch_finished.desc())
+        filter_by(current=True).\
+        order_by(HarvestObject.fetch_finished.desc())
 
     if package_id:
-        query = query.filter(HarvestObject.package_id==package_id)
+        query = query.filter(HarvestObject.package_id == package_id)
 
     report = ReportTable([
         'Harvest Object id',
@@ -56,7 +57,7 @@ def validation_report(package_id=None):
         valid, errors = validators.is_valid(xml)
         if not valid:
             new_validation_failure_count += 1
-                         
+
         report.add_row_dict({
                              'Harvest Object id': harvest_object.id,
                              'GEMINI2 id': harvest_object.guid,
