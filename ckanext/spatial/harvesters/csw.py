@@ -75,25 +75,25 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
                 if not isinstance(require_keywords, list):
                     raise ValueError('require_keywords must be a list')
                 for keyword in require_keywords:
-                    if not isinstance(keyword, basestring):
+                    if not isinstance(keyword, six.text_type):
                         raise ValueError('require_keyword values must be strings')
 
             require_in_abstract = source_config_obj.get('require_in_abstract', None)
             if require_in_abstract is not None:
-                if not isinstance(require_in_abstract, basestring):
+                if not isinstance(require_in_abstract, six.text_type):
                     raise ValueError('require_in_abstract must be string')
 
             identifier_schema = source_config_obj.get('identifier_schema', None)
             if identifier_schema is not None:
-                if not isinstance(identifier_schema, basestring):
+                if not isinstance(identifier_schema, six.text_type):
                     raise ValueError('identifier_schema must be string')
 
             esn = source_config_obj.get('esn', None)
             if esn is not None:
-                if not isinstance(esn, basestring):
+                if not isinstance(esn, six.text_type):
                     raise ValueError('esn must be string')
 
-        except ValueError, e:
+        except ValueError as e:
             raise e
 
         return source_config
