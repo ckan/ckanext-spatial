@@ -1,29 +1,51 @@
 from setuptools import setup, find_packages
-import sys, os
 
-version = '0.2'
+version = "1.0.0"
 
 setup(
-	name='ckanext-spatial',
-	version=version,
-	description="Geo-related plugins for CKAN",
-	long_description="""\
-	""",
-	classifiers=[], # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
-	keywords='',
-	author='Open Knowledge Foundation',
-	author_email='info@okfn.org',
-	url='http://okfn.org',
-	license='AGPL',
-	packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
-	namespace_packages=['ckanext'],
-	include_package_data=True,
-	zip_safe=False,
-	install_requires=[
-		# -*- Extra requirements: -*-
-	],
-	entry_points=\
-	"""
+    name="ckanext-spatial",
+    version=version,
+    description="Geo-related plugins for CKAN",
+    long_description="""
+This extension contains plugins that add geospatial capabilities to CKAN_,
+including:
+
+* A spatial field on the default CKAN dataset schema, that uses PostGIS_
+  as the backend and allows to perform spatial queries and to display the
+  dataset extent on the frontend.
+* Harvesters to import geospatial metadata into CKAN from other sources
+  in ISO 19139 format and others.
+* Commands to support the CSW standard using pycsw_.
+
+**Note**: The view plugins for rendering spatial formats like GeoJSON_ have
+been moved to ckanext-geoview_.
+
+Full documentation, including installation instructions, can be found at:
+
+https://docs.ckan.org/projects/ckanext-spatial/en/latest/
+""",
+    classifiers=[
+        "Development Status :: 5 - Production/Stable",
+        "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
+        "Programming Language :: Python",
+        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+    ],
+    keywords="",
+    author="Open Knowledge Foundation",
+    author_email="info@okfn.org",
+    url="http://okfn.org",
+    license="AGPL",
+    packages=find_packages(exclude=["ez_setup", "examples", "tests"]),
+    namespace_packages=["ckanext"],
+    include_package_data=True,
+    zip_safe=False,
+    install_requires=[
+        # -*- Extra requirements: -*-
+    ],
+    entry_points="""
     [ckan.plugins]
     spatial_metadata=ckanext.spatial.plugin:SpatialMetadata
     spatial_query=ckanext.spatial.plugin:SpatialQuery
@@ -45,6 +67,5 @@ setup(
 
     [ckan.test_plugins]
     test_spatial_plugin = ckanext.spatial.tests.test_plugin.plugin:TestSpatialPlugin
-
-	""",
+""",
 )
