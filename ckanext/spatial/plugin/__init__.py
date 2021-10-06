@@ -7,8 +7,10 @@ import six
 import ckantoolkit as tk
 
 from ckan import plugins as p
+from ckan import logic
 
 from ckan.lib.helpers import json
+from ckan.lib.navl.validators import not_empty
 
 if tk.check_ckan_version(min_version="2.9.0"):
     from ckanext.spatial.plugin.flask_plugin import (
@@ -72,12 +74,41 @@ def package_error_summary(error_dict):
             summary[tk._(prettify(key))] = error[0]
     return summary
 
-class SpatialMetadata(p.SingletonPlugin):
+
+class SpatialMetadata(p.SingletonPlugin, tk.DefaultDatasetForm):
 
     p.implements(p.IPackageController, inherit=True)
     p.implements(p.IConfigurable, inherit=True)
     p.implements(p.IConfigurer, inherit=True)
     p.implements(p.ITemplateHelpers, inherit=True)
+    p.implements(p.IDatasetForm, inherit=True)
+
+    # Need to modify the schema to match import
+    #  function that customizes tag validation
+    def create_package_schema(self):
+        # let's grab the default schema from CKAN
+        schema = logic.schema.default_create_package_schema()
+        schema['tags'].update({
+            'name': [not_empty, six.text_type]
+        })
+        return schema
+
+    def update_package_schema(self):
+        # let's grab the default schema from CKAN
+        schema = logic.schema.default_update_package_schema()
+        schema['tags'].update({
+            'name': [not_empty, six.text_type]
+        })
+        log.error('Trying to update package schema %s' % schema['tags'])
+        return schema
+
+    def is_fallback(self):
+        return True
+
+    def package_types(self):
+        # This plugin doesn't handle any special package types, it just
+        # customizes tag validation (see above)
+        return []
 
     def configure(self, config):
         from ckanext.spatial.model.package_extent import setup as setup_model
