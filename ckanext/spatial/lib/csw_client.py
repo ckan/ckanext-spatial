@@ -10,6 +10,13 @@ from owslib.fes import PropertyIsEqualTo, SortBy, SortProperty
 
 log = logging.getLogger(__name__)
 
+# Py2 vs Py3 encoding
+import sys
+if sys.version_info[0] < 3:
+    _enc='utf-8'
+else:
+    _enc=str
+
 class CswError(Exception):
     pass
 
@@ -178,13 +185,13 @@ class CswService(OwsService):
         md = csw._exml.find("/{http://www.isotc211.org/2005/gmd}MD_Metadata")
         mdtree = etree.ElementTree(md)
         try:
-            record["xml"] = etree.tostring(mdtree, pretty_print=True, encoding=str)
+            record["xml"] = etree.tostring(mdtree, pretty_print=True, encoding=_enc)
         except TypeError:
             # API incompatibilities between different flavours of elementtree
             try:
-                record["xml"] = etree.tostring(mdtree, pretty_print=True, encoding=str)
+                record["xml"] = etree.tostring(mdtree, pretty_print=True, encoding=_enc)
             except AssertionError:
-                record["xml"] = etree.tostring(md, pretty_print=True, encoding=str)
+                record["xml"] = etree.tostring(md, pretty_print=True, encoding=_enc)
 
         record["xml"] = '<?xml version="1.0" encoding="UTF-8"?>\n' + record["xml"]
         record["tree"] = mdtree
