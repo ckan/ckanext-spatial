@@ -70,6 +70,23 @@ class CswService(OwsService):
     def __init__(self, endpoint=None):
         super(CswService, self).__init__(endpoint)
         self.sortby = SortBy([SortProperty('dc:identifier')])
+        # check capabilities
+        _cap = self.getcapabilities(endpoint)['response']
+        self.capabilities=etree.ElementTree(etree.fromstring(_cap))
+
+    def _get_output_schemas(self, operation):
+        _cap_ns = self.capabilities.getroot().nsmap
+        _ows_ns = _cap_ns.get('ows')
+        if not _ows_ns:
+            raise CswError('Bad getcapabilities response: OWS namespace not found '+str(_cap_ns))
+        _op=self.capabilities.find("//{}Operation[@name='{}']".format(_ows_ns,operation))
+        _schemas=_op.find("{}Parameter[@name='outputSchema']".format(_ows_ns))
+        _values = map(lambda v: v.text, _schemas.findall("{}Value".format(_ows_ns)))
+        output_schemas={}
+        for key, value in _schemas.nsmap.items():
+            if value in _values:
+                output_schemas.update({key:value})
+        return output_schemas
 
     def getrecords(self, qtype=None, keywords=[],
                    typenames="csw:Record", esn="brief",
@@ -156,9 +173,14 @@ class CswService(OwsService):
     def getrecordbyid(self, ids=[], esn="full", outputschema="gmd", **kw):
         from owslib.csw import namespaces
         csw = self._ows(**kw)
+
+        output_schemas=self._get_output_schemas('GetRecordById')
+        if not output_schemas[outputschema]:
+            raise CswError('Output schema not supported by target server: '+str(output_schemas))
+
         kwa = {
             "esn": esn,
-            "outputschema": namespaces[outputschema],
+            "outputschema": output_schemas[outputschema],
             }
         # Ordinary Python version's don't support the metadata argument
         log.info('Making CSW request: getrecordbyid %r %r', ids, kwa)

@@ -159,10 +159,11 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
             self._save_object_error('Error contacting the CSW server: %s' % e,
                                     harvest_object)
             return False
-
+        
+        namespace = self.source_config.get('output_schema',self.output_schema())
         identifier = harvest_object.guid
         try:
-            record = self.csw.getrecordbyid([identifier], outputschema=self.output_schema())
+            record = self.csw.getrecordbyid([identifier], outputschema=namespace)
         except Exception as e:
             self._save_object_error('Error getting the CSW record with GUID %s' % identifier, harvest_object)
             return False
