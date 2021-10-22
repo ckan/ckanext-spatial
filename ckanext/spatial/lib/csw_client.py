@@ -190,14 +190,17 @@ class CswService(OwsService):
                   csw.exceptionreport.exceptions
             #log.error(err)
             raise CswError(err)
-        if not csw.records:
+        elif csw.records:
+            record = self._xmd(list(csw.records.values())[0])
+        elif csw.response:
+            record = self._xmd(etree.fromstring(csw.response))
+        else:
             return
-        record = self._xmd(list(csw.records.values())[0])
 
         ## strip off the enclosing results container, we only want the metadata
-        #md = csw._exml.find("/gmd:MD_Metadata")#, namespaces=namespaces)
-        # Ordinary Python version's don't support the metadata argument
-        md = csw._exml.find("/{http://www.isotc211.org/2005/gmd}MD_Metadata")
+        # '/{schema}*' expression should be safe enough and is able to match the
+        #  desired schema followed by both MD_Metadata or MI_Metadata (iso19115[-2])
+        md = csw._exml.find("/{{{schema}}}*".format(schema=output_schemas[outputschema]))
         mdtree = etree.ElementTree(md)
         try:
             record["xml"] = etree.tostring(mdtree, pretty_print=True, encoding=str)
