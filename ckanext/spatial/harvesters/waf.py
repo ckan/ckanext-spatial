@@ -138,6 +138,19 @@ class WAFHarvester(SpatialHarvester, SingletonPlugin):
 
 
         ids = []
+        for location in delete:
+            obj = HarvestObject(job=harvest_job,
+                                extras=create_extras('','', 'delete'),
+                                guid=url_to_ids[location][0],
+                                package_id=url_to_ids[location][1],
+                               )
+            model.Session.query(HarvestObject).\
+                  filter_by(guid=url_to_ids[location][0]).\
+                  update({'current': False}, False)
+
+            obj.save()
+            ids.append(obj.id)
+
         for location in new:
             guid=hashlib.md5(location.encode('utf8','ignore')).hexdigest()
             obj = HarvestObject(job=harvest_job,
@@ -157,19 +170,6 @@ class WAFHarvester(SpatialHarvester, SingletonPlugin):
                                 guid=url_to_ids[location][0],
                                 package_id=url_to_ids[location][1],
                                )
-            obj.save()
-            ids.append(obj.id)
-
-        for location in delete:
-            obj = HarvestObject(job=harvest_job,
-                                extras=create_extras('','', 'delete'),
-                                guid=url_to_ids[location][0],
-                                package_id=url_to_ids[location][1],
-                               )
-            model.Session.query(HarvestObject).\
-                  filter_by(guid=url_to_ids[location][0]).\
-                  update({'current': False}, False)
-
             obj.save()
             ids.append(obj.id)
 
