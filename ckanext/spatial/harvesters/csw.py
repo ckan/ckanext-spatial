@@ -160,8 +160,9 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
                                     harvest_object)
             return False
         
-        if not self.source_config:
-            self._set_source_config(harvest_object.source.config)
+        # load config
+        self._set_source_config(harvest_object.source.config)
+        # get output_schema from config
         namespace = self.source_config.get('output_schema',self.output_schema())
         identifier = harvest_object.guid
         try:
