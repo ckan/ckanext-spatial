@@ -79,9 +79,9 @@ class CswService(OwsService):
         _ows_ns = _cap_ns.get('ows')
         if not _ows_ns:
             raise CswError('Bad getcapabilities response: OWS namespace not found '+str(_cap_ns))
-        _op=self.capabilities.find("//{}Operation[@name='{}']".format(_ows_ns,operation))
-        _schemas=_op.find("{}Parameter[@name='outputSchema']".format(_ows_ns))
-        _values = map(lambda v: v.text, _schemas.findall("{}Value".format(_ows_ns)))
+        _op=self.capabilities.find("//{{{}}}Operation[@name='{}']".format(_ows_ns,operation))
+        _schemas=_op.find("{{{}}}Parameter[@name='outputSchema']".format(_ows_ns))
+        _values = map(lambda v: v.text, _schemas.findall("{{{}}}Value".format(_ows_ns)))
         output_schemas={}
         for key, value in _schemas.nsmap.items():
             if value in _values:
