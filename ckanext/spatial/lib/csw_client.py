@@ -171,12 +171,13 @@ class CswService(OwsService):
             kwa["startposition"] = startposition
 
     def getrecordbyid(self, ids=[], esn="full", outputschema="gmd", **kw):
-        from owslib.csw import namespaces
+        
         csw = self._ows(**kw)
 
+        # fetch target csw server capabilities for requested output schema
         output_schemas=self._get_output_schemas('GetRecordById')
-        if not output_schemas[outputschema]:
-            raise CswError('Output schema not supported by target server: '+str(output_schemas))
+        if not output_schemas.get(outputschema):
+            raise CswError('Output schema \'{}\' not supported by target server: '.format(output_schemas))
 
         kwa = {
             "esn": esn,
