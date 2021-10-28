@@ -5,9 +5,8 @@ import logging
 log = logging.getLogger(__name__)
 
 # Py2 vs Py3 encoding
-def _encode(element):
-    import sys 
-    if sys.version_info[0] < 3:
+def _encode(element): 
+    if six.PY2:
         return element.encode('utf-8')
     else:
         return str(element)

@@ -11,8 +11,7 @@ from owslib.fes import PropertyIsEqualTo, SortBy, SortProperty
 log = logging.getLogger(__name__)
 
 # Py2 vs Py3 encoding
-import sys
-if sys.version_info[0] < 3:
+if six.PY2:
     _enc='utf-8'
 else:
     _enc=str
