@@ -75,7 +75,9 @@ The currently supported configuration options are:
   and spaces replaced with dashes. Setting this option to False gives the same effect as leaving it unset.
 * ``validator_profiles``: A list of string that specifies a list of validators that will be applied to the
   current harvester, overriding the global ones defined by the 'ckan.spatial.validator.profiles' option.
+* ``output_schema``: the namespace to use as outputSchema_ for a CSW request
 
+.. _outputSchema: https://docs.opengeospatial.org/is/12-176r7/12-176r7.html#72
 
 Customizing the harvesters
 --------------------------
