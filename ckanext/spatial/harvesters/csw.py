@@ -163,14 +163,22 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
         # load config
         self._set_source_config(harvest_object.source.config)
         # get output_schema from config
-        namespace = self.source_config.get('output_schema',self.output_schema())
+        output_schema = self.source_config.get('output_schema',self.output_schema())
         identifier = harvest_object.guid
         try:
-            record = self.csw.getrecordbyid([identifier], outputschema=namespace)
+            record = self.csw.getrecordbyid([identifier], outputschema=output_schema)
         except Exception as e:
-            self._save_object_error('Error getting the CSW record with GUID %s' % identifier, harvest_object)
-            return False
-
+            try:
+                log.warn('Unable to fetch GUID {} with output schema: {}'.format(identifier, output_schema))
+                if output_schema == self.output_schema():
+                    raise e
+                log.info('Fetching GUID {} with output schema: {}'.format(identifier, self.output_schema()))
+                # retry with default output schema
+                record = self.csw.getrecordbyid([identifier], outputschema=self.output_schema())
+            except Exception as e:
+                self._save_object_error('Error getting the CSW record with GUID {}'.format(identifier), harvest_object)
+                return False
+        
         if record is None:
             self._save_object_error('Empty record for GUID %s' % identifier,
                                     harvest_object)
