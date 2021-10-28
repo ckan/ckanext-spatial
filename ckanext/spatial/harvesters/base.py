@@ -467,7 +467,7 @@ class SpatialHarvester(HarvesterBase):
             context.update({
                 'ignore_auth': True,
             })
-            p.toolkit.get_action('package_delete')(context, {'id': harvest_object.package_id})
+            p.toolkit.get_action('package_purge')(context, {'id': harvest_object.package_id})
             log.info('Deleted package {0} with guid {1}'.format(harvest_object.package_id, harvest_object.guid))
 
             return True
