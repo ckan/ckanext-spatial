@@ -163,7 +163,7 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
         # load config
         self._set_source_config(harvest_object.source.config)
         # get output_schema from config
-        output_schema = self.source_config.get('output_schema',self.output_schema())
+        output_schema = self.source_config.get('output_schema', self.output_schema())
         identifier = harvest_object.guid
         try:
             record = self.csw.getrecordbyid([identifier], outputschema=output_schema)
