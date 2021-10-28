@@ -399,6 +399,7 @@ class SpatialHarvester(HarvesterBase):
                         })
                     package_dict['resources'].append(resource)
 
+        extras['resources'] = iso_values.get('lineage')
 
         # Add default_extras from config
         default_extras = self.source_config.get('default_extras',{})
