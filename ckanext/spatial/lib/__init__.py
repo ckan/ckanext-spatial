@@ -8,7 +8,7 @@ import ckantoolkit as tk
 
 from ckanext.spatial.model import PackageExtent
 import shapely
-
+from past.builtins import basestring
 
 from ckanext.spatial.geoalchemy_common import (WKTElement, ST_Transform,
                                                compare_geometry_fields,
