@@ -1,6 +1,6 @@
 import six
 from six.moves.urllib.parse import urlparse
-from six.moves.urllib.request import urlopen
+from six.moves.urllib.request import urlopen, Request
 
 import re
 import cgitb
@@ -141,20 +141,20 @@ class SpatialHarvester(HarvesterBase):
         return '%s/package_search' % self._get_action_api_offset()
 
     def _get_content(self, url):
-        http_request = urllib2.Request(url=url)
+        http_request = Request(url=url)
 
         api_key = self.config.get('api_key')
         if api_key:
             http_request.add_header('Authorization', api_key)
 
         try:
-            http_response = urllib2.urlopen(http_request)
-        except urllib2.HTTPError as e:
+            http_response = urlopen(http_request)
+        except urllib.HTTPError as e:
             if e.getcode() == 404:
                 raise ContentNotFoundError('HTTP error: %s' % e.code)
             else:
                 raise ContentFetchError('HTTP error: %s' % e.code)
-        except urllib2.URLError as e:
+        except urllib.URLError as e:
             raise ContentFetchError('URL error: %s' % e.reason)
         except httplib.HTTPException as e:
             raise ContentFetchError('HTTP Exception: %s' % e)
