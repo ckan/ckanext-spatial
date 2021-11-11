@@ -261,7 +261,7 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
                         wkt = polygon.wkt
 
                 if not wkt:
-                    shape = shapely.geometry.asShape(geometry)
+                    shape = shapely.geometry.shape(geometry)
                     if not shape.is_valid:
                         log.error('Wrong geometry, not indexing')
                         return pkg_dict
