@@ -19,7 +19,7 @@ else:
         SpatialQueryMixin, HarvestMetadataApiMixin
     )
 
-
+from ckan.lib.navl.validators import ignore_missing
 config = tk.config
 
 

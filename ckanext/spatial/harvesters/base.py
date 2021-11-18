@@ -1,6 +1,9 @@
 import six
 from six.moves.urllib.parse import urlparse
 from six.moves.urllib.request import urlopen, Request
+from six.moves.urllib.error import HTTPError, URLError
+import http.client
+import socket
 
 import re
 import cgitb
@@ -149,14 +152,14 @@ class SpatialHarvester(HarvesterBase):
 
         try:
             http_response = urlopen(http_request)
-        except urllib.HTTPError as e:
+        except HTTPError as e:
             if e.getcode() == 404:
                 raise ContentNotFoundError('HTTP error: %s' % e.code)
             else:
                 raise ContentFetchError('HTTP error: %s' % e.code)
-        except urllib.URLError as e:
+        except URLError as e:
             raise ContentFetchError('URL error: %s' % e.reason)
-        except httplib.HTTPException as e:
+        except http.client.HTTPException as e:
             raise ContentFetchError('HTTP Exception: %s' % e)
         except socket.error as e:
             raise ContentFetchError('HTTP socket error: %s' % e)

@@ -9,4 +9,5 @@ argparse
 pyparsing>=2.1.10
 requests>=1.1.0
 six
+GDAL==3.1.4
 cioos_iso_validate@git+git://github.com/cioos-siooc/cioos-iso-validate@master#egg=cioos_iso_validate

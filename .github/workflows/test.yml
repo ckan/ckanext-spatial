@@ -19,7 +19,7 @@ jobs:
       matrix:
         ckan-version: [2.9, 2.9-py2, 2.8, 2.7]
       fail-fast: false
-    
+
     name: CKAN ${{ matrix.ckan-version }}
     runs-on: ubuntu-latest
     container:
@@ -43,7 +43,7 @@ jobs:
       CKAN_SOLR_URL: http://solr:8983/solr/ckan
       CKAN_REDIS_URL: redis://redis:6379/1
       PGPASSWORD: postgres
-    
+
     steps:
     - uses: actions/checkout@v2
     - name: Create Database
@@ -63,6 +63,10 @@ jobs:
     - name: Install dependency (common)
       run: |
         apk add --no-cache \
+          linux-headers \
+          python3 python3-dev py3-pip mysql-dev libffi-dev openssl-dev \
+          py3-numpy-dev python3-dev py3-setuptools py3-numpy \
+          openexr-dev libheif-dev xerces-c-dev geos-dev cfitsio-dev \
           geos \
           geos-dev \
           proj-util \
@@ -71,7 +75,11 @@ jobs:
           libxslt \
           gcc \
           libxml2-dev \
-          libxslt-dev
+          libxslt-dev \
+          gdal-dev=3.1.4-r3 \
+          gdal=3.1.4-r3 \
+          curl
+        curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && python3 get-pip.py
     - name: Install dependency (python2)
       if: ${{ matrix.ckan-version != '2.9' }}
       run: |
