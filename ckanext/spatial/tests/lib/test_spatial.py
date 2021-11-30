@@ -83,7 +83,6 @@ class TestValidateBbox(object):
         assert(res is None)
 
 
-
 def bbox_2_geojson(bbox_dict):
     return (
         '{"type":"Polygon","coordinates":[[[%(minx)s, %(miny)s],'
@@ -162,12 +161,14 @@ class TestBboxQueryPerformance(SpatialQueryTestBase):
     ]  # increase the number to 1000 say
 
     def test_query(self):
+        bbox_dict = self.x_values_to_bbox((2, 7))
         t0 = time.time()
         bbox_query(bbox_dict)
         t1 = time.time()
         print("bbox_query took: ", t1 - t0)
 
     def test_query_ordered(self):
+        bbox_dict = self.x_values_to_bbox((2, 7))
         t0 = time.time()
         bbox_query_ordered(bbox_dict)
         t1 = time.time()
