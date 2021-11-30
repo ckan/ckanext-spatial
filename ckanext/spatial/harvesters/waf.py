@@ -1,6 +1,10 @@
+from __future__ import print_function
+
+import six
+from six.moves.urllib.parse import urljoin
 import logging
 import hashlib
-from urlparse import urljoin
+
 import dateutil.parser
 import pyparsing as parse
 import requests
@@ -57,9 +61,9 @@ class WAFHarvester(SpatialHarvester, SingletonPlugin):
         try:
             response = requests.get(source_url, timeout=60)
             response.raise_for_status()
-        except requests.exceptions.RequestException, e:
-            self._save_gather_error('Unable to get content for URL: %s: %r' %
-                                    (source_url, e), harvest_job)
+        except requests.exceptions.RequestException as e:
+            self._save_gather_error('Unable to get content for URL: %s: %r' % \
+                                        (source_url, e),harvest_job)
             return None
 
         content = response.content
@@ -90,7 +94,7 @@ class WAFHarvester(SpatialHarvester, SingletonPlugin):
         try:
             for url, modified_date in _extract_waf(content, source_url, scraper):
                 url_to_modified_harvest[url] = modified_date
-        except Exception, e:
+        except Exception as e:
             msg = 'Error extracting URLs from %s, error was %s' % (source_url, e)
             self._save_gather_error(msg, harvest_job)
             return None
@@ -187,7 +191,7 @@ class WAFHarvester(SpatialHarvester, SingletonPlugin):
         # Get contents
         try:
             content = self._get_content_as_unicode(url)
-        except Exception, e:
+        except Exception as e:
             msg = 'Could not harvest WAF link {0}: {1}'.format(url, e)
             self._save_object_error(msg, harvest_object)
             return False
@@ -292,8 +296,8 @@ def _extract_waf(content, base_url, scraper, results=None, depth=0):
             try:
                 response = requests.get(new_url)
                 content = response.content
-            except Exception, e:
-                print str(e)
+            except Exception as e:
+                print(six.text_type(e))
                 continue
             _extract_waf(content, new_url, scraper, results, new_depth)
             continue
@@ -302,8 +306,8 @@ def _extract_waf(content, base_url, scraper, results=None, depth=0):
         date = record.date
         if date:
             try:
-                date = str(dateutil.parser.parse(date))
-            except Exception, e:
+                date = six.text_type(dateutil.parser.parse(date))
+            except Exception as e:
                 raise
                 date = None
         results.append((urljoin(base_url, record.url), date))

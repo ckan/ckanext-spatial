@@ -1,6 +1,6 @@
 import re
-import urllib
-import urlparse
+import six
+from six.moves.urllib.parse import urlparse, urlunparse, urlencode
 
 import logging
 
@@ -37,7 +37,7 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
                                     filter(HarvestObject.id == harvest_object_id).\
                                     first()
 
-        parts = urlparse.urlparse(obj.source.url)
+        parts = urlparse(obj.source.url)
 
         params = {
             'SERVICE': 'CSW',
@@ -48,12 +48,12 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
             'ID': obj.guid
         }
 
-        url = urlparse.urlunparse((
+        url = urlunparse((
             parts.scheme,
             parts.netloc,
             parts.path,
             None,
-            urllib.urlencode(params),
+            urlencode(params),
             None
         ))
 
@@ -75,25 +75,25 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
                 if not isinstance(require_keywords, list):
                     raise ValueError('require_keywords must be a list')
                 for keyword in require_keywords:
-                    if not isinstance(keyword, basestring):
+                    if not isinstance(keyword, six.text_type):
                         raise ValueError('require_keyword values must be strings')
 
             require_in_abstract = source_config_obj.get('require_in_abstract', None)
             if require_in_abstract is not None:
-                if not isinstance(require_in_abstract, basestring):
+                if not isinstance(require_in_abstract, six.text_type):
                     raise ValueError('require_in_abstract must be string')
 
             identifier_schema = source_config_obj.get('identifier_schema', None)
             if identifier_schema is not None:
-                if not isinstance(identifier_schema, basestring):
+                if not isinstance(identifier_schema, six.text_type):
                     raise ValueError('identifier_schema must be string')
 
             esn = source_config_obj.get('esn', None)
             if esn is not None:
-                if not isinstance(esn, basestring):
+                if not isinstance(esn, six.text_type):
                     raise ValueError('esn must be string')
 
-        except ValueError, e:
+        except ValueError as e:
             raise e
 
         return source_config
@@ -108,7 +108,7 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
 
         try:
             self._setup_csw_client(url)
-        except Exception, e:
+        except Exception as e:
             self._save_gather_error('Error contacting the CSW server: %s' % e, harvest_job)
             return None
 
@@ -140,13 +140,13 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
                         continue
 
                     guids_in_harvest.add(identifier)
-                except Exception, e:
-                    self._save_gather_error('Error for the identifier %s [%r]' % (identifier, e), harvest_job)
+                except Exception as e:
+                    self._save_gather_error('Error for the identifier %s [%r]' % (identifier,e), harvest_job)
                     continue
 
-        except Exception, e:
+        except Exception as e:
             log.error('Exception: %s' % text_traceback())
-            self._save_gather_error('Error gathering the identifiers from the CSW server [%s]' % str(e), harvest_job)
+            self._save_gather_error('Error gathering the identifiers from the CSW server [%s]' % six.text_type(e), harvest_job)
             return None
 
         new = guids_in_harvest - guids_in_db
@@ -202,7 +202,7 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
         url = harvest_object.source.url
         try:
             self._setup_csw_client(url)
-        except Exception, e:
+        except Exception as e:
             self._save_object_error('Error contacting the CSW server: %s' % e,
                                     harvest_object)
             return False
@@ -210,8 +210,8 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
         identifier = harvest_object.guid
         esn = self.source_config.get('esn', 'full')
         try:
-            record = self.csw.getrecordbyid([identifier], outputschema=self.output_schema(), esn=esn)
-        except Exception, e:
+            record = self.csw.getrecordbyid([identifier], outputschema=self.output_schema())
+        except Exception as e:
             self._save_object_error('Error getting the CSW record with GUID %s' % identifier, harvest_object)
             return False
 
@@ -268,8 +268,8 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
 
             harvest_object.content = content.strip()
             harvest_object.save()
-        except Exception, e:
-            self._save_object_error('Error saving the harvest object for GUID %s [%r]' %
+        except Exception as e:
+            self._save_object_error('Error saving the harvest object for GUID %s [%r]' % \
                                     (identifier, e), harvest_object)
             return False
 

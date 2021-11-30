@@ -256,7 +256,7 @@ class SchematronValidator(BaseValidator):
             "xml/schematron/iso_abstract_expand.xsl",
             "xml/schematron/iso_svrl_for_xslt1.xsl",
             ]
-        if isinstance(schema, file):
+        if hasattr(schema, 'read'):
             compiled = etree.parse(schema)
         else:
             compiled = schema

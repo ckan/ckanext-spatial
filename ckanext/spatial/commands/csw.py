@@ -1,3 +1,4 @@
+from __future__ import print_function
 import sys
 import logging
 
@@ -69,4 +70,4 @@ option:
         elif cmd == 'clear':
             ckan_pycsw.clear(config)
         else:
-            print 'Command %s not recognized' % cmd
+            print('Command %s not recognized' % cmd)
