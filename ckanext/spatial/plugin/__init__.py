@@ -182,13 +182,13 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
         })
         return schema
 
-        def configure(self, config):
+    def configure(self, config):
 
-            self.search_backend = config.get('ckanext.spatial.search_backend', 'postgis')
-            if self.search_backend != 'postgis' and not tk.check_ckan_version('2.0.1'):
-                msg = 'The Solr backends for the spatial search require CKAN 2.0.1 or higher. ' + \
-                      'Please upgrade CKAN or select the \'postgis\' backend.'
-                raise tk.CkanVersionException(msg)
+        self.search_backend = config.get('ckanext.spatial.search_backend', 'postgis')
+        if self.search_backend != 'postgis' and not tk.check_ckan_version('2.0.1'):
+            msg = 'The Solr backends for the spatial search require CKAN 2.0.1 or higher. ' + \
+                  'Please upgrade CKAN or select the \'postgis\' backend.'
+            raise tk.CkanVersionException(msg)
 
     def before_map(self, map):
         map.connect('api_spatial_query', '/api/2/search/{register:dataset|package}/geo',
