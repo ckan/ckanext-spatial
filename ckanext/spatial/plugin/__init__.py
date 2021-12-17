@@ -226,7 +226,7 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
                         geometry = shapely.geometry.mapping(poly)
                     except Exception as e:
                         log.error(e)
-                    log.error('Solr backend only supports bboxes (Polygons with 5 points), ignoring geometry {0}'.format(pkg_dict['extras_spatial']))
+                        log.error('Solr backend only supports bboxes (Polygons with 5 points), ignoring geometry {0}'.format(pkg_dict['extras_spatial']))
                     return pkg_dict
 
                 coords = geometry['coordinates']
