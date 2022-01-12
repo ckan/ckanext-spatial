@@ -1511,7 +1511,6 @@ class ISODocument(MappedXmlDocument):
             doi = re.sub(r'^http.*doi\.org/', '', doi, flags=re.IGNORECASE)  # strip https://doi.org/ and the like
             if doi and re.match(r'^10.\d{4,9}\/[-._;()/:A-Z0-9]+$', doi, re.IGNORECASE):
                 value['DOI'] = doi
-
         # TODO: could we have more then one doi?
 
         field = {}
@@ -1522,18 +1521,13 @@ class ISODocument(MappedXmlDocument):
             abstract = field[lang]['abstract']
             field[lang]['abstract'] = abstract.get(lang)
             field[lang]['language'] = lang
-            field[lang]['URL'] = (
-                "https//doi.org/" + value['DOI'] 
-                if value.get('DOI') != None else 
-                url_for(
+            field[lang]['URL'] = url_for(
                 controller='dataset',
                 action='read',
                 id=munge.munge_name(values.get('guid', '')),
                 local=lang,
                 qualified=True
-                )
             )
-           
             field[lang] = json.dumps([field[lang]])
             # the dump converts utf-8 escape sequences to unicode escape
             # sequences so we have to convert back again
