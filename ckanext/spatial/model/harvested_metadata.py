@@ -804,7 +804,7 @@ class ISOCitation(ISOElement):
             name="author",
             search_paths=[
                 # 19115-3
-                "cit:citedResponsibleParty/cit:CI_Responsibility"
+                "cit:citedResponsibleParty/cit:CI_Responsibility[not(cit:role/cit:CI_RoleCode/text() = 'publisher' or cit:role/cit:CI_RoleCode/@codeListValue ='publisher')]"
             ],
             multiplicity="1..*",
         ),
@@ -830,9 +830,8 @@ class ISOCitation(ISOElement):
             name="publisher",
             search_paths=[
                 # 19115-3
-                "cit:citedResponsibleParty/cit:CI_Responsibility[cit:role/cit:CI_RoleCode/text() ='publisher']/cit:party/cit:CI_Individual/cit:name/gco:CharacterString/text()[boolean(.)]",
-                "cit:citedResponsibleParty/cit:CI_Responsibility[cit:role/cit:CI_RoleCode/text() ='publisher']/cit:party/cit:CI_Organisation/cit:name/gco:CharacterString/text()[boolean(.)]",
-
+                "cit:citedResponsibleParty/cit:CI_Responsibility[cit:role/cit:CI_RoleCode/text() ='publisher' or cit:role/cit:CI_RoleCode/@codeListValue ='publisher']/cit:party/cit:CI_Organisation/cit:name/gco:CharacterString/text()",
+                "cit:citedResponsibleParty/cit:CI_Responsibility[cit:role/cit:CI_RoleCode/text() ='publisher' or cit:role/cit:CI_RoleCode/@codeListValue ='publisher']/cit:party/cit:CI_Individual/cit:name/gco:CharacterString/text()",
             ],
             multiplicity="1",
         ),
