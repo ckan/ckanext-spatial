@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from __future__ import print_function, annotations
+from __future__ import print_function
 import os
 import sys
 
@@ -206,7 +206,7 @@ def _transform_to_html(content, xslt_package=None, xslt_path=None):
     return result
 
 
-def _get_package_extras(pkg_id: str) -> list[PackageExtra]:
+def _get_package_extras(pkg_id):
     """Returns a list of package extras by its ID
 
     Args:
