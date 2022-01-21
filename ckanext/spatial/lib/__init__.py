@@ -6,7 +6,7 @@ from ckan.model import Session, Package
 import ckantoolkit as tk
 
 from ckanext.spatial.model import PackageExtent
-from shapely.geometry import asShape
+from shapely.geometry import shape
 
 
 from ckanext.spatial.geoalchemy_common import (WKTElement, ST_Transform,
@@ -53,13 +53,13 @@ def save_package_extent(package_id, geometry = None, srid = None):
     existing_package_extent = Session.query(PackageExtent).filter(PackageExtent.package_id==package_id).first()
 
     if geometry:
-        shape = asShape(geometry)
+        geom_obj = shape(geometry)
 
         if not srid:
             srid = db_srid
 
         package_extent = PackageExtent(package_id=package_id,
-                                       the_geom=WKTElement(shape.wkt, srid))
+                                       the_geom=WKTElement(geom_obj.wkt, srid))
 
     # Check if extent exists
     if existing_package_extent:

@@ -5,7 +5,7 @@ import random
 
 import pytest
 
-from shapely.geometry import asShape
+from shapely.geometry import shape
 
 from ckan import model
 from ckan import plugins
@@ -43,9 +43,9 @@ class TestCompareGeometries(SpatialTestBase):
     def _get_extent_object(self, geometry):
         if isinstance(geometry, six.string_types):
             geometry = json.loads(geometry)
-        shape = asShape(geometry)
+        geom_obj = shape(geometry)
         return PackageExtent(
-            package_id="xxx", the_geom=WKTElement(shape.wkt, 4326)
+            package_id="xxx", the_geom=WKTElement(geom_obj.wkt, 4326)
         )
 
     def test_same_points(self):
