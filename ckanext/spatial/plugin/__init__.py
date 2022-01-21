@@ -223,13 +223,12 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
                         # Check if coordinates are defined counter-clockwise,
                         # otherwise we'll get wrong results from Solr
                         lr = shapely.geometry.polygon.LinearRing(geometry['coordinates'][0])
-                        if not lr.is_ccw:
-                            lr.coords = list(lr.coords)[::-1]
-                        polygon = shapely.geometry.polygon.Polygon(lr)
+                        lr_coords = list(lr.coords) if lr.is_ccw else reversed(list(lr.coords))
+                        polygon = shapely.geometry.polygon.Polygon(lr_coords)
                         wkt = polygon.wkt
 
                 if not wkt:
-                    shape = shapely.geometry.asShape(geometry)
+                    shape = shapely.geometry.shape(geometry)
                     if not shape.is_valid:
                         log.error('Wrong geometry, not indexing')
                         return pkg_dict

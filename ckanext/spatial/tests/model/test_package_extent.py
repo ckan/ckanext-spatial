@@ -1,11 +1,10 @@
 import pytest
 
-from shapely.geometry import asShape
+from shapely.geometry import shape
 
 from ckan.model import Session
 from ckan.lib.helpers import json
 
-import ckan.tests.helpers as helpers
 import ckan.tests.factories as factories
 
 from ckanext.spatial.model import PackageExtent
@@ -21,10 +20,10 @@ class TestPackageExtent(SpatialTestBase):
 
         geojson = json.loads(self.geojson_examples["point"])
 
-        shape = asShape(geojson)
+        geom_obj = shape(geojson)
         package_extent = PackageExtent(
             package_id=package["id"],
-            the_geom=WKTElement(shape.wkt, self.db_srid),
+            the_geom=WKTElement(geom_obj.wkt, self.db_srid),
         )
         package_extent.save()
 
@@ -60,10 +59,10 @@ class TestPackageExtent(SpatialTestBase):
 
         geojson = json.loads(self.geojson_examples["point"])
 
-        shape = asShape(geojson)
+        geom_obj = shape(geojson)
         package_extent = PackageExtent(
             package_id=package["id"],
-            the_geom=WKTElement(shape.wkt, self.db_srid),
+            the_geom=WKTElement(geom_obj.wkt, self.db_srid),
         )
         package_extent.save()
         if legacy_geoalchemy:
@@ -84,8 +83,8 @@ class TestPackageExtent(SpatialTestBase):
         # Update the geometry (Point -> Polygon)
         geojson = json.loads(self.geojson_examples["polygon"])
 
-        shape = asShape(geojson)
-        package_extent.the_geom = WKTElement(shape.wkt, self.db_srid)
+        geom_obj = shape(geojson)
+        package_extent.the_geom = WKTElement(geom_obj.wkt, self.db_srid)
         package_extent.save()
 
         assert(package_extent.package_id == package["id"])
