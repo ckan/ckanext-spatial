@@ -10,6 +10,7 @@ from ckan import plugins as p
 
 from ckan.lib.helpers import json
 
+from ckanext.spatial.util import _get_package_extras
 if tk.check_ckan_version(min_version="2.9.0"):
     from ckanext.spatial.plugin.flask_plugin import (
         SpatialQueryMixin, HarvestMetadataApiMixin
@@ -117,36 +118,37 @@ class SpatialMetadata(p.SingletonPlugin):
             return
 
         # TODO: deleted extra
-        for extra in package.extras_list:
-            if extra.key == 'spatial':
-                if extra.state == 'active' and extra.value:
-                    try:
-                        log.debug('Received: %r' % extra.value)
-                        geometry = json.loads(extra.value)
-                    except ValueError as e:
-                        error_dict = {'spatial':[u'Error decoding JSON object: %s' % six.text_type(e)]}
-                        raise tk.ValidationError(error_dict, error_summary=package_error_summary(error_dict))
-                    except TypeError as e:
-                        error_dict = {'spatial':[u'Error decoding JSON object: %s' % six.text_type(e)]}
-                        raise tk.ValidationError(error_dict, error_summary=package_error_summary(error_dict))
+        for extra in _get_package_extras(package.id):
+            if extra.key != 'spatial':
+                continue
+            if extra.state == 'active' and extra.value:
+                try:
+                    log.debug('Received: %r' % extra.value)
+                    geometry = json.loads(extra.value)
+                except ValueError as e:
+                    error_dict = {'spatial':[u'Error decoding JSON object: %s' % six.text_type(e)]}
+                    raise tk.ValidationError(error_dict, error_summary=package_error_summary(error_dict))
+                except TypeError as e:
+                    error_dict = {'spatial':[u'Error decoding JSON object: %s' % six.text_type(e)]}
+                    raise tk.ValidationError(error_dict, error_summary=package_error_summary(error_dict))
 
-                    try:
-                        save_package_extent(package.id,geometry)
+                try:
+                    save_package_extent(package.id,geometry)
 
-                    except ValueError as e:
-                        error_dict = {'spatial':[u'Error creating geometry: %s' % six.text_type(e)]}
-                        raise tk.ValidationError(error_dict, error_summary=package_error_summary(error_dict))
-                    except Exception as e:
-                        if bool(os.getenv('DEBUG')):
-                            raise
-                        error_dict = {'spatial':[u'Error: %s' % six.text_type(e)]}
-                        raise tk.ValidationError(error_dict, error_summary=package_error_summary(error_dict))
+                except ValueError as e:
+                    error_dict = {'spatial':[u'Error creating geometry: %s' % six.text_type(e)]}
+                    raise tk.ValidationError(error_dict, error_summary=package_error_summary(error_dict))
+                except Exception as e:
+                    if bool(os.getenv('DEBUG')):
+                        raise
+                    error_dict = {'spatial':[u'Error: %s' % six.text_type(e)]}
+                    raise tk.ValidationError(error_dict, error_summary=package_error_summary(error_dict))
 
-                elif (extra.state == 'active' and not extra.value) or extra.state == 'deleted':
-                    # Delete extent from table
-                    save_package_extent(package.id,None)
+            elif (extra.state == 'active' and not extra.value) or extra.state == 'deleted':
+                # Delete extent from table
+                save_package_extent(package.id,None)
 
-                break
+            break
 
 
     def delete(self, package):
