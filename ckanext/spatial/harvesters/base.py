@@ -455,11 +455,11 @@ class SpatialHarvester(HarvesterBase):
                 extras[key] = iso_values[key][0]
 
         # Save responsible organization roles
-        if iso_values['responsible-organisation']:
+        if iso_values.get('responsible-organisation'):
             parties = {}
             for party in iso_values['responsible-organisation']:
-                if party['organisation-name'] in parties:
-                    if not party['role'] in parties[party['organisation-name']]:
+                if party.get('organisation-name') in parties:
+                    if not party.get('role') in parties[party['organisation-name']]:
                         parties[party['organisation-name']].append(party['role'])
                 else:
                     parties[party['organisation-name']] = [party['role']]
