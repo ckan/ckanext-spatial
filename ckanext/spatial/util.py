@@ -13,6 +13,8 @@ from lxml import etree
 from pprint import pprint
 
 from ckan import model
+from ckan.model.package_extra import PackageExtra
+
 from ckanext.spatial.lib import save_package_extent
 from ckanext.spatial.lib.reports import validation_report
 from ckanext.spatial.harvesters import SpatialHarvester
@@ -203,3 +205,16 @@ def _transform_to_html(content, xslt_package=None, xslt_path=None):
 
     return result
 
+
+def _get_package_extras(pkg_id):
+    """Returns a list of package extras by its ID
+
+    Args:
+        pkg_id (str): an ID of package
+
+    Returns:
+        List[PackageExtra]: a list of package extras
+    """
+    return model.meta.Session.query(PackageExtra) \
+        .filter_by(package_id=pkg_id) \
+        .all()
