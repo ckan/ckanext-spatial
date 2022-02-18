@@ -135,8 +135,8 @@ class SpatialMetadata(p.SingletonPlugin):
                 try:
                     save_package_extent(package.id,geometry)
 
-                except ValueError as e:
-                    error_dict = {'spatial':[u'Error creating geometry: %s' % six.text_type(e)]}
+                except AttributeError as e:
+                    error_dict = {'spatial':[u'Error creating geometry: invalid GeoJSON']}
                     raise tk.ValidationError(error_dict, error_summary=package_error_summary(error_dict))
                 except Exception as e:
                     if bool(os.getenv('DEBUG')):
@@ -225,13 +225,12 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
                         # Check if coordinates are defined counter-clockwise,
                         # otherwise we'll get wrong results from Solr
                         lr = shapely.geometry.polygon.LinearRing(geometry['coordinates'][0])
-                        if not lr.is_ccw:
-                            lr.coords = list(lr.coords)[::-1]
-                        polygon = shapely.geometry.polygon.Polygon(lr)
+                        lr_coords = list(lr.coords) if lr.is_ccw else reversed(list(lr.coords))
+                        polygon = shapely.geometry.polygon.Polygon(lr_coords)
                         wkt = polygon.wkt
 
                 if not wkt:
-                    shape = shapely.geometry.asShape(geometry)
+                    shape = shapely.geometry.shape(geometry)
                     if not shape.is_valid:
                         log.error('Wrong geometry, not indexing')
                         return pkg_dict
