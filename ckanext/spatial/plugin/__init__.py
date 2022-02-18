@@ -135,8 +135,8 @@ class SpatialMetadata(p.SingletonPlugin):
                 try:
                     save_package_extent(package.id,geometry)
 
-                except ValueError as e:
-                    error_dict = {'spatial':[u'Error creating geometry: %s' % six.text_type(e)]}
+                except AttributeError as e:
+                    error_dict = {'spatial':[u'Error creating geometry: invalid GeoJSON']}
                     raise tk.ValidationError(error_dict, error_summary=package_error_summary(error_dict))
                 except Exception as e:
                     if bool(os.getenv('DEBUG')):
