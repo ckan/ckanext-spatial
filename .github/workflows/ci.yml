@@ -19,7 +19,7 @@ jobs:
       matrix:
         ckan-version: [2.9, 2.9-py2, 2.8, 2.7]
       fail-fast: false
-    
+
     name: CKAN ${{ matrix.ckan-version }}
     runs-on: ubuntu-latest
     container:
@@ -45,7 +45,8 @@ jobs:
       CKAN_DATAPUSHER_URL: http://datapusher:8800
       PGPASSWORD: postgres
       CRYPTOGRAPHY_DONT_BUILD_RUST: 1
-    
+      TZ: UTC
+
     steps:
     - uses: actions/checkout@v2
     - name: Create Database
