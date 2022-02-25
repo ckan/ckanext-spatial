@@ -8,8 +8,6 @@ import ckantoolkit as tk
 
 from ckanext.spatial.model import PackageExtent
 import shapely
-from past.builtins import basestring
-
 from ckanext.spatial.geoalchemy_common import (WKTElement, ST_Transform,
                                                compare_geometry_fields,
                                                )
@@ -100,7 +98,7 @@ def validate_polygon(poly_wkt):
     regex_multipoly = "^MULTIPOLYGON\\(\\(\\(-?\\d+\\.?\\d* -?\\d+\\.?\\d*(?:, -?\\d+\\.?\\d* -?\\d+\\.?\\d*)*(?:\\)\\),\\(\\(-?\\d+\\.?\\d* -?\\d+\\.?\\d*(?:, -?\\d+\\.?\\d* -?\\d+\\.?\\d*)*)*\\)\\)\\)"
     regex_box = "^BOX\\(-?\\d+\\.?\\d*,-?\\d+\\.?\\d*,-?\\d+\\.?\\d*,-?\\d+\\.?\\d*\\)"
 
-    if not isinstance(poly_wkt, basestring):
+    if not isinstance(poly_wkt, six.string_types):
         return None
 
     foundPoly = re.match(regex_poly, poly_wkt, re.IGNORECASE)

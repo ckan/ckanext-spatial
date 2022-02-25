@@ -2,13 +2,13 @@ from __future__ import print_function
 
 import six
 from six.moves.urllib.parse import urljoin
+from six.moves import html_parser
 import logging
 import hashlib
 
 import dateutil.parser
 import pyparsing as parse
 import requests
-import html
 from sqlalchemy.orm import aliased
 from sqlalchemy.exc import DataError
 
@@ -351,7 +351,7 @@ def _extract_waf(content, base_url, scraper, results = None, depth=0):
         url = record.url
 
         if '&#' in url:
-            url = html.unescape(url)
+            url = html_parser.unescape(url)
             record.url = url
 
         if not url:

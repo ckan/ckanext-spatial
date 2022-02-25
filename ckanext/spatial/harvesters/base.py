@@ -2,7 +2,7 @@ import six
 from six.moves.urllib.parse import urlparse
 from six.moves.urllib.request import urlopen, Request
 from six.moves.urllib.error import HTTPError, URLError
-import http.client
+from six.moves.http_client import HTTPException
 import socket
 
 import re
@@ -159,7 +159,7 @@ class SpatialHarvester(HarvesterBase):
                 raise ContentFetchError('HTTP error: %s' % e.code)
         except URLError as e:
             raise ContentFetchError('URL error: %s' % e.reason)
-        except http.client.HTTPException as e:
+        except HTTPException as e:
             raise ContentFetchError('HTTP Exception: %s' % e)
         except socket.error as e:
             raise ContentFetchError('HTTP socket error: %s' % e)
