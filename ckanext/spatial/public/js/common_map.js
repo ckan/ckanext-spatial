@@ -36,7 +36,7 @@
                 });
 
       var baseLayer;
-      
+
       map = new L.Map(container, leafletMapOptions);
 
       if (mapConfig.type == 'mapbox') {
@@ -73,7 +73,7 @@
               wmsOptions['crs'] = mapConfig['wms.srs'] || mapConfig['wms.crs'];
           }
           wmsOptions['version'] = mapConfig['wms.version'] || '1.1.1';
-          
+
           baseLayer = new L.TileLayer.WMS(baseLayerUrl, wmsOptions);
 
       } else {
@@ -87,8 +87,52 @@
 
       map.addLayer(baseLayer);
 
-      return map;
+      function getColor(i) {
+          pallet = ["#1f78b4","#e31a1c","#fb9a99","#fdbf6f","#ff7f00","#cab2d6","#6a3d9a","#ffff99","#a6cee3","#b2df8a","#33a02c"];
+          if(i>10){
+            return '#FFEDA0';
+          }
+          return pallet[i];
+      }
 
+      function myStyle(i) {
+        return {
+          "color": getColor(i),
+          "weight": 2,
+          "opacity": 1,
+          "fillColor": getColor(i),
+          "fillOpacity": 0.1,
+          "clickable": false
+        };
+      }
+
+      let urls = []
+      if (mapConfig.geoJsonLayerURLs) {
+        urls = JSON.parse(mapConfig.geoJsonLayerURLs);
+        var GJLayers = L.layerGroup().addTo(map)
+        for(const [i, url] of urls.entries()){
+          fetch(
+            url
+          ).then(
+            res => res.json()
+          ).then(
+            data => GJLayers.addLayer(
+              L.geoJSON(
+                data,
+                {
+                  style: myStyle(i),
+                  onEachFeature: function (feature, layer) {
+                    if(feature.properties && feature.properties.name){
+                      layer.bindPopup(feature.properties.name);
+                    }
+                  }
+                }
+              )
+            )            
+          )
+        }
+      }
+      return map;
   }
 
 })(this.ckan, this.jQuery);

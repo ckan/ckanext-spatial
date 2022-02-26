@@ -8,8 +8,9 @@ but can be easily adapted for other INSPIRE/ISO19139 XML metadata
     - GeminiWafHarvester - An index page with links to GEMINI resources
 
 '''
+import six
 import os
-from urlparse import urlparse
+from six.moves.urllib.parse import urlparse
 from datetime import datetime
 from numbers import Number
 import uuid
@@ -70,12 +71,12 @@ class GeminiHarvester(SpatialHarvester):
         try:
             self.import_gemini_object(harvest_object.content)
             return True
-        except Exception, e:
+        except Exception as e:
             log.error('Exception during import: %s' % text_traceback())
-            if not str(e).strip():
+            if not six.text_type(e).strip():
                 self._save_object_error('Error importing Gemini document.', harvest_object, 'Import')
             else:
-                self._save_object_error('Error importing Gemini document: %s' % str(e), harvest_object, 'Import')
+                self._save_object_error('Error importing Gemini document: %s' % six.text_type(e), harvest_object, 'Import')
             raise
             if debug_exception_mode:
                 raise
@@ -97,7 +98,7 @@ class GeminiHarvester(SpatialHarvester):
             log.error('Errors found for object with GUID %s:' % self.obj.guid)
             self._save_object_error(out,self.obj,'Import')
 
-        unicode_gemini_string = etree.tostring(xml, encoding=unicode, pretty_print=True)
+        unicode_gemini_string = etree.tostring(xml, encoding='utf8', pretty_print=True)
 
         # may raise Exception for errors
         package_dict = self.write_package_from_gemini_string(unicode_gemini_string)
@@ -223,10 +224,10 @@ class GeminiHarvester(SpatialHarvester):
                 extras['licence_url'] = licence_url_extracted
 
         extras['access_constraints'] = gemini_values.get('limitations-on-public-access','')
-        if gemini_values.has_key('temporal-extent-begin'):
+        if 'temporal-extent-begin' in gemini_values:
             #gemini_values['temporal-extent-begin'].sort()
             extras['temporal_coverage-from'] = gemini_values['temporal-extent-begin']
-        if gemini_values.has_key('temporal-extent-end'):
+        if 'temporal-extent-end' in gemini_values:
             #gemini_values['temporal-extent-end'].sort()
             extras['temporal_coverage-to'] = gemini_values['temporal-extent-end']
 
@@ -274,7 +275,7 @@ class GeminiHarvester(SpatialHarvester):
         if package is None or package.title != gemini_values['title']:
             name = self.gen_new_name(gemini_values['title'])
             if not name:
-                name = self.gen_new_name(str(gemini_guid))
+                name = self.gen_new_name(six.text_type(gemini_guid))
             if not name:
                 raise Exception('Could not generate a unique name from the title or the GUID. Please choose a more unique title.')
             package_dict['name'] = name
@@ -318,8 +319,8 @@ class GeminiHarvester(SpatialHarvester):
                     view_resources[0]['ckan_recommended_wms_preview'] = True
 
         extras_as_dict = []
-        for key,value in extras.iteritems():
-            if isinstance(value,(basestring,Number)):
+        for key,value in extras.items():
+            if isinstance(value, six.string_types + (Number,)):
                 extras_as_dict.append({'key':key,'value':value})
             else:
                 extras_as_dict.append({'key':key,'value':json.dumps(value)})
@@ -412,8 +413,8 @@ class GeminiHarvester(SpatialHarvester):
         else:
             counter = 1
             while counter < 101:
-                if name+str(counter) not in taken:
-                    return name+str(counter)
+                if name+six.text_type(counter) not in taken:
+                    return name+six.text_type(counter)
                 counter = counter + 1
             return None
 
@@ -453,7 +454,7 @@ class GeminiHarvester(SpatialHarvester):
 
         # The default package schema does not like Upper case tags
         tag_schema = logic.schema.default_tags_schema()
-        tag_schema['name'] = [not_empty,unicode]
+        tag_schema['name'] = [not_empty,six.text_type]
         package_schema['tags'] = tag_schema
 
         # TODO: user
@@ -466,8 +467,8 @@ class GeminiHarvester(SpatialHarvester):
         if not package:
             # We need to explicitly provide a package ID, otherwise ckanext-spatial
             # won't be be able to link the extent to the package.
-            package_dict['id'] = unicode(uuid.uuid4())
-            package_schema['id'] = [unicode]
+            package_dict['id'] = six.text_type(uuid.uuid4())
+            package_schema['id'] = [six.text_type]
 
             action_function = get_action('package_create')
         else:
@@ -476,8 +477,8 @@ class GeminiHarvester(SpatialHarvester):
 
         try:
             package_dict = action_function(context, package_dict)
-        except ValidationError,e:
-            raise Exception('Validation Error: %s' % str(e.error_summary))
+        except ValidationError as e:
+            raise Exception('Validation Error: %s' % six.text_type(e.error_summary))
             if debug_exception_mode:
                 raise
 
@@ -539,7 +540,7 @@ class GeminiCswHarvester(GeminiHarvester, SingletonPlugin):
 
         try:
             self._setup_csw_client(url)
-        except Exception, e:
+        except Exception as e:
             self._save_gather_error('Error contacting the CSW server: %s' % e, harvest_job)
             return None
 
@@ -565,13 +566,13 @@ class GeminiCswHarvester(GeminiHarvester, SingletonPlugin):
 
                     ids.append(obj.id)
                     used_identifiers.append(identifier)
-                except Exception, e:
+                except Exception as e:
                     self._save_gather_error('Error for the identifier %s [%r]' % (identifier,e), harvest_job)
                     continue
 
-        except Exception, e:
+        except Exception as e:
             log.error('Exception: %s' % text_traceback())
-            self._save_gather_error('Error gathering the identifiers from the CSW server [%s]' % str(e), harvest_job)
+            self._save_gather_error('Error gathering the identifiers from the CSW server [%s]' % six.text_type(e), harvest_job)
             return None
 
         if len(ids) == 0:
@@ -587,7 +588,7 @@ class GeminiCswHarvester(GeminiHarvester, SingletonPlugin):
         url = harvest_object.source.url
         try:
             self._setup_csw_client(url)
-        except Exception, e:
+        except Exception as e:
             self._save_object_error('Error contacting the CSW server: %s' % e,
                                     harvest_object)
             return False
@@ -595,7 +596,7 @@ class GeminiCswHarvester(GeminiHarvester, SingletonPlugin):
         identifier = harvest_object.guid
         try:
             record = self.csw.getrecordbyid([identifier])
-        except Exception, e:
+        except Exception as e:
             self._save_object_error('Error getting the CSW record with GUID %s' % identifier, harvest_object)
             return False
 
@@ -608,7 +609,7 @@ class GeminiCswHarvester(GeminiHarvester, SingletonPlugin):
             # Save the fetch contents in the HarvestObject
             harvest_object.content = record['xml']
             harvest_object.save()
-        except Exception,e:
+        except Exception as e:
             self._save_object_error('Error saving the harvest object for GUID %s [%r]' % \
                                     (identifier, e), harvest_object)
             return False
@@ -646,7 +647,7 @@ class GeminiDocHarvester(GeminiHarvester, SingletonPlugin):
         # Get contents
         try:
             content = self._get_content(url)
-        except Exception,e:
+        except Exception as e:
             self._save_gather_error('Unable to get content for URL: %s: %r' % \
                                         (url, e),harvest_job)
             return None
@@ -668,7 +669,7 @@ class GeminiDocHarvester(GeminiHarvester, SingletonPlugin):
             else:
                 self._save_gather_error('Could not get the GUID for source %s' % url, harvest_job)
                 return None
-        except Exception, e:
+        except Exception as e:
             self._save_gather_error('Error parsing the document. Is this a valid Gemini document?: %s [%r]'% (url,e),harvest_job)
             if debug_exception_mode:
                 raise
@@ -707,7 +708,7 @@ class GeminiWafHarvester(GeminiHarvester, SingletonPlugin):
         # Get contents
         try:
             content = self._get_content(url)
-        except Exception,e:
+        except Exception as e:
             self._save_gather_error('Unable to get content for URL: %s: %r' % \
                                         (url, e),harvest_job)
             return None
@@ -716,7 +717,7 @@ class GeminiWafHarvester(GeminiHarvester, SingletonPlugin):
             for url in self._extract_urls(content,url):
                 try:
                     content = self._get_content(url)
-                except Exception, e:
+                except Exception as e:
                     msg = 'Couldn\'t harvest WAF link: %s: %s' % (url, e)
                     self._save_gather_error(msg,harvest_job)
                     continue
@@ -737,11 +738,11 @@ class GeminiWafHarvester(GeminiHarvester, SingletonPlugin):
                             ids.append(obj.id)
 
 
-                    except Exception,e:
+                    except Exception as e:
                         msg = 'Could not get GUID for source %s: %r' % (url,e)
                         self._save_gather_error(msg,harvest_job)
                         continue
-        except Exception,e:
+        except Exception as e:
             msg = 'Error extracting URLs from %s' % url
             self._save_gather_error(msg,harvest_job)
             return None
@@ -765,7 +766,7 @@ class GeminiWafHarvester(GeminiHarvester, SingletonPlugin):
         try:
             parser = etree.HTMLParser()
             tree = etree.fromstring(content, parser=parser)
-        except Exception, inst:
+        except Exception as inst:
             msg = 'Couldn\'t parse content into a tree: %s: %s' \
                   % (inst, content)
             raise Exception(msg)
@@ -795,5 +796,3 @@ class GeminiWafHarvester(GeminiHarvester, SingletonPlugin):
         base_url += '/'
         log.debug('WAF base URL: %s', base_url)
         return [base_url + i for i in urls]
-
-

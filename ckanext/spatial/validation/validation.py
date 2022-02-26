@@ -1,4 +1,5 @@
 import os
+import cioos_iso_validate as cioos_iso_validate
 from pkg_resources import resource_stream
 from ckanext.spatial.model import ISODocument
 
@@ -287,7 +288,10 @@ class SchematronValidator(BaseValidator):
             message_element = failed_assert_element.find("{http://purl.oclc.org/dsdl/svrl}diagnostic-reference[@{http://www.w3.org/XML/1998/namespace}lang='en']")
         if not message_element:
             message_element = failed_assert_element.find("{http://purl.oclc.org/dsdl/svrl}diagnostic-reference")
-        message = message_element.text.strip()
+        if not message_element:
+            message = 'Missing required field'
+        else:
+            message = message_element.text.strip()
 
         # TODO: Do we really need such detail on the error messages?
         return message, 'Error Message: "%s"  Error Location: "%s"  Error Assert: "%s"' % (message, location, assert_)
@@ -299,7 +303,7 @@ class SchematronValidator(BaseValidator):
             "xml/schematron/iso_abstract_expand.xsl",
             "xml/schematron/iso_svrl_for_xslt1.xsl",
             ]
-        if isinstance(schema, file):
+        if hasattr(schema, 'read'):
             compiled = etree.parse(schema)
         else:
             compiled = schema
@@ -320,6 +324,19 @@ class ISO19115Schematron(SchematronValidator):
         with resource_stream(
                 __name__,
                 "xml/iso19115-3/standards.iso.org/iso/19115/-3/mdb/1.0/mdb.sch") as schema:
+
+            return [cls.schematron(schema)]
+
+class CIOOSSchematron(SchematronValidator):
+    name = 'CIOOSschematron'
+    title = 'CIOOS Schematron'
+
+    @classmethod
+    def get_schematrons(cls):
+        sch_path = os.path.dirname(os.path.relpath(cioos_iso_validate.__file__, os.path.dirname(os.path.abspath(__file__)))) + '/schematron/cioos.sch'
+        with resource_stream(
+                __name__,
+                sch_path) as schema:
 
             return [cls.schematron(schema)]
 
@@ -377,6 +394,7 @@ all_validators = (ISO19115Schema,
                   ISO19139NGDCSchema,
                   FGDCSchema,
                   ISO19115Schematron,
+                  CIOOSSchematron,
                   ConstraintsSchematron,
                   ConstraintsSchematron14,
                   Gemini2Schematron,

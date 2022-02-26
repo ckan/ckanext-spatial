@@ -1,16 +1,17 @@
+import six
 import logging
 import re
 from string import Template
 
 from ckan.model import Session, Package
-from ckan.lib.base import config
+import ckantoolkit as tk
 
 from ckanext.spatial.model import PackageExtent
-from shapely.geometry import asShape
-
+import shapely
 from ckanext.spatial.geoalchemy_common import (WKTElement, ST_Transform,
                                                compare_geometry_fields,
                                                )
+config = tk.config
 
 log = logging.getLogger(__name__)
 
@@ -47,11 +48,10 @@ def save_package_extent(package_id, geometry = None, srid = None):
     '''
     db_srid = int(config.get('ckan.spatial.srid', '4326'))
 
-
-    existing_package_extent = Session.query(PackageExtent).filter(PackageExtent.package_id==package_id).first()
+    existing_package_extent = Session.query(PackageExtent).filter(PackageExtent.package_id == package_id).first()
 
     if geometry:
-        shape = asShape(geometry)
+        shape = shapely.geometry.shape(geometry)
 
         if not srid:
             srid = db_srid
@@ -98,7 +98,7 @@ def validate_polygon(poly_wkt):
     regex_multipoly = "^MULTIPOLYGON\\(\\(\\(-?\\d+\\.?\\d* -?\\d+\\.?\\d*(?:, -?\\d+\\.?\\d* -?\\d+\\.?\\d*)*(?:\\)\\),\\(\\(-?\\d+\\.?\\d* -?\\d+\\.?\\d*(?:, -?\\d+\\.?\\d* -?\\d+\\.?\\d*)*)*\\)\\)\\)"
     regex_box = "^BOX\\(-?\\d+\\.?\\d*,-?\\d+\\.?\\d*,-?\\d+\\.?\\d*,-?\\d+\\.?\\d*\\)"
 
-    if not isinstance(poly_wkt, basestring):
+    if not isinstance(poly_wkt, six.string_types):
         return None
 
     foundPoly = re.match(regex_poly, poly_wkt, re.IGNORECASE)
@@ -126,10 +126,10 @@ def validate_bbox(bbox_values):
     Any problems and it returns None.
     '''
 
-    if isinstance(bbox_values,basestring):
+    if isinstance(bbox_values,six.string_types):
         bbox_values = bbox_values.split(',')
 
-    if len(bbox_values) is not 4:
+    if len(bbox_values) != 4:
         return None
 
     try:
@@ -138,7 +138,7 @@ def validate_bbox(bbox_values):
         bbox['miny'] = float(bbox_values[1])
         bbox['maxx'] = float(bbox_values[2])
         bbox['maxy'] = float(bbox_values[3])
-    except ValueError,e:
+    except ValueError as e:
         return None
 
     return bbox
@@ -227,7 +227,7 @@ def bbox_query_ordered(bbox, srid=None):
 
     input_geometry = _bbox_2_wkt(bbox, srid)
 
-    params = {'query_bbox': str(input_geometry),
+    params = {'query_bbox': six.text_type(input_geometry),
               'query_srid': input_geometry.srid}
 
     # First get the area of the query box

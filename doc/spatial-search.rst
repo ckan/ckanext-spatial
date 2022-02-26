@@ -61,6 +61,10 @@ synchronize the information stored in the extra with the geometry table.
 If you already have datasets when you enable Spatial Search then you'll need to
 reindex them:
 
+   ckan --config=/etc/ckan/default/development.ini search-index rebuild
+
+..note:: For CKAN 2.8 and below use:
+
    paster --plugin=ckan search-index rebuild --config=/etc/ckan/default/development.ini
 
 

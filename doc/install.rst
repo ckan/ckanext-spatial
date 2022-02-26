@@ -140,6 +140,10 @@ plugins on the configuration ini file (eg when restarting Apache).
 If for some reason you need to explicitly create the table beforehand, you can
 do it with the following command (with the virtualenv activated)::
 
+  (pyenv) $ ckan --config=mysite.ini spatial initdb [srid]
+
+On CKAN 2.8 and below use::
+
   (pyenv) $ paster --plugin=ckanext-spatial spatial initdb [srid] --config=mysite.ini
 
 You can define the SRID of the geometry column. Default is 4326. If you are not
