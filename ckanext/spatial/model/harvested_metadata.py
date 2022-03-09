@@ -812,7 +812,7 @@ class ISOCitation(ISOElement):
             name="issued",
             search_paths=[
                 # 19115-3
-                "ancestor::mdb:MD_Metadata/mdb:identificationInfo/mri:MD_DataIdentification/mri:citation/cit:CI_Citation/cit:date/cit:CI_Date[cit:dateType/cit:CI_DateTypeCode/@codeListValue != 'creation']",
+                "cit:date/cit:CI_Date[cit:dateType/cit:CI_DateTypeCode/@codeListValue != 'creation']",
                 "ancestor::mdb:MD_Metadata/mdb:dateInfo/cit:CI_Date"
             ],
             multiplicity="1..*",
@@ -825,6 +825,20 @@ class ISOCitation(ISOElement):
                 "ancestor::mdb:MD_Metadata/mdb:identificationInfo/srv:SV_ServiceIdentification/mri:abstract",
             ],
             multiplicity="1",
+        ),
+        ISOElement(
+            name="edition",
+            search_paths=[
+                "cit:edition/gco:CharacterString/text()"
+            ],
+            multiplicity="0..1",
+        ),
+        ISOElement(
+            name="edition-date",
+            search_paths=[
+                "cit:editionDate/gco:DateTime/text()"
+            ],
+            multiplicity="0..1",
         ),
         ISOElement(
             name="publisher",
