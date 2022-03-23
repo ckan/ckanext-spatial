@@ -37,7 +37,7 @@ def spatial_query(register):
     if 'bbox' in request_data:
         bbox = validate_bbox(request.params['bbox'])
     elif 'poly' in request_data:
-        poly_str = urllib.unquote_plus(request_data['poly'])
+        poly_str = urllib.parse.unquote_plus(request_data['poly'])
         if poly_str.startswith('BOX'):
             bbox = validate_bbox(poly_str[4:-1])
         else:
