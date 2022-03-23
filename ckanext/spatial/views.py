@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
+import urllib
 
 from flask import Blueprint, make_response
 
@@ -9,7 +10,7 @@ import ckan.plugins.toolkit as tk
 from ckantoolkit import request
 from ckan.views.api import _finish_ok, _finish_bad_request
 
-from ckanext.spatial.lib import get_srid, validate_bbox, bbox_query
+from ckanext.spatial.lib import get_srid, validate_bbox, bbox_query, polygon_query, validate_polygon
 from ckanext.spatial import util
 
 
