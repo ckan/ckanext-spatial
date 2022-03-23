@@ -50,17 +50,15 @@ class ApiController(BaseApiController):
         if poly:
             extents = polygon_query(poly, srid)
 
-        format = request_data.get('format', '')
-
         try:
-            output = self._output_results(extents, format)
+            output = self._output_results(extents)
         except (Exception) as e:
             abort(400, error_400_msg + '\n\n' + e.message)
             output = None
 
         return output
 
-    def _output_results(self, extents, format=None):
+    def _output_results(self, extents):
 
         ids = [extent.package_id for extent in extents]
         output = dict(count=len(ids), results=ids)

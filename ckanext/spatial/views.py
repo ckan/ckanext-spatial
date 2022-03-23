@@ -31,7 +31,6 @@ def spatial_query(register):
 
     srid = get_srid(str(request_data.get('crs'))) if 'crs' in \
         request_data else None
-    format = request_data.get('format', '')
 
     bbox = poly = []
     if 'bbox' in request_data:
