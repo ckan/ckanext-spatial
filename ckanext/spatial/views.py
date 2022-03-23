@@ -29,7 +29,7 @@ def spatial_query(register):
     else:
         request_data = request.args
 
-    srid = get_srid(request_data.get('crs')) if 'crs' in \
+    srid = get_srid(str(request_data.get('crs'))) if 'crs' in \
         request_data else None
     format = request_data.get('format', '')
 
