@@ -23,10 +23,15 @@ class ApiController(BaseApiController):
             'or "poly" parameter [POLYGON((x1 y1,x2 y2, ....)) | MULTIPOLYGON(((x1 y1,x2 y2, ....)),((x1 y1,x2 y2, ....)))] | BOX(minx,miny,maxx,maxy)'
 
         bbox = poly = []
-        if 'bbox' in request.params:
-            bbox = validate_bbox(request.params['bbox'])
-        elif 'poly' in request.params:
-            poly_str = urllib.unquote_plus(request.params['poly'])
+        if request.method == 'POST':
+            request_data = request.get_json()
+        else:
+            request_data = request.params
+
+        if 'bbox' in request_data:
+            bbox = validate_bbox(request_data['bbox'])
+        elif 'poly' in request_data:
+            poly_str = urllib.unquote_plus(request_data['poly'])
             if poly_str.startswith('BOX'):
                 bbox = validate_bbox(poly_str[4:-1])
             else:
@@ -37,15 +42,15 @@ class ApiController(BaseApiController):
         if not bbox and not poly:
             abort(400, error_400_msg)
 
-        srid = get_srid(request.params.get('crs')) if 'crs' in \
-            request.params else None
+        srid = get_srid(request_data.get('crs')) if 'crs' in \
+            request_data else None
 
         if bbox:
             extents = bbox_query(bbox, srid)
         if poly:
             extents = polygon_query(poly, srid)
 
-        format = request.params.get('format', '')
+        format = request_data.get('format', '')
 
         try:
             output = self._output_results(extents, format)

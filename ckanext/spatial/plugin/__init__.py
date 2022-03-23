@@ -195,7 +195,8 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
     def before_map(self, map):
         map.connect('api_spatial_query', '/api/2/search/{register:dataset|package}/geo',
                     controller='ckanext.spatial.controllers.api:ApiController',
-                    action='spatial_query')
+                    action='spatial_query',
+                    conditions=dict(method=['GET', 'POST']))
         return map
 
     def before_index(self, pkg_dict):
