@@ -1592,6 +1592,17 @@ class ISODocument(MappedXmlDocument):
         key = key[:2]
         return key
 
+    def unescape_unicode(encoded_str):
+        if not encoded_str:
+            return encoded_str
+
+        if(re.search(r'\\u[0-9a-fA-F]{4}', encoded_str)):
+            if isinstance(encoded_str, str):  # encode to get bytestring as decode only works on bytes
+                encoded_str = encoded_str.encode().decode('unicode-escape')
+            else:  # we have bytes
+                encoded_str = encoded_str.decode('unicode-escape')
+        return encoded_str
+
     def local_to_dict(self, item, defaultLangKey):
         # XML parser seems to generate unicode strings containg utf-8 escape
         # charicters even though the file is utf-8. To fix must encode unicode
@@ -1602,17 +1613,8 @@ class ISODocument(MappedXmlDocument):
 
         default = item.get('default').strip()
         # decode double escaped unicode chars
-        if(default and re.search(r'\\\\u[0-9a-fA-F]{4}', default)):
-            if isinstance(default, str):  # encode to get bytestring as decode only works on bytes
-                default = default.encode().decode('unicode-escape')
-            else:  # we have bytes
-                default = default.decode('unicode-escape')
+        default = unescape_unicode(default)
 
-        # this will create a byte string so better to let the json.dumps library handle it
-        # try:
-        #     default = default.encode('utf-8')
-        # except Exception:
-        #     log.error('Failed to encode string "%r" as utf-8', default)
         if len(default) > 1:
             out.update({defaultLangKey: default})
 
@@ -1624,17 +1626,8 @@ class ISODocument(MappedXmlDocument):
             LangValue = item.get('local').get('value')
             LangValue = LangValue.strip()
             # decode double escaped unicode chars
-            if(LangValue and re.search(r'\\\\u[0-9a-fA-F]{4}', LangValue)):
-                if isinstance(LangValue, str):  # encode to get bytestring as decode only works on bytes
-                    LangValue = LangValue.encode().decode('unicode-escape')
-                else:  # we have bytes
-                    LangValue = LangValue.decode('unicode-escape')
+            LangValue = unescape_unicode(LangValue)
 
-            # this will create a byte string so better to let the json.dumps library handle it
-            # try:
-            #     LangValue = LangValue.encode('utf-8')
-            # except Exception:
-            #     log.error('Failed to encode string "%r" as utf-8', LangValue)
             if len(LangValue) > 1:
                 out.update({langKey: LangValue})
 
