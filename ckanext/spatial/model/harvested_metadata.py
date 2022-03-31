@@ -1592,15 +1592,21 @@ class ISODocument(MappedXmlDocument):
         key = key[:2]
         return key
 
-    def unescape_unicode(encoded_str):
+    def unescape_unicode(self, encoded_str):
         if not encoded_str:
             return encoded_str
 
-        if(re.search(r'\\u[0-9a-fA-F]{4}', encoded_str)):
+        while(re.search(r'\\u[0-9a-fA-F]{4}', encoded_str)):
             if isinstance(encoded_str, str):  # encode to get bytestring as decode only works on bytes
-                encoded_str = encoded_str.encode().decode('unicode-escape')
+                encoded_str = encoded_str.encode('raw_unicode_escape').decode('unicode_escape')
             else:  # we have bytes
-                encoded_str = encoded_str.decode('unicode-escape')
+                encoded_str = encoded_str.decode().encode('raw_unicode_escape').decode('unicode_escape')
+
+        # newline escape seem to only work with exact matches. regex did not pickup the multi escape
+        encoded_str = encoded_str.replace('\\\\n', '\n')
+        encoded_str = encoded_str.replace('\\\n', '\n')
+        encoded_str = encoded_str.replace('\\n', '\n')
+
         return encoded_str
 
     def local_to_dict(self, item, defaultLangKey):
@@ -1613,7 +1619,7 @@ class ISODocument(MappedXmlDocument):
 
         default = item.get('default').strip()
         # decode double escaped unicode chars
-        default = unescape_unicode(default)
+        default = self.unescape_unicode(default)
 
         if len(default) > 1:
             out.update({defaultLangKey: default})
@@ -1626,7 +1632,7 @@ class ISODocument(MappedXmlDocument):
             LangValue = item.get('local').get('value')
             LangValue = LangValue.strip()
             # decode double escaped unicode chars
-            LangValue = unescape_unicode(LangValue)
+            LangValue = self.unescape_unicode(LangValue)
 
             if len(LangValue) > 1:
                 out.update({langKey: LangValue})
