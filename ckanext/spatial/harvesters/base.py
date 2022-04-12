@@ -1,19 +1,20 @@
+import six
+from six.moves.urllib.parse import urlparse
+from six.moves.urllib.request import urlopen
+
 import re
 import cgitb
 import warnings
-import urllib2
+
 import sys
 import logging
 from string import Template
-from urlparse import urlparse
 from datetime import datetime
 import uuid
 import hashlib
 import dateutil
 import mimetypes
 
-
-from pylons import config
 from owslib import wms
 import requests
 from lxml import etree
@@ -32,6 +33,7 @@ from ckanext.harvest.model import HarvestObject
 from ckanext.spatial.validation import Validators, all_validators
 from ckanext.spatial.model import ISODocument
 from ckanext.spatial.interfaces import ISpatialHarvester
+from ckantoolkit import config
 
 log = logging.getLogger(__name__)
 
@@ -58,7 +60,7 @@ def guess_standard(content):
     return 'unknown'
 
 
-def guess_resource_format(url, use_mimetypes=True):
+def guess_resource_format(resource_locator, use_mimetypes=True):
     '''
     Given a URL try to guess the best format to assign to the resource
 
@@ -72,22 +74,82 @@ def guess_resource_format(url, use_mimetypes=True):
     Returns None if no format could be guessed.
 
     '''
-    url = url.lower().strip()
+    # https://www.ogc.org/docs/is
+    # https://geonetwork-opensource.org/manuals/3.10.x/en/annexes/standards/iso19139.html#protocol
+    protocols = {
+        'esri:aims-http-configuration':'http',
+        'esri:aims-http-get-feature':'http', #arcims internet feature map service
+        'esri:aims-http-get-image':'http', # arcims internet image map service
+        'glg:kml-2.0-http-get-map':'kml', # google earth kml service (ver 2.0)
+        'ogc:csw':'csw', # ogc-csw catalogue service for the web
+        'ogc:kml':'kml', # ogc-kml keyhole markup language
+        'ogc:gml':'gml', # ogc-gml geography markup language
+        #'ogc:ods':'', # ogc-ods openls directory service
+        #'ogc:ogs':'', # ogc-ods openls gateway service
+        #'ogc:ous':'', # ogc-ods openls utility service
+        #'ogc:ops':'', # ogc-ods openls presentation service
+        #'ogc:ors':'', # ogc-ods openls route service
+        #'ogc:sos':'', # ogc-sos sensor observation service
+        #'ogc:sps':'', # ogc-sps sensor planning service
+        #'ogc:sas':'', # ogc-sas sensor alert service
+        'ogc:wcs':'wcs', # ogc-wcs web coverage service
+        'ogc:wcs-1.1.0-http-get-capabilities':'wcs', # ogc-wcs web coverage service (ver 1.1.0)
+        'ogc:wcts':'wcts', # ogc-wcts web coordinate transformation service
+        'ogc:wfs':'wfs', # ogc-wfs web feature service
+        'ogc:wfs-1.0.0-http-get-capabilities':'wfs', # ogc-wfs web feature service (ver 1.0.0)
+        'ogc:wfs-g':'wfs', # ogc-wfs-g gazzetteer service
+        'ogc:wmc':'wmc', # ogc-wmc web map context
+        'ogc:wms':'wms', # ogc-wms web map service
+        'ogc:wms-1.1.1-http-get-capabilities':'wms', # ogc-wms capabilities service (ver 1.1.1)
+        'ogc:wms-1.3.0-http-get-capabilities':'wms', # ogc-wms capabilities service (ver 1.3.0)
+        'ogc:wms-1.1.1-http-get-map':'wms', # ogc web map service (ver 1.1.1)
+        'ogc:wms-1.3.0-http-get-map':'wms', # ogc web map service (ver 1.3.0)
+        'ogc:wmts':'wmts', # ogc-wmts web map tiled service
+        'ogc:wmts-1.0.0-http-get-capabilities':'wmts', # ogc-wmts capabilities service (ver 1.0.0)
+        'ogc:sos-1.0.0-http-get-observation':'sos', # ogc-sos get observation (ver 1.0.0)
+        'ogc:sos-1.0.0-http-post-observation':'sos', # ogc-sos get observation (post) (ver 1.0.0)
+        'ogc:wns':'wns', # ogc-wns web notification service
+        'ogc:wps':'wps', # ogc-wps web processing service
+        #'ogc:ows-c':'', # ogc ows context
+        'tms':'tms', # tiled map service
+        'www:download-1.0-ftp-download':'ftp', # file for download through ftp
+        'www:download-1.0-http-download':'http', # file for download
+        #'file:geo':'', # gis file
+        #'file:raster':'', # gis raster file
+        'www:link-1.0-http-ical':'ical', # icalendar (url)
+        'www:link-1.0-http-link':'http', # web address (url)
+        #'doi':'', # digital object identifier (doi)
+        'www:link-1.0-http-partners':'http', # partner web address (url)
+        'www:link-1.0-http-related':'http', # related link (url)
+        'www:link-1.0-http-rss':'http', # rss news feed (url)
+        'www:link-1.0-http-samples':'http', # showcase product (url)
+        #'db:postgis':'', # postgis database table
+        #'db:oracle':'', # oracle database table
+        'www:link-1.0-http-opendap':'http', # opendap url
+        #'rbnb:dataturbine':'', # data turbine
+        #'ukst':'', # unknown service type
+    }
+    protocol = resource_locator.get('protocol').lower().strip()
+    resource_type = protocols.get(protocol)
+    if resource_type:
+        return resource_type
+    
+    url = resource_locator.get('url').lower().strip()
 
     resource_types = {
         # OGC
-        'wms': ('service=wms', 'geoserver/wms', 'mapserver/wmsserver', 'com.esri.wms.Esrimap', 'service/wms'),
-        'wfs': ('service=wfs', 'geoserver/wfs', 'mapserver/wfsserver', 'com.esri.wfs.Esrimap'),
-        'wcs': ('service=wcs', 'geoserver/wcs', 'imageserver/wcsserver', 'mapserver/wcsserver'),
-        'sos': ('service=sos',),
-        'csw': ('service=csw',),
+        'wms': ('/wms', 'service=wms', 'geoserver/wms', 'mapserver/wmsserver', 'com.esri.wms.Esrimap', 'service/wms'),
+        'wfs': ('/wfs', 'service=wfs', 'geoserver/wfs', 'mapserver/wfsserver', 'com.esri.wfs.Esrimap'),
+        'wcs': ('/wcs', 'service=wcs', 'geoserver/wcs', 'imageserver/wcsserver', 'mapserver/wcsserver'),
+        'sos': ('/sos', 'service=sos',),
+        'csw': ('/csw', 'service=csw',),
         # ESRI
         'kml': ('mapserver/generatekml',),
         'arcims': ('com.esri.esrimap.esrimap',),
         'arcgis_rest': ('arcgis/rest/services',),
     }
 
-    for resource_type, parts in resource_types.iteritems():
+    for resource_type, parts in resource_types.items():
         if any(part in url for part in parts):
             return resource_type
 
@@ -95,14 +157,17 @@ def guess_resource_format(url, use_mimetypes=True):
         'kml' : ('kml',),
         'kmz': ('kmz',),
         'gml': ('gml',),
+        'tif': ('tif','tiff',),
+        'shp': ('shp',),
+        'zip': ('zip',)
     }
 
-    for file_type, extensions in file_types.iteritems():
+    for file_type, extensions in file_types.items():
         if any(url.endswith(extension) for extension in extensions):
             return file_type
 
-    resource_format, encoding = mimetypes.guess_type(url)
-    if resource_format:
+    if use_mimetypes:
+        resource_format, encoding = mimetypes.guess_type(url)
         return resource_format
 
     return None
@@ -159,7 +224,7 @@ class SpatialHarvester(HarvesterBase):
                     if not isinstance(source_config_obj[key],bool):
                         raise ValueError('%s must be boolean' % key)
 
-        except ValueError, e:
+        except ValueError as e:
             raise e
 
         return source_config
@@ -207,7 +272,7 @@ class SpatialHarvester(HarvesterBase):
         :returns: A dataset dictionary (package_dict)
         :rtype: dict
         '''
-        
+
         tags = []
 
         if 'tags' in iso_values:
@@ -259,7 +324,7 @@ class SpatialHarvester(HarvesterBase):
         if package is None or package.title != iso_values['title']:
             name = self._gen_new_name(iso_values['title'])
             if not name:
-                name = self._gen_new_name(str(iso_values['guid']))
+                name = self._gen_new_name(six.text_type(iso_values['guid']))
             if not name:
                 raise Exception('Could not generate a unique name from the title or the GUID. Please choose a more unique title.')
             package_dict['name'] = name
@@ -358,7 +423,7 @@ class SpatialHarvester(HarvesterBase):
                         parties[party['organisation-name']].append(party['role'])
                 else:
                     parties[party['organisation-name']] = [party['role']]
-            extras['responsible-party'] = [{'name': k, 'roles': v} for k, v in parties.iteritems()]
+            extras['responsible-party'] = [{'name': k, 'roles': v} for k, v in parties.items()]
 
         if len(iso_values['bbox']) > 0:
             bbox = iso_values['bbox'][0]
@@ -372,8 +437,8 @@ class SpatialHarvester(HarvesterBase):
                 xmax = float(bbox['east'])
                 ymin = float(bbox['south'])
                 ymax = float(bbox['north'])
-            except ValueError, e:
-                self._save_object_error('Error parsing bounding box value: {0}'.format(str(e)),
+            except ValueError as e:
+                self._save_object_error('Error parsing bounding box value: {0}'.format(six.text_type(e)),
                                     harvest_object, 'Import')
             else:
                 # Construct a GeoJSON extent so ckanext-spatial can register the extent geometry
@@ -403,7 +468,7 @@ class SpatialHarvester(HarvesterBase):
                 url = resource_locator.get('url', '').strip()
                 if url:
                     resource = {}
-                    resource['format'] = guess_resource_format(url)
+                    resource['format'] = guess_resource_format(resource_locator)
                     if resource['format'] == 'wms' and config.get('ckanext.spatial.harvest.validate_wms', False):
                         # Check if the service is a view service
                         test_url = url.split('?')[0] if '?' in url else url
@@ -421,16 +486,17 @@ class SpatialHarvester(HarvesterBase):
                         })
                     package_dict['resources'].append(resource)
 
+        extras['lineage'] = iso_values.get('lineage')
 
         # Add default_extras from config
         default_extras = self.source_config.get('default_extras',{})
         if default_extras:
            override_extras = self.source_config.get('override_extras',False)
-           for key,value in default_extras.iteritems():
+           for key,value in default_extras.items():
               log.debug('Processing extra %s', key)
               if not key in extras or override_extras:
                  # Look for replacement strings
-                 if isinstance(value,basestring):
+                 if isinstance(value,six.string_types):
                     value = value.format(harvest_source_id=harvest_object.job.source.id,
                              harvest_source_url=harvest_object.job.source.url.strip('/'),
                              harvest_source_title=harvest_object.job.source.title,
@@ -439,7 +505,7 @@ class SpatialHarvester(HarvesterBase):
                  extras[key] = value
 
         extras_as_dict = []
-        for key, value in extras.iteritems():
+        for key, value in extras.items():
             if isinstance(value, (list, dict)):
                 extras_as_dict.append({'key': key, 'value': json.dumps(value)})
             else:
@@ -533,8 +599,8 @@ class SpatialHarvester(HarvesterBase):
 
             iso_parser = ISODocument(harvest_object.content)
             iso_values = iso_parser.read_values()
-        except Exception, e:
-            self._save_object_error('Error parsing ISO document for object {0}: {1}'.format(harvest_object.id, str(e)),
+        except Exception as e:
+            self._save_object_error('Error parsing ISO document for object {0}: {1}'.format(harvest_object.id, six.text_type(e)),
                                     harvest_object, 'Import')
             return False
 
@@ -604,7 +670,7 @@ class SpatialHarvester(HarvesterBase):
 
         # The default package schema does not like Upper case tags
         tag_schema = logic.schema.default_tags_schema()
-        tag_schema['name'] = [not_empty, unicode]
+        tag_schema['name'] = [not_empty, six.text_type]
 
         # Flag this object as the current one
         harvest_object.current = True
@@ -617,8 +683,8 @@ class SpatialHarvester(HarvesterBase):
 
             # We need to explicitly provide a package ID, otherwise ckanext-spatial
             # won't be be able to link the extent to the package.
-            package_dict['id'] = unicode(uuid.uuid4())
-            package_schema['id'] = [unicode]
+            package_dict['id'] = six.text_type(uuid.uuid4())
+            package_schema['id'] = [six.text_type]
 
             # Save reference to the package on the object
             harvest_object.package_id = package_dict['id']
@@ -632,8 +698,8 @@ class SpatialHarvester(HarvesterBase):
             try:
                 package_id = p.toolkit.get_action('package_create')(context, package_dict)
                 log.info('Created new package %s with guid %s', package_id, harvest_object.guid)
-            except p.toolkit.ValidationError, e:
-                self._save_object_error('Validation Error: %s' % str(e.error_summary), harvest_object, 'Import')
+            except p.toolkit.ValidationError as e:
+                self._save_object_error('Validation Error: %s' % six.text_type(e.error_summary), harvest_object, 'Import')
                 return False
 
         elif status == 'change':
@@ -678,8 +744,8 @@ class SpatialHarvester(HarvesterBase):
                 try:
                     package_id = p.toolkit.get_action('package_update')(context, package_dict)
                     log.info('Updated package %s with guid %s', package_id, harvest_object.guid)
-                except p.toolkit.ValidationError, e:
-                    self._save_object_error('Validation Error: %s' % str(e.error_summary), harvest_object, 'Import')
+                except p.toolkit.ValidationError as e:
+                    self._save_object_error('Validation Error: %s' % six.text_type(e.error_summary), harvest_object, 'Import')
                     return False
 
         model.Session.commit()
@@ -693,14 +759,10 @@ class SpatialHarvester(HarvesterBase):
         Uses owslib WMS reader to parse the response.
         '''
         try:
-            capabilities_url = wms.WMSCapabilitiesReader().capabilities_url(url)
-            res = urllib2.urlopen(capabilities_url, None, 10)
-            xml = res.read()
-
-            s = wms.WebMapService(url, xml=xml)
+            s = wms.WebMapService(url)
             return isinstance(s.contents, dict) and s.contents != {}
-        except Exception, e:
-            log.error('WMS check for %s failed with exception: %s' % (url, str(e)))
+        except Exception as e:
+            log.error('WMS check for %s failed with exception: %s' % (url, six.text_type(e)))
         return False
 
     def _get_object_extra(self, harvest_object, key):
@@ -791,7 +853,7 @@ class SpatialHarvester(HarvesterBase):
         DEPRECATED: Use _get_content_as_unicode instead
         '''
         url = url.replace(' ', '%20')
-        http_response = urllib2.urlopen(url)
+        http_response = urlopen(url)
         return http_response.read()
 
     def _get_content_as_unicode(self, url):
@@ -842,8 +904,8 @@ class SpatialHarvester(HarvesterBase):
 
         try:
             xml = etree.fromstring(document_string)
-        except etree.XMLSyntaxError, e:
-            self._save_object_error('Could not parse XML file: {0}'.format(str(e)), harvest_object, 'Import')
+        except etree.XMLSyntaxError as e:
+            self._save_object_error('Could not parse XML file: {0}'.format(six.text_type(e)), harvest_object, 'Import')
             return False, None, []
 
         valid, profile, errors = validator.is_valid(xml)

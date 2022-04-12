@@ -1,15 +1,18 @@
+import six
 import logging
 from string import Template
 
 from ckan.model import Session, Package
-from ckan.lib.base import config
+import ckantoolkit as tk
 
 from ckanext.spatial.model import PackageExtent
-from shapely.geometry import asShape
+from shapely.geometry import shape
+
 
 from ckanext.spatial.geoalchemy_common import (WKTElement, ST_Transform,
                                                compare_geometry_fields,
                                                )
+config = tk.config
 
 log = logging.getLogger(__name__)
 
@@ -50,13 +53,13 @@ def save_package_extent(package_id, geometry = None, srid = None):
     existing_package_extent = Session.query(PackageExtent).filter(PackageExtent.package_id==package_id).first()
 
     if geometry:
-        shape = asShape(geometry)
+        geom_obj = shape(geometry)
 
         if not srid:
             srid = db_srid
 
         package_extent = PackageExtent(package_id=package_id,
-                                       the_geom=WKTElement(shape.wkt, srid))
+                                       the_geom=WKTElement(geom_obj.wkt, srid))
 
     # Check if extent exists
     if existing_package_extent:
@@ -96,10 +99,10 @@ def validate_bbox(bbox_values):
     Any problems and it returns None.
     '''
 
-    if isinstance(bbox_values,basestring):
+    if isinstance(bbox_values,six.string_types):
         bbox_values = bbox_values.split(',')
 
-    if len(bbox_values) is not 4:
+    if len(bbox_values) != 4:
         return None
 
     try:
@@ -108,7 +111,7 @@ def validate_bbox(bbox_values):
         bbox['miny'] = float(bbox_values[1])
         bbox['maxx'] = float(bbox_values[2])
         bbox['maxy'] = float(bbox_values[3])
-    except ValueError,e:
+    except ValueError as e:
         return None
 
     return bbox
@@ -167,7 +170,7 @@ def bbox_query_ordered(bbox, srid=None):
 
     input_geometry = _bbox_2_wkt(bbox, srid)
 
-    params = {'query_bbox': str(input_geometry),
+    params = {'query_bbox': six.text_type(input_geometry),
               'query_srid': input_geometry.srid}
 
     # First get the area of the query box
