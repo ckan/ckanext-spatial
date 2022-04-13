@@ -92,7 +92,6 @@ class SpatialMetadata(p.SingletonPlugin):
         ''' Set up the resource library, public directory and
         template directory for all the spatial extensions
         '''
-        tk.add_public_directory(config, '../public')
         tk.add_template_directory(config, '../templates')
         tk.add_resource('../public', 'ckanext-spatial')
 
