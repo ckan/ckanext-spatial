@@ -1,13 +1,13 @@
 leaflet_js:
   filter: rjsmin
-  output: ckanext-spatial%(version)s_leaflet.js
+  output: ckanext-spatial/%(version)s_leaflet.js
   contents:
     - js/vendor/leaflet/leaflet.js
     - js/vendor/leaflet.draw/leaflet.draw.js
 
 dataset_map_js:
   filter: rjsmin
-  output: ckanext-spatial%(version)s_dataset_map.js
+  output: ckanext-spatial/%(version)s_dataset_map.js
   extra:
     preload:
       - base/main
@@ -18,14 +18,14 @@ dataset_map_js:
 
 dataset_map_css:
   filters: cssrewrite
-  output: ckanext-spatial%(version)s_dataset_map.css
+  output: ckanext-spatial/%(version)s_dataset_map.css
   contents:
     - js/vendor/leaflet/leaflet.css
     - css/dataset_map.css
 
 spatial_query_js:
   filter: rjsmin
-  output: ckanext-spatial%(version)s_spatial_query.js
+  output: ckanext-spatial/%(version)s_spatial_query.js
   extra:
     preload:
       - base/main
@@ -36,7 +36,7 @@ spatial_query_js:
 
 spatial_query_css:
   filters: cssrewrite
-  output: ckanext-spatial%(version)s_spatial_query.css
+  output: ckanext-spatial/%(version)s_spatial_query.css
   contents:
     - js/vendor/leaflet/leaflet.css
     - js/vendor/leaflet.draw/leaflet.draw.css
