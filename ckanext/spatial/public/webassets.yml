@@ -17,7 +17,6 @@ dataset_map_js:
     - js/dataset_map.js
 
 dataset_map_css:
-  filters: cssrewrite
   output: ckanext-spatial/%(version)s_dataset_map.css
   contents:
     - js/vendor/leaflet/leaflet.css
@@ -35,7 +34,6 @@ spatial_query_js:
     - js/spatial_query.js
 
 spatial_query_css:
-  filters: cssrewrite
   output: ckanext-spatial/%(version)s_spatial_query.css
   contents:
     - js/vendor/leaflet/leaflet.css
