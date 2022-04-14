@@ -305,7 +305,7 @@ def _extract_waf(content, base_url, scraper, results = None, depth=0):
             except Exception as e:
                 print(six.text_type(e))
                 continue
-            _extract_waf(content, new_url, scraper, results, new_depth)
+            _extract_waf(six.text_type(content), new_url, scraper, results, new_depth)
             continue
         if not url.endswith('.xml'):
             continue
