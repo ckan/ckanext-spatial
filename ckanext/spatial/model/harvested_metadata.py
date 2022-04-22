@@ -1492,11 +1492,18 @@ class ISODocument(MappedXmlDocument):
             ind = author.get('individual-name')
             org = author.get('organisation-name')
             if ind:
-                name_list = ind.split()
-                value['author'].append({
-                    "given": ' '.join(name_list[0:-1]),
-                    "family": name_list[-1]
-                })
+                if ',' in ind: # string is last name first so split on commas
+                    name_list = ind.split(',')
+                    value['author'].append({
+                        "given": name_list[1].strip(),
+                        "family": name_list[0]
+                    })
+                else: # fall back to spliting on spaces
+                    name_list = ind.split()
+                    value['author'].append({
+                        "given": ' '.join(name_list[0:-1]),
+                        "family": name_list[-1]
+                    })
             else:
                 value['author'].append({"literal": org})
 
