@@ -1,8 +1,5 @@
 -e git+https://github.com/ckan/ckan#egg=ckan
 -r https://raw.githubusercontent.com/ckan/ckan/master/requirements.txt
-GeoAlchemy>=0.6
-OWSLib==0.8.6
-lxml>=2.3
-pyparsing==1.5.6
-Sphinx==1.2.3
-sphinx-rtd-theme==0.1.7
+-r requirements.txt
+Sphinx==1.8.5
+sphinx-rtd-theme==0.4.3

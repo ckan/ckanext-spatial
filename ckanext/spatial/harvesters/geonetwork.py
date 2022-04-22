@@ -11,7 +11,7 @@ from ckanext.spatial.model import ISOElement
 
 from ckan.logic import ValidationError, NotFound, get_action
 
-from pylons import config
+from ckantoolkit import config
 from datetime import datetime
 
 log = logging.getLogger(__name__)
@@ -46,9 +46,8 @@ for element in ISODocument.elements:
         element.search_paths.append(newpath)
         log.info("Added old URI for gml to %s", element.name)
 
-class GeoNetworkHarvester(CSWHarvester, SingletonPlugin):
 
-    #p.implements(ISpatialHarvester, inherit=True)
+class GeoNetworkHarvester(CSWHarvester, SingletonPlugin):
 
     def info(self):
         return {
@@ -146,9 +145,9 @@ class GeoNetworkHarvester(CSWHarvester, SingletonPlugin):
                         #else:
                         #validated_groups.append(group['id'])
                         validated_groups.append({'name': groupname})
-                    except NotFound, e:
+                    except NotFound as e:
                         log.warning('Group %s from category %s is not available' % (groupname, cat))
-        except Exception, e:
+        except Exception as e:
             log.warning('Error handling groups for metadata %s' % harvest_object.guid)
 
         return validated_groups

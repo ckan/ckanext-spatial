@@ -7,7 +7,10 @@ import datetime
 from ckan.lib.helpers import url_for
 from copy import copy
 from collections import OrderedDict
+import six
+
 import logging
+import ckan.lib.munge as munge
 log = logging.getLogger(__name__)
 
 
@@ -44,10 +47,7 @@ class MappedXmlDocument(MappedXmlObject):
     def get_xml_tree(self):
         if self.xml_tree is None:
             parser = etree.XMLParser(remove_blank_text=True)
-            if type(self.xml_str) == unicode:
-                xml_str = self.xml_str.encode('utf8')
-            else:
-                xml_str = self.xml_str
+            xml_str = six.ensure_str(self.xml_str)
             self.xml_tree = etree.fromstring(xml_str, parser=parser)
         return self.xml_tree
 
@@ -108,7 +108,7 @@ class MappedXmlElement(MappedXmlObject):
         elif type(element) == etree._ElementStringResult:
             value = str(element)
         elif type(element) == etree._ElementUnicodeResult:
-            value = unicode(element)
+            value = str(element)
         else:
             value = self.element_tostring(element)
         return value
@@ -225,6 +225,7 @@ class ISOResourceLocator(ISOElement):
             name="name",
             search_paths=[
                 "gmd:name/gco:CharacterString/text()",
+                "gmd:name/gmx:MimeFileType/text()",
                 # 19115-3
                 "cit:name/gco:CharacterString/text()",
             ],
@@ -802,7 +803,7 @@ class ISOCitation(ISOElement):
             name="author",
             search_paths=[
                 # 19115-3
-                "cit:citedResponsibleParty/cit:CI_Responsibility"
+                "cit:citedResponsibleParty/cit:CI_Responsibility[not(cit:role/cit:CI_RoleCode/text() = 'publisher' or cit:role/cit:CI_RoleCode/@codeListValue ='publisher')]"
             ],
             multiplicity="1..*",
         ),
@@ -810,7 +811,7 @@ class ISOCitation(ISOElement):
             name="issued",
             search_paths=[
                 # 19115-3
-                "ancestor::mdb:MD_Metadata/mdb:identificationInfo/mri:MD_DataIdentification/mri:citation/cit:CI_Citation/cit:date/cit:CI_Date[cit:dateType/cit:CI_DateTypeCode/@codeListValue != 'creation']",
+                "cit:date/cit:CI_Date[cit:dateType/cit:CI_DateTypeCode/@codeListValue != 'creation']",
                 "ancestor::mdb:MD_Metadata/mdb:dateInfo/cit:CI_Date"
             ],
             multiplicity="1..*",
@@ -825,12 +826,25 @@ class ISOCitation(ISOElement):
             multiplicity="1",
         ),
         ISOElement(
+            name="edition",
+            search_paths=[
+                "cit:edition/gco:CharacterString/text()"
+            ],
+            multiplicity="0..1",
+        ),
+        ISOElement(
+            name="edition-date",
+            search_paths=[
+                "cit:editionDate/gco:DateTime/text()"
+            ],
+            multiplicity="0..1",
+        ),
+        ISOElement(
             name="publisher",
             search_paths=[
                 # 19115-3
-                "cit:citedResponsibleParty/cit:CI_Responsibility[cit:role/cit:CI_RoleCode/text() ='publisher']/cit:party/cit:CI_Individual/cit:name/gco:CharacterString/text()[boolean(.)]",
-                "cit:citedResponsibleParty/cit:CI_Responsibility[cit:role/cit:CI_RoleCode/text() ='publisher']/cit:party/cit:CI_Organisation/cit:name/gco:CharacterString/text()[boolean(.)]",
-
+                "cit:citedResponsibleParty/cit:CI_Responsibility[cit:role/cit:CI_RoleCode/text() ='publisher' or cit:role/cit:CI_RoleCode/@codeListValue ='publisher']/cit:party/cit:CI_Organisation/cit:name/gco:CharacterString/text()",
+                "cit:citedResponsibleParty/cit:CI_Responsibility[cit:role/cit:CI_RoleCode/text() ='publisher' or cit:role/cit:CI_RoleCode/@codeListValue ='publisher']/cit:party/cit:CI_Individual/cit:name/gco:CharacterString/text()",
             ],
             multiplicity="1",
         ),
@@ -855,6 +869,7 @@ class ISODocument(MappedXmlDocument):
             search_paths=[
                 "gmd:language/gmd:LanguageCode/@codeListValue",
                 "gmd:language/gmd:LanguageCode/text()",
+                "gmd:language/gco:CharacterString/text()",
                 # 19115-3
                 "mdb:defaultLocale/lan:PT_Locale/lan:language/lan:LanguageCode/@codeListValue",
                 "mdb:defaultLocale/lan:PT_Locale/lan:language/lan:LanguageCode/text()",
@@ -1104,6 +1119,17 @@ class ISODocument(MappedXmlDocument):
             name="keyword-controlled-other",
             search_paths=[
                 "gmd:identificationInfo/srv:SV_ServiceIdentification/srv:keywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString/text()",
+            ],
+            multiplicity="*",
+        ),
+        ISOElement(
+            name="keyword-project",
+            search_paths=[
+                # ISO19115-3
+                "mdb:identificationInfo/mri:MD_DataIdentification/mri:descriptiveKeywords/mri:MD_Keywords[mri:type/mri:MD_KeywordTypeCode/text() = 'project']/mri:keyword/gco:CharacterString/text()",
+                "mdb:identificationInfo/mri:MD_DataIdentification/mri:descriptiveKeywords/mri:MD_Keywords[mri:type/mri:MD_KeywordTypeCode/@codeListValue = 'project']/mri:keyword/gco:CharacterString/text()",
+                "mdb:identificationInfo/srv:SV_ServiceIdentification/mri:descriptiveKeywords/mri:MD_Keywords[mri:type/mri:MD_KeywordTypeCode/text() = 'project']/mri:keyword/gco:CharacterString/text()",
+                "mdb:identificationInfo/srv:SV_ServiceIdentification/mri:descriptiveKeywords/mri:MD_Keywords[mri:type/mri:MD_KeywordTypeCode/@codeListValue = 'project']/mri:keyword/gco:CharacterString/text()",
             ],
             multiplicity="*",
         ),
@@ -1461,13 +1487,17 @@ class ISODocument(MappedXmlDocument):
         self.infer_guid(values)
         self.infer_temporal_vertical_extent(values)
         self.infer_citation(values)
+        self.drop_empty_objects(values)
         return values
 
     def infer_citation(self, values):
         value = values['citation'][0]
         if len(value['issued']):
             dates = value['issued']
-            dates.sort(reverse=True)
+            if isinstance(dates[0], str):
+                dates.sort(reverse=True)
+            else:  # it's an object
+                dates = sorted(dates, key=lambda k: k['value'], reverse=True)
             issued_date = str(dates[0]['value'])
             value['issued'] = [{"date-parts": [issued_date[:4], issued_date[5:7], issued_date[8:10]]}]
         value['id'] = self.calculate_identifier(value['id'])
@@ -1486,11 +1516,18 @@ class ISODocument(MappedXmlDocument):
             ind = author.get('individual-name')
             org = author.get('organisation-name')
             if ind:
-                name_list = ind.split()
-                value['author'].append({
-                    "given": ' '.join(name_list[0:-1]),
-                    "family": name_list[-1]
-                })
+                if ',' in ind: # string is last name first so split on commas
+                    name_list = ind.split(',')
+                    value['author'].append({
+                        "given": name_list[1].strip(),
+                        "family": name_list[0]
+                    })
+                else: # fall back to spliting on spaces
+                    name_list = ind.split()
+                    value['author'].append({
+                        "given": ' '.join(name_list[0:-1]),
+                        "family": name_list[-1]
+                    })
             else:
                 value['author'].append({"literal": org})
 
@@ -1501,6 +1538,7 @@ class ISODocument(MappedXmlDocument):
         identifier = values.get('unique-resource-identifier-full', {})
         if identifier:
             doi = self.calculate_identifier(identifier)
+            doi = re.sub(r'^http.*doi\.org/', '', doi, flags=re.IGNORECASE)  # strip https://doi.org/ and the like
             if doi and re.match(r'^10.\d{4,9}\/[-._;()/:A-Z0-9]+$', doi, re.IGNORECASE):
                 value['DOI'] = doi
         # TODO: could we have more then one doi?
@@ -1514,17 +1552,17 @@ class ISODocument(MappedXmlDocument):
             field[lang]['abstract'] = abstract.get(lang)
             field[lang]['language'] = lang
             field[lang]['URL'] = url_for(
-                controller='package',
+                controller='dataset',
                 action='read',
-                id=values.get('guid', ''),
+                id=munge.munge_name(values.get('guid', '')),
                 local=lang,
                 qualified=True
             )
             field[lang] = json.dumps([field[lang]])
             # the dump converts utf-8 escape sequences to unicode escape
             # sequences so we have to convert back again
-            if(field[lang] and re.search(r'\\u[0-9a-fA-F]{4}', field[lang])):
-                field[lang] = field[lang].decode("raw_unicode_escape")
+            # if(field[lang] and re.search(r'\\u[0-9a-fA-F]{4}', field[lang])):
+            #     field[lang] = field[lang].decode("raw_unicode_escape")
             # double escape any double quotes that are already escaped
             field[lang] = field[lang].replace('\"', '\\"')
         values['citation'] = json.dumps(field)
@@ -1585,6 +1623,23 @@ class ISODocument(MappedXmlDocument):
         key = key[:2]
         return key
 
+    def unescape_unicode(self, encoded_str):
+        if not encoded_str:
+            return encoded_str
+
+        while(re.search(r'\\u[0-9a-fA-F]{4}', encoded_str)):
+            if isinstance(encoded_str, str):  # encode to get bytestring as decode only works on bytes
+                encoded_str = encoded_str.encode('raw_unicode_escape').decode('unicode_escape')
+            else:  # we have bytes
+                encoded_str = encoded_str.decode().encode('raw_unicode_escape').decode('unicode_escape')
+
+        # newline escape seem to only work with exact matches. regex did not pickup the multi escape
+        encoded_str = encoded_str.replace('\\\\n', '\n')
+        encoded_str = encoded_str.replace('\\\n', '\n')
+        encoded_str = encoded_str.replace('\\n', '\n')
+
+        return encoded_str
+
     def local_to_dict(self, item, defaultLangKey):
         # XML parser seems to generate unicode strings containg utf-8 escape
         # charicters even though the file is utf-8. To fix must encode unicode
@@ -1595,32 +1650,21 @@ class ISODocument(MappedXmlDocument):
 
         default = item.get('default').strip()
         # decode double escaped unicode chars
-        if(default and re.search(r'\\\\u[0-9a-fA-F]{4}', default)):
-            default = default.decode("raw_unicode_escape")
-        if isinstance(default, unicode):
-            try:
-                default = default.encode('utf-8')
-            except Exception:
-                log.error('Failed to encode string "%r" as utf-8', default)
+        default = self.unescape_unicode(default)
+
         if len(default) > 1:
             out.update({defaultLangKey: default})
 
         local = item.get('local')
         if isinstance(local, dict):
             langKey = self.cleanLangKey(local.get('language_code'))
-            if isinstance(langKey, unicode):
-                langKey = langKey.encode('utf-8')
+            # langKey = langKey.encode('utf-8')
 
             LangValue = item.get('local').get('value')
             LangValue = LangValue.strip()
             # decode double escaped unicode chars
-            if(LangValue and re.search(r'\\\\u[0-9a-fA-F]{4}', LangValue)):
-                LangValue = LangValue.decode("raw_unicode_escape")
-            if isinstance(LangValue, unicode):
-                try:
-                    LangValue = LangValue.encode('utf-8')
-                except Exception:
-                    log.error('Failed to encode string "%r" as utf-8', LangValue)
+            LangValue = self.unescape_unicode(LangValue)
+
             if len(LangValue) > 1:
                 out.update({langKey: LangValue})
 
@@ -1669,6 +1713,23 @@ class ISODocument(MappedXmlDocument):
     def infer_spatial(self, values):
         geom = None
         for xmlGeom in values.get('spatial', []):
+            # convert bytes to str
+            try:
+                xmlGeom = xmlGeom.decode()
+            except (UnicodeDecodeError, AttributeError):
+                pass
+
+            if isinstance(xmlGeom, list):
+                for n, x in enumerate(xmlGeom):
+                    try:
+                        xmlGeom[n] = x.decode()
+                    except (UnicodeDecodeError, AttributeError):
+                        pass
+
+            if isinstance(xmlGeom, list):
+                if len(xmlGeom) == 1:
+                    xmlGeom = xmlGeom[0]
+
             try:
                 geom = ogr.CreateGeometryFromGML(xmlGeom)
             except Exception:
@@ -1683,6 +1744,11 @@ class ISODocument(MappedXmlDocument):
                         return
         if geom:
             values['spatial'] = geom.ExportToJson()
+            if not values.get('bbox'):
+                extent = geom.GetEnvelope()
+                if extent:
+                    values['bbox'].append({'west': '', 'east': '', 'north': '', 'south': ''})
+                    values['bbox'][0]['west'], values['bbox'][0]['east'], values['bbox'][0]['north'], values['bbox'][0]['south'] = extent
 
     def clean_metadata_reference_date(self, values):
         dates = []
@@ -1783,12 +1849,19 @@ class ISODocument(MappedXmlDocument):
         for responsible_party in values['responsible-organisation']:
             if isinstance(responsible_party, dict) and \
                isinstance(responsible_party.get('contact-info'), dict) and \
-               responsible_party['contact-info'].has_key('email'):
+               'email' in responsible_party['contact-info']:
                 value = responsible_party['contact-info']['email']
                 if value:
                     break
         values['contact-email'] = value
 
+    def drop_empty_objects(self, values):
+        to_drop = []
+        for key, value in values.items():
+            if value == {} or value == []:
+                to_drop.append(key)
+        for key in to_drop:
+            del values[key]
 
 class GeminiDocument(ISODocument):
     '''

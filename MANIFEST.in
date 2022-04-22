@@ -2,12 +2,11 @@ recursive-include ckanext/spatial/templates                                     
 recursive-include ckanext/spatial/public                                              *
 recursive-include ckanext/spatial/validation/xml                                      *
 
-recursive-include ckanext/spatial/public/ckanext/spatial/js/openlayers/               *.js
-recursive-include ckanext/spatial/public/ckanext/spatial/js/openlayers/               *.txt
-recursive-include ckanext/spatial/public/ckanext/spatial/js/openlayers/               *.cfg
-recursive-include ckanext/spatial/public/ckanext/spatial/js/openlayers/img/           *.gif
-recursive-include ckanext/spatial/public/ckanext/spatial/js/openlayers/img/           *.png
-recursive-include ckanext/spatial/public/ckanext/spatial/js/openlayers/theme/default/ *.css
-recursive-include ckanext/spatial/public/ckanext/spatial/js/                          *.js
-recursive-include ckanext/spatial/public/ckanext/spatial/                             *.css
-
+recursive-include ckanext/spatial/public/js/vendor/openlayers/               *.js
+recursive-include ckanext/spatial/public/js/vendor/openlayers/               *.txt
+recursive-include ckanext/spatial/public/js/vendor/openlayers/               *.cfg
+recursive-include ckanext/spatial/public/js/vendor/openlayers/img/           *.gif
+recursive-include ckanext/spatial/public/js/vendor/openlayers/img/           *.png
+recursive-include ckanext/spatial/public/js/vendor/openlayers/theme/default/ *.css
+recursive-include ckanext/spatial/public/js/                          *.js
+recursive-include ckanext/spatial/public/                             *.css

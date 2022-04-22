@@ -135,7 +135,7 @@ class WAFHarvesterCIOOS(WAFHarvester, SingletonPlugin):
             schema_languages = p.toolkit.h.fluent_form_languages(schema=schema)
 
             # init language key
-            field_value = {l:[] for l in schema_languages}
+            field_value = {l: [] for l in schema_languages}
 
             # process tags by convert list of language dictinarys into
             # a dictinary of language lists

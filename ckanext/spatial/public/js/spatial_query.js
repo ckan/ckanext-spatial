@@ -33,10 +33,10 @@ this.ckan.module('spatial-query', function ($, _) {
       if (user_default_extent ){
         if (user_default_extent instanceof Array) {
           // Assume it's a pair of coords like [[90, 180], [-90, -180]]
-          this.options.default_extent = user_default_extent;
+          module.options.default_extent = user_default_extent;
         } else if (user_default_extent instanceof Object) {
           // Assume it's a GeoJSON bbox
-          this.options.default_extent = new L.GeoJSON(user_default_extent).getBounds();
+          module.options.default_extent = new L.GeoJSON(user_default_extent).getBounds();
         }
       }
       this.el.ready(this._onReady);
@@ -69,9 +69,10 @@ this.ckan.module('spatial-query', function ($, _) {
       var extentLayer;
       var previous_box;
       var previous_extent;
-      var is_exanded = false;
+      var is_expanded = false;
       var should_zoom = true;
       var form = $("#dataset-search");
+
       // CKAN 2.1
       if (!form.length) {
           form = $(".search-form");
@@ -89,10 +90,14 @@ this.ckan.module('spatial-query', function ($, _) {
       // OK map time
       map = ckan.commonLeafletMap(
         'dataset-map-container',
-        this.options.map_config,
+        module.options.map_config,
         {
           attributionControl: false,
-          drawControlTooltips: false
+          drawControlTooltips: false,
+          fullscreenControl: true,
+          fullscreenControlOptions: {
+            position: 'topleft'
+          }
         }
       );
 
@@ -109,15 +114,48 @@ this.ckan.module('spatial-query', function ($, _) {
         }
       }));
 
+      L.Control.RemoveAll = L.Control.extend(
+      {
+          options:
+          {
+              position: 'topright',
+          },
+          onAdd: function (map) {
+              var controlDiv = L.DomUtil.create('div', 'leaflet-draw-toolbar leaflet-bar');
+              L.DomEvent
+                  .addListener(controlDiv, 'click', L.DomEvent.stopPropagation)
+                  .addListener(controlDiv, 'click', L.DomEvent.preventDefault)
+                  .addListener(controlDiv, 'click', function () {
+                  if (extentLayer) {
+                    map.removeLayer(extentLayer);
+                    var url = new URL(window.location.href);
+                    var search_params = url.searchParams;
+                    search_params.delete('ext_bbox');
+                    search_params.delete('ext_prev_extent');
+                    search_params.delete('ext_location');
+                    url.search = search_params.toString();
+                    window.location.href = url.toString();
+                  }
+              });
+
+              var controlUI = L.DomUtil.create('a', 'leaflet-draw-edit-remove', controlDiv);
+              controlUI.title = 'Clear';
+              controlUI.href = '#';
+              return controlDiv;
+          }
+      });
+      var removeAllControl = new L.Control.RemoveAll();
+      map.addControl(removeAllControl);
+
       // OK add the expander
       $('a.leaflet-draw-draw-rectangle', module.el).on('click', function(e) {
-        if (!is_exanded && this.options.spatial_widget_expands) {
+        if (!is_expanded && String(module.options.spatial_widget_expands).toLowerCase() === 'true') {
           $('body').addClass('dataset-map-expanded');
           if (should_zoom && !extentLayer) {
             map.zoomIn();
           }
           resetMap();
-          is_exanded = true;
+          is_expanded = true;
         }
       });
 
@@ -133,14 +171,14 @@ this.ckan.module('spatial-query', function ($, _) {
         setPreviousExtent();
         setPreviousBBBox();
         resetMap();
-        is_exanded = false;
+        is_expanded = false;
       });
 
       // Handle the apply expanded action
       $('.apply', buttons).on('click', function() {
         if (extentLayer) {
           $('body').removeClass('dataset-map-expanded');
-          is_exanded = false;
+          is_expanded = false;
           resetMap();
           // Eugh, hacky hack.
           setTimeout(function() {
@@ -158,7 +196,7 @@ this.ckan.module('spatial-query', function ($, _) {
         extentLayer = e.layer;
         $('#ext_bbox').val(extentLayer.getBounds().toBBoxString());
         map.addLayer(extentLayer);
-	if (this.options.spatial_widget_expands) {
+        if (String(module.options.spatial_widget_expands).toLowerCase() === 'true') {
           $('.apply', buttons).removeClass('disabled').addClass('btn-primary');
         } else {
           // Eugh, hacky hack. but submitts the query as there is no apply button

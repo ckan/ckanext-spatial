@@ -1,10 +1,14 @@
+from __future__ import print_function
+
+import six
+from six.moves.urllib.parse import urljoin
+from six.moves import html_parser
 import logging
 import hashlib
-from urlparse import urljoin
+
 import dateutil.parser
 import pyparsing as parse
 import requests
-from HTMLParser import HTMLParser
 from sqlalchemy.orm import aliased
 from sqlalchemy.exc import DataError
 
@@ -12,7 +16,7 @@ from ckan import model
 from ckan.logic import ValidationError, NotFound, get_action
 
 from ckan.plugins.core import SingletonPlugin, implements
-from pylons import config
+from ckantoolkit import config
 
 from ckanext.harvest.interfaces import IHarvester
 from ckanext.harvest.model import HarvestObject
@@ -88,11 +92,10 @@ class WAFHarvester(SpatialHarvester, SingletonPlugin):
                         #else:
                         #validated_groups.append(group['id'])
                         validated_groups.append({'name': groupname})
-                    except NotFound, e:
+                    except NotFound as e:
                         log.warning('Group %s from category %s is not available' % (groupname, cat))
-        except Exception, e:
+        except Exception as e:
             log.warning('Error handling groups for metadata %s' % harvest_object.guid)
-	    log.error('%s',e)
 
         return validated_groups
 
@@ -121,7 +124,7 @@ class WAFHarvester(SpatialHarvester, SingletonPlugin):
         try:
             response = requests.get(source_url, timeout=60)
             response.raise_for_status()
-        except requests.exceptions.RequestException, e:
+        except requests.exceptions.RequestException as e:
             self._save_gather_error('Unable to get content for URL: %s: %r' % \
                                         (source_url, e),harvest_job)
             return None
@@ -154,11 +157,11 @@ class WAFHarvester(SpatialHarvester, SingletonPlugin):
 
         url_to_modified_harvest = {} ## mapping of url to last_modified in harvest
         try:
-            for url, modified_date in _extract_waf(content,source_url,scraper):
+            for url, modified_date in _extract_waf(content, source_url, scraper):
                 url_to_modified_harvest[url] = modified_date
-        except Exception,e:
-            msg = 'Error extracting URLs from %s, error was %s' % (source_url, e)
-            self._save_gather_error(msg,harvest_job)
+        except Exception as e:
+            msg = 'Error extracting URLs from %s, error was %r' % (source_url, e)
+            self._save_gather_error(msg, harvest_job)
             return None
 
         ######  Compare source and db ######
@@ -258,7 +261,7 @@ class WAFHarvester(SpatialHarvester, SingletonPlugin):
         # Get contents
         try:
             content = self._get_content_as_unicode(url)
-        except Exception, e:
+        except Exception as e:
             msg = 'Could not harvest WAF link {0}: {1}'.format(url, e)
             self._save_object_error(msg, harvest_object)
             return False
@@ -337,16 +340,18 @@ def _extract_waf(content, base_url, scraper, results = None, depth=0):
     base_url += '/'
 
     try:
-        parsed = scrapers[scraper].parseString(content)
-    except parse.ParseException:
-        parsed = scrapers['other'].parseString(content)
+        parsed = scrapers[scraper].parseString(str(content))
+    except parse.ParseException as pex:
+        log.error(pex)
+        parsed = scrapers['other'].parseString(str(content))
+    except Exception as e:
+        log.exception(e)
 
     for record in parsed:
         url = record.url
 
-	if '&#' in url:
-	    h = HTMLParser()
-            url=h.unescape(url)
+        if '&#' in url:
+            url = html_parser.unescape(url)
             record.url = url
 
         if not url:
@@ -371,8 +376,8 @@ def _extract_waf(content, base_url, scraper, results = None, depth=0):
             try:
                 response = requests.get(new_url)
                 content = response.content
-            except Exception, e:
-                print str(e)
+            except Exception as e:
+                print(six.text_type(e))
                 continue
             _extract_waf(content, new_url, scraper, results, new_depth)
             continue
@@ -381,8 +386,8 @@ def _extract_waf(content, base_url, scraper, results = None, depth=0):
         date = record.date
         if date:
             try:
-                date = str(dateutil.parser.parse(date))
-            except Exception, e:
+                date = six.text_type(dateutil.parser.parse(date))
+            except Exception as e:
                 raise
                 date = None
         results.append((urljoin(base_url, record.url), date))
