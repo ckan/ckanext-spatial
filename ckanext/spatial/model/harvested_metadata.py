@@ -304,6 +304,47 @@ class ISOResourceLocator(ISOElement):
         )
     ]
 
+class ISOIdentifier(ISOElement):
+    elements=[
+        ISOElement(
+            name="code",
+            search_paths=[
+                # ISO19115-3
+                "mcc:code/gco:CharacterString/text()",
+                "mcc:code/gcx:Anchor/text()",
+            ],
+            multiplicity="0..1",
+        ),
+        ISOElement(
+            name="authority",
+            search_paths=[
+                # ISO19115-3
+                "mcc:authority/cit:CI_Citation/cit:title/gco:CharacterString/text()",
+                "mcc:authority/cit:CI_Citation/cit:title/gcx:Anchor/text()",
+            ],
+            multiplicity="0..1",
+        ),
+        ISOElement(
+            name="code-space",
+            search_paths=[
+                # ISO19115-3
+                "mcc:codeSpace/gco:CharacterString/text()",
+                "mcc:codeSpace/gcx:Anchor/text()",
+            ],
+            multiplicity="0..1",
+        ),
+        ISOElement(
+            name="version",
+            search_paths=[
+                # ISO19115-3
+                "mcc:version/gco:CharacterString/text()",
+                "mcc:version/gcx:Anchor/text()",
+            ],
+            multiplicity="0..1",
+        ),
+    ]
+
+
 
 class ISOResponsibleParty(ISOElement):
 
@@ -316,11 +357,25 @@ class ISOResponsibleParty(ISOElement):
             ],
             multiplicity="0..1",
         ),
+        ISOIdentifier(
+            name="individual-uri",
+            search_paths=[
+                "cit:party/cit:CI_Individual/cit:partyIdentifier",
+            ],
+            multiplicity="0..1",
+        ),
         ISOElement(
             name="organisation-name",
             search_paths=[
                 "gmd:organisationName/gco:CharacterString/text()",
                 "cit:party/cit:CI_Organisation/cit:name/gco:CharacterString/text()",
+            ],
+            multiplicity="0..1",
+        ),
+        ISOIdentifier(
+            name="organisation-uri",
+            search_paths=[
+                "cit:party/cit:CI_Organisation/cit:partyIdentifier",
             ],
             multiplicity="0..1",
         ),
