@@ -312,8 +312,7 @@ class ISOResponsibleParty(ISOElement):
             name="individual-name",
             search_paths=[
                 "gmd:individualName/gco:CharacterString/text()",
-                "cit:party/cit:CI_Individual/cit:name/gco:CharacterString/text()",
-                "cit:party/cit:CI_Organisation/cit:individual/cit:CI_Individual/cit:name/gco:CharacterString/text()",
+                "cit:party/cit:CI_Individual/cit:name/gco:CharacterString/text()|cit:party/cit:CI_Organisation/cit:individual/cit:CI_Individual/cit:name/gco:CharacterString/text()",
             ],
             multiplicity="0..1",
         ),
