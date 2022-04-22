@@ -353,8 +353,7 @@ class ISOResponsibleParty(ISOElement):
             name="individual-name",
             search_paths=[
                 "gmd:individualName/gco:CharacterString/text()",
-                "cit:party/cit:CI_Individual/cit:name/gco:CharacterString/text()",
-                "cit:party/cit:CI_Organisation/cit:individual/cit:CI_Individual/cit:name/gco:CharacterString/text()",
+                "cit:party/cit:CI_Individual/cit:name/gco:CharacterString/text()|cit:party/cit:CI_Organisation/cit:individual/cit:CI_Individual/cit:name/gco:CharacterString/text()",
             ],
             multiplicity="0..1",
         ),
@@ -867,7 +866,7 @@ class ISOCitation(ISOElement):
             name="issued",
             search_paths=[
                 # 19115-3
-                "ancestor::mdb:MD_Metadata/mdb:identificationInfo/mri:MD_DataIdentification/mri:citation/cit:CI_Citation/cit:date/cit:CI_Date[cit:dateType/cit:CI_DateTypeCode/@codeListValue != 'creation']",
+                "cit:date/cit:CI_Date[cit:dateType/cit:CI_DateTypeCode/@codeListValue != 'creation']",
                 "ancestor::mdb:MD_Metadata/mdb:dateInfo/cit:CI_Date"
             ],
             multiplicity="1..*",
@@ -880,6 +879,20 @@ class ISOCitation(ISOElement):
                 "ancestor::mdb:MD_Metadata/mdb:identificationInfo/srv:SV_ServiceIdentification/mri:abstract",
             ],
             multiplicity="1",
+        ),
+        ISOElement(
+            name="edition",
+            search_paths=[
+                "cit:edition/gco:CharacterString/text()"
+            ],
+            multiplicity="0..1",
+        ),
+        ISOElement(
+            name="edition-date",
+            search_paths=[
+                "cit:editionDate/gco:DateTime/text()"
+            ],
+            multiplicity="0..1",
         ),
         ISOElement(
             name="publisher",
@@ -1161,6 +1174,17 @@ class ISODocument(MappedXmlDocument):
             name="keyword-controlled-other",
             search_paths=[
                 "gmd:identificationInfo/srv:SV_ServiceIdentification/srv:keywords/gmd:MD_Keywords/gmd:keyword/gco:CharacterString/text()",
+            ],
+            multiplicity="*",
+        ),
+        ISOElement(
+            name="keyword-project",
+            search_paths=[
+                # ISO19115-3
+                "mdb:identificationInfo/mri:MD_DataIdentification/mri:descriptiveKeywords/mri:MD_Keywords[mri:type/mri:MD_KeywordTypeCode/text() = 'project']/mri:keyword/gco:CharacterString/text()",
+                "mdb:identificationInfo/mri:MD_DataIdentification/mri:descriptiveKeywords/mri:MD_Keywords[mri:type/mri:MD_KeywordTypeCode/@codeListValue = 'project']/mri:keyword/gco:CharacterString/text()",
+                "mdb:identificationInfo/srv:SV_ServiceIdentification/mri:descriptiveKeywords/mri:MD_Keywords[mri:type/mri:MD_KeywordTypeCode/text() = 'project']/mri:keyword/gco:CharacterString/text()",
+                "mdb:identificationInfo/srv:SV_ServiceIdentification/mri:descriptiveKeywords/mri:MD_Keywords[mri:type/mri:MD_KeywordTypeCode/@codeListValue = 'project']/mri:keyword/gco:CharacterString/text()",
             ],
             multiplicity="*",
         ),
@@ -1547,11 +1571,18 @@ class ISODocument(MappedXmlDocument):
             ind = author.get('individual-name')
             org = author.get('organisation-name')
             if ind:
-                name_list = ind.split()
-                value['author'].append({
-                    "given": ' '.join(name_list[0:-1]),
-                    "family": name_list[-1]
-                })
+                if ',' in ind: # string is last name first so split on commas
+                    name_list = ind.split(',')
+                    value['author'].append({
+                        "given": name_list[1].strip(),
+                        "family": name_list[0]
+                    })
+                else: # fall back to spliting on spaces
+                    name_list = ind.split()
+                    value['author'].append({
+                        "given": ' '.join(name_list[0:-1]),
+                        "family": name_list[-1]
+                    })
             else:
                 value['author'].append({"literal": org})
 
@@ -1647,6 +1678,23 @@ class ISODocument(MappedXmlDocument):
         key = key[:2]
         return key
 
+    def unescape_unicode(self, encoded_str):
+        if not encoded_str:
+            return encoded_str
+
+        while(re.search(r'\\u[0-9a-fA-F]{4}', encoded_str)):
+            if isinstance(encoded_str, str):  # encode to get bytestring as decode only works on bytes
+                encoded_str = encoded_str.encode('raw_unicode_escape').decode('unicode_escape')
+            else:  # we have bytes
+                encoded_str = encoded_str.decode().encode('raw_unicode_escape').decode('unicode_escape')
+
+        # newline escape seem to only work with exact matches. regex did not pickup the multi escape
+        encoded_str = encoded_str.replace('\\\\n', '\n')
+        encoded_str = encoded_str.replace('\\\n', '\n')
+        encoded_str = encoded_str.replace('\\n', '\n')
+
+        return encoded_str
+
     def local_to_dict(self, item, defaultLangKey):
         # XML parser seems to generate unicode strings containg utf-8 escape
         # charicters even though the file is utf-8. To fix must encode unicode
@@ -1657,17 +1705,8 @@ class ISODocument(MappedXmlDocument):
 
         default = item.get('default').strip()
         # decode double escaped unicode chars
-        if(default and re.search(r'\\\\u[0-9a-fA-F]{4}', default)):
-            if isinstance(default, str):  # encode to get bytestring as decode only works on bytes
-                default = default.encode().decode('unicode-escape')
-            else:  # we have bytes
-                default = default.decode('unicode-escape')
+        default = self.unescape_unicode(default)
 
-        # this will create a byte string so better to let the json.dumps library handle it
-        # try:
-        #     default = default.encode('utf-8')
-        # except Exception:
-        #     log.error('Failed to encode string "%r" as utf-8', default)
         if len(default) > 1:
             out.update({defaultLangKey: default})
 
@@ -1679,17 +1718,8 @@ class ISODocument(MappedXmlDocument):
             LangValue = item.get('local').get('value')
             LangValue = LangValue.strip()
             # decode double escaped unicode chars
-            if(LangValue and re.search(r'\\\\u[0-9a-fA-F]{4}', LangValue)):
-                if isinstance(LangValue, str):  # encode to get bytestring as decode only works on bytes
-                    LangValue = LangValue.encode().decode('unicode-escape')
-                else:  # we have bytes
-                    LangValue = LangValue.decode('unicode-escape')
+            LangValue = self.unescape_unicode(LangValue)
 
-            # this will create a byte string so better to let the json.dumps library handle it
-            # try:
-            #     LangValue = LangValue.encode('utf-8')
-            # except Exception:
-            #     log.error('Failed to encode string "%r" as utf-8', LangValue)
             if len(LangValue) > 1:
                 out.update({langKey: LangValue})
 
