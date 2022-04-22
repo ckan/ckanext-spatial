@@ -1109,6 +1109,17 @@ class ISODocument(MappedXmlDocument):
             ],
             multiplicity="*",
         ),
+        ISOElement(
+            name="keyword-project",
+            search_paths=[
+                # ISO19115-3
+                "mdb:identificationInfo/mri:MD_DataIdentification/mri:descriptiveKeywords/mri:MD_Keywords[mri:type/mri:MD_KeywordTypeCode/text() = 'project']/mri:keyword/gco:CharacterString/text()",
+                "mdb:identificationInfo/mri:MD_DataIdentification/mri:descriptiveKeywords/mri:MD_Keywords[mri:type/mri:MD_KeywordTypeCode/@codeListValue = 'project']/mri:keyword/gco:CharacterString/text()",
+                "mdb:identificationInfo/srv:SV_ServiceIdentification/mri:descriptiveKeywords/mri:MD_Keywords[mri:type/mri:MD_KeywordTypeCode/text() = 'project']/mri:keyword/gco:CharacterString/text()",
+                "mdb:identificationInfo/srv:SV_ServiceIdentification/mri:descriptiveKeywords/mri:MD_Keywords[mri:type/mri:MD_KeywordTypeCode/@codeListValue = 'project']/mri:keyword/gco:CharacterString/text()",
+            ],
+            multiplicity="*",
+        ),
         ISOUsage(
             name="usage",
             search_paths=[
