@@ -186,10 +186,10 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
         return self.before_dataset_index(pkg_dict)
 
     def before_search(self, search_params):
-        return self.before_dataset_search(search_params):
+        return self.before_dataset_search(search_params)
 
     def after_search(self, search_results, search_params):
-        return self.after_dataset_search(search_results, search_params):
+        return self.after_dataset_search(search_results, search_params)
 
     def before_dataset_index(self, pkg_dict):
         import shapely
