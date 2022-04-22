@@ -192,12 +192,6 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
                   'Please upgrade CKAN or select the \'postgis\' backend.'
             raise tk.CkanVersionException(msg)
 
-    def before_map(self, map):
-        map.connect('api_spatial_query', '/api/2/search/{register:dataset|package}/geo',
-                    controller='ckanext.spatial.controllers.api:ApiController',
-                    action='spatial_query')
-        return map
-
     def before_index(self, pkg_dict):
         import shapely
         import shapely.geometry
