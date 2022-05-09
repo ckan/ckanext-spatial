@@ -4,15 +4,16 @@
 # project.
 # 
 # Translators:
+# Meeri Hakala <meeri.hakala@dvv.fi>, 2022
 # Peter Kronström <peter.kronstrom@gofore.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: ytp\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2015-07-01 14:23+0300\n"
-"PO-Revision-Date: 2015-07-01 11:24+0000\n"
-"Last-Translator: Peter Kronström <peter.kronstrom@gofore.com>\n"
-"Language-Team: Finnish (http://www.transifex.com/projects/p/ytp/language/fi/)\n"
+"PO-Revision-Date: 2015-07-01 11:16+0000\n"
+"Last-Translator: Meeri Hakala <meeri.hakala@dvv.fi>, 2022\n"
+"Language-Team: Finnish (http://www.transifex.com/avoindata/ytp/language/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -42,7 +43,7 @@ msgstr ""
 
 #: ckanext/spatial/plugin.py:59
 msgid "Resources"
-msgstr ""
+msgstr "Aineistolinkit"
 
 #: ckanext/spatial/plugin.py:59
 msgid "Package resource(s) invalid"
@@ -54,7 +55,7 @@ msgstr ""
 
 #: ckanext/spatial/plugin.py:61
 msgid "Missing Value"
-msgstr ""
+msgstr "Puuttuva arvo"
 
 #: ckanext/spatial/public/js/geojson_preview.js:13
 #, python-format
@@ -86,4 +87,4 @@ msgstr "Suodata sijainnin perusteella"
 
 #: ckanext/spatial/templates/spatial/snippets/spatial_query.html:18
 msgid "Clear"
-msgstr ""
+msgstr "Tyhjennä"
