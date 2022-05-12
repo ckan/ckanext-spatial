@@ -129,12 +129,12 @@ def guess_resource_format(resource_locator, use_mimetypes=True):
         #'rbnb:dataturbine':'', # data turbine
         #'ukst':'', # unknown service type
     }
-    protocol = resource_locator.get('protocol').lower().strip()
+    protocol = resource_locator.get('protocol', '').lower().strip()
     resource_type = protocols.get(protocol)
     if resource_type:
         return resource_type
     
-    url = resource_locator.get('url').lower().strip()
+    url = resource_locator.get('url', '').lower().strip()
 
     resource_types = {
         # OGC
@@ -295,7 +295,7 @@ class SpatialHarvester(HarvesterBase):
                 try:
                     group = p.toolkit.get_action('group_show')(context, {'id': group_id})
                     groups.append({'id': group['id'], 'name': group['name']})
-                except p.toolkit.ObjectNotFound, e:
+                except p.toolkit.ObjectNotFound as e:
                     logging.error('Default group %s not found, proceeding without.' % group_id)
 
         package_dict = {

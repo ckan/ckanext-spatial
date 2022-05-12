@@ -1,5 +1,7 @@
 import re
 from lxml import etree
+import six
+
 from ckanext.harvest.harvesters.base import munge_tag
 
 import logging
@@ -39,10 +41,7 @@ class MappedXmlDocument(MappedXmlObject):
     def get_xml_tree(self):
         if self.xml_tree is None:
             parser = etree.XMLParser(remove_blank_text=True)
-            if type(self.xml_str) == unicode:
-                xml_str = self.xml_str.encode('utf8')
-            else:
-                xml_str = self.xml_str
+            xml_str = six.ensure_str(self.xml_str)
             self.xml_tree = etree.fromstring(xml_str, parser=parser)
         return self.xml_tree
 
@@ -97,7 +96,7 @@ class MappedXmlElement(MappedXmlObject):
         elif type(element) == etree._ElementStringResult:
             value = str(element)
         elif type(element) == etree._ElementUnicodeResult:
-            value = unicode(element)
+            value = six.text_type(element)
         else:
             value = self.element_tostring(element)
         return value

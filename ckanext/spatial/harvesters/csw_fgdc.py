@@ -1,14 +1,13 @@
+import six
+from six.moves.urllib.parse import urlparse, urlunparse, urlencode
+
 import re
-import urllib
-import urlparse
-from string import Template
 import uuid
 import hashlib
 import dateutil
 import mimetypes
 import logging
-
-from pylons import config
+from string import Template
 
 from ckan import plugins as p
 from ckan import model
@@ -25,60 +24,13 @@ from ckanext.harvest.model import HarvestObject
 from ckanext.harvest.model import HarvestObjectExtra as HOExtra
 
 from ckanext.spatial.lib.csw_client import CswService
-from ckanext.spatial.harvesters.base import SpatialHarvester, text_traceback
+from ckanext.spatial.harvesters.base import (SpatialHarvester,
+                                             text_traceback,
+                                             guess_resource_format)
 
 from ckanext.spatial.model import FGDCDocument
 from ckanext.spatial.interfaces import ISpatialHarvester
-
-
-def guess_resource_format(url, use_mimetypes=True):
-    '''
-    Given a URL try to guess the best format to assign to the resource
-
-    The function looks for common patterns in popular geospatial services and
-    file extensions, so it may not be 100% accurate. It just looks at the
-    provided URL, it does not attempt to perform any remote check.
-
-    if 'use_mimetypes' is True (default value), the mimetypes module will be
-    used if no match was found before.
-
-    Returns None if no format could be guessed.
-
-    '''
-    url = url.lower().strip()
-
-    resource_types = {
-        # OGC
-        'wms': ('service=wms', 'geoserver/wms', 'mapserver/wmsserver', 'com.esri.wms.Esrimap', 'service/wms'),
-        'wfs': ('service=wfs', 'geoserver/wfs', 'mapserver/wfsserver', 'com.esri.wfs.Esrimap'),
-        'wcs': ('service=wcs', 'geoserver/wcs', 'imageserver/wcsserver', 'mapserver/wcsserver'),
-        'sos': ('service=sos',),
-        'csw': ('service=csw',),
-        # ESRI
-        'kml': ('mapserver/generatekml',),
-        'arcims': ('com.esri.esrimap.esrimap',),
-        'arcgis_rest': ('arcgis/rest/services',),
-    }
-
-    for resource_type, parts in resource_types.iteritems():
-        if any(part in url for part in parts):
-            return resource_type
-
-    file_types = {
-        'kml' : ('kml',),
-        'kmz': ('kmz',),
-        'gml': ('gml',),
-    }
-
-    for file_type, extensions in file_types.iteritems():
-        if any(url.endswith(extension) for extension in extensions):
-            return file_type
-
-    resource_format, encoding = mimetypes.guess_type(url)
-    if resource_format:
-        return resource_format
-
-    return None
+from ckantoolkit import config
 
 
 class CSWFGDCHarvester(SpatialHarvester, SingletonPlugin):
@@ -87,7 +39,7 @@ class CSWFGDCHarvester(SpatialHarvester, SingletonPlugin):
     '''
     implements(IHarvester)
 
-    csw=None
+    csw = None
 
     def info(self):
         return {
@@ -102,7 +54,7 @@ class CSWFGDCHarvester(SpatialHarvester, SingletonPlugin):
                                     filter(HarvestObject.id==harvest_object_id).\
                                     first()
 
-        parts = urlparse.urlparse(obj.source.url)
+        parts = urlparse(obj.source.url)
 
         params = {
             'SERVICE': 'CSW',
@@ -114,12 +66,12 @@ class CSWFGDCHarvester(SpatialHarvester, SingletonPlugin):
             'ID': obj.guid
         }
 
-        url = urlparse.urlunparse((
+        url = urlunparse((
             parts.scheme,
             parts.netloc,
             parts.path,
             None,
-            urllib.urlencode(params),
+            urlencode(params),
             None
         ))
 
@@ -138,7 +90,7 @@ class CSWFGDCHarvester(SpatialHarvester, SingletonPlugin):
 
         try:
             self._setup_csw_client(url)
-        except Exception, e:
+        except Exception as e:
             self._save_gather_error('Error contacting the CSW server: %s' % e, harvest_job)
             return None
 
@@ -166,14 +118,14 @@ class CSWFGDCHarvester(SpatialHarvester, SingletonPlugin):
                         continue
 
                     guids_in_harvest.add(identifier)
-                except Exception, e:
+                except Exception as e:
                     self._save_gather_error('Error for the identifier %s [%r]' % (identifier,e), harvest_job)
                     continue
 
 
-        except Exception, e:
+        except Exception as e:
             log.error('Exception: %s' % text_traceback())
-            self._save_gather_error('Error gathering the identifiers from the CSW server [%s]' % str(e), harvest_job)
+            self._save_gather_error('Error gathering the identifiers from the CSW server [%s]' % six.text_type(e), harvest_job)
             return None
 
         new = guids_in_harvest - guids_in_db
@@ -223,7 +175,7 @@ class CSWFGDCHarvester(SpatialHarvester, SingletonPlugin):
         url = harvest_object.source.url
         try:
             self._setup_csw_client(url)
-        except Exception, e:
+        except Exception as e:
             self._save_object_error('Error contacting the CSW server: %s' % e,
                                     harvest_object)
             return False
@@ -244,7 +196,7 @@ class CSWFGDCHarvester(SpatialHarvester, SingletonPlugin):
 
             harvest_object.content = content.strip()
             harvest_object.save()
-        except Exception,e:
+        except Exception as e:
             self._save_object_error('Error saving the harvest object for GUID %s [%r]' % \
                                     (identifier, e), harvest_object)
             return False
@@ -296,8 +248,8 @@ class CSWFGDCHarvester(SpatialHarvester, SingletonPlugin):
         try:
             fgdc_parser = FGDCDocument(harvest_object.content)
             fgdc_values = fgdc_parser.read_values()
-        except Exception, e:
-            self._save_object_error('Error parsing FGDC document for object {0}: {1}'.format(harvest_object.id, str(e)),
+        except Exception as e:
+            self._save_object_error('Error parsing FGDC document for object {0}: {1}'.format(harvest_object.id, six.text_type(e)),
                                     harvest_object, 'Import')
             return False
 
@@ -367,7 +319,7 @@ class CSWFGDCHarvester(SpatialHarvester, SingletonPlugin):
 
         # The default package schema does not like Upper case tags
         tag_schema = logic.schema.default_tags_schema()
-        tag_schema['name'] = [not_empty, unicode]
+        tag_schema['name'] = [not_empty, six.text_type]
 
         # Flag this object as the current one
         harvest_object.current = True
@@ -380,8 +332,8 @@ class CSWFGDCHarvester(SpatialHarvester, SingletonPlugin):
 
             # We need to explicitly provide a package ID, otherwise ckanext-spatial
             # won't be be able to link the extent to the package.
-            package_dict['id'] = unicode(uuid.uuid4())
-            package_schema['id'] = [unicode]
+            package_dict['id'] = six.text_type(uuid.uuid4())
+            package_schema['id'] = [six.text_type]
 
             # Save reference to the package on the object
             harvest_object.package_id = package_dict['id']
@@ -395,8 +347,8 @@ class CSWFGDCHarvester(SpatialHarvester, SingletonPlugin):
             try:
                 package_id = p.toolkit.get_action('package_create')(context, package_dict)
                 log.info('Created new package %s with guid %s', package_id, harvest_object.guid)
-            except p.toolkit.ValidationError, e:
-                self._save_object_error('Validation Error: %s' % str(e.error_summary), harvest_object, 'Import')
+            except p.toolkit.ValidationError as e:
+                self._save_object_error('Validation Error: %s' % six.text_type(e.error_summary), harvest_object, 'Import')
                 return False
 
         elif status == 'change':
@@ -441,8 +393,8 @@ class CSWFGDCHarvester(SpatialHarvester, SingletonPlugin):
                 try:
                     package_id = p.toolkit.get_action('package_update')(context, package_dict)
                     log.info('Updated package %s with guid %s', package_id, harvest_object.guid)
-                except p.toolkit.ValidationError, e:
-                    self._save_object_error('Validation Error: %s' % str(e.error_summary), harvest_object, 'Import')
+                except p.toolkit.ValidationError as e:
+                    self._save_object_error('Validation Error: %s' % six.text_type(e.error_summary), harvest_object, 'Import')
                     return False
 
         model.Session.commit()
@@ -513,7 +465,7 @@ class CSWFGDCHarvester(SpatialHarvester, SingletonPlugin):
                 try:
                     group = p.toolkit.get_action('group_show')(context, {'id': group_id})
                     groups.append({'id': group['id'], 'name': group['name']})
-                except p.toolkit.ObjectNotFound, e:
+                except p.toolkit.ObjectNotFound as e:
                     log.error('Default group %s not found, proceeding without.' % group_id)
 
         package_dict = {
@@ -542,7 +494,7 @@ class CSWFGDCHarvester(SpatialHarvester, SingletonPlugin):
         if package is None or package.title != fgdc_values['title']:
             name = self._gen_new_name(fgdc_values['title'])
             if not name:
-                name = self._gen_new_name(str(fgdc_values['guid']))
+                name = self._gen_new_name(six.text_type(fgdc_values['guid']))
             if not name:
                 raise Exception('Could not generate a unique name from the title or the GUID. Please choose a more unique title.')
             package_dict['name'] = name
@@ -583,8 +535,8 @@ class CSWFGDCHarvester(SpatialHarvester, SingletonPlugin):
                 xmax = float(bbox['east'])
                 ymin = float(bbox['south'])
                 ymax = float(bbox['north'])
-            except ValueError, e:
-                self._save_object_error('Error parsing bounding box value: {0}'.format(str(e)),
+            except ValueError as e:
+                self._save_object_error('Error parsing bounding box value: {0}'.format(six.text_type(e)),
                                     harvest_object, 'Import')
             else:
                 # Construct a GeoJSON extent so ckanext-spatial can register the extent geometry
@@ -613,24 +565,26 @@ class CSWFGDCHarvester(SpatialHarvester, SingletonPlugin):
             for index, resource_locator in enumerate(resource_locators):
                 url = resource_locator.get('url', '').strip()
                 if url:
-                    res_name = resource_locator.get('format-name', 'Unnamed resource')
-                    res_description = resource_locator.get('format-info-content', '')
+                    resource = {}
+
+                    res_name = resource_locator.get('format-name') or resource_locator.get('name', 'Unnamed resource')
+                    res_description = resource_locator.get('format-info-content') or resource_locator.get('description', '')
                     if len(ea_list) > 0 and index < len(ea_list):
                         ea_info = ea_list[index]
                         res_name = ea_info.get('entity-type-label')
                         res_description = ea_info.get('entity-type-definition')
 
-                    resource = {}
-                    res_format = guess_resource_format(url)
+                    res_format = guess_resource_format(resource_locator)
                     if not res_format:
-                        res_format = guess_resource_format(res_name)
+                        res_format, encoding = mimetypes.guess_type(res_name)
                     resource['format'] = res_format
 
                     resource.update({
                         'url': url,
                         'name': res_name,
                         'description': res_description,
-                        'url_type': 'xloader',
+                        'resource_locator_protocol': resource_locator.get('protocol') or '',
+                        'resource_locator_function': resource_locator.get('function') or '',
                     })
                     package_dict['resources'].append(resource)
 
@@ -638,21 +592,22 @@ class CSWFGDCHarvester(SpatialHarvester, SingletonPlugin):
         # Add default_extras from config
         default_extras = self.source_config.get('default_extras',{})
         if default_extras:
-           override_extras = self.source_config.get('override_extras',False)
-           for key,value in default_extras.iteritems():
-              log.debug('Processing extra %s', key)
-              if not key in extras or override_extras:
-                 # Look for replacement strings
-                 if isinstance(value,basestring):
-                    value = value.format(harvest_source_id=harvest_object.job.source.id,
-                             harvest_source_url=harvest_object.job.source.url.strip('/'),
-                             harvest_source_title=harvest_object.job.source.title,
-                             harvest_job_id=harvest_object.job.id,
-                             harvest_object_id=harvest_object.id)
-                 extras[key] = value
+            override_extras = self.source_config.get('override_extras',False)
+            for key,value in default_extras.items():
+                log.debug('Processing extra %s', key)
+                if not key in extras or override_extras:
+                    # Look for replacement strings
+                    if isinstance(value,six.string_types):
+                        value = value.format(
+                                harvest_source_id=harvest_object.job.source.id,
+                                harvest_source_url=harvest_object.job.source.url.strip('/'),
+                                harvest_source_title=harvest_object.job.source.title,
+                                harvest_job_id=harvest_object.job.id,
+                                harvest_object_id=harvest_object.id)
+                    extras[key] = value
 
         extras_as_dict = []
-        for key, value in extras.iteritems():
+        for key, value in extras.items():
             if isinstance(value, (list, dict)):
                 extras_as_dict.append({'key': key, 'value': json.dumps(value)})
             else:
