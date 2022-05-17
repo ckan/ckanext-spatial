@@ -683,9 +683,11 @@ class SpatialHarvester(HarvesterBase):
             # Check if the modified date is more recent
             if not self.force_import and previous_object and harvest_object.metadata_modified_date <= previous_object.metadata_modified_date:
 
-                # Assign the previous job id to the new object to
-                # avoid losing history
-                harvest_object.harvest_job_id = previous_object.job.id
+                # Assign the previous job id (if it hasn't been cleared) to the new object to avoid losing history
+                if previous_object.job:
+                    harvest_object.harvest_job_id = previous_object.job.id
+                else:
+                    harvest_object.harvest_job_id = None
                 harvest_object.add()
 
                 # Delete the previous object to avoid cluttering the object table
