@@ -14,9 +14,9 @@ class CswError(Exception):
     pass
 
 class OwsService(object):
-    def __init__(self, endpoint=None):
+    def __init__(self, endpoint=None, skip_caps=False):
         if endpoint is not None:
-            self._ows(endpoint)
+            self._ows(endpoint, skip_caps)
 
     def __call__(self, args):
         return getattr(self, args.operation)(**self._xmd(args))
@@ -43,13 +43,13 @@ class OwsService(object):
                 md[attr] = self._xmd(val)
         return md
 
-    def _ows(self, endpoint=None, **kw):
+    def _ows(self, endpoint=None, skip_caps=False, **kw):
         if not hasattr(self, "_Implementation"):
             raise NotImplementedError("Needs an Implementation")
         if not hasattr(self, "__ows_obj__"):
             if endpoint is None:
                 raise ValueError("Must specify a service endpoint")
-            self.__ows_obj__ = self._Implementation(endpoint)
+            self.__ows_obj__ = self._Implementation(endpoint, skip_caps=skip_caps)
         return self.__ows_obj__
 
     def getcapabilities(self, debug=False, **kw):
@@ -67,8 +67,8 @@ class CswService(OwsService):
     """
     from owslib.csw import CatalogueServiceWeb as _Implementation
 
-    def __init__(self, endpoint=None):
-        super(CswService, self).__init__(endpoint)
+    def __init__(self, endpoint=None, skip_caps=False):
+        super(CswService, self).__init__(endpoint, skip_caps=skip_caps)
         self.sortby = SortBy([SortProperty('dc:identifier')])
 
     def getrecords(self, qtype=None, keywords=[],

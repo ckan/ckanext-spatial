@@ -219,7 +219,7 @@ class SpatialHarvester(HarvesterBase):
                 if not isinstance(source_config_obj['default_extras'],dict):
                     raise ValueError('default_extras must be a dictionary')
 
-            for key in ('override_extras', 'clean_tags'):
+            for key in ('override_extras', 'clean_tags', 'skip_caps'):
                 if key in source_config_obj:
                     if not isinstance(source_config_obj[key],bool):
                         raise ValueError('%s must be boolean' % key)
@@ -291,7 +291,7 @@ class SpatialHarvester(HarvesterBase):
         default_groups = self.source_config.get('default_groups', [])
         if default_groups:
             for group_id in default_groups:
-                context = {'model': model, 'user': p.toolkit.c.user}
+                context = {'model': model, 'user': self._get_user_name()}
                 try:
                     group = p.toolkit.get_action('group_show')(context, {'id': group_id})
                     groups.append({'id': group['id'], 'name': group['name']})

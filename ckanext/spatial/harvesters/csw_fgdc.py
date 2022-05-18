@@ -87,9 +87,10 @@ class CSWFGDCHarvester(SpatialHarvester, SingletonPlugin):
         url = harvest_job.source.url
 
         self._set_source_config(harvest_job.source.config)
+        skip_caps = self.source_config.get('skip_caps', False)
 
         try:
-            self._setup_csw_client(url)
+            self._setup_csw_client(url, skip_caps=skip_caps)
         except Exception as e:
             self._save_gather_error('Error contacting the CSW server: %s' % e, harvest_job)
             return None
@@ -173,8 +174,12 @@ class CSWFGDCHarvester(SpatialHarvester, SingletonPlugin):
         log.debug('CswHarvester fetch_stage for object: %s', harvest_object.id)
 
         url = harvest_object.source.url
+
+        self._set_source_config(harvest_object.source.config)
+        skip_caps = self.source_config.get('skip_caps', False)
+
         try:
-            self._setup_csw_client(url)
+            self._setup_csw_client(url, skip_caps=skip_caps)
         except Exception as e:
             self._save_object_error('Error contacting the CSW server: %s' % e,
                                     harvest_object)
@@ -204,8 +209,8 @@ class CSWFGDCHarvester(SpatialHarvester, SingletonPlugin):
         log.debug('XML content saved (len %s)', len(record['xml']))
         return True
 
-    def _setup_csw_client(self, url):
-        self.csw = CswService(url)
+    def _setup_csw_client(self, url, skip_caps=False):
+        self.csw = CswService(url, skip_caps=skip_caps)
 
     def import_stage(self, harvest_object):
         context = {
@@ -461,7 +466,7 @@ class CSWFGDCHarvester(SpatialHarvester, SingletonPlugin):
         default_groups = self.source_config.get('default_groups', [])
         if default_groups:
             for group_id in default_groups:
-                context = {'model': model, 'user': p.toolkit.c.user}
+                context = {'model': model, 'user': self._get_user_name()}
                 try:
                     group = p.toolkit.get_action('group_show')(context, {'id': group_id})
                     groups.append({'id': group['id'], 'name': group['name']})
@@ -590,9 +595,9 @@ class CSWFGDCHarvester(SpatialHarvester, SingletonPlugin):
 
 
         # Add default_extras from config
-        default_extras = self.source_config.get('default_extras',{})
+        default_extras = self.source_config.get('default_extras', {})
         if default_extras:
-            override_extras = self.source_config.get('override_extras',False)
+            override_extras = self.source_config.get('override_extras', False)
             for key,value in default_extras.items():
                 log.debug('Processing extra %s', key)
                 if not key in extras or override_extras:

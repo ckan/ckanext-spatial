@@ -117,12 +117,12 @@ class MappedXmlElement(MappedXmlObject):
         if self.multiplicity == "0":
             # 0 = None
             if values:
-                log.warn("Values found for element '%s' when multiplicity should be 0: %s",  self.name, values)
+                log.warning("Values found for element '%s' when multiplicity should be 0: %s",  self.name, values)
             return ""
         elif self.multiplicity == "1":
             # 1 = Mandatory, maximum 1 = Exactly one
             if not values:
-                log.warn("Value not found for element '%s'" % self.name)
+                log.warning("Value not found for element '%s'" % self.name)
                 return ''
             return values[0]
         elif self.multiplicity == "*":
