@@ -43,7 +43,7 @@ msgstr ""
 
 #: ckanext/spatial/plugin.py:59
 msgid "Resources"
-msgstr "Aineistolinkit"
+msgstr "Data-aineistot"
 
 #: ckanext/spatial/plugin.py:59
 msgid "Package resource(s) invalid"
