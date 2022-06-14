@@ -5,14 +5,15 @@
 # 
 # Translators:
 # Alexis Troberg <alexis.troberg@gofore.com>, 2015
+# Jonna Jantunen <jonna.jantunen@vrk.fi>, 2020
 # Peter Kronström <peter.kronstrom@gofore.com>, 2015
 msgid ""
 msgstr ""
 "Project-Id-Version: ytp\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
 "POT-Creation-Date: 2015-07-01 14:23+0300\n"
-"PO-Revision-Date: 2015-09-28 17:34+0000\n"
-"Last-Translator: Alexis Troberg <alexis.troberg@gofore.com>\n"
+"PO-Revision-Date: 2015-07-01 11:16+0000\n"
+"Last-Translator: Jonna Jantunen <jonna.jantunen@vrk.fi>, 2020\n"
 "Language-Team: Swedish (http://www.transifex.com/avoindata/ytp/language/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -70,7 +71,7 @@ msgstr "Laddar..."
 #: ckanext/spatial/templates/spatial/snippets/dataset_map.html:17
 #: ckanext/spatial/templates/spatial/snippets/dataset_map_sidebar.html:17
 msgid "Dataset extent"
-msgstr "Datasetets omfattning"
+msgstr "Datamängdens omfattning"
 
 #: ckanext/spatial/templates/spatial/snippets/map_attribution.html:2
 msgid "Map data"
