@@ -254,6 +254,10 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
         if pkg_dict.get('coupled-resource'):
             pkg_dict.pop('coupled-resource')
 
+        # spatial field is geojson coordinate data, not need in SOLR either
+        if pkg_dict.get('spatial'):
+            pkg_dict.pop('spatial')
+
         return pkg_dict
 
     def before_dataset_search(self, search_params):
