@@ -17,6 +17,9 @@ package_extent_table = None
 DEFAULT_SRID = 4326 #(WGS 84)
 
 def setup(srid=None):
+    if config.get('ckanext.spatial.search_backend', 'postgis') != 'postgis':
+        log.debug('Spatial tables not required')
+        return
 
     if package_extent_table is None:
         define_spatial_tables(srid)
