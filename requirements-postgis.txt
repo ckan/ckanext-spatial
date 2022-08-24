@@ -1,1 +1,1 @@
-GeoAlchemy2==0.12.3
+GeoAlchemy2==0.11.1
