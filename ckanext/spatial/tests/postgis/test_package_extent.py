@@ -19,16 +19,19 @@ from ckan.lib.munge import munge_title_to_name
 
 import ckan.tests.factories as factories
 
-from ckanext.spatial.postgis.model import (
-    PackageExtent,
-    WKTElement,  # type: ignore
-    bbox_query,
-    bbox_query_ordered,
-    compare_geometry_fields,
-    setup as spatial_db_setup,
-)
-
 from ckanext.spatial.tests.base import SpatialTestBase
+
+use_postgis = tk.asbool(tk.config.get("ckan.spatial.use_postgis", False))
+
+if use_postgis:
+    from ckanext.spatial.postgis.model import (
+        PackageExtent,
+        WKTElement,  # type: ignore
+        bbox_query,
+        bbox_query_ordered,
+        compare_geometry_fields,
+        setup as spatial_db_setup,
+    )
 
 
 def _create_postgis_extension():
@@ -54,9 +57,7 @@ def spatial_setup():
 
 
 pytestmark = pytest.mark.skipif(
-    tk.asbool(tk.config.get("ckan.spatial.use_postgis", False)) is False,
-    reason="PostGIS is no longer used by default",
-)
+    use_postgis is False, reason="PostGIS is no longer used by default")
 
 
 @pytest.mark.usefixtures(
