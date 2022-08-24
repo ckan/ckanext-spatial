@@ -337,7 +337,7 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
         return search_params
 
     def _params_for_postgis_search(self, bbox, search_params):
-        from ckanext.spatial.lib import   bbox_query, bbox_query_ordered
+        from ckanext.spatial.postgis.model import bbox_query, bbox_query_ordered
         from ckan.lib.search import SearchError
 
         # Note: This will be deprecated at some point in favour of the
