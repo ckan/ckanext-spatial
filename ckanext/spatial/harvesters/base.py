@@ -31,7 +31,7 @@ from ckanext.harvest.harvesters.base import HarvesterBase
 from ckanext.harvest.model import HarvestObject
 
 from ckanext.spatial.validation import Validators, all_validators
-from ckanext.spatial.model import ISODocument
+from ckanext.spatial.harvested_metadata import ISODocument
 from ckanext.spatial.interfaces import ISpatialHarvester
 from ckantoolkit import config
 
@@ -133,7 +133,7 @@ def guess_resource_format(resource_locator, use_mimetypes=True):
     resource_type = protocols.get(protocol)
     if resource_type:
         return resource_type
-    
+
     url = resource_locator.get('url').lower().strip()
 
     resource_types = {

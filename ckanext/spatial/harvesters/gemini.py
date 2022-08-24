@@ -33,7 +33,7 @@ from ckan.lib.navl.validators import not_empty
 from ckanext.harvest.interfaces import IHarvester
 from ckanext.harvest.model import HarvestObject
 
-from ckanext.spatial.model import GeminiDocument
+from ckanext.spatial.harvested_metadata import GeminiDocument
 from ckanext.spatial.lib.csw_client import CswService
 
 from ckanext.spatial.harvesters.base import SpatialHarvester, text_traceback

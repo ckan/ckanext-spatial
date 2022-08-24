@@ -15,10 +15,9 @@ from pprint import pprint
 from ckan import model
 from ckan.model.package_extra import PackageExtra
 
-from ckanext.spatial.lib import save_package_extent
 from ckanext.spatial.lib.reports import validation_report
 from ckanext.spatial.harvesters import SpatialHarvester
-from ckanext.spatial.model import ISODocument
+from ckanext.spatial.harvested_metadata import ISODocument
 
 from ckantoolkit import config
 
@@ -95,7 +94,7 @@ def initdb(srid=None):
     if srid:
         srid = six.text_type(srid)
 
-    from ckanext.spatial.model import setup as db_setup
+    from ckanext.spatial.postgis.model import setup as db_setup
 
     db_setup(srid)
 
@@ -103,15 +102,17 @@ def initdb(srid=None):
 
 
 def update_extents():
-    from ckan.model import PackageExtra, Package, Session
-    conn = Session.connection()
-    packages = [extra.package \
-                for extra in \
-                Session.query(PackageExtra).filter(PackageExtra.key == 'spatial').all()]
+    from ckanext.spatial.postgis.model import save_package_extent
+
+    packages = [
+        extra.package for extra in
+        model.Session.query(PackageExtra).filter(PackageExtra.key == 'spatial').all()
+    ]
 
     errors = []
     count = 0
     for package in packages:
+        geometry = None
         try:
             value = package.extras['spatial']
             log.debug('Received: %r' % value)
@@ -127,7 +128,7 @@ def update_extents():
 
         save_package_extent(package.id, geometry)
 
-    Session.commit()
+    model.Session.commit()
 
     if errors:
         msg = 'Errors were found:\n%s' % '\n'.join(errors)

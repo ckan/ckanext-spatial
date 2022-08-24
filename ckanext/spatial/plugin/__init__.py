@@ -8,7 +8,6 @@ import ckantoolkit as tk
 
 from ckan import plugins as p
 
-from ckanext.spatial.lib import save_package_extent
 from ckan.lib.helpers import json
 
 if tk.check_ckan_version(min_version="2.9.0"):
@@ -33,14 +32,22 @@ class SpatialMetadata(p.SingletonPlugin):
     p.implements(p.IConfigurer, inherit=True)
     p.implements(p.ITemplateHelpers, inherit=True)
 
+    use_postgis = False
+
     # IConfigurable
 
     def configure(self, config):
-        from ckanext.spatial.model.package_extent import setup as setup_model
 
-        if not tk.asbool(config.get('ckan.spatial.testing', 'False')):
-            log.debug('Setting up the spatial model')
-            setup_model()
+        # PostGIS is no longer required, support for it will be dropped in the future
+        self.use_postgis = tk.asbool(config.get("ckan.spatial.use_postgis", False))
+
+        if self.use_postgis:
+
+            from ckanext.spatial.postgis.model import setup as setup_model
+
+            if not tk.asbool(config.get("ckan.spatial.testing", False)):
+                log.debug("Setting up the spatial model")
+                setup_model()
 
     # IConfigure
 
@@ -75,7 +82,10 @@ class SpatialMetadata(p.SingletonPlugin):
         return self.after_dataset_delete(context, data_dict)
 
     def after_dataset_delete(self, context, data_dict):
-        save_package_extent(data_dict["id"], None)
+
+        if self.use_postgis:
+            from ckanext.spatial.postgis.model import save_package_extent
+            save_package_extent(data_dict["id"], None)
 
     def check_spatial_extra(self, dataset_dict):
         '''
@@ -96,7 +106,8 @@ class SpatialMetadata(p.SingletonPlugin):
                     else:
                         geometry = extra["value"]
 
-        if geometry is None or geometry == "" or delete:
+        if (geometry is None or geometry == "" or delete) and self.use_postgis:
+            from ckanext.spatial.postgis.model import save_package_extent
             save_package_extent(dataset_id, None)
         elif not geometry:
             return
@@ -118,13 +129,15 @@ class SpatialMetadata(p.SingletonPlugin):
             error_dict = {"spatial": [msg]}
             raise tk.ValidationError(error_dict)
 
-        try:
-            save_package_extent(dataset_id, geometry)
-        except Exception as e:
-            if bool(os.getenv('DEBUG')):
-                raise
-            error_dict = {"spatial": ["Error: {}".format(six.text_type(e))]}
-            raise tk.ValidationError(error_dict)
+        if self.use_postgis:
+            from ckanext.spatial.postgis.model import save_package_extent
+            try:
+                save_package_extent(dataset_id, geometry)
+            except Exception as e:
+                if bool(os.getenv('DEBUG')):
+                    raise
+                error_dict = {"spatial": ["Error: {}".format(six.text_type(e))]}
+                raise tk.ValidationError(error_dict)
 
     # ITemplateHelpers
 
