@@ -84,14 +84,9 @@ The following table summarizes the different spatial search backends:
 +------------------------+---------------+-------------------------------------+-----------------------------------------------------------+-------------------------------------------+
 | ``solr-spatial-field`` | >= 4.x        | Bounding Box, Point and Polygon [1] | Not implemented                                           | Good                                      |
 +------------------------+---------------+-------------------------------------+-----------------------------------------------------------+-------------------------------------------+
-| ``postgis``            | >= 1.3        | Bounding Box                        | Partial, only spatial sorting supported [2]               | Poor                                      |
-+------------------------+---------------+-------------------------------------+-----------------------------------------------------------+-------------------------------------------+
 
 
 [1] Requires JTS
-
-[2] Needs ``ckanext.spatial.use_postgis_sorting`` set to True
-
 
 
 We recommend to use the ``solr`` backend whenever possible. Here are more
@@ -145,17 +140,9 @@ details about the available options:
             <field name="spatial_geom"  type="location_rpt" indexed="true" stored="true" multiValued="true" />
         </fields>
 
-* ``postgis``
-    This is the original implementation of the spatial search. It
-    does not require any change in the Solr schema and can run on Solr 1.x,
-    but it is not as efficient as the previous ones. Basically the bounding
-    box based query is performed in PostGIS first, and the ids of the matched
-    datasets are added as a filter to the Solr request. This, apart from being
-    much less efficient, can led to issues on Solr due to size of the requests
-    (See `Solr configuration issues on legacy PostGIS backend`_). There is
-    support for a spatial ranking on this backend (setting
-    ``ckanext.spatial.use_postgis_sorting`` to True on the ini file), but
-    it can not be combined with any other filtering.
+.. note:: The old ``postgis`` search backend is deprecated and will be removed in future versions of the extension.
+    You should migrate to one of the other backends instead but if you need to keep using it for a while see :ref:`legacy_postgis`.
+
 
 
 Spatial Search Widget
@@ -240,65 +227,6 @@ For adding the map to the main body, add this to the main dataset page template 
     {% endblock %}
 
 You need to load the ``spatial_metadata`` plugin to use these snippets.
-
-Legacy Search
--------------
-
-Solr configuration issues on legacy PostGIS backend
-+++++++++++++++++++++++++++++++++++++++++++++++++++
-
-.. warning::
-
-    If you find any of the issues described in this section it is strongly
-    recommended that you consider switching to one of the Solr based backends
-    which are much more efficient. These notes are just kept for informative
-    purposes.
-
-
-If using Spatial Query functionality then there is an additional SOLR/Lucene
-setting that should be used to set the limit on number of datasets searchable
-with a spatial value.
-
-The setting is ``maxBooleanClauses`` in the solrconfig.xml and the value is the
-number of datasets spatially searchable. The default is ``1024`` and this could
-be increased to say ``16384``. For a SOLR single core this will probably be at
-`/etc/solr/conf/solrconfig.xml`. For a multiple core set-up, there will me
-several solrconfig.xml files a couple of levels below `/etc/solr`. For that
-case, *all* of the cores' `solrconfig.xml` should have this setting at the new
-value.
-
-Example::
-
-      <maxBooleanClauses>16384</maxBooleanClauses>
-
-This setting is needed because PostGIS spatial query results are fed into SOLR
-using a Boolean expression, and the parser for that has a limit. So if your
-spatial area contains more than the limit (of which the default is 1024) then
-you will get this error::
-
- Dataset search error: ('SOLR returned an error running query...
-
-and in the SOLR logs you see::
-
- too many boolean clauses ...  Caused by:
- org.apache.lucene.search.BooleanQuery$TooManyClauses: maxClauseCount is set to
- 1024
-
-
-Legacy API
-++++++++++
-
-The extension adds the following call to the CKAN search API, which returns
-datasets with an extent that intersects with the bounding box provided::
-
-    /api/2/search/dataset/geo?bbox={minx,miny,maxx,maxy}[&crs={srid}]
-
-If the bounding box coordinates are not in the same projection as the one
-defined in the database, a CRS must be provided, in one of the following forms:
-
-- `urn:ogc:def:crs:EPSG::4326`
-- EPSG:4326
-- 4326
 
 .. _action API: http://docs.ckan.org/en/latest/apiv3.html
 .. _edismax: http://wiki.apache.org/solr/ExtendedDisMax
