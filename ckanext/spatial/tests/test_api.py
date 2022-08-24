@@ -15,6 +15,8 @@ extents = {
     "dateline2": '{"type":"Polygon","coordinates":[[[170,60],[-170,60],[-170,70],[170,70],[170,60]]]}',
 }
 
+# TODO: migrate to Solr
+@pytest.skip(reason="These tests need to be migrated to Solr")
 class TestAction(SpatialTestBase):
     @pytest.mark.usefixtures('clean_postgis', 'clean_db', 'clean_index', 'harvest_setup', 'spatial_setup')
     def test_spatial_query(self):
