@@ -17,7 +17,7 @@ jobs:
     needs: lint
     strategy:
       matrix:
-        ckan-version: [master, 2.9, 2.9-py2, 2.8, 2.7]
+        ckan-version: [2.9, 2.9-py2, 2.8, 2.7]
       fail-fast: false
     
     name: CKAN ${{ matrix.ckan-version }}
@@ -96,7 +96,7 @@ jobs:
         psql --host=postgres --username=postgres -d ckan_test --command="ALTER ROLE ckan_default WITH superuser;"
         psql --host=postgres --username=postgres -d ckan_test --command="CREATE EXTENSION postgis;"
     - name: Run tests
-      run: pytest --ckan-ini=test-postgis.ini --cov=ckanext.spatial --cov-report=xml --cov-append --disable-warnings ckanext/spatial/tests
+      run: pytest --ckan-ini=test-postgis.ini --cov=ckanext.spatial --cov-report=xml --cov-append --disable-warnings ckanext/spatial/tests/postgis
 
     - name: Upload coverage report to codecov
       uses: codecov/codecov-action@v1

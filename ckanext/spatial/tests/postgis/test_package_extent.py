@@ -57,7 +57,8 @@ def spatial_setup():
 
 
 pytestmark = pytest.mark.skipif(
-    use_postgis is False, reason="PostGIS is no longer used by default")
+    use_postgis is False, reason="PostGIS is no longer used by default"
+)
 
 
 @pytest.mark.usefixtures(
@@ -451,7 +452,7 @@ class TestSpatialExtra(SpatialTestBase):
 
         assert "Error" in res, res
         assert "Spatial" in res
-        assert "Error creating geometry" in res
+        assert "Wrong GeoJSON object" in res
 
 
 extents = {
@@ -463,7 +464,12 @@ extents = {
 
 
 @pytest.mark.usefixtures(
-    "clean_postgis", "clean_db", "clean_index", "harvest_setup", "spatial_setup"
+    "with_plugins",
+    "clean_postgis",
+    "clean_db",
+    "clean_index",
+    "harvest_setup",
+    "spatial_setup",
 )
 class TestSearchActionPostgis(SpatialTestBase):
     def test_spatial_query(self):
