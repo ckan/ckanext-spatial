@@ -28,7 +28,7 @@ jobs:
       solr:
         image: ckan/ckan-solr-dev:${{ matrix.ckan-version }}
       postgres:
-        image: ckan/ckan-postgres-dev:${{ matrix.ckan-version }}
+        image: postgis/postgis:10-3.1
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
@@ -46,6 +46,13 @@ jobs:
     
     steps:
     - uses: actions/checkout@v2
+    - name: Create Database
+      run: |
+        psql --host=postgres --username=postgres --command="CREATE USER ckan_default WITH PASSWORD 'pass' NOSUPERUSER NOCREATEDB NOCREATEROLE;"
+        createdb --encoding=utf-8 --host=postgres --username=postgres --owner=ckan_default ckan_test
+        psql --host=postgres --username=postgres --command="CREATE USER datastore_write WITH PASSWORD 'pass' NOSUPERUSER NOCREATEDB NOCREATEROLE;"
+        psql --host=postgres --username=postgres --command="CREATE USER datastore_read WITH PASSWORD 'pass' NOSUPERUSER NOCREATEDB NOCREATEROLE;"
+        createdb --encoding=utf-8 --host=postgres --username=postgres --owner=datastore_write datastore_test
     - name: Install harvester
       run: |
         git clone https://github.com/ckan/ckanext-harvest
@@ -79,11 +86,17 @@ jobs:
         pip install -r requirements.txt
     - name: Install requirements
       run: |
+
+        pip install -r requirements-postgis.txt
         pip install -e .
         # Replace default path to CKAN core config file with the one on the container
         sed -i -e 's/use = config:.*/use = config:\/srv\/app\/src\/ckan\/test-core.ini/' test.ini
+    - name: setup postgis
+      run: |
+        psql --host=postgres --username=postgres -d ckan_test --command="ALTER ROLE ckan_default WITH superuser;"
+        psql --host=postgres --username=postgres -d ckan_test --command="CREATE EXTENSION postgis;"
     - name: Run tests
-      run: pytest --ckan-ini=test.ini --cov=ckanext.spatial --cov-report=xml --cov-append --disable-warnings ckanext/spatial/tests
+      run: pytest --ckan-ini=test-postgis.ini --cov=ckanext.spatial --cov-report=xml --cov-append --disable-warnings ckanext/spatial/tests
 
     - name: Upload coverage report to codecov
       uses: codecov/codecov-action@v1
