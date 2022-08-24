@@ -53,28 +53,6 @@ check_geoalchemy_requirement()
 log = getLogger(__name__)
 
 
-def package_error_summary(error_dict):
-    ''' Do some i18n stuff on the error_dict keys '''
-
-    def prettify(field_name):
-        field_name = re.sub('(?<!\w)[Uu]rl(?!\w)', 'URL',
-                            field_name.replace('_', ' ').capitalize())
-        return tk._(field_name.replace('_', ' '))
-
-    summary = {}
-    for key, error in error_dict.items():
-        if key == 'resources':
-            summary[tk._('Resources')] = tk._(
-                'Package resource(s) invalid')
-        elif key == 'extras':
-            summary[tk._('Extras')] = tk._('Missing Value')
-        elif key == 'extras_validation':
-            summary[tk._('Extras')] = error[0]
-        else:
-            summary[tk._(prettify(key))] = error[0]
-    return summary
-
-
 class SpatialMetadata(p.SingletonPlugin):
 
     p.implements(p.IPackageController, inherit=True)
@@ -158,25 +136,22 @@ class SpatialMetadata(p.SingletonPlugin):
         except ValueError as e:
             error_dict = {
                 "spatial": ["Error decoding JSON object: {}".format(six.text_type(e))]}
-            raise tk.ValidationError(
-                error_dict, error_summary=package_error_summary(error_dict))
+            raise tk.ValidationError(error_dict)
 
         if not hasattr(geometry, "is_valid") or not geometry.is_valid:
             msg = "Wrong GeoJSON object"
             if hasattr(geometry, "errors"):
                 msg = msg + ": {}".format(geometry.errors())
             error_dict = {"spatial": [msg]}
-            raise tk.ValidationError(
-                error_dict, error_summary=package_error_summary(error_dict))
+            raise tk.ValidationError(error_dict)
 
         try:
             save_package_extent(dataset_id, geometry)
         except Exception as e:
             if bool(os.getenv('DEBUG')):
                 raise
-            error_dict = {'spatial': [u'Error: %s' % six.text_type(e)]}
-            raise tk.ValidationError(
-                error_dict, error_summary=package_error_summary(error_dict))
+            error_dict = {"spatial": ["Error: {}".format(six.text_type(e))]}
+            raise tk.ValidationError(error_dict)
 
     # ITemplateHelpers
 
