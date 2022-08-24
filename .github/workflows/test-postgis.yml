@@ -1,4 +1,4 @@
-name: Tests
+name: Legacy PostGIS Tests
 on: [push, pull_request]
 
 jobs:
@@ -78,16 +78,16 @@ jobs:
         apk add --no-cache \
           python2-dev
         pip install -r requirements-py2.txt
+        pip install -r requirements-postgis-py2.txt
     - name: Install dependency (python3)
       if: ${{ matrix.ckan-version != '2.9-py2' && matrix.ckan-version != '2.8' && matrix.ckan-version != '2.7' }}
       run: |
         apk add --no-cache \
           python3-dev
         pip install -r requirements.txt
+        pip install -r requirements-postgis.txt
     - name: Install requirements
       run: |
-
-        pip install -r requirements-postgis.txt
         pip install -e .
         # Replace default path to CKAN core config file with the one on the container
         sed -i -e 's/use = config:.*/use = config:\/srv\/app\/src\/ckan\/test-core.ini/' test.ini
