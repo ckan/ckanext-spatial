@@ -76,7 +76,7 @@ class SpatialMetadata(p.SingletonPlugin):
         return self.after_dataset_update(context, data_dict)
 
     def after_dataset_update(self, context, data_dict):
-        self.check_spatial_extra(data_dict)
+        self.check_spatial_extra(data_dict, update=True)
 
     def after_delete(self, context, data_dict):
         return self.after_dataset_delete(context, data_dict)
@@ -87,7 +87,7 @@ class SpatialMetadata(p.SingletonPlugin):
             from ckanext.spatial.postgis.model import save_package_extent
             save_package_extent(data_dict["id"], None)
 
-    def check_spatial_extra(self, dataset_dict):
+    def check_spatial_extra(self, dataset_dict, update=False):
         '''
         For a given dataset, looks at the spatial extent (as given in the
         "spatial" field/extra in GeoJSON format) and stores it in the database.
@@ -106,9 +106,12 @@ class SpatialMetadata(p.SingletonPlugin):
                     else:
                         geometry = extra["value"]
 
-        if (geometry is None or geometry == "" or delete) and self.use_postgis:
+        if ((geometry is None or geometry == "" or delete)
+                and update
+                and self.use_postgis):
             from ckanext.spatial.postgis.model import save_package_extent
             save_package_extent(dataset_id, None)
+            return
         elif not geometry:
             return
 
@@ -116,7 +119,7 @@ class SpatialMetadata(p.SingletonPlugin):
         try:
             log.debug("Received geometry: {}".format(geometry))
 
-            geometry = geojson.loads(geometry)
+            geometry = geojson.loads(six.text_type(geometry))
         except ValueError as e:
             error_dict = {
                 "spatial": ["Error decoding JSON object: {}".format(six.text_type(e))]}
