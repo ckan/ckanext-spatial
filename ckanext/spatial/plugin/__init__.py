@@ -126,7 +126,7 @@ class SpatialMetadata(p.SingletonPlugin):
             raise tk.ValidationError(error_dict)
 
         if not hasattr(geometry, "is_valid") or not geometry.is_valid:
-            msg = "Wrong GeoJSON object"
+            msg = "Error: Wrong GeoJSON object"
             if hasattr(geometry, "errors"):
                 msg = msg + ": {}".format(geometry.errors())
             error_dict = {"spatial": [msg]}
