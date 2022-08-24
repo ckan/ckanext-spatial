@@ -67,7 +67,7 @@ class TestSpatialExtra(SpatialTestBase):
 
         assert "Error" in res, res
         assert "Spatial" in res
-        assert "Wrong GeoJSON object" in res
+        assert "Error decoding JSON object" in res
 
     def test_spatial_extra_bad_geojson(self, app):
 
