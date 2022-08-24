@@ -4,13 +4,14 @@ import mimetypes
 from logging import getLogger
 
 import six
+import geojson
 import ckantoolkit as tk
 
 from ckan import plugins as p
 
+from ckanext.spatial.lib import save_package_extent
 from ckan.lib.helpers import json
 
-from ckanext.spatial.util import _get_package_extras
 if tk.check_ckan_version(min_version="2.9.0"):
     from ckanext.spatial.plugin.flask_plugin import (
         SpatialQueryMixin, HarvestMetadataApiMixin
@@ -73,6 +74,7 @@ def package_error_summary(error_dict):
             summary[tk._(prettify(key))] = error[0]
     return summary
 
+
 class SpatialMetadata(p.SingletonPlugin):
 
     p.implements(p.IPackageController, inherit=True)
@@ -80,12 +82,16 @@ class SpatialMetadata(p.SingletonPlugin):
     p.implements(p.IConfigurer, inherit=True)
     p.implements(p.ITemplateHelpers, inherit=True)
 
+    # IConfigurable
+
     def configure(self, config):
         from ckanext.spatial.model.package_extent import setup as setup_model
 
         if not tk.asbool(config.get('ckan.spatial.testing', 'False')):
             log.debug('Setting up the spatial model')
             setup_model()
+
+    # IConfigure
 
     def update_config(self, config):
         ''' Set up the resource library, public directory and
@@ -100,62 +106,79 @@ class SpatialMetadata(p.SingletonPlugin):
         mimetypes.add_type('application/json', '.geojson')
         mimetypes.add_type('application/gml+xml', '.gml')
 
-    def create(self, package):
-        self.check_spatial_extra(package)
+    # IPackageController
 
-    def edit(self, package):
-        self.check_spatial_extra(package)
+    def after_create(self, context, data_dict):
+        return self.after_dataset_create(context, data_dict)
 
-    def check_spatial_extra(self,package):
+    def after_dataset_create(self, context, data_dict):
+        self.check_spatial_extra(data_dict)
+
+    def after_update(self, context, data_dict):
+        return self.after_dataset_update(context, data_dict)
+
+    def after_dataset_update(self, context, data_dict):
+        self.check_spatial_extra(data_dict)
+
+    def after_delete(self, context, data_dict):
+        return self.after_dataset_delete(context, data_dict)
+
+    def after_dataset_delete(self, context, data_dict):
+        save_package_extent(data_dict["id"], None)
+
+    def check_spatial_extra(self, dataset_dict):
         '''
-        For a given package, looks at the spatial extent (as given in the
-        extra "spatial" in GeoJSON format) and records it in PostGIS.
+        For a given dataset, looks at the spatial extent (as given in the
+        "spatial" field/extra in GeoJSON format) and stores it in the database.
         '''
-        from ckanext.spatial.lib import save_package_extent
 
-        if not package.id:
-            log.warning('Couldn\'t store spatial extent because no id was provided for the package')
+        dataset_id = dataset_dict["id"]
+        geometry = dataset_dict.get("spatial")
+        delete = False
+
+        if not geometry:
+            # Check extras
+            for extra in dataset_dict.get("extras", []):
+                if extra["key"] == "spatial":
+                    if extra.get("deleted"):
+                        delete = True
+                    else:
+                        geometry = extra["value"]
+
+        if geometry is None or geometry == "" or delete:
+            save_package_extent(dataset_id, None)
+        elif not geometry:
             return
 
-        # TODO: deleted extra
-        for extra in _get_package_extras(package.id):
-            if extra.key != 'spatial':
-                continue
-            if extra.state == 'active' and extra.value:
-                try:
-                    log.debug('Received: %r' % extra.value)
-                    geometry = json.loads(extra.value)
-                except ValueError as e:
-                    error_dict = {'spatial':[u'Error decoding JSON object: %s' % six.text_type(e)]}
-                    raise tk.ValidationError(error_dict, error_summary=package_error_summary(error_dict))
-                except TypeError as e:
-                    error_dict = {'spatial':[u'Error decoding JSON object: %s' % six.text_type(e)]}
-                    raise tk.ValidationError(error_dict, error_summary=package_error_summary(error_dict))
+        # Check valid JSON
+        try:
+            log.debug("Received geometry: {}".format(geometry))
 
-                try:
-                    save_package_extent(package.id,geometry)
+            geometry = geojson.loads(geometry)
+        except ValueError as e:
+            error_dict = {
+                "spatial": ["Error decoding JSON object: {}".format(six.text_type(e))]}
+            raise tk.ValidationError(
+                error_dict, error_summary=package_error_summary(error_dict))
 
-                except AttributeError as e:
-                    error_dict = {'spatial':[u'Error creating geometry: invalid GeoJSON']}
-                    raise tk.ValidationError(error_dict, error_summary=package_error_summary(error_dict))
-                except Exception as e:
-                    if bool(os.getenv('DEBUG')):
-                        raise
-                    error_dict = {'spatial':[u'Error: %s' % six.text_type(e)]}
-                    raise tk.ValidationError(error_dict, error_summary=package_error_summary(error_dict))
+        if not hasattr(geometry, "is_valid") or not geometry.is_valid:
+            msg = "Wrong GeoJSON object"
+            if hasattr(geometry, "errors"):
+                msg = msg + ": {}".format(geometry.errors())
+            error_dict = {"spatial": [msg]}
+            raise tk.ValidationError(
+                error_dict, error_summary=package_error_summary(error_dict))
 
-            elif (extra.state == 'active' and not extra.value) or extra.state == 'deleted':
-                # Delete extent from table
-                save_package_extent(package.id,None)
+        try:
+            save_package_extent(dataset_id, geometry)
+        except Exception as e:
+            if bool(os.getenv('DEBUG')):
+                raise
+            error_dict = {'spatial': [u'Error: %s' % six.text_type(e)]}
+            raise tk.ValidationError(
+                error_dict, error_summary=package_error_summary(error_dict))
 
-            break
-
-
-    def delete(self, package):
-        from ckanext.spatial.lib import save_package_extent
-        save_package_extent(package.id,None)
-
-    ## ITemplateHelpers
+    # ITemplateHelpers
 
     def get_helpers(self):
         from ckanext.spatial import helpers as spatial_helpers

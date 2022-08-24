@@ -204,17 +204,3 @@ def _transform_to_html(content, xslt_package=None, xslt_path=None):
     result = etree.tostring(html, pretty_print=True)
 
     return result
-
-
-def _get_package_extras(pkg_id):
-    """Returns a list of package extras by its ID
-
-    Args:
-        pkg_id (str): an ID of package
-
-    Returns:
-        List[PackageExtra]: a list of package extras
-    """
-    return model.meta.Session.query(PackageExtra) \
-        .filter_by(package_id=pkg_id) \
-        .all()
