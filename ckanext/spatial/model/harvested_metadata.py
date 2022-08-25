@@ -199,6 +199,44 @@ class ISOElement(MappedXmlElement):
     }
 
 
+class ISOLocalised(ISOElement):
+
+    elements = [
+        ISOElement(
+            name="default",
+            search_paths=[
+                "gco:CharacterString/text()",
+            ],
+            multiplicity="0..1",
+        ),
+        ISOElement(
+            name='local',
+            search_paths=[
+                "gmd:PT_FreeText/gmd:textGroup",
+                "lan:PT_FreeText/lan:textGroup",
+            ],
+            multiplicity="0..1",
+            elements=[
+                ISOElement(
+                    name="value",
+                    search_paths=[
+                        "gmd:LocalisedCharacterString/text()",
+                        "lan:LocalisedCharacterString/text()",
+                    ],
+                    multiplicity="0..1",
+                ),
+                ISOElement(
+                    name="language_code",
+                    search_paths=[
+                        "gmd:LocalisedCharacterString/@locale",
+                        "lan:LocalisedCharacterString/@locale",
+                    ],
+                    multiplicity="0..1",
+                )
+            ]
+        )
+    ]
+
 class ISOResourceLocator(ISOElement):
 
     elements = [
@@ -221,13 +259,13 @@ class ISOResourceLocator(ISOElement):
             ],
             multiplicity="0..1",
         ),
-        ISOElement(
+        ISOLocalised(
             name="name",
             search_paths=[
                 "gmd:name/gco:CharacterString/text()",
                 "gmd:name/gmx:MimeFileType/text()",
                 # 19115-3
-                "cit:name/gco:CharacterString/text()",
+                "cit:name",
             ],
             multiplicity="0..1",
         ),
@@ -577,46 +615,6 @@ class ISOBrowseGraphic(ISOElement):
             multiplicity="0..1",
         ),
     ]
-
-
-class ISOLocalised(ISOElement):
-
-    elements = [
-        ISOElement(
-            name="default",
-            search_paths=[
-                "gco:CharacterString/text()",
-            ],
-            multiplicity="0..1",
-        ),
-        ISOElement(
-            name='local',
-            search_paths=[
-                "gmd:PT_FreeText/gmd:textGroup",
-                "lan:PT_FreeText/lan:textGroup",
-            ],
-            multiplicity="0..1",
-            elements=[
-                ISOElement(
-                    name="value",
-                    search_paths=[
-                        "gmd:LocalisedCharacterString/text()",
-                        "lan:LocalisedCharacterString/text()",
-                    ],
-                    multiplicity="0..1",
-                ),
-                ISOElement(
-                    name="language_code",
-                    search_paths=[
-                        "gmd:LocalisedCharacterString/@locale",
-                        "lan:LocalisedCharacterString/@locale",
-                    ],
-                    multiplicity="0..1",
-                )
-            ]
-        )
-    ]
-
 
 class ISOKeyword(ISOElement):
 
@@ -1539,6 +1537,7 @@ class ISODocument(MappedXmlDocument):
         self.infer_metadata_language(values)
         self.infert_keywords(values)
         self.infer_multilinguale(values)
+        self.infer_multilinguale_resource(values)
         self.infer_guid(values)
         self.infer_temporal_vertical_extent(values)
         self.infer_citation(values)
@@ -1749,7 +1748,10 @@ class ISODocument(MappedXmlDocument):
                 })
         values['keywords'] = value
 
-    def infer_multilinguale(self, values):
+    def infer_multilinguale(self, values, defaultLangKey=''):
+        if not defaultLangKey:
+            defaultLangKey = self.cleanLangKey(values.get('metadata-language', 'en'))
+
         for key in values:
             value = values[key]
 
@@ -1761,9 +1763,17 @@ class ISODocument(MappedXmlDocument):
                     ('default' in value and len(value) == 1)
                 )
             ):
-                defaultLangKey = self.cleanLangKey(values.get('metadata-language', 'en'))
+
                 LangDict = self.local_to_dict(values[key], defaultLangKey)
                 values[key] = json.dumps(LangDict)
+
+    def infer_multilinguale_resource(self, values):
+        defaultLangKey = self.cleanLangKey(values.get('metadata-language', 'en'))
+        for locator in values['resource-locator']:
+            log.debug(locator)
+            self.infer_multilinguale(locator, defaultLangKey)
+            log.debug(locator)
+
 
     def infer_spatial(self, values):
         geom = None
