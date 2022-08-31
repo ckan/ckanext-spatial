@@ -24,21 +24,27 @@ def get_srid(crs):
     return int(srid)
 
 
-def validate_bbox(bbox_values):
+def normalize_bbox(bbox_values):
     """
-    Ensures a bbox is expressed in a standard dict.
+    Ensures a bbox is expressed in a standard dict
 
     bbox_values may be:
            a string: "-4.96,55.70,-3.78,56.43"
            or a list [-4.96, 55.70, -3.78, 56.43]
            or a list of strings ["-4.96", "55.70", "-3.78", "56.43"]
-    and returns a dict:
-           {'minx': -4.96,
-            'miny': 55.70,
-            'maxx': -3.78,
-            'maxy': 56.43}
 
-    Any problems and it returns None.
+    ordered as MinX, MinY, MaxX, MaxY.
+
+    Returns a dict with the keys:
+
+       {
+            "minx": -4.96,
+            "miny": 55.70,
+            "maxx": -3.78,
+            "maxy": 56.43
+        }
+
+    If there are any problems parsing the input it returns None.
     """
 
     if isinstance(bbox_values, six.string_types):
@@ -56,4 +62,48 @@ def validate_bbox(bbox_values):
     except ValueError:
         return None
 
+    bbox = fit_bbox(bbox)
+
     return bbox
+
+
+def fit_bbox(bbox_dict):
+    """
+    Ensures that all coordinates in a bounding box
+    fall within -180, -90, 180, 90 degrees
+
+    Accepts a dict with the following keys:
+
+       {
+            "minx": -4.96,
+            "miny": 55.70,
+            "maxx": -3.78,
+            "maxy": 56.43
+        }
+
+    """
+
+    def _adjust_longitude(value):
+        if value < -180 or value > 180:
+            value = value % 360
+            if value < -180:
+                value = 360 + value
+            elif value > 180:
+                value = -360 + value
+        return value
+
+    def _adjust_latitude(value):
+        if value < -90 or value > 90:
+            value = value % 180
+            if value < -90:
+                value = 180 + value
+            elif value > 90:
+                value = -180 + value
+        return value
+
+    return {
+        "minx": _adjust_longitude(bbox_dict["minx"]),
+        "maxx": _adjust_longitude(bbox_dict["maxx"]),
+        "miny": _adjust_latitude(bbox_dict["miny"]),
+        "maxy": _adjust_latitude(bbox_dict["maxy"]),
+    }
