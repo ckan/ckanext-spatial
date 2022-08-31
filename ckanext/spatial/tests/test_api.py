@@ -16,8 +16,8 @@ extents = {
 }
 
 # TODO: migrate to Solr
-@pytest.mark.skip(reason="These tests need to be migrated to Solr")
 @pytest.mark.usefixtures("clean_db", "clean_index", "harvest_setup")
+@pytest.mark.ckan_config("ckanext.spatial.search_backend", "solr")
 class TestAction(SpatialTestBase):
 
     def test_spatial_query(self):
