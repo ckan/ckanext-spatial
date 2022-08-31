@@ -62,8 +62,6 @@ def normalize_bbox(bbox_values):
     except ValueError:
         return None
 
-    bbox = fit_bbox(bbox)
-
     return bbox
 
 
