@@ -244,7 +244,7 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
             if not bbox:
                 raise SearchError('Wrong bounding box provided')
 
-            bbox = fit_bbox(bbox)
+            #bbox = fit_bbox(bbox)
 
             if self.search_backend == 'solr':
                 if not search_params.get("fq_list"):
