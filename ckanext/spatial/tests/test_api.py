@@ -15,11 +15,10 @@ extents = {
     "dateline2": '{"type":"Polygon","coordinates":[[[170,60],[-170,60],[-170,70],[170,70],[170,60]]]}',
 }
 
-# TODO: migrate to Solr
+
 @pytest.mark.usefixtures("clean_db", "clean_index", "harvest_setup")
 @pytest.mark.ckan_config("ckanext.spatial.search_backend", "solr")
-class TestAction(SpatialTestBase):
-
+class TestBBoxSearch(SpatialTestBase):
     def test_spatial_query(self):
         dataset = factories.Dataset(
             extras=[{"key": "spatial", "value": self.geojson_examples["point"]}]

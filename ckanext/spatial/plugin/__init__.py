@@ -4,11 +4,16 @@ from logging import getLogger
 
 import six
 import geojson
+
+import shapely.geometry
+
 import ckantoolkit as tk
 
 from ckan import plugins as p
+from ckan.lib.search import SearchError
 
 from ckan.lib.helpers import json
+from ckanext.spatial.lib import normalize_bbox, fit_bbox
 
 if tk.check_ckan_version(min_version="2.9.0"):
     from ckanext.spatial.plugin.flask_plugin import (
@@ -18,7 +23,6 @@ else:
     from ckanext.spatial.plugin.pylons_plugin import (
         SpatialQueryMixin, HarvestMetadataApiMixin
     )
-from ckanext.spatial.lib import normalize_bbox, fit_bbox
 
 config = tk.config
 
@@ -147,10 +151,11 @@ class SpatialMetadata(p.SingletonPlugin):
     def get_helpers(self):
         from ckanext.spatial import helpers as spatial_helpers
         return {
-                'get_reference_date' : spatial_helpers.get_reference_date,
-                'get_responsible_party': spatial_helpers.get_responsible_party,
-                'get_common_map_config' : spatial_helpers.get_common_map_config,
-                }
+            "get_reference_date": spatial_helpers.get_reference_date,
+            "get_responsible_party": spatial_helpers.get_responsible_party,
+            "get_common_map_config": spatial_helpers.get_common_map_config,
+        }
+
 
 class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
 
@@ -179,7 +184,6 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
 
     def before_dataset_index(self, pkg_dict):
 
-        import shapely.geometry
         if pkg_dict.get('extras_spatial', None) and self.search_backend in ('solr', 'solr-spatial-field'):
             try:
                 geometry = json.loads(pkg_dict['extras_spatial'])
@@ -233,7 +237,6 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
         return pkg_dict
 
     def before_dataset_search(self, search_params):
-        from ckan.lib.search import SearchError
 
         if search_params.get('extras', None) and search_params['extras'].get('ext_bbox', None):
 
@@ -252,60 +255,10 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
                         **bbox)
                 )
 
-                #search_params = self._params_for_solr_search(bbox, search_params)
             elif self.search_backend == 'solr-spatial-field':
                 search_params = self._params_for_solr_spatial_field_search(bbox, search_params)
             elif self.search_backend == 'postgis':
                 search_params = self._params_for_postgis_search(bbox, search_params)
-        return search_params
-
-    def _params_for_solr_search(self, bbox, search_params):
-        '''
-        This will add the following parameters to the query:
-
-            defType - edismax (We need to define EDisMax to use bf)
-            bf - {function} A boost function to influence the score (thus
-                 influencing the sorting). The algorithm can be basically defined as:
-
-                    2 * X / Q + T
-
-                 Where X is the intersection between the query area Q and the
-                 target geometry T. It gives a ratio from 0 to 1 where 0 means
-                 no overlap at all and 1 a perfect fit
-
-             fq - Adds a filter that force the value returned by the previous
-                  function to be between 0 and 1, effectively applying the
-                  spatial filter.
-
-        '''
-
-        variables =dict(
-            x11=bbox['minx'],
-            x12=bbox['maxx'],
-            y11=bbox['miny'],
-            y12=bbox['maxy'],
-            x21='minx',
-            x22='maxx',
-            y21='miny',
-            y22='maxy',
-            area_search = abs(bbox['maxx'] - bbox['minx']) * abs(bbox['maxy'] - bbox['miny'])
-        )
-
-        bf = '''div(
-                   mul(
-                   mul(max(0, sub(min({x12},{x22}) , max({x11},{x21}))),
-                       max(0, sub(min({y12},{y22}) , max({y11},{y21})))
-                       ),
-                   2),
-                   add({area_search}, mul(sub({y22}, {y21}), sub({x22}, {x21})))
-                )'''.format(**variables).replace('\n','').replace(' ','')
-
-        search_params['fq_list'] = search_params.get('fq_list', [])
-        search_params['fq_list'].append('{!frange incl=false l=0 u=1}%s' % bf)
-
-        search_params['bf'] = bf
-        search_params['defType'] = 'edismax'
-
         return search_params
 
     def _params_for_solr_spatial_field_search(self, bbox, search_params):
