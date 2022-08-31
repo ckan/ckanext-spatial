@@ -17,7 +17,13 @@ jobs:
     needs: lint
     strategy:
       matrix:
-        ckan-version: [master, 2.9, 2.9-py2, 2.8, 2.7]
+        include:
+          - ckan-version: "2.10"
+            solr-image: "2.10-spatial"
+          - ckan-version: 2.9
+            solr-image: 2.9-solr8-spatial
+          - ckan-version: 2.9-py2
+            solr-image: 2.9-py2-solr8-spatial
       fail-fast: false
     
     name: CKAN ${{ matrix.ckan-version }}
@@ -26,7 +32,7 @@ jobs:
       image: openknowledge/ckan-dev:${{ matrix.ckan-version }}
     services:
       solr:
-        image: ckan/ckan-solr-dev:${{ matrix.ckan-version }}
+        image: ckan/ckan-solr:${{ matrix.solr-image }}
       postgres:
         image: ckan/ckan-postgres-dev:${{ matrix.ckan-version }}
         env:
