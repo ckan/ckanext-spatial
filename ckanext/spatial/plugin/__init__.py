@@ -250,8 +250,6 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
                 else:
                     # Check if coordinates are defined counter-clockwise,
                     # otherwise we'll get wrong results from Solr
-
-                    import ipdb; ipdb.set_trace()
                     lr = shapely.geometry.polygon.LinearRing(geometry['coordinates'][0])
                     lr_coords = list(lr.coords) if lr.is_ccw else reversed(list(lr.coords))
                     polygon = shapely.geometry.polygon.Polygon(lr_coords)
@@ -259,7 +257,6 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
 
             if not wkt:
                 shape = shapely.geometry.shape(geometry)
-                import ipdb; ipdb.set_trace()
                 if not shape.is_valid:
                     log.error('Wrong geometry, not indexing')
                     return pkg_dict
