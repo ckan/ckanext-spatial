@@ -244,9 +244,10 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
             if not bbox:
                 raise SearchError('Wrong bounding box provided')
 
-            #bbox = fit_bbox(bbox)
-
             if self.search_backend == 'solr':
+
+                bbox = fit_bbox(bbox)
+
                 if not search_params.get("fq_list"):
                     search_params["fq_list"] = []
 
@@ -256,6 +257,9 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
                 )
 
             elif self.search_backend == 'solr-spatial-field':
+
+                bbox = fit_bbox(bbox)
+
                 search_params = self._params_for_solr_spatial_field_search(bbox, search_params)
             elif self.search_backend == 'postgis':
                 search_params = self._params_for_postgis_search(bbox, search_params)
@@ -277,6 +281,14 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
     def _params_for_postgis_search(self, bbox, search_params):
         from ckanext.spatial.postgis.model import bbox_query, bbox_query_ordered
         from ckan.lib.search import SearchError
+
+        # Adjust easting values
+        while (bbox['minx'] < -180):
+            bbox['minx'] += 360
+            bbox['maxx'] += 360
+        while (bbox['minx'] > 180):
+            bbox['minx'] -= 360
+            bbox['maxx'] -= 360
 
         # Note: This will be deprecated at some point in favour of the
         # Solr 4 spatial sorting capabilities
