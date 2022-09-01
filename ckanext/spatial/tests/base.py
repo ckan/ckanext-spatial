@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import pytest
-
 geojson_examples = {
     "point": '{"type":"Point","coordinates":[100.0,0.0]}',
     "point_2": '{"type":"Point","coordinates":[20,10]}',
