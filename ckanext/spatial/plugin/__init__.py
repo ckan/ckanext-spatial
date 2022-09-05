@@ -264,7 +264,6 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
                     log.error('Wrong geometry, not indexing')
                     return pkg_dict
                 if shape.bounds[0] < -180 or shape.bounds[2] > 180:
-                    import ipdb; ipdb.set_trace()
                     log.error("""
 Geometries outside the -180, -90, 180, 90 boundaries are not supported,
 you need to split the geometry in order to fit the parts. Not indexing""")
@@ -290,47 +289,36 @@ you need to split the geometry in order to fit the parts. Not indexing""")
 
         search_backend = self._get_search_backend()
 
-        if search_params.get('extras', None) and search_params['extras'].get('ext_bbox', None):
+        input_bbox = search_params.get('extras', {}).get('ext_bbox', None)
 
-            bbox = normalize_bbox(search_params['extras']['ext_bbox'])
+        if input_bbox:
+            bbox = normalize_bbox(input_bbox)
             if not bbox:
                 raise SearchError('Wrong bounding box provided')
 
-            if search_backend == 'solr':
+            if search_backend in ('solr', 'solr-spatial-field'):
 
                 bbox = fit_bbox(bbox)
 
                 if not search_params.get("fq_list"):
                     search_params["fq_list"] = []
 
+                spatial_field = "spatial_bbox" if search_backend == "solr" else "spatial_geom"
+
                 search_params["fq_list"].append(
-                    "{{!field f=spatial_bbox}}Intersects(ENVELOPE({minx}, {maxx}, {maxy}, {miny}))".format(
-                        **bbox)
+                    "{{!field f={spatial_field}}}Intersects(ENVELOPE({minx}, {maxx}, {maxy}, {miny}))".format(
+                        spatial_field=spatial_field, **bbox)
                 )
 
-            elif search_backend == 'solr-spatial-field':
-
-                bbox = fit_bbox(bbox)
-
-                search_params = self._params_for_solr_spatial_field_search(bbox, search_params)
             elif search_backend == 'postgis':
                 search_params = self._params_for_postgis_search(bbox, search_params)
-        return search_params
-
-    def _params_for_solr_spatial_field_search(self, bbox, search_params):
-        '''
-        This will add an fq filter with the form:
-
-            +spatial_geom:"Intersects(ENVELOPE({minx}, {miny}, {maxx}, {maxy}))
-
-        '''
-        search_params['fq_list'] = search_params.get('fq_list', [])
-        search_params['fq_list'].append('+spatial_geom:"Intersects(ENVELOPE({minx}, {maxx}, {maxy}, {miny}))"'
-                                        .format(minx=bbox['minx'], miny=bbox['miny'], maxx=bbox['maxx'], maxy=bbox['maxy']))
 
         return search_params
 
     def _params_for_postgis_search(self, bbox, search_params):
+        """
+        Note: The PostGIS search functionality will be removed in future versions
+        """
         from ckanext.spatial.postgis.model import bbox_query, bbox_query_ordered
         from ckan.lib.search import SearchError
 
@@ -389,20 +377,25 @@ you need to split the geometry in order to fit the parts. Not indexing""")
         return search_params
 
     def after_dataset_search(self, search_results, search_params):
+        """
+        Note: The PostGIS search functionality will be removed in future versions
+        """
         from ckan.lib.search import PackageSearchQuery
 
-        # Note: This will be deprecated at some point in favour of the
-        # Solr 4 spatial sorting capabilities
-        if search_params.get('extras', {}).get('ext_spatial') and \
-           tk.asbool(config.get('ckanext.spatial.use_postgis_sorting', 'False')):
-            # Apply the spatial sort
-            querier = PackageSearchQuery()
-            pkgs = []
-            for package_id, spatial_ranking in search_params['extras']['ext_spatial']:
-                # get package from SOLR
-                pkg = querier.get_index(package_id)['data_dict']
-                pkgs.append(json.loads(pkg))
-            search_results['results'] = pkgs
+        search_backend = self._get_search_backend()
+        if search_backend == "postgis":
+            # Note: This will be deprecated at some point in favour of the
+            # Solr 4 spatial sorting capabilities
+            if search_params.get('extras', {}).get('ext_spatial') and \
+               tk.asbool(config.get('ckanext.spatial.use_postgis_sorting', 'False')):
+                # Apply the spatial sort
+                querier = PackageSearchQuery()
+                pkgs = []
+                for package_id, spatial_ranking in search_params['extras']['ext_spatial']:
+                    # get package from SOLR
+                    pkg = querier.get_index(package_id)['data_dict']
+                    pkgs.append(json.loads(pkg))
+                search_results['results'] = pkgs
         return search_results
 
 
