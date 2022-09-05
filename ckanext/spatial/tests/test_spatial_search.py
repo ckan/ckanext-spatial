@@ -10,10 +10,27 @@ import ckan.tests.factories as factories
 from ckanext.spatial.tests.base import SpatialTestBase
 
 extents = {
-    "nz": '{"type":"Polygon","coordinates":[[[174,-38],[176,-38],[176,-40],[174,-40],[174,-38]]]}',
-    "ohio": '{"type": "Polygon","coordinates": [[[-84,38],[-84,40],[-80,42],[-80,38],[-84,38]]]}',
-    "dateline": '{"type":"Polygon","coordinates":[[[169,70],[169,60],[192,60],[192,70],[169,70]]]}',
-    "dateline2": '{"type":"Polygon","coordinates":[[[170,60],[-170,60],[-170,70],[170,70],[170,60]]]}',
+    "nz": """
+        {"type":"Polygon",
+        "coordinates":[[[174,-38],[176,-38],[176,-40],[174,-40],[174,-38]]]}""",
+    "ohio": """
+        {"type": "Polygon",
+        "coordinates": [[[-84,38],[-84,40],[-80,42],[-80,38],[-84,38]]]}""",
+    "antimeridian_bbox": """
+        {"type":"Polygon",
+        "coordinates":[[[169,70],[169,60],[192,60],[192,70],[169,70]]]}""",
+    "antimeridian_bbox_2": """
+        {"type":"Polygon",
+        "coordinates":[[[170,60],[-170,60],[-170,70],[170,70],[170,60]]]}""",
+    "antimeridian_polygon": """
+        { "type": "MultiPolygon",
+            "coordinates": [ [ [
+            [ 181.2, 61.7 ], [ 178.1, 61.4 ],
+            [ 176.9, 59.2 ], [ 178.4, 55.2 ],
+            [ 188.6, 54.9 ], [ 188.8, 60.2 ],
+            [ 181.2, 61.7 ] ] ] ]
+        }
+    """
 }
 
 
@@ -175,10 +192,10 @@ class TestBBoxSearch(SpatialTestBase):
         assert result["count"] == 1
         assert result["results"][0]["id"] == dataset["id"]
 
-    def test_spatial_query_dateline_1(self):
+    def test_spatial_query_antimeridian_1(self):
 
         dataset = factories.Dataset(
-            extras=[{"key": "spatial", "value": extents["dateline"]}]
+            extras=[{"key": "spatial", "value": extents["antimeridian_bbox"]}]
         )
 
         result = helpers.call_action(
@@ -188,10 +205,10 @@ class TestBBoxSearch(SpatialTestBase):
         assert result["count"] == 1
         assert result["results"][0]["id"] == dataset["id"]
 
-    def test_spatial_query_dateline_2(self):
+    def test_spatial_query_antimeridian_2(self):
 
         dataset = factories.Dataset(
-            extras=[{"key": "spatial", "value": extents["dateline"]}]
+            extras=[{"key": "spatial", "value": extents["antimeridian_bbox"]}]
         )
 
         result = helpers.call_action(
@@ -201,10 +218,10 @@ class TestBBoxSearch(SpatialTestBase):
         assert result["count"] == 1
         assert result["results"][0]["id"] == dataset["id"]
 
-    def test_spatial_query_dateline_3(self):
+    def test_spatial_query_antimeridian_3(self):
 
         dataset = factories.Dataset(
-            extras=[{"key": "spatial", "value": extents["dateline2"]}]
+            extras=[{"key": "spatial", "value": extents["antimeridian_bbox_2"]}]
         )
 
         result = helpers.call_action(
@@ -214,10 +231,10 @@ class TestBBoxSearch(SpatialTestBase):
         assert result["count"] == 1
         assert result["results"][0]["id"] == dataset["id"]
 
-    def test_spatial_query_dateline_4(self):
+    def test_spatial_query_antimeridian_4(self):
 
         dataset = factories.Dataset(
-            extras=[{"key": "spatial", "value": extents["dateline2"]}]
+            extras=[{"key": "spatial", "value": extents["antimeridian_bbox_2"]}]
         )
 
         result = helpers.call_action(
@@ -413,10 +430,10 @@ class TestSpatialFieldSearch(SpatialTestBase):
         assert result["count"] == 1
         assert result["results"][0]["id"] == dataset["id"]
 
-    def test_spatial_query_dateline_1(self):
+    def test_spatial_query_antimeridian_1(self):
 
         dataset = factories.Dataset(
-            extras=[{"key": "spatial", "value": extents["dateline"]}]
+            extras=[{"key": "spatial", "value": extents["antimeridian_bbox"]}]
         )
 
         result = helpers.call_action(
@@ -426,10 +443,10 @@ class TestSpatialFieldSearch(SpatialTestBase):
         assert result["count"] == 1
         assert result["results"][0]["id"] == dataset["id"]
 
-    def test_spatial_query_dateline_2(self):
+    def test_spatial_query_antimeridian_2(self):
 
         dataset = factories.Dataset(
-            extras=[{"key": "spatial", "value": extents["dateline"]}]
+            extras=[{"key": "spatial", "value": extents["antimeridian_bbox"]}]
         )
 
         result = helpers.call_action(
@@ -439,10 +456,10 @@ class TestSpatialFieldSearch(SpatialTestBase):
         assert result["count"] == 1
         assert result["results"][0]["id"] == dataset["id"]
 
-    def test_spatial_query_dateline_3(self):
+    def test_spatial_query_antimeridian_3(self):
 
         dataset = factories.Dataset(
-            extras=[{"key": "spatial", "value": extents["dateline2"]}]
+            extras=[{"key": "spatial", "value": extents["antimeridian_bbox_2"]}]
         )
 
         result = helpers.call_action(
@@ -452,10 +469,10 @@ class TestSpatialFieldSearch(SpatialTestBase):
         assert result["count"] == 1
         assert result["results"][0]["id"] == dataset["id"]
 
-    def test_spatial_query_dateline_4(self):
+    def test_spatial_query_antimeridian_4(self):
 
         dataset = factories.Dataset(
-            extras=[{"key": "spatial", "value": extents["dateline2"]}]
+            extras=[{"key": "spatial", "value": extents["antimeridian_bbox_2"]}]
         )
 
         result = helpers.call_action(
@@ -494,6 +511,22 @@ class TestSpatialFieldSearch(SpatialTestBase):
 
         result = helpers.call_action(
             "package_search", extras={"ext_bbox": "0,61,15,64"}
+        )
+
+        assert result["count"] == 0
+
+    def test_spatial_polygon_across_antimeridian_not_indexed(self):
+        factories.Dataset(
+            extras=[
+                {
+                    "key": "spatial",
+                    "value": extents["antimeridian_polygon"]
+                }
+            ]
+        )
+
+        result = helpers.call_action(
+            "package_search", extras={"ext_bbox": "177.9,55,178.0,59"},
         )
 
         assert result["count"] == 0

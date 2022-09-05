@@ -252,7 +252,7 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
                     lr = shapely.geometry.polygon.LinearRing(geometry['coordinates'][0])
                     lr_coords = (
                         list(lr.coords) if lr.is_ccw
-                        else reversed(list(lr.coords))
+                        else list(reversed(list(lr.coords)))
                     )
                     polygon = shapely.geometry.polygon.Polygon(
                         fit_linear_ring(lr_coords))
@@ -262,6 +262,12 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
                 shape = shapely.geometry.shape(geometry)
                 if not shape.is_valid:
                     log.error('Wrong geometry, not indexing')
+                    return pkg_dict
+                if shape.bounds[0] < -180 or shape.bounds[2] > 180:
+                    import ipdb; ipdb.set_trace()
+                    log.error("""
+Geometries outside the -180, -90, 180, 90 boundaries are not supported,
+you need to split the geometry in order to fit the parts. Not indexing""")
                     return pkg_dict
                 wkt = shape.wkt
 

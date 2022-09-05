@@ -112,8 +112,8 @@ def fit_linear_ring(lr):
     bbox = {
         "minx": lr[0][0],
         "maxx": lr[2][0],
-        "miny": lr[1][1],
-        "maxy": lr[0][1],
+        "miny": lr[0][1],
+        "maxy": lr[2][1],
     }
 
     bbox = fit_bbox(bbox)
