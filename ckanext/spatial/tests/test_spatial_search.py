@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import pytest
 
 from ckan.lib.search import SearchError
@@ -83,6 +85,23 @@ class TestBBoxSearch(SpatialTestBase):
 
         result = helpers.call_action(
             "package_search", extras={"ext_bbox": "-156.570,19.959,-155.960,20.444"}
+        )
+
+        assert result["count"] == 1
+        assert result["results"][0]["id"] == dataset["id"]
+
+    def test_spatial_polygon_split_across_antimeridian(self):
+        dataset = factories.Dataset(
+            extras=[
+                {
+                    "key": "spatial",
+                    "value": self.read_file("data/chukot.geojson")
+                }
+            ]
+        )
+
+        result = helpers.call_action(
+            "package_search", extras={"ext_bbox": "175,61,179,64"}
         )
 
         assert result["count"] == 1
