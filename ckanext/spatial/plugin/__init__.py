@@ -13,7 +13,7 @@ from ckan import plugins as p
 from ckan.lib.search import SearchError
 
 from ckan.lib.helpers import json
-from ckanext.spatial.lib import normalize_bbox, fit_bbox
+from ckanext.spatial.lib import normalize_bbox, fit_bbox, fit_linear_ring
 
 if tk.check_ckan_version(min_version="2.9.0"):
     from ckanext.spatial.plugin.flask_plugin import (
@@ -34,7 +34,6 @@ ALLOWED_SEARCH_BACKENDS = [
     "solr-spatial-field",
     "postgis",      # Deprecated: will be removed in the next version
 ]
-
 
 
 class SpatialMetadata(p.SingletonPlugin):
@@ -251,8 +250,12 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
                     # Check if coordinates are defined counter-clockwise,
                     # otherwise we'll get wrong results from Solr
                     lr = shapely.geometry.polygon.LinearRing(geometry['coordinates'][0])
-                    lr_coords = list(lr.coords) if lr.is_ccw else reversed(list(lr.coords))
-                    polygon = shapely.geometry.polygon.Polygon(lr_coords)
+                    lr_coords = (
+                        list(lr.coords) if lr.is_ccw
+                        else reversed(list(lr.coords))
+                    )
+                    polygon = shapely.geometry.polygon.Polygon(
+                        fit_linear_ring(lr_coords))
                     wkt = polygon.wkt
 
             if not wkt:

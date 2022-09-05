@@ -107,6 +107,29 @@ class TestBBoxSearch(SpatialTestBase):
         assert result["count"] == 1
         assert result["results"][0]["id"] == dataset["id"]
 
+    def test_spatial_polygon_split_across_antimeridian_outside_bbox(self):
+        """
+        This test passes because as the geometry passes the antemeridian, the
+        extent generated to be index is (-180, miny, 180, maxy). Sites needing to
+        deal with this scenario should use the `solr-spatial-field` backend.
+        See ``TestSpatialFieldSearch.test_spatial_polygon_split_across_antimeridian_outside_bbox``
+        """
+        dataset = factories.Dataset(
+            extras=[
+                {
+                    "key": "spatial",
+                    "value": self.read_file("data/chukot.geojson")
+                }
+            ]
+        )
+
+        result = helpers.call_action(
+            "package_search", extras={"ext_bbox": "0,61,15,64"}
+        )
+
+        assert result["count"] == 1
+        assert result["results"][0]["id"] == dataset["id"]
+
     def test_spatial_query_nz(self):
         dataset = factories.Dataset(extras=[{"key": "spatial", "value": extents["nz"]}])
 
@@ -442,3 +465,35 @@ class TestSpatialFieldSearch(SpatialTestBase):
         assert result["count"] == 1
         assert result["results"][0]["id"] == dataset["id"]
 
+    def test_spatial_polygon_split_across_antimeridian(self):
+        dataset = factories.Dataset(
+            extras=[
+                {
+                    "key": "spatial",
+                    "value": self.read_file("data/chukot.geojson")
+                }
+            ]
+        )
+
+        result = helpers.call_action(
+            "package_search", extras={"ext_bbox": "175,61,179,64"}
+        )
+
+        assert result["count"] == 1
+        assert result["results"][0]["id"] == dataset["id"]
+
+    def test_spatial_polygon_split_across_antimeridian_outside_bbox(self):
+        factories.Dataset(
+            extras=[
+                {
+                    "key": "spatial",
+                    "value": self.read_file("data/chukot.geojson")
+                }
+            ]
+        )
+
+        result = helpers.call_action(
+            "package_search", extras={"ext_bbox": "0,61,15,64"}
+        )
+
+        assert result["count"] == 0

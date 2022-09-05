@@ -105,3 +105,23 @@ def fit_bbox(bbox_dict):
         "miny": _adjust_latitude(bbox_dict["miny"]),
         "maxy": _adjust_latitude(bbox_dict["maxy"]),
     }
+
+
+def fit_linear_ring(lr):
+
+    bbox = {
+        "minx": lr[0][0],
+        "maxx": lr[2][0],
+        "miny": lr[1][1],
+        "maxy": lr[0][1],
+    }
+
+    bbox = fit_bbox(bbox)
+
+    return [
+        (bbox["minx"], bbox["maxy"]),
+        (bbox["minx"], bbox["miny"]),
+        (bbox["maxx"], bbox["miny"]),
+        (bbox["maxx"], bbox["maxy"]),
+        (bbox["minx"], bbox["maxy"]),
+    ]
