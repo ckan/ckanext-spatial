@@ -214,8 +214,17 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
         if not pkg_dict.get('extras_spatial'):
             return pkg_dict
 
+        # Coupled resources are URL -> uuid links, they are not needed in SOLR
+        # and might be huge if there are lot of coupled resources
+        pkg_dict.pop('coupled-resource', None)
+        pkg_dict.pop('extras_coupled-resource', None)
+
+        # spatial field is geojson coordinate data, not needed in SOLR either
+        pkg_dict.pop('spatial', None)
+        geom_from_metadata = pkg_dict.pop('extras_spatial', None)
+
         try:
-            geometry = json.loads(pkg_dict['extras_spatial'])
+            geometry = json.loads(geom_from_metadata)
 
             shape = shapely.geometry.shape(geometry)
         except (AttributeError, ValueError):
@@ -272,16 +281,6 @@ you need to split the geometry in order to fit the parts. Not indexing""")
 
             pkg_dict['spatial_geom'] = wkt
 
-        # Coupled resources are URL -> uuid links, they are not needed in SOLR
-        # and might be huge if there are lot of coupled resources
-        if pkg_dict.get('coupled-resource'):
-            pkg_dict.pop('coupled-resource', None)
-            pkg_dict.pop('extras_coupled-resource', None)
-
-        # spatial field is geojson coordinate data, not needed in SOLR either
-        if pkg_dict.get('spatial'):
-            pkg_dict.pop('spatial', None)
-            pkg_dict.pop('extras_spatial', None)
 
         return pkg_dict
 
