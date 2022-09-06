@@ -303,10 +303,17 @@ you need to split the geometry in order to fit the parts. Not indexing""")
                 if not search_params.get("fq_list"):
                     search_params["fq_list"] = []
 
-                spatial_field = "spatial_bbox" if search_backend == "solr" else "spatial_geom"
+                spatial_field = (
+                    "spatial_bbox" if search_backend == "solr" else "spatial_geom"
+                )
+
+                default_spatial_query = "{{!field f={spatial_field}}}Intersects(ENVELOPE({minx}, {maxx}, {maxy}, {miny}))"
+
+                spatial_query = config.get(
+                    "ckanext.spatial.solr_query", default_spatial_query)
 
                 search_params["fq_list"].append(
-                    "{{!field f={spatial_field}}}Intersects(ENVELOPE({minx}, {maxx}, {maxy}, {miny}))".format(
+                    spatial_query.format(
                         spatial_field=spatial_field, **bbox)
                 )
 

@@ -244,6 +244,39 @@ class TestBBoxSearch(SpatialTestBase):
         assert result["count"] == 1
         assert result["results"][0]["id"] == dataset["id"]
 
+    def test_custom_spatial_query(self, monkeypatch, ckan_config):
+        """
+            ┌────────────────┐ xxxxxx
+            │           xxxxx│xx     xxx
+            │         xxx    │       xxx
+            │        xx      │      xx
+            │     xxxx       │    xxx
+            │     x         x│xxxxx
+            │      xxx   xxxx│
+            │         xxxx   │
+            │                │
+            └────────────────┘
+        """
+        dataset = factories.Dataset(extras=[{"key": "spatial", "value": extents["nz"]}])
+
+        result = helpers.call_action(
+            "package_search", extras={"ext_bbox": "175,-39.5,176.5,-39"}
+        )
+
+        assert result["count"] == 1
+        assert result["results"][0]["id"] == dataset["id"]
+
+        monkeypatch.setitem(
+            ckan_config,
+            "ckanext.spatial.solr_query",
+            "{{!field f={spatial_field}}}Contains(ENVELOPE({minx}, {maxx}, {maxy}, {miny}))")
+
+        result = helpers.call_action(
+            "package_search", extras={"ext_bbox": "175,-39.5,176.5,-39"}
+        )
+
+        assert result["count"] == 0
+
 
 @pytest.mark.usefixtures("clean_db", "clean_index", "harvest_setup")
 @pytest.mark.ckan_config("ckanext.spatial.search_backend", "solr-spatial-field")
@@ -530,3 +563,37 @@ class TestSpatialFieldSearch(SpatialTestBase):
         )
 
         assert result["count"] == 0
+
+    def test_custom_spatial_query(self, monkeypatch, ckan_config):
+        """
+            ┌────────────────┐ xxxxxx
+            │           xxxxx│xx     xxx
+            │         xxx    │       xxx
+            │        xx      │      xx
+            │     xxxx       │    xxx
+            │     x         x│xxxxx
+            │      xxx   xxxx│
+            │         xxxx   │
+            │                │
+            └────────────────┘
+        """
+        dataset = factories.Dataset(extras=[{"key": "spatial", "value": extents["nz"]}])
+
+        result = helpers.call_action(
+            "package_search", extras={"ext_bbox": "175,-39.5,176.5,-39"}
+        )
+
+        assert result["count"] == 1
+        assert result["results"][0]["id"] == dataset["id"]
+
+        monkeypatch.setitem(
+            ckan_config,
+            "ckanext.spatial.solr_query",
+            "{{!field f={spatial_field}}}Contains(ENVELOPE({minx}, {maxx}, {maxy}, {miny}))")
+
+        result = helpers.call_action(
+            "package_search", extras={"ext_bbox": "175,-39.5,176.5,-39"}
+        )
+
+        assert result["count"] == 0
+
