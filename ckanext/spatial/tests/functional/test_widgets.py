@@ -7,8 +7,10 @@ from ckan.tests import factories
 import ckan.plugins.toolkit as tk
 
 
+@pytest.mark.usefixtures("with_plugins", "clean_db", "clean_index", "harvest_setup")
+@pytest.mark.ckan_config(
+    "ckan.plugins", "test_spatial_plugin spatial_metadata spatial_query")
 class TestSpatialWidgets(SpatialTestBase):
-    @pytest.mark.usefixtures("with_plugins", "clean_db", "clean_index", "harvest_setup")
     def test_dataset_map(self, app):
         dataset = factories.Dataset(
             extras=[{"key": "spatial", "value": self.geojson_examples["point"]}],

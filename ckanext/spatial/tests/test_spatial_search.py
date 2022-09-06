@@ -596,3 +596,55 @@ class TestSpatialFieldSearch(SpatialTestBase):
 
         assert result["count"] == 0
 
+
+@pytest.mark.usefixtures("clean_db", "clean_index", "harvest_setup", "with_plugins")
+@pytest.mark.ckan_config(
+    "ckan.plugins", "test_spatial_plugin spatial_metadata spatial_query")
+@pytest.mark.ckan_config("ckanext.spatial.search_backend", "solr-spatial-field")
+class TestCustomIndexing(SpatialTestBase):
+    """
+    These tests ensure both that
+    1. You can use your own custom logic to index geometries
+    2. The spatial fields are multivaule, ie you can index more than one geometry against
+       the same dataset
+    """
+    def test_single_geom(self):
+        dataset = factories.Dataset(
+            extras=[{"key": "my_geoms", "value": self.geojson_examples["polygon"]}]
+        )
+
+        result = helpers.call_action(
+            "package_search", extras={"ext_bbox": "-180,-90,180,90"}
+        )
+
+        assert result["count"] == 1
+        assert result["results"][0]["id"] == dataset["id"]
+
+    def test_multiple_geoms(self):
+        dataset = factories.Dataset(
+            extras=[
+                {
+                    "key": "my_geoms",
+                    "value": "[{}, {}]".format(
+                        extents["nz"], extents["ohio"])
+                }
+            ]
+        )
+
+        # Test that we get the same dataset using two different extents
+
+        # New Zealand
+        result = helpers.call_action(
+            "package_search", extras={"ext_bbox": "56,-54,189,-28"}
+        )
+
+        assert result["count"] == 1
+        assert result["results"][0]["id"] == dataset["id"]
+
+        # Ohio
+        result = helpers.call_action(
+            "package_search", extras={"ext_bbox": "-110,37,-78,53"}
+        )
+
+        assert result["count"] == 1
+        assert result["results"][0]["id"] == dataset["id"]
