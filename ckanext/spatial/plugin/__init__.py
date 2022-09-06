@@ -281,7 +281,6 @@ you need to split the geometry in order to fit the parts. Not indexing""")
 
             pkg_dict['spatial_geom'] = wkt
 
-
         return pkg_dict
 
     def before_dataset_search(self, search_params):

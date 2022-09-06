@@ -34,7 +34,7 @@ extents = {
 }
 
 
-@pytest.mark.usefixtures("clean_db", "clean_index", "harvest_setup")
+@pytest.mark.usefixtures("clean_db", "clean_index", "harvest_setup", "with_plugins")
 @pytest.mark.ckan_config("ckanext.spatial.search_backend", "solr")
 class TestBBoxSearch(SpatialTestBase):
     def test_spatial_query(self):
@@ -50,7 +50,6 @@ class TestBBoxSearch(SpatialTestBase):
         assert result["results"][0]["id"] == dataset["id"]
 
     def test_spatial_query_outside_bbox(self):
-
         factories.Dataset(
             extras=[{"key": "spatial", "value": self.geojson_examples["point"]}]
         )
@@ -278,7 +277,7 @@ class TestBBoxSearch(SpatialTestBase):
         assert result["count"] == 0
 
 
-@pytest.mark.usefixtures("clean_db", "clean_index", "harvest_setup")
+@pytest.mark.usefixtures("clean_db", "clean_index", "harvest_setup", "with_plugins")
 @pytest.mark.ckan_config("ckanext.spatial.search_backend", "solr-spatial-field")
 class TestSpatialFieldSearch(SpatialTestBase):
     def test_spatial_query_point(self):
