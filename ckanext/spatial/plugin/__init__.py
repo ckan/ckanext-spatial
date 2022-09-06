@@ -13,7 +13,7 @@ from ckan import plugins as p
 from ckan.lib.search import SearchError
 
 from ckan.lib.helpers import json
-from ckanext.spatial.lib import normalize_bbox, fit_bbox
+from ckanext.spatial.lib import normalize_bbox, fit_bbox, fit_linear_ring
 
 if tk.check_ckan_version(min_version="2.9.0"):
     from ckanext.spatial.plugin.flask_plugin import (
@@ -27,6 +27,13 @@ else:
 config = tk.config
 
 log = getLogger(__name__)
+
+DEFAULT_SEARCH_BACKEND = "solr"
+ALLOWED_SEARCH_BACKENDS = [
+    "solr",
+    "solr-spatial-field",
+    "postgis",      # Deprecated: will be removed in the next version
+]
 
 
 class SpatialMetadata(p.SingletonPlugin):
@@ -160,16 +167,31 @@ class SpatialMetadata(p.SingletonPlugin):
 class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
 
     p.implements(p.IPackageController, inherit=True)
-    p.implements(p.IConfigurable, inherit=True)
+    p.implements(p.IConfigurer, inherit=True)
 
-    search_backend = None
+    def _get_search_backend(self):
+        search_backend = config.get(
+            "ckanext.spatial.search_backend", DEFAULT_SEARCH_BACKEND)
 
-    def configure(self, config):
+        if search_backend not in ALLOWED_SEARCH_BACKENDS:
+            raise ValueError(
+                "Unknown spatial search backend: {}. Allowed values are: {}".format(
+                    search_backend, ALLOWED_SEARCH_BACKENDS)
+            )
 
-        self.search_backend = config.get("ckanext.spatial.search_backend", "solr")
+        if search_backend == "postgis":
+            log.warning(
+                "The `postgis` spatial search backend is deprecated"
+                "and will be removed in future versions"
+            )
 
-        if self.search_backend == "postgis":
-            log.warning("The `postgis` spatial search backend is deprecated and will be removed in future versions")
+        return search_backend
+
+    # IConfigure
+
+    def update_config(self, config):
+
+        self._get_search_backend()
 
     # IPackageController
 
@@ -184,101 +206,124 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
 
     def before_dataset_index(self, pkg_dict):
 
-        if pkg_dict.get('extras_spatial', None) and self.search_backend in ('solr', 'solr-spatial-field'):
-            try:
-                geometry = json.loads(pkg_dict['extras_spatial'])
+        search_backend = self._get_search_backend()
 
+        if search_backend not in ('solr', 'solr-spatial-field'):
+            return pkg_dict
+
+        if not pkg_dict.get('extras_spatial'):
+            return pkg_dict
+
+        # Coupled resources are URL -> uuid links, they are not needed in SOLR
+        # and might be huge if there are lot of coupled resources
+        pkg_dict.pop('coupled-resource', None)
+        pkg_dict.pop('extras_coupled-resource', None)
+
+        # spatial field is geojson coordinate data, not needed in SOLR either
+        pkg_dict.pop('spatial', None)
+        geom_from_metadata = pkg_dict.pop('extras_spatial', None)
+
+        try:
+            geometry = json.loads(geom_from_metadata)
+
+            shape = shapely.geometry.shape(geometry)
+        except (AttributeError, ValueError):
+            log.error('Geometry not valid GeoJSON, not indexing')
+            return pkg_dict
+
+        if search_backend == 'solr':
+            # We always index the envelope of the geometry regardless of
+            # if it's an actual bounding box (polygon)
+
+            bounds = shape.bounds
+            bbox = fit_bbox(normalize_bbox(list(bounds)))
+
+            pkg_dict["spatial_bbox"] = "ENVELOPE({minx}, {maxx}, {maxy}, {miny})".format(
+                **bbox)
+
+        elif search_backend == 'solr-spatial-field':
+            wkt = None
+
+            # Check potential problems with bboxes
+            if geometry['type'] == 'Polygon' \
+               and len(geometry['coordinates']) == 1 \
+               and len(geometry['coordinates'][0]) == 5:
+
+                # Check wrong bboxes (4 same points)
+                xs = [p[0] for p in geometry['coordinates'][0]]
+                ys = [p[1] for p in geometry['coordinates'][0]]
+
+                if xs.count(xs[0]) == 5 and ys.count(ys[0]) == 5:
+                    wkt = 'POINT({x} {y})'.format(x=xs[0], y=ys[0])
+                else:
+                    # Check if coordinates are defined counter-clockwise,
+                    # otherwise we'll get wrong results from Solr
+                    lr = shapely.geometry.polygon.LinearRing(geometry['coordinates'][0])
+                    lr_coords = (
+                        list(lr.coords) if lr.is_ccw
+                        else list(reversed(list(lr.coords)))
+                    )
+                    polygon = shapely.geometry.polygon.Polygon(
+                        fit_linear_ring(lr_coords))
+                    wkt = polygon.wkt
+
+            if not wkt:
                 shape = shapely.geometry.shape(geometry)
-            except (AttributeError, ValueError):
-                log.error('Geometry not valid GeoJSON, not indexing')
-                return pkg_dict
+                if not shape.is_valid:
+                    log.error('Wrong geometry, not indexing')
+                    return pkg_dict
+                if shape.bounds[0] < -180 or shape.bounds[2] > 180:
+                    log.error("""
+Geometries outside the -180, -90, 180, 90 boundaries are not supported,
+you need to split the geometry in order to fit the parts. Not indexing""")
+                    return pkg_dict
+                wkt = shape.wkt
 
-            if self.search_backend == 'solr':
-                # We always index the envelope of the geometry regardless of
-                # if it's an actual bounding box (polygon)
-
-                bounds = shape.bounds
-                bbox = fit_bbox(normalize_bbox(list(bounds)))
-
-                pkg_dict["spatial_bbox"] = "ENVELOPE({minx}, {maxx}, {maxy}, {miny})".format(
-                    **bbox)
-
-            elif self.search_backend == 'solr-spatial-field':
-                wkt = None
-
-                # Check potential problems with bboxes
-                if geometry['type'] == 'Polygon' \
-                   and len(geometry['coordinates']) == 1 \
-                   and len(geometry['coordinates'][0]) == 5:
-
-                    # Check wrong bboxes (4 same points)
-                    xs = [p[0] for p in geometry['coordinates'][0]]
-                    ys = [p[1] for p in geometry['coordinates'][0]]
-
-                    if xs.count(xs[0]) == 5 and ys.count(ys[0]) == 5:
-                        wkt = 'POINT({x} {y})'.format(x=xs[0], y=ys[0])
-                    else:
-                        # Check if coordinates are defined counter-clockwise,
-                        # otherwise we'll get wrong results from Solr
-                        lr = shapely.geometry.polygon.LinearRing(geometry['coordinates'][0])
-                        lr_coords = list(lr.coords) if lr.is_ccw else reversed(list(lr.coords))
-                        polygon = shapely.geometry.polygon.Polygon(lr_coords)
-                        wkt = polygon.wkt
-
-                if not wkt:
-                    shape = shapely.geometry.shape(geometry)
-                    if not shape.is_valid:
-                        log.error('Wrong geometry, not indexing')
-                        return pkg_dict
-                    wkt = shape.wkt
-
-                pkg_dict['spatial_geom'] = wkt
+            pkg_dict['spatial_geom'] = wkt
 
         return pkg_dict
 
     def before_dataset_search(self, search_params):
 
-        if search_params.get('extras', None) and search_params['extras'].get('ext_bbox', None):
+        search_backend = self._get_search_backend()
 
-            bbox = normalize_bbox(search_params['extras']['ext_bbox'])
+        input_bbox = search_params.get('extras', {}).get('ext_bbox', None)
+
+        if input_bbox:
+            bbox = normalize_bbox(input_bbox)
             if not bbox:
                 raise SearchError('Wrong bounding box provided')
 
-            if self.search_backend == 'solr':
+            if search_backend in ('solr', 'solr-spatial-field'):
 
                 bbox = fit_bbox(bbox)
 
                 if not search_params.get("fq_list"):
                     search_params["fq_list"] = []
 
-                search_params["fq_list"].append(
-                    "{{!field f=spatial_bbox}}Intersects(ENVELOPE({minx}, {maxx}, {maxy}, {miny}))".format(
-                        **bbox)
+                spatial_field = (
+                    "spatial_bbox" if search_backend == "solr" else "spatial_geom"
                 )
 
-            elif self.search_backend == 'solr-spatial-field':
+                default_spatial_query = "{{!field f={spatial_field}}}Intersects(ENVELOPE({minx}, {maxx}, {maxy}, {miny}))"
 
-                bbox = fit_bbox(bbox)
+                spatial_query = config.get(
+                    "ckanext.spatial.solr_query", default_spatial_query)
 
-                search_params = self._params_for_solr_spatial_field_search(bbox, search_params)
-            elif self.search_backend == 'postgis':
+                search_params["fq_list"].append(
+                    spatial_query.format(
+                        spatial_field=spatial_field, **bbox)
+                )
+
+            elif search_backend == 'postgis':
                 search_params = self._params_for_postgis_search(bbox, search_params)
-        return search_params
-
-    def _params_for_solr_spatial_field_search(self, bbox, search_params):
-        '''
-        This will add an fq filter with the form:
-
-            +spatial_geom:"Intersects(ENVELOPE({minx}, {miny}, {maxx}, {maxy}))
-
-        '''
-        search_params['fq_list'] = search_params.get('fq_list', [])
-        search_params['fq_list'].append('+spatial_geom:"Intersects(ENVELOPE({minx}, {maxx}, {maxy}, {miny}))"'
-                                        .format(minx=bbox['minx'], miny=bbox['miny'], maxx=bbox['maxx'], maxy=bbox['maxy']))
 
         return search_params
 
     def _params_for_postgis_search(self, bbox, search_params):
+        """
+        Note: The PostGIS search functionality will be removed in future versions
+        """
         from ckanext.spatial.postgis.model import bbox_query, bbox_query_ordered
         from ckan.lib.search import SearchError
 
@@ -337,20 +382,25 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
         return search_params
 
     def after_dataset_search(self, search_results, search_params):
+        """
+        Note: The PostGIS search functionality will be removed in future versions
+        """
         from ckan.lib.search import PackageSearchQuery
 
-        # Note: This will be deprecated at some point in favour of the
-        # Solr 4 spatial sorting capabilities
-        if search_params.get('extras', {}).get('ext_spatial') and \
-           tk.asbool(config.get('ckanext.spatial.use_postgis_sorting', 'False')):
-            # Apply the spatial sort
-            querier = PackageSearchQuery()
-            pkgs = []
-            for package_id, spatial_ranking in search_params['extras']['ext_spatial']:
-                # get package from SOLR
-                pkg = querier.get_index(package_id)['data_dict']
-                pkgs.append(json.loads(pkg))
-            search_results['results'] = pkgs
+        search_backend = self._get_search_backend()
+        if search_backend == "postgis":
+            # Note: This will be deprecated at some point in favour of the
+            # Solr 4 spatial sorting capabilities
+            if search_params.get('extras', {}).get('ext_spatial') and \
+               tk.asbool(config.get('ckanext.spatial.use_postgis_sorting', 'False')):
+                # Apply the spatial sort
+                querier = PackageSearchQuery()
+                pkgs = []
+                for package_id, spatial_ranking in search_params['extras']['ext_spatial']:
+                    # get package from SOLR
+                    pkg = querier.get_index(package_id)['data_dict']
+                    pkgs.append(json.loads(pkg))
+                search_results['results'] = pkgs
         return search_results
 
 
