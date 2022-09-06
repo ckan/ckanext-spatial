@@ -6,28 +6,18 @@ The spatial extension allows to index datasets with spatial information so they
 can be filtered via a spatial search query. This includes both via the web
 interface (see the `Spatial Search Widget`_) or via the `action API`_, e.g.::
 
-    POST http://localhost:5000/api/action/package_search
-        { "q": "Pollution",
-          "facet": "true",
-          "facet.field": "country",
-          "extras": {
-              "ext_bbox": "-7.535093,49.208494,3.890688,57.372349" }
-        }
-
-.. versionchanged:: 2.0.1
-   Starting from this version the spatial filter it is also supported on GET
-   requests:
-
    http://localhost:5000/api/action/package_search?q=Pollution&ext_bbox=-7.535093,49.208494,3.890688,57.372349
+
+The ``ext_bbox`` parameter must be provided in the form ``ext_bbox={minx},{miny},{maxx},{maxy}``
 
 
 Setup
 -----
 
 To enable the spatial search you need to add the ``spatial_query`` plugin to
-your ini file. This plugin requires the ``spatial_metadata`` plugin, eg::
+your ini file. This plugin in turn requires the ``spatial_metadata`` plugin, eg::
 
-  ckan.plugins = [other plugins] spatial_metadata spatial_query
+  ckan.plugins = ... spatial_metadata spatial_query
 
 To define which backend to use for the spatial search use the following
 configuration option (see `Choosing a backend for the spatial search`_)::
@@ -39,8 +29,14 @@ Geo-Indexing your datasets
 --------------------------
 
 Regardless of the backend that you are using, in order to make a dataset
-searchable by location, it must have a special extra, with its key named
-'spatial'. The value must be a valid GeoJSON_ geometry, for example::
+searchable by location, it must have a the location information (a geometry), indexed in
+Solr. You can provide this information in two ways.
+
+The ``spatial`` extra field
++++++++++++++++++++++++++++
+
+The easiest way to get your geometries indexed is to use an extra field named ``spatial``.
+The value of this extra should be a valid GeoJSON_ geometry, for example::
 
     {
       "type":"Polygon",
@@ -56,89 +52,121 @@ or::
 
 
 Every time a dataset is created, updated or deleted, the extension will
-synchronize the information stored in the extra with the geometry table.
+index the information stored in the ``spatial`` in Solr, so it can be reflected on spatial searches.
 
 If you already have datasets when you enable Spatial Search then you'll need to
-reindex them:
+`rebuild the search index <https://docs.ckan.org/en/latest/maintaining/cli.html?#search-index-rebuild-search-index>`_.
 
-   ckan --config=/etc/ckan/default/development.ini search-index rebuild
 
-..note:: For CKAN 2.8 and below use:
+Custom indexing logic
++++++++++++++++++++++
 
-   paster --plugin=ckan search-index rebuild --config=/etc/ckan/default/development.ini
+You might not want to use the ``spatial`` extra field. Perhaps you don't want to store the geometries
+in the dataset metadata but prefer to do so in a separate table, or you simply want to perform a different
+processing on the geometries before indexing.
 
+In this case you need to implement the ``before_dataset_index()`` method of the `IPackageController <https://docs.ckan.org/en/latest/extensions/plugin-interfaces.html#ckan.plugins.interfaces.IPackageController.before_dataset_index>`_ interface::
+
+    def before_dataset_search(self, dataset_dict):
+
+        # When using the default `solr` backend (based on bounding boxes), you need to
+        # include the `spatial_bbox` field in the returned dataset_dict. Make sure to use
+        # the correct syntax expected by Solr:
+
+        dataset_dict["spatial_bbox"] = "ENVELOPE({minx}, {maxx}, {maxy}, {miny})"
+
+        # When using the `solr-spatial-field` backend, you need to include the `spatial_geom`
+        # field in the returned dataset_dict. This should be a valid geometry in WKT format.
+        # Shapely can help you get the WKT representation of your gemetry if you have it in GeoJSON:
+
+        shape = shapely.geometry.shape(geometry)
+        wkt = shape.wkt
+
+        dataset_dict["spatial_geom"] = wkt
+
+        # Don't forget to actually return the dict!
+
+        return dataset_dict
+
+Some things to keep in mind:
+
+* Remember, you only need to provide one field, either ``spatial_bbox`` or ``spatial_geom``, depending on
+  the backend chosen.
+* All indexed geometries should fall within the -180, -90, 180, 90 bounds. If you have polygons crossing the antimeridian (i.e. with longituded lower than -180 or bigger than 180) you'll have to split them across the antimeridian.
+* Check the default implementation of ``before_dataset_index()`` in `ckanext/spatial/plugins/__init__.py <https://github.com/ckan/ckanext-spatial/blob/master/ckanext/spatial/plugin/__init__.py>`_ for extra useful checks and validations.
+* If you want to store the geometry in the ``spatial`` field but don't want to apply the default automatic indexing logic applied by ckanext-spatial just remove the field from the dict (this won't remove it from the dataset metadata, just from the indexed data)::
+
+    def before_dataset_search(self, dataset_dict):
+
+        dataset_dict.pop("spatial", None)
+
+        return dataset_dict
 
 Choosing a backend for the spatial search
 +++++++++++++++++++++++++++++++++++++++++
 
+Ckanext-spatial uses Solr to power the spatial search. The current implementation is tested on Solr 8, which is the supported version, although it might work on previous Solr versions.
+
+The are official `Docker images for Solr <https://github.com/ckan/ckan-solr>`_ that have all the configuration needed to perform spatial searches. This is the easiest way to get started but if you need to customize Solr yourself see below for the modifications needed.
+
 There are different backends supported for the spatial search, it is important
 to understand their differences and the necessary setup required when choosing
-which one to use.
+which one to use. To configure the search backend use the following configuration option::
+
+    ckanext.spatial.search_backend = solr | solr-spatial-field
 
 The following table summarizes the different spatial search backends:
 
-+------------------------+---------------+-------------------------------------+-----------------------------------------------------------+-------------------------------------------+
-| Backend                | Solr Versions | Supported geometries                | Sorting and relevance                                     | Performance with large number of datasets |
-+========================+===============+=====================================+===========================================================+===========================================+
-| ``solr``               | >= 3.1        | Bounding Box                        | Yes, spatial sorting combined with other query parameters | Good                                      |
-+------------------------+---------------+-------------------------------------+-----------------------------------------------------------+-------------------------------------------+
-| ``solr-spatial-field`` | >= 4.x        | Bounding Box, Point and Polygon [1] | Not implemented                                           | Good                                      |
-+------------------------+---------------+-------------------------------------+-----------------------------------------------------------+-------------------------------------------+
++------------------------+--------------------------------------+--------------------+
+| Backend                | Supported geometries indexed in Solr | Solr setup needed  |
++========================+======================================+====================+
+| ``solr``               | Bounding Box                         | Custom field       |
++------------------------+--------------------------------------+--------------------+
+| ``solr-spatial-field`` | Bounding Box, Point and Polygon      | Custom field + JTS |
++------------------------+--------------------------------------+--------------------+
 
 
-[1] Requires JTS
 
+The ``solr`` backend is probably a good starting point. Here are more
+details about the available options (again, you don't need to modify Solr if you are using one of the spatial enabled official Docker images):
 
-We recommend to use the ``solr`` backend whenever possible. Here are more
-details about the available options:
-
-* ``solr`` (Recommended)
-    This option uses normal Solr fields to index the relevant bits of
-    information about the geometry and uses an algorithm function to sort
-    results by relevance, keeping any other non-spatial filtering. It only
-    supports bounding boxes both for the geometries to be indexed and the
-    input query shape. It requires `EDisMax`_ query parser, so it will only
-    work on versions of Solr greater than 3.1 (We recommend using Solr 4.x).
-
-    You will need to add the following fields to your Solr schema file to
-    enable it::
-
-        <fields>
-            <!-- ... -->
-            <field name="bbox_area" type="float" indexed="true" stored="true" />
-            <field name="maxx" type="float" indexed="true" stored="true" />
-            <field name="maxy" type="float" indexed="true" stored="true" />
-            <field name="minx" type="float" indexed="true" stored="true" />
-            <field name="miny" type="float" indexed="true" stored="true" />
-        </fields>
-
-    The solr schema file is typically located at: (..)/src/ckan/ckan/config/solr/schema.xml
-
-* ``solr-spatial-field``
-    This option uses the `spatial field`_ introduced in Solr 4, which allows
-    to index points, rectangles and more complex geometries (complex geometries
-    will require `JTS`_, check the documentation).
-    Sorting has not yet been implemented, users willing to do so will need to
-    modify the query using the ``before_search`` extension point.
-
-    You will need to add the following field type and field to your Solr
-    schema file to enable it (Check the `Solr documentation`__ for more
-    information on the different parameters, note that you don't need
-    ``spatialContextFactory`` if you are not using JTS)::
+* ``solr``
+    This option always indexes just the extent of the provided geometries, whether if it's an
+    actual bounding box or not. It uses Solr's `BBoxField <https://solr.apache.org/guide/8_11/spatial-search.html#bboxfield>`_ so you need to add the following to your Solr schema::
 
         <types>
             <!-- ... -->
-            <fieldType name="location_rpt" class="solr.SpatialRecursivePrefixTreeFieldType"
-                spatialContextFactory="com.spatial4j.core.context.jts.JtsSpatialContextFactory"
-                autoIndex="true"
-                distErrPct="0.025"
-                maxDistErr="0.000009"
-                distanceUnits="degrees" />
+            <fieldType name="bbox" class="solr.BBoxField"
+                geo="true" distanceUnits="kilometers" numberType="pdouble" />
         </types>
+
         <fields>
             <!-- ... -->
-            <field name="spatial_geom"  type="location_rpt" indexed="true" stored="true" multiValued="true" />
+            <field name="spatial_bbox" type="bbox" />
         </fields>
+
+* ``solr-spatial-field``
+    This option uses the `RPT <https://solr.apache.org/guide/8_11/spatial-search.html#rpt>`_ Solr field, which allows
+    to index points, rectangles and more complex geometries like polygons. This requires the install of the `JTS`_ library. See the linked Solr documentation for details on this.
+    You will need to add the following field type and field to your Solr
+    schema file to enable it ::
+
+        <types>
+            <!-- ... -->
+            <fieldType name="location_rpt"   class="solr.SpatialRecursivePrefixTreeFieldType"
+                spatialContextFactory="JTS"
+                autoIndex="true"
+                validationRule="repairBuffer0"
+                distErrPct="0.025"
+                maxDistErr="0.001"
+                distanceUnits="kilometers" />
+        </types>
+
+        <fields>
+            <!-- ... -->
+            <field name="spatial_geom" type="location_rpt" indexed="true" multiValued="true" />
+        </fields>
+
 
 .. note:: The old ``postgis`` search backend is deprecated and will be removed in future versions of the extension.
     You should migrate to one of the other backends instead but if you need to keep using it for a while see :ref:`legacy_postgis`.
@@ -229,8 +257,5 @@ For adding the map to the main body, add this to the main dataset page template 
 You need to load the ``spatial_metadata`` plugin to use these snippets.
 
 .. _action API: http://docs.ckan.org/en/latest/apiv3.html
-.. _edismax: http://wiki.apache.org/solr/ExtendedDisMax
-.. _JTS: http://www.vividsolutions.com/jts/JTSHome.htm
-.. _spatial field: http://wiki.apache.org/solr/SolrAdaptersForLuceneSpatial4
-__ `spatial field`_
+.. _JTS: https://github.com/locationtech/jts 
 .. _GeoJSON: http://geojson.org

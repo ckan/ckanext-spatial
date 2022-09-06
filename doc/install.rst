@@ -8,10 +8,6 @@ Check the Troubleshooting_ section if you get errors at any stage.
           or WMS services), these are now located in ckanext-geoview_. They have a much simpler
           installation, so you can skip all the following steps if you just want the previews.
 
-
-.. note:: The package names and paths shown are the defaults on Ubuntu installs.
-          Adjust the package names and the paths if you are using a different platform.
-
 .. note:: Starting from ckanext-spatial 2.0.0 **PostGIS is no longer required** to use the extension,
           and its use has been deprected. If for some reason you still need to use the old PostGIS backend
           see :ref:`legacy_postgis`.
@@ -21,6 +17,9 @@ All commands assume an existing CKAN database named ``ckan_default``.
 
 Install the extension
 ---------------------
+
+.. note:: The package names and paths shown are the defaults on Ubuntu installs.
+          Adjust the package names and the paths if you are using a different platform.
 
 #. Install some packages needed by the extension dependencies::
 

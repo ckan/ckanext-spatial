@@ -220,8 +220,8 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
         pkg_dict.pop('extras_coupled-resource', None)
 
         # spatial field is geojson coordinate data, not needed in SOLR either
-        pkg_dict.pop('spatial', None)
-        geom_from_metadata = pkg_dict.pop('extras_spatial', None)
+        geom_from_metadata = pkg_dict.pop('spatial', None)
+        pkg_dict.pop('extras_spatial', None)
 
         try:
             geometry = json.loads(geom_from_metadata)
