@@ -605,7 +605,7 @@ class TestCustomIndexing(SpatialTestBase):
     """
     These tests ensure both that
     1. You can use your own custom logic to index geometries
-    2. The spatial fields are multivaule, ie you can index more than one geometry against
+    2. The spatial fields are multivalued, ie you can index more than one geometry against
        the same dataset
     """
     def test_single_geom(self):

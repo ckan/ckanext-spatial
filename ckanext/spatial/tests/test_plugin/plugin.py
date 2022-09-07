@@ -12,6 +12,9 @@ class TestSpatialPlugin(p.SingletonPlugin):
     def update_config(self, config):
         p.toolkit.add_template_directory(config, "templates")
 
+    def before_index(self, pkg_dict):
+        return self.before_dataset_index(pkg_dict)
+
     def before_dataset_index(self, pkg_dict):
 
         if not pkg_dict.get("my_geoms"):
