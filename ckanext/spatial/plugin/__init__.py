@@ -227,13 +227,13 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
         try:
             geometry = json.loads(geom_from_metadata)
         except (AttributeError, ValueError) as e:
-            log.error(f'Geometry not valid JSON {e}, not indexing :: {geom_from_metadata[:100]}')
+            log.error('Geometry not valid JSON {}, not indexing :: {}'.format(e, geom_from_metadata[:100]))
             return pkg_dict
 
         try:
             shape = shapely.geometry.shape(geometry)
         except GeometryTypeError as e:
-            log.error(f'{e}, not indexing :: {geom_from_metadata[:100]}')
+            log.error('{}, not indexing :: {}'.format(e, geom_from_metadata[:100]))
             return pkg_dict
 
         if search_backend == 'solr':
