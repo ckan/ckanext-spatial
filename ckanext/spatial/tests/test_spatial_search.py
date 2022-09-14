@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+import json
 import pytest
 
 from ckan.lib.search import SearchError
@@ -275,6 +275,43 @@ class TestBBoxSearch(SpatialTestBase):
         )
 
         assert result["count"] == 0
+    
+    def test_geometry_collection(self):
+        """ Test a geometry collection """
+
+        # Build a GeometryCollection with all ohio and nz extents
+        geometry_collection = {
+            'type': 'GeometryCollection',
+            'geometries': [
+                json.loads(geom) for zone, geom in extents.items() if zone in ['nz', 'ohio']]
+        }
+
+        dataset = factories.Dataset(
+            extras=[
+                {
+                    "key": "spatial",
+                    "value": json.dumps(geometry_collection)
+                }
+            ]
+        )
+
+        # Test that we get the same dataset using two different extents
+
+        # New Zealand
+        result = helpers.call_action(
+            "package_search", extras={"ext_bbox": "56,-54,189,-28"}
+        )
+
+        assert result["count"] == 1
+        assert result["results"][0]["id"] == dataset["id"]
+
+        # Ohio
+        result = helpers.call_action(
+            "package_search", extras={"ext_bbox": "-110,37,-78,53"}
+        )
+
+        assert result["count"] == 1
+        assert result["results"][0]["id"] == dataset["id"]
 
 
 @pytest.mark.usefixtures("clean_db", "clean_index", "harvest_setup", "with_plugins")

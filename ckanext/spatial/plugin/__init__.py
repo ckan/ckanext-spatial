@@ -6,6 +6,11 @@ import six
 import geojson
 
 import shapely.geometry
+try:
+    from shapely.errors import GeometryTypeError
+except ImportError:
+    # Previous version of shapely uses ValueError and TypeError
+    GeometryTypeError = (ValueError, TypeError)
 
 import ckantoolkit as tk
 
@@ -225,10 +230,14 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
 
         try:
             geometry = json.loads(geom_from_metadata)
+        except (AttributeError, ValueError) as e:
+            log.error('Geometry not valid JSON {}, not indexing :: {}'.format(e, geom_from_metadata[:100]))
+            return pkg_dict
 
+        try:
             shape = shapely.geometry.shape(geometry)
-        except (AttributeError, ValueError):
-            log.error('Geometry not valid GeoJSON, not indexing')
+        except GeometryTypeError as e:
+            log.error('{}, not indexing :: {}'.format(e, geom_from_metadata[:100]))
             return pkg_dict
 
         if search_backend == 'solr':
@@ -244,28 +253,36 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
         elif search_backend == 'solr-spatial-field':
             wkt = None
 
-            # Check potential problems with bboxes
-            if geometry['type'] == 'Polygon' \
-               and len(geometry['coordinates']) == 1 \
-               and len(geometry['coordinates'][0]) == 5:
+            # We allow multiple geometries as GeometryCollections
+            if geometry['type'] == 'GeometryCollection':
+                geometries = geometry['geometries']
+            else:
+                geometries = [geometry]
 
-                # Check wrong bboxes (4 same points)
-                xs = [p[0] for p in geometry['coordinates'][0]]
-                ys = [p[1] for p in geometry['coordinates'][0]]
+            # Check potential problems with bboxes in each geometry
+            wkt = []
+            for geom in geometries:
+                if geom['type'] == 'Polygon' \
+                and len(geom['coordinates']) == 1 \
+                and len(geom['coordinates'][0]) == 5:
 
-                if xs.count(xs[0]) == 5 and ys.count(ys[0]) == 5:
-                    wkt = 'POINT({x} {y})'.format(x=xs[0], y=ys[0])
-                else:
-                    # Check if coordinates are defined counter-clockwise,
-                    # otherwise we'll get wrong results from Solr
-                    lr = shapely.geometry.polygon.LinearRing(geometry['coordinates'][0])
-                    lr_coords = (
-                        list(lr.coords) if lr.is_ccw
-                        else list(reversed(list(lr.coords)))
-                    )
-                    polygon = shapely.geometry.polygon.Polygon(
-                        fit_linear_ring(lr_coords))
-                    wkt = polygon.wkt
+                    # Check wrong bboxes (4 same points)
+                    xs = [p[0] for p in geom['coordinates'][0]]
+                    ys = [p[1] for p in geom['coordinates'][0]]
+
+                    if xs.count(xs[0]) == 5 and ys.count(ys[0]) == 5:
+                        wkt.append('POINT({x} {y})'.format(x=xs[0], y=ys[0]))
+                    else:
+                        # Check if coordinates are defined counter-clockwise,
+                        # otherwise we'll get wrong results from Solr
+                        lr = shapely.geometry.polygon.LinearRing(geom['coordinates'][0])
+                        lr_coords = (
+                            list(lr.coords) if lr.is_ccw
+                            else list(reversed(list(lr.coords)))
+                        )
+                        polygon = shapely.geometry.polygon.Polygon(
+                            fit_linear_ring(lr_coords))
+                        wkt.append(polygon.wkt)
 
             if not wkt:
                 shape = shapely.geometry.shape(geometry)
