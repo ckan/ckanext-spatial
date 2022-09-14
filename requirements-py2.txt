@@ -3,7 +3,7 @@ GeoAlchemy>=0.6
 GeoAlchemy2==0.5.0
 Shapely>=1.2.13
 pyproj==2.2.2
-OWSLib==0.8.7
+OWSLib==0.18.0
 lxml>=2.3
 argparse
 pyparsing>=2.1.10
