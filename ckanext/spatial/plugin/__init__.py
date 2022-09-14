@@ -6,7 +6,11 @@ import six
 import geojson
 
 import shapely.geometry
-from shapely.errors import GeometryTypeError
+try:
+    from shapely.errors import GeometryTypeError
+except ImportError:
+    # Previous version of shapely uses ValueError and TypeError
+    GeometryTypeError = (ValueError, TypeError)
 
 import ckantoolkit as tk
 
