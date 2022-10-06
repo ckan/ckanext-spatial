@@ -6,7 +6,7 @@ from ckanext.spatial.tests.base import SpatialTestBase
 import ckan.tests.helpers as helpers
 
 
-@pytest.mark.usefixtures("with_plugins", "clean_db", "clean_index", "harvest_setup")
+@pytest.mark.usefixtures("with_plugins", "with_request_context", "clean_db", "clean_index", "harvest_setup")
 class TestSpatialExtra(SpatialTestBase):
     def test_spatial_extra_base(self, app):
 
@@ -18,7 +18,6 @@ class TestSpatialExtra(SpatialTestBase):
             offset = tk.url_for("dataset.edit", id=dataset["id"])
         else:
             offset = tk.url_for(controller="package", action="edit", id=dataset["id"])
-        res = app.get(offset, extra_environ=env)
 
         if tk.check_ckan_version(min_version="2.9"):
             data = {
@@ -31,6 +30,8 @@ class TestSpatialExtra(SpatialTestBase):
             form = res.forms[1]
             form["extras__0__key"] = u"spatial"
             form["extras__0__value"] = self.geojson_examples["point"]
+
+            res = app.get(offset, extra_environ=env)
             res = helpers.submit_and_follow(app, form, env, "save")
 
         assert "Error" not in res, res
