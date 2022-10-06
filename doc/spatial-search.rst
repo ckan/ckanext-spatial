@@ -113,24 +113,26 @@ There are different backends supported for the spatial search, it is important
 to understand their differences and the necessary setup required when choosing
 which one to use. To configure the search backend use the following configuration option::
 
-    ckanext.spatial.search_backend = solr | solr-spatial-field
+    ckanext.spatial.search_backend = solr-bbox | solr-spatial-field
 
 The following table summarizes the different spatial search backends:
 
-+------------------------+--------------------------------------+--------------------+
-| Backend                | Supported geometries indexed in Solr | Solr setup needed  |
-+========================+======================================+====================+
-| ``solr``               | Bounding Box                         | Custom field       |
-+------------------------+--------------------------------------+--------------------+
-| ``solr-spatial-field`` | Bounding Box, Point and Polygon      | Custom field + JTS |
-+------------------------+--------------------------------------+--------------------+
++-------------------------+--------------------------------------+--------------------+
+| Backend                 | Supported geometries indexed in Solr | Solr setup needed  |
++=========================+======================================+====================+
+| ``solr-bbox`` (default) | Bounding Box                         | Custom field       |
++-------------------------+--------------------------------------+--------------------+
+| ``solr-spatial-field``  | Bounding Box, Point and Polygon      | Custom field + JTS |
++-------------------------+--------------------------------------+--------------------+
+
+.. note:: The default ``solr-bbox`` search backend was previously known as ``solr``. Please update
+    your configuration if using this version as it will be removed in the future.
 
 
-
-The ``solr`` backend is probably a good starting point. Here are more
+The ``solr-bbox`` backend is probably a good starting point. Here are more
 details about the available options (again, you don't need to modify Solr if you are using one of the spatial enabled official Docker images):
 
-* ``solr``
+* ``solr-bbox``
     This option always indexes just the extent of the provided geometries, whether if it's an
     actual bounding box or not. It uses Solr's `BBoxField <https://solr.apache.org/guide/8_11/spatial-search.html#bboxfield>`_ so you need to add the following to your Solr schema::
 

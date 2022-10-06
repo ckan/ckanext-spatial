@@ -33,9 +33,10 @@ config = tk.config
 
 log = getLogger(__name__)
 
-DEFAULT_SEARCH_BACKEND = "solr"
+DEFAULT_SEARCH_BACKEND = "solr-bbox"
 ALLOWED_SEARCH_BACKENDS = [
-    "solr",
+    "solr",         # Deprecated, please update to "solr-bbox"
+    "solr-bbox",
     "solr-spatial-field",
     "postgis",      # Deprecated: will be removed in the next version
 ]
@@ -184,9 +185,14 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
                     search_backend, ALLOWED_SEARCH_BACKENDS)
             )
 
-        if search_backend == "postgis":
+        if search_backend == "solr":
             log.warning(
-                "The `postgis` spatial search backend is deprecated"
+                "The `solr` spatial search backend has been renamed to `solr-bbox`, "
+                "please update your configuration"
+            )
+        elif search_backend == "postgis":
+            log.warning(
+                "The `postgis` spatial search backend is deprecated "
                 "and will be removed in future versions"
             )
 
@@ -213,7 +219,7 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
 
         search_backend = self._get_search_backend()
 
-        if search_backend not in ('solr', 'solr-spatial-field'):
+        if search_backend not in ("solr-bbox", "solr-spatial-field"):
             return pkg_dict
 
         if not pkg_dict.get('extras_spatial'):
@@ -240,7 +246,7 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
             log.error('{}, not indexing :: {}'.format(e, geom_from_metadata[:100]))
             return pkg_dict
 
-        if search_backend == 'solr':
+        if search_backend == "solr-bbox":
             # We always index the envelope of the geometry regardless of
             # if it's an actual bounding box (polygon)
 
@@ -311,7 +317,7 @@ you need to split the geometry in order to fit the parts. Not indexing""")
             if not bbox:
                 raise SearchError('Wrong bounding box provided')
 
-            if search_backend in ('solr', 'solr-spatial-field'):
+            if search_backend in ("solr-bbox", "solr-spatial-field"):
 
                 bbox = fit_bbox(bbox)
 
@@ -319,7 +325,7 @@ you need to split the geometry in order to fit the parts. Not indexing""")
                     search_params["fq_list"] = []
 
                 spatial_field = (
-                    "spatial_bbox" if search_backend == "solr" else "spatial_geom"
+                    "spatial_bbox" if search_backend == "solr-bbox" else "spatial_geom"
                 )
 
                 default_spatial_query = "{{!field f={spatial_field}}}Intersects(ENVELOPE({minx}, {maxx}, {maxy}, {miny}))"

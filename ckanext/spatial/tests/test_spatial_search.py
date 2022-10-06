@@ -35,7 +35,7 @@ extents = {
 
 
 @pytest.mark.usefixtures("clean_db", "clean_index", "harvest_setup", "with_plugins")
-@pytest.mark.ckan_config("ckanext.spatial.search_backend", "solr")
+@pytest.mark.ckan_config("ckanext.spatial.search_backend", "solr-bbox")
 class TestBBoxSearch(SpatialTestBase):
     def test_spatial_query(self):
         dataset = factories.Dataset(
@@ -275,7 +275,7 @@ class TestBBoxSearch(SpatialTestBase):
         )
 
         assert result["count"] == 0
-    
+
     def test_geometry_collection(self):
         """ Test a geometry collection """
 
