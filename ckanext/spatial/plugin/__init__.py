@@ -190,6 +190,8 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
                 "The `solr` spatial search backend has been renamed to `solr-bbox`, "
                 "please update your configuration"
             )
+            search_backend = "solr-bbox"
+
         elif search_backend == "postgis":
             log.warning(
                 "The `postgis` spatial search backend is deprecated "
