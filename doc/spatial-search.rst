@@ -148,7 +148,7 @@ details about the available options (again, you don't need to modify Solr if you
 
 * ``solr-spatial-field``
     This option uses the `RPT <https://solr.apache.org/guide/8_11/spatial-search.html#rpt>`_ Solr field, which allows
-    to index points, rectangles and more complex geometries like polygons. This requires the install of the `JTS`_ library. See the linked Solr documentation for details on this. Note that it does not support spatial sorting of the returned results. 
+    to index points, rectangles and more complex geometries like polygons. This requires the install of the `JTS`_ library. See the linked Solr documentation for details on this. Note that it does not support spatial sorting of the returned results.
     You will need to add the following field type and field to your Solr
     schema file to enable it ::
 
@@ -168,6 +168,9 @@ details about the available options (again, you don't need to modify Solr if you
             <field name="spatial_geom" type="location_rpt" indexed="true" multiValued="true" />
         </fields>
 
+    By default, the ``solr-sptatial-field`` backend uses the following query. This can be customized by setting the ``ckanext.spatial.solr_query`` configuration option, but note that all placeholders must be included::
+
+    "{{!field f=spatial_geom}}Intersects(ENVELOPE({minx}, {maxx}, {maxy}, {miny}))"
 
 .. note:: The old ``postgis`` search backend is deprecated and will be removed in future versions of the extension.
     You should migrate to one of the other backends instead but if you need to keep using it for a while see :ref:`legacy_postgis`.
@@ -258,5 +261,5 @@ For adding the map to the main body, add this to the main dataset page template 
 You need to load the ``spatial_metadata`` plugin to use these snippets.
 
 .. _action API: http://docs.ckan.org/en/latest/apiv3.html
-.. _JTS: https://github.com/locationtech/jts 
+.. _JTS: https://github.com/locationtech/jts
 .. _GeoJSON: http://geojson.org
