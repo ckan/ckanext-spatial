@@ -57,28 +57,71 @@ class SolrBBoxSearchBackend(SpatialSearchBackend):
             return dataset_dict
 
         bounds = shape.bounds
-        bbox = fit_bbox(normalize_bbox(list(bounds)))
 
-        dataset_dict[
-            "spatial_bbox"
-        ] = "ENVELOPE({minx}, {maxx}, {maxy}, {miny})".format(**bbox)
+        bbox = normalize_bbox(list(bounds))
+        if not bbox:
+            return dataset_dict
+
+        dataset_dict.update(bbox)
 
         return dataset_dict
 
     def search_params(self, bbox, search_params):
+        """
+        This will add the following parameters to the query:
 
-        bbox = fit_bbox(bbox)
+            defType - edismax (We need to define EDisMax to use bf)
+            bf - {function} A boost function to influence the score (thus
+                 influencing the sorting). The algorithm can be basically defined as:
 
-        if not search_params.get("fq_list"):
-            search_params["fq_list"] = []
+                    2 * X / Q + T
 
-        default_spatial_query = "{{!field f={spatial_field}}}Intersects(ENVELOPE({minx}, {maxx}, {maxy}, {miny}))"
+                 Where X is the intersection between the query area Q and the
+                 target geometry T. It gives a ratio from 0 to 1 where 0 means
+                 no overlap at all and 1 a perfect fit
 
-        spatial_query = config.get("ckanext.spatial.solr_query", default_spatial_query)
+             fq - Adds a filter that force the value returned by the previous
+                  function to be between 0 and 1, effectively applying the
+                  spatial filter.
 
-        search_params["fq_list"].append(
-            spatial_query.format(spatial_field="spatial_bbox", **bbox)
+        """
+
+        while bbox["minx"] < -180:
+            bbox["minx"] += 360
+            bbox["maxx"] += 360
+        while bbox["minx"] > 180:
+            bbox["minx"] -= 360
+            bbox["maxx"] -= 360
+
+        values = dict(
+            input_minx=bbox["minx"],
+            input_maxx=bbox["maxx"],
+            input_miny=bbox["miny"],
+            input_maxy=bbox["maxy"],
+            area_search=abs(bbox["maxx"] - bbox["minx"])
+            * abs(bbox["maxy"] - bbox["miny"]),
         )
+
+        bf = (
+            """div(
+                   mul(
+                   mul(max(0, sub(min({input_maxx},maxx) , max({input_minx},minx))),
+                       max(0, sub(min({input_maxy},maxy) , max({input_miny},miny)))
+                       ),
+                   2),
+                   add({area_search},mul(sub(maxy, miny), sub(maxx, minx)))
+                )""".format(
+                **values
+            )
+            .replace("\n", "")
+            .replace(" ", "")
+        )
+
+        search_params["fq_list"] = search_params.get("fq_list", [])
+        search_params["fq_list"].append("{!frange incl=false l=0 u=1}%s" % bf)
+
+        search_params["bf"] = bf
+        search_params["defType"] = "edismax"
 
         return search_params
 

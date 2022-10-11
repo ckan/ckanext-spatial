@@ -22,7 +22,7 @@ your ini file. This plugin in turn requires the ``spatial_metadata`` plugin, eg:
 To define which backend to use for the spatial search use the following
 configuration option (see `Choosing a backend for the spatial search`_)::
 
-  ckanext.spatial.search_backend = solr
+  ckanext.spatial.search_backend = solr-bbox
 
 
 Geo-Indexing your datasets
@@ -69,11 +69,13 @@ In this case you need to implement the ``before_dataset_index()`` method of the 
 
     def before_dataset_search(self, dataset_dict):
 
-        # When using the default `solr` backend (based on bounding boxes), you need to
-        # include the `spatial_bbox` field in the returned dataset_dict. Make sure to use
-        # the correct syntax expected by Solr:
+        # When using the default `solr-bbox` backend (based on bounding boxes), you need to
+        # include the following fields in the returned dataset_dict:
 
-        dataset_dict["spatial_bbox"] = "ENVELOPE({minx}, {maxx}, {maxy}, {miny})"
+        dataset_dict["minx"] = minx
+        dataset_dict["maxx"] = maxx
+        dataset_dict["miny"] = miny
+        dataset_dict["maxy"] = maxy
 
         # When using the `solr-spatial-field` backend, you need to include the `spatial_geom`
         # field in the returned dataset_dict. This should be a valid geometry in WKT format.
@@ -120,7 +122,7 @@ The following table summarizes the different spatial search backends:
 +-------------------------+--------------------------------------+--------------------+
 | Backend                 | Supported geometries indexed in Solr | Solr setup needed  |
 +=========================+======================================+====================+
-| ``solr-bbox`` (default) | Bounding Box                         | Custom field       |
+| ``solr-bbox`` (default) | Bounding Box, Polygon (extents only) | Custom fields      |
 +-------------------------+--------------------------------------+--------------------+
 | ``solr-spatial-field``  | Bounding Box, Point and Polygon      | Custom field + JTS |
 +-------------------------+--------------------------------------+--------------------+
@@ -130,26 +132,23 @@ The following table summarizes the different spatial search backends:
 
 
 The ``solr-bbox`` backend is probably a good starting point. Here are more
-details about the available options (again, you don't need to modify Solr if you are using one of the spatial enabled official Docker images):
+details about the available options (again, you don't need to modify Solr if you are using one of the spatially enabled official Docker images):
 
 * ``solr-bbox``
     This option always indexes just the extent of the provided geometries, whether if it's an
-    actual bounding box or not. It uses Solr's `BBoxField <https://solr.apache.org/guide/8_11/spatial-search.html#bboxfield>`_ so you need to add the following to your Solr schema::
-
-        <types>
-            <!-- ... -->
-            <fieldType name="bbox" class="solr.BBoxField"
-                geo="true" distanceUnits="kilometers" numberType="pdouble" />
-        </types>
+    actual bounding box or not. It supports spatial sorting of the returned results (based on the closeness of their bounding box to the query bounding box). It uses standard Solr float fields so you just need to add the following to your Solr schema::
 
         <fields>
             <!-- ... -->
-            <field name="spatial_bbox" type="bbox" />
+            <field name="minx" type="float" indexed="true" stored="true" />
+            <field name="maxx" type="float" indexed="true" stored="true" />
+            <field name="miny" type="float" indexed="true" stored="true" />
+            <field name="maxy" type="float" indexed="true" stored="true" />
         </fields>
 
 * ``solr-spatial-field``
     This option uses the `RPT <https://solr.apache.org/guide/8_11/spatial-search.html#rpt>`_ Solr field, which allows
-    to index points, rectangles and more complex geometries like polygons. This requires the install of the `JTS`_ library. See the linked Solr documentation for details on this.
+    to index points, rectangles and more complex geometries like polygons. This requires the install of the `JTS`_ library. See the linked Solr documentation for details on this. Note that it does not support spatial sorting of the returned results. 
     You will need to add the following field type and field to your Solr
     schema file to enable it ::
 

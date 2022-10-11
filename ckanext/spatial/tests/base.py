@@ -3,7 +3,7 @@
 import os
 
 geojson_examples = {
-    "point": '{"type":"Point","coordinates":[100.0,0.0]}',
+    "point": '{"type":"Point","coordinates":[100.0,2.0]}',
     "point_2": '{"type":"Point","coordinates":[20,10]}',
     "line": '{"type":"LineString","coordinates":[[100.0,0.0],[101.0,1.0]]}',
     "polygon": '{"type":"Polygon","coordinates":[[[100.0,0.0],[101.0,0.0],'

@@ -39,7 +39,7 @@ extents = {
 class TestBBoxSearch(SpatialTestBase):
     def test_spatial_query(self):
         dataset = factories.Dataset(
-            extras=[{"key": "spatial", "value": self.geojson_examples["point"]}]
+            extras=[{"key": "spatial", "value": extents["ohio"]}]
         )
 
         result = helpers.call_action(
@@ -49,9 +49,20 @@ class TestBBoxSearch(SpatialTestBase):
         assert result["count"] == 1
         assert result["results"][0]["id"] == dataset["id"]
 
+    def test_spatial_query_point(self):
+        dataset = factories.Dataset(
+            extras=[{"key": "spatial", "value": self.geojson_examples["point"]}]
+        )
+
+        result = helpers.call_action(
+            "package_search", extras={"ext_bbox": "-180,-90,180,90"}
+        )
+
+        assert result["count"] == 0
+
     def test_spatial_query_outside_bbox(self):
         factories.Dataset(
-            extras=[{"key": "spatial", "value": self.geojson_examples["point"]}]
+            extras=[{"key": "spatial", "value": extents["ohio"]}]
         )
 
         result = helpers.call_action(
@@ -242,39 +253,6 @@ class TestBBoxSearch(SpatialTestBase):
 
         assert result["count"] == 1
         assert result["results"][0]["id"] == dataset["id"]
-
-    def test_custom_spatial_query(self, monkeypatch, ckan_config):
-        """
-            ┌────────────────┐ xxxxxx
-            │           xxxxx│xx     xxx
-            │         xxx    │       xxx
-            │        xx      │      xx
-            │     xxxx       │    xxx
-            │     x         x│xxxxx
-            │      xxx   xxxx│
-            │         xxxx   │
-            │                │
-            └────────────────┘
-        """
-        dataset = factories.Dataset(extras=[{"key": "spatial", "value": extents["nz"]}])
-
-        result = helpers.call_action(
-            "package_search", extras={"ext_bbox": "175,-39.5,176.5,-39"}
-        )
-
-        assert result["count"] == 1
-        assert result["results"][0]["id"] == dataset["id"]
-
-        monkeypatch.setitem(
-            ckan_config,
-            "ckanext.spatial.solr_query",
-            "{{!field f={spatial_field}}}Contains(ENVELOPE({minx}, {maxx}, {maxy}, {miny}))")
-
-        result = helpers.call_action(
-            "package_search", extras={"ext_bbox": "175,-39.5,176.5,-39"}
-        )
-
-        assert result["count"] == 0
 
     def test_geometry_collection(self):
         """ Test a geometry collection """
