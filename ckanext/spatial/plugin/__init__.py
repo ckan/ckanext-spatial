@@ -249,6 +249,14 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
 
                 pkg_dict['spatial_geom'] = wkt
 
+        # Coupled resources are URL -> uuid links, they are not needed in SOLR
+        # and might be huge if there are lot of coupled resources
+        if pkg_dict.get('coupled-resource'):
+            pkg_dict.pop('coupled-resource')
+
+        # spatial field is geojson coordinate data, not need in SOLR either
+        if pkg_dict.get('spatial'):
+            pkg_dict.pop('spatial')
 
         return pkg_dict
 
