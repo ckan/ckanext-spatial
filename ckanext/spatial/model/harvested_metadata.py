@@ -716,6 +716,16 @@ class ISODocument(MappedXmlDocument):
             ],
             multiplicity="*",
         ),
+        ISOElement(
+            name="other-constraints",
+            search_paths=[
+                "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:resourceConstraints/"
+                "gmd:MD_LegalConstraints/gmd:otherConstraints/gmx:Anchor/@xlink:href",
+                "gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:resourceConstraints/"
+                "gmd:MD_LegalConstraints/gmd:otherConstraints/gmx:Anchor/@xlink:href",
+            ],
+            multiplicity="*",
+        ),
         ISOAggregationInfo(
             name="aggregation-info",
             search_paths=[
