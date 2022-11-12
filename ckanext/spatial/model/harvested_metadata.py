@@ -269,12 +269,12 @@ class ISOResourceLocator(ISOElement):
             ],
             multiplicity="0..1",
         ),
-        ISOElement(
+        ISOLocalised(
             name="description",
             search_paths=[
                 "gmd:description/gco:CharacterString/text()",
                 # 19115-3
-                "cit:description/gco:CharacterString/text()",
+                "cit:description",
             ],
             multiplicity="0..1",
         ),
