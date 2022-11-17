@@ -4,7 +4,7 @@ import re
 import json
 import pytz
 import datetime
-from ckan.lib.helpers import url_for
+from ckan.lib.helpers import url_for, is_url
 from copy import copy
 from collections import OrderedDict
 import six
@@ -398,7 +398,7 @@ class ISOResponsibleParty(ISOElement):
         ISOIdentifier(
             name="individual-uri",
             search_paths=[
-                "cit:party/cit:CI_Individual/cit:partyIdentifier",
+                "cit:party/cit:CI_Individual/cit:partyIdentifier/mcc:MD_Identifier|cit:party/cit:CI_Organisation/cit:individual/cit:CI_Individual/cit:partyIdentifier/mcc:MD_Identifier",
             ],
             multiplicity="0..1",
         ),
@@ -413,7 +413,7 @@ class ISOResponsibleParty(ISOElement):
         ISOIdentifier(
             name="organisation-uri",
             search_paths=[
-                "cit:party/cit:CI_Organisation/cit:partyIdentifier",
+                "cit:party/cit:CI_Organisation/cit:partyIdentifier/mcc:MD_Identifier",
             ],
             multiplicity="0..1",
         ),
@@ -683,49 +683,6 @@ class ISOVerticalExtent(ISOElement):
                    multiplicity="0..1"
                    )
     ]
-
-
-class ISOIdentifier(ISOElement):
-
-    elements = [
-        ISOElement(
-            name="code",
-            search_paths=[
-                # ISO19115-3
-                "mcc:code/gco:CharacterString/text()",
-                "mcc:code/gcx:Anchor/text()",
-            ],
-            multiplicity="0..1",
-        ),
-        ISOElement(
-            name="authority",
-            search_paths=[
-                # ISO19115-3
-                "mcc:authority/cit:CI_Citation/cit:title/gco:CharacterString/text()",
-                "mcc:authority/cit:CI_Citation/cit:title/gcx:Anchor/text()",
-            ],
-            multiplicity="0..1",
-        ),
-        ISOElement(
-            name="code-space",
-            search_paths=[
-                # ISO19115-3
-                "mcc:codeSpace/gco:CharacterString/text()",
-                "mcc:codeSpace/gcx:Anchor/text()",
-            ],
-            multiplicity="0..1",
-        ),
-        ISOElement(
-            name="version",
-            search_paths=[
-                # ISO19115-3
-                "mcc:version/gco:CharacterString/text()",
-                "mcc:version/gcx:Anchor/text()",
-            ],
-            multiplicity="0..1",
-        ),
-    ]
-
 
 class ISOUsage(ISOElement):
 
@@ -1518,7 +1475,6 @@ class ISODocument(MappedXmlDocument):
                     raise
         return utc_dt.strftime('%Y-%m-%d %H:%M:%S')
 
-
     def infer_values(self, values):
         # Todo: Infer name.
         self.clean_metadata_reference_date(values)
@@ -1541,8 +1497,58 @@ class ISODocument(MappedXmlDocument):
         self.infer_guid(values)
         self.infer_temporal_vertical_extent(values)
         self.infer_citation(values)
+        self.condense_uri(values)
         self.drop_empty_objects(values)
         return values
+
+    def get_fully_qualified_package_uri(self, uri_dict):
+        if not uri_dict:
+            return ''
+        authority = uri_dict.get('authority')
+        code_space = uri_dict.get('code-space')
+        code = uri_dict.get('code')
+        version = uri_dict.get('version')
+        if not code:
+            return ''
+        if is_url(code):
+            return code
+        code = '/'.join([code_space.strip('/'), code.lstrip('/')])
+        if authority and authority not in code:
+            code = authority.strip('/') + '/' + code.lstrip('/')
+        if is_url(code):
+            return code
+        code = 'https://' + code.lstrip('/')
+        if is_url(code):
+            return code
+        return uri_dict.get('code')
+
+    def condense_uri(self, values):
+        fields = [
+            ['metadata-point-of-contact', 'individual-uri'],
+            ['metadata-point-of-contact', 'organisation-uri'],
+            ['cited-responsible-party', 'individual-uri'],
+            ['cited-responsible-party', 'organisation-uri'],
+            ['responsible-organisation', 'individual-uri'],
+            ['responsible-organisation', 'organisation-uri'],
+            ['distributor', 'individual-uri'],
+            ['distributor', 'organisation-uri'],
+            ['unique-resource-identifier-full'],
+            ['guid'],
+        ]
+        for field in fields:
+            uri_field_values = values[field[0]]
+
+            if not uri_field_values or isinstance(uri_field_values, str):
+                continue
+            if isinstance(uri_field_values, dict):
+                uri_field_values['code'] = self.get_fully_qualified_package_uri(uri_field_values)
+
+            elif isinstance(uri_field_values, list):
+                for uri_field_value in uri_field_values:
+                    value = uri_field_value[field[1]]
+                    if not value:
+                        continue
+                    value['code'] = self.get_fully_qualified_package_uri(value)
 
     def infer_citation(self, values):
         value = values['citation'][0]
@@ -1558,25 +1564,27 @@ class ISODocument(MappedXmlDocument):
 
         # remove duplicate entries
         author_list = [
-            {"individual-name": x['individual-name'],
-             "organisation-name": x['organisation-name'],
-            } for x in value['author']]
+            {
+                "individual-name": x['individual-name'],
+                "organisation-name": x['organisation-name'],
+            } for x in value['author']
+        ]
         author_list = [i for n, i in enumerate(author_list) if i not in author_list[n + 1:]]
 
-        #clear author list
+        # clear author list
         value['author'] = []
 
         for author in author_list:
             ind = author.get('individual-name')
             org = author.get('organisation-name')
             if ind:
-                if ',' in ind: # string is last name first so split on commas
+                if ',' in ind:  # string is last name first so split on commas
                     name_list = ind.split(',')
                     value['author'].append({
                         "given": name_list[1].strip(),
                         "family": name_list[0]
                     })
-                else: # fall back to spliting on spaces
+                else:  # fall back to spliting on spaces
                     name_list = ind.split()
                     value['author'].append({
                         "given": ' '.join(name_list[0:-1]),
@@ -1635,7 +1643,7 @@ class ISODocument(MappedXmlDocument):
                 value['begin'] = min(blist)[:10]
                 if max(elist):
                     value['end'] = max(elist)[:10]
-                log.warn('Problem converting temporal-extent dates to utc format. Defaulting to %s and %s instead', value.get('begin',''), value.get('end',''))
+                log.warn('Problem converting temporal-extent dates to utc format. Defaulting to %s and %s instead', value.get('begin', ''), value.get('end', ''))
 
             values['temporal-extent'] = value
 
@@ -1763,17 +1771,13 @@ class ISODocument(MappedXmlDocument):
                     ('default' in value and len(value) == 1)
                 )
             ):
-
                 LangDict = self.local_to_dict(values[key], defaultLangKey)
                 values[key] = json.dumps(LangDict)
 
     def infer_multilinguale_resource(self, values):
         defaultLangKey = self.cleanLangKey(values.get('metadata-language', 'en'))
         for locator in values['resource-locator']:
-            log.debug(locator)
             self.infer_multilinguale(locator, defaultLangKey)
-            log.debug(locator)
-
 
     def infer_spatial(self, values):
         geom = None
@@ -1927,6 +1931,7 @@ class ISODocument(MappedXmlDocument):
                 to_drop.append(key)
         for key in to_drop:
             del values[key]
+
 
 class GeminiDocument(ISODocument):
     '''
