@@ -4,6 +4,12 @@ import six
 import logging
 log = logging.getLogger(__name__)
 
+# Py2 vs Py3 encoding
+def _encode(element): 
+    if six.PY2:
+        return element.encode('utf-8')
+    else:
+        return str(element)
 
 class MappedXmlObject(object):
     elements = []
@@ -91,9 +97,9 @@ class MappedXmlElement(MappedXmlObject):
                 value[child.name] = child.read_value(element)
             return value
         elif type(element) == etree._ElementStringResult:
-            value = str(element)
+            value = _encode(element)
         elif type(element) == etree._ElementUnicodeResult:
-            value = str(element)
+            value = _encode(element)
         else:
             value = self.element_tostring(element)
         return value
