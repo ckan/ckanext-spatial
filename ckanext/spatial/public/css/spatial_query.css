@@ -37,7 +37,7 @@
 #dataset-map-edit-buttons {
   display: none;
 }
-.leaflet-draw-toolbar a.leaflet-draw-draw-rectangle {
+.leaflet-touch .leaflet-draw-toolbar a.leaflet-draw-draw-rectangle {
   background-image: url("../img/pencil.png");
   background-repeat: no-repeat;
   background-position: 50% 50%;
