@@ -237,6 +237,7 @@ class ISOLocalised(ISOElement):
         )
     ]
 
+
 class ISOResourceLocator(ISOElement):
 
     elements = [
@@ -342,8 +343,9 @@ class ISOResourceLocator(ISOElement):
         )
     ]
 
+
 class ISOIdentifier(ISOElement):
-    elements=[
+    elements = [
         ISOElement(
             name="code",
             search_paths=[
@@ -381,7 +383,6 @@ class ISOIdentifier(ISOElement):
             multiplicity="0..1",
         ),
     ]
-
 
 
 class ISOResponsibleParty(ISOElement):
@@ -616,6 +617,7 @@ class ISOBrowseGraphic(ISOElement):
         ),
     ]
 
+
 class ISOKeyword(ISOElement):
 
     elements = [
@@ -665,6 +667,7 @@ class ISOTemporalExtent(ISOElement):
                    )
     ]
 
+
 class ISOVerticalExtent(ISOElement):
 
     elements = [
@@ -683,6 +686,7 @@ class ISOVerticalExtent(ISOElement):
                    multiplicity="0..1"
                    )
     ]
+
 
 class ISOUsage(ISOElement):
 
@@ -1463,6 +1467,153 @@ class ISODocument(MappedXmlDocument):
             multiplicity="1..*",
         ),
 
+        ISOKeyword(
+            name="keyword-subject-theme",
+            search_paths=[
+                # ISO19139
+                "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords[gmd:type/gmd:MD_KeywordTypeCode/text() = subTopicCategory]",
+                "gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:descriptiveKeywords/gmd:MD_Keywords[gmd:type/gmd:MD_KeywordTypeCode/text() = subTopicCategory]",
+                # ISO19115-3
+                "mdb:identificationInfo/mri:MD_DataIdentification/mri:descriptiveKeywords/mri:MD_Keywords[mri:type/mri:MD_KeywordTypeCode/text() = subTopicCategory]",
+                "mdb:identificationInfo/srv:SV_ServiceIdentification/mri:descriptiveKeywords/mri:MD_Keywords[mri:type/mri:MD_KeywordTypeCode/text() = subTopicCategory]",
+            ],
+            multiplicity="*",
+        ),
+
+        ISOElement(
+            name="acquisition-information",
+            search_paths=[
+                "mac:MI_AcquisitionInformation/",
+            ],
+            multiplicity="0..1",
+            elements=[
+                ISOElement(
+                    name="scope",
+                    search_paths=[
+                        "mac:scope/mcc:MD_Scope",
+                    ],
+                    multiplicity="0..1",
+                    elements=[
+                        ISOElement(
+                            name="level",
+                            search_paths=[
+                                "mcc:level/MD_ScopeCode/text()",
+                            ],
+                            multiplicity="0..1",
+                        ),
+                        ISOElement(
+                            name="description",
+                            search_paths=[
+                                "mcc:levelDescription/mcc:MD_ScopeDescription/mcc:attributes/gco:CharacterString/text()",
+                            ],
+                            multiplicity="0..1",
+                        )
+                    ]
+                ),
+                ISOElement(
+                    name="platform",
+                    search_paths=[
+                        "mac:platform/mac:MI_Platform",
+                    ],
+                    multiplicity="0..1",
+                    elements=[
+                        ISOElement(
+                            name="identifier",
+                            search_paths=[
+                                "mac:identifier/mcc:MD_Identifier",
+                            ],
+                            multiplicity="0..1",
+                        ),
+                        ISOElement(
+                            name="description",
+                            search_paths=[
+                                "mac:description/gco:CharacterString/text()",
+                            ],
+                            multiplicity="0..1",
+                        ),
+                        ISOElement(
+                            name="instrument",
+                            search_paths=[
+                                "mac:instrument/mac:MI_Instrument",
+                            ],
+                            multiplicity="*",
+                            elements=[
+                                ISOElement(
+                                    name="identifier",
+                                    search_paths=[
+                                        "mac:identifier/mcc:MD_Identifier",
+                                    ],
+                                    multiplicity="0..1",
+                                ),
+                                ISOElement(
+                                    name="description",
+                                    search_paths=[
+                                        "mac:description/gco:CharacterString/text()",
+                                    ],
+                                    multiplicity="0..1",
+                                ),
+                                ISOElement(
+                                    name="type",
+                                    search_paths=[
+                                        "mac:type/gco:CharacterString/text()",
+                                    ],
+                                    multiplicity="*",
+                                ),
+
+                            ]
+                        ),
+
+                    ]
+                ),
+            ]
+        ),
+
+        # # https://github.com/metadata101/iso19115-3/blob/357df0c2bfa966444fb1874d7215f83563f51ff4/src/main/plugin/iso19115-3/templates/geodata.xml#L305
+        # # https://github.com/Esri/geoportal-server/blob/master/geoportal/profiles/metadata/iso/iso19110/iso-19110-fc-template.xml#L30
+        # ISOElement(
+        #     name="variable-measured",
+        #     search_paths=[
+        #         "mdb:contentInfo/mrc:MD_FeatureCatalogue/gfc:FC_FeatureCatalogue/?????",
+        #     ],
+        #     multiplicity="0..1",
+        #     elements=[
+        #         ISOElement(
+        #             name="name",
+        #             search_paths=[
+        #                 "gfc:name???",
+        #             ],
+        #             multiplicity="0..1",
+        #         ),
+        #         ISOElement(
+        #             name="type",
+        #             search_paths=[
+        #                 "gfc:featureType???",
+        #             ],
+        #             multiplicity="0..1",
+        #         ),
+        #     ]
+        # ),
+
+        # # https://github.com/metadata101/iso19115-3/blob/357df0c2bfa966444fb1874d7215f83563f51ff4/src/main/test/resources/metadata.xml#L327
+        # # https://github.com/Esri/arcgis-pro-metadata-toolkit/blob/66cb9efc03e7d8c26d45c98098a2363025f1bb01/resources/sample%20metadata%20documents/standard%20elements/ISO%2019115_3%20content/ISO19115-3elementNames_dataset_proExportISO19115-3.xml#L1972
+        # ISOElement(
+        #     name="measurement-techniques",
+        #     search_paths=[
+        #         "mdb:resourceLineage/mrl:LI_Lineage[mrl:scope/mcc:MD_Scope/mcc:level/MD_ScopeCode/text() = fieldSession???]/mrl:statement/gco:CharacterString/text()",
+        #     ],
+        #     multiplicity="*",
+        # ),
+
+        # # https://github.com/Esri/arcgis-pro-metadata-toolkit/blob/8dc79dab89bdb0624a2c08a7e37c5f0d5147af98/resources/sample%20metadata%20documents/ArcGIS%20metadata%20editor%20location/ArcGISmetadata_editorLocation_dataset_proExportISO19115-3.xml#L2960
+        # # https://github.com/metadata101/iso19115-3/blob/357df0c2bfa966444fb1874d7215f83563f51ff4/src/main/test/resources/metadata-ISO19115-3.xml#L3327
+        # ISOElement(
+        #     name="provider",
+        #     search_paths=[
+        #         "mdb:resourceLineage/mrl:LI_Lineage/mrl:source/mrl:LI_Source[mrl:scope/mcc:MD_Scope/mcc:level/MD_ScopeCode/text() = metadata]",
+        #     ],
+        #     multiplicity="0..1",
+        # ),
+
     ]
 
     def iso_date_time_to_utc(self, value):
@@ -1508,9 +1659,15 @@ class ISODocument(MappedXmlDocument):
         self.infer_guid(values)
         self.infer_temporal_vertical_extent(values)
         self.infer_citation(values)
+        self.infer_subject(values)
         self.condense_uri(values)
         self.drop_empty_objects(values)
         return values
+
+    def infer_subject(self, values):
+        topic_category = values['topic-category']
+        sub_topic_categories = values['keyword-subject-theme']
+        values['subject'] = topic_category + sub_topic_categories
 
     def get_fully_qualified_package_uri(self, uri_dict):
         if not uri_dict:
@@ -1776,10 +1933,10 @@ class ISODocument(MappedXmlDocument):
 
             # second case used to gracfully fail if no secondary language is defined
             if (
-                isinstance(value, dict) and
-                (
-                    ('default' in value and 'local' in value and len(value) == 2) or
-                    ('default' in value and len(value) == 1)
+                isinstance(value, dict)
+                and (
+                    ('default' in value and 'local' in value and len(value) == 2)
+                    or ('default' in value and len(value) == 1)
                 )
             ):
                 LangDict = self.local_to_dict(values[key], defaultLangKey)
