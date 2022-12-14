@@ -22,7 +22,25 @@ this.ckan.module('spatial-query', function ($, _) {
         '<a href="javascript:;" class="btn cancel">Cancel</a> ',
         '<a href="javascript:;" class="btn apply disabled">Apply</a>',
         '</div>'
-      ].join('')
+      ].join(''),
+      modal: [
+        '<div class="modal">',
+        '<div class="modal-dialog modal-lg">',
+        '<div class="modal-content">',
+        '<div class="modal-header">',
+        '<button type="button" class="close" data-dismiss="modal">×</button>',
+        '<h3 class="modal-title"></h3>',
+        '</div>',
+        '<div class="modal-body"><div id="draw-map-container"></div></div>',
+        '<div class="modal-footer">',
+        '<button class="btn btn-default btn-cancel" data-dismiss="modal"></button>',
+        '<button class="btn apply btn-primary disabled"></button>',
+        '</div>',
+        '</div>',
+        '</div>',
+        '</div>'
+      ].join('\n')
+
     },
 
     initialize: function () {
@@ -40,6 +58,80 @@ this.ckan.module('spatial-query', function ($, _) {
         }
       }
       this.el.ready(this._onReady);
+    },
+
+    _createModal: function () {
+      if (!this.modal) {
+        var element = this.modal = jQuery(this.template.modal);
+        element.on('click', '.btn-primary', this._onApply);
+        element.on('click', '.btn-cancel', this._onCancel);
+        element.modal({show: false});
+
+        element.find('.modal-title').text(this._('Please draw the extent to query:'));
+        element.find('.btn-primary').text(this._('Apply'));
+        element.find('.btn-cancel').text(this._('Cancel'));
+
+        var module = this;
+
+        this.modal.on('shown.bs.modal', function () {
+          if (module.drawMap) {
+            module._setPreviousBBBox(map, zoom=false);
+
+            // TODO
+            $('a.leaflet-draw-draw-rectangle', element).trigger('click');
+            return
+          }
+          var container = element.find('#draw-map-container')[0];
+          module.drawMap = map = module._createMap(container);
+
+          // Initialize the draw control
+          var draw = new L.Control.Draw({
+            position: 'topright',
+            draw: {
+              polyline: false,
+              polygon: false,
+              circle: false,
+              circlemarker: false,
+              marker: false,
+              rectangle: {shapeOptions: module.options.style}
+            }
+          });
+
+          map.addControl(draw);
+
+          module._setPreviousBBBox(map, zoom=false);
+          map.fitBounds(module.mainMap.getBounds());
+
+          if (map.getZoom() == 0) {
+            map.zoomIn();
+          }
+
+          map.on('draw:created', function (e) {
+            if (module.extentLayer) {
+              map.removeLayer(module.extentLayer);
+            }
+            module.extentLayer = extentLayer = e.layer;
+            $('#ext_bbox').val(extentLayer.getBounds().toBBoxString());
+            map.addLayer(extentLayer);
+            element.find('.btn-primary').removeClass('disabled').addClass('btn-primary');
+          });
+
+          // Record the current map view so we can replicate it after submitting
+          map.on('moveend', function(e) {
+            $('#ext_prev_extent').val(map.getBounds().toBBoxString());
+          });
+
+          // TODO
+          $('a.leaflet-draw-draw-rectangle', element).trigger('click');
+
+        })
+
+        this.modal.on('hidden.bs.modal', function () {
+          module._onCancel()
+        });
+
+      }
+      return this.modal;
     },
 
     _getParameterByName: function (name) {
@@ -63,14 +155,60 @@ this.ckan.module('spatial-query', function ($, _) {
         return new L.GeoJSON(geom, {style: this.options.style});
     },
 
+    _onApply: function() {
+      $(".search-form").submit();
+    },
+
+    _onCancel: function() {
+      if (this.extentLayer) {
+        this.drawMap.removeLayer(this.extentLayer);
+      }
+    },
+
+    _createMap: function(container) {
+      map = ckan.commonLeafletMap(
+        container,
+        this.options.map_config,
+        {
+          attributionControl: false,
+          drawControlTooltips: false
+        }
+      );
+
+      return map;
+
+    },
+
+    // Is there an existing box from a previous search?
+    _setPreviousBBBox: function(map, zoom=true) {
+      previous_bbox = this._getParameterByName('ext_bbox');
+      if (previous_bbox) {
+        $('#ext_bbox').val(previous_bbox);
+        this.extentLayer = this._drawExtentFromCoords(previous_bbox.split(','))
+        map.addLayer(this.extentLayer);
+        if (zoom) {
+          map.fitBounds(this.extentLayer.getBounds());
+        }
+      }
+    },
+
+    // Is there an existing extent from a previous search?
+    _setPreviousExtent: function(map) {
+      previous_extent = this._getParameterByName('ext_prev_extent');
+      if (previous_extent) {
+        coords = previous_extent.split(',');
+        map.fitBounds([[coords[1], coords[0]], [coords[3], coords[2]]], {"animate": false});
+      } else {
+        if (!previous_bbox){
+            map.fitBounds(this.options.default_extent, {"animate": false});
+        }
+      }
+    },
+
     _onReady: function() {
       var module = this;
       var map;
       var extentLayer;
-      var previous_box;
-      var previous_extent;
-      var is_exanded = false;
-      var should_zoom = true;
       var form = $("#dataset-search");
       // CKAN 2.1
       if (!form.length) {
@@ -87,68 +225,31 @@ this.ckan.module('spatial-query', function ($, _) {
       });
 
       // OK map time
-      map = ckan.commonLeafletMap(
-        'dataset-map-container',
-        this.options.map_config,
-        {
-          attributionControl: false,
-          drawControlTooltips: false
-        }
-      );
-
-      // Initialize the draw control
-      map.addControl(new L.Control.Draw({
-        position: 'topright',
-        draw: {
-          polyline: false,
-          polygon: false,
-          circle: false,
-          circlemarker: false,
-          marker: false,
-          rectangle: {shapeOptions: module.options.style}
-        }
-      }));
+      this.mainMap = map = this._createMap('dataset-map-container');
 
       // OK add the expander
-      $('a.leaflet-draw-draw-rectangle', module.el).on('click', function(e) {
-        if (!is_exanded) {
-          $('body').addClass('dataset-map-expanded');
-          if (should_zoom && !extentLayer) {
-            map.zoomIn();
-          }
-          resetMap();
-          is_exanded = true;
+      var module = this;
+
+      var expandButton = L.Control.extend({
+        position: 'topright',
+        onAdd: function(map) {
+          var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control leaflet-control-custom');
+
+          var button = L.DomUtil.create('a', 'leaflet-control-custom-button', container);
+          button.innerHTML = '<i class="fa fa-pencil"></i>';
+          button.title = module._('Draw an extent');
+
+          L.DomEvent.on(button, 'click', function(e) {
+            module.sandbox.body.append(module._createModal());
+            module.modal.modal('show');
+
+          });
+
+          return container;
         }
       });
+      map.addControl(new expandButton());
 
-      // Setup the expanded buttons
-      buttons = $(module.template.buttons).insertBefore('#dataset-map-attribution');
-
-      // Handle the cancel expanded action
-      $('.cancel', buttons).on('click', function() {
-        $('body').removeClass('dataset-map-expanded');
-        if (extentLayer) {
-          map.removeLayer(extentLayer);
-        }
-        setPreviousExtent();
-        setPreviousBBBox();
-        resetMap();
-        is_exanded = false;
-      });
-
-      // Handle the apply expanded action
-      $('.apply', buttons).on('click', function() {
-        if (extentLayer) {
-          $('body').removeClass('dataset-map-expanded');
-          is_exanded = false;
-          resetMap();
-          // Eugh, hacky hack.
-          setTimeout(function() {
-            map.fitBounds(extentLayer.getBounds());
-            submitForm();
-          }, 200);
-        }
-      });
 
       // When user finishes drawing the box, record it and add it to the map
       map.on('draw:created', function (e) {
@@ -166,52 +267,9 @@ this.ckan.module('spatial-query', function ($, _) {
         $('#ext_prev_extent').val(map.getBounds().toBBoxString());
       });
 
-      // Ok setup the default state for the map
-      var previous_bbox;
-      setPreviousBBBox();
-      setPreviousExtent();
+      module._setPreviousBBBox(map);
+      module._setPreviousExtent(map);
 
-      // OK, when we expand we shouldn't zoom then
-      map.on('zoomstart', function(e) {
-        should_zoom = false;
-      });
-
-
-      // Is there an existing box from a previous search?
-      function setPreviousBBBox() {
-        previous_bbox = module._getParameterByName('ext_bbox');
-        if (previous_bbox) {
-          $('#ext_bbox').val(previous_bbox);
-          extentLayer = module._drawExtentFromCoords(previous_bbox.split(','))
-          map.addLayer(extentLayer);
-          map.fitBounds(extentLayer.getBounds());
-        }
-      }
-
-      // Is there an existing extent from a previous search?
-      function setPreviousExtent() {
-        previous_extent = module._getParameterByName('ext_prev_extent');
-        if (previous_extent) {
-          coords = previous_extent.split(',');
-          map.fitBounds([[coords[1], coords[0]], [coords[3], coords[2]]]);
-        } else {
-          if (!previous_bbox){
-              map.fitBounds(module.options.default_extent);
-          }
-        }
-      }
-
-      // Reset map view
-      function resetMap() {
-        L.Util.requestAnimFrame(map.invalidateSize, map, !1, map._container);
-      }
-
-      // Add the loading class and submit the form
-      function submitForm() {
-        setTimeout(function() {
-          form.submit();
-        }, 800);
-      }
     }
   }
 });
