@@ -67,7 +67,7 @@ this.ckan.module('spatial-query', function ($, _) {
         element.on('click', '.btn-cancel', this._onCancel);
         element.modal({show: false});
 
-        element.find('.modal-title').text(this._('Please draw the extent to query:'));
+        element.find('.modal-title').text(this._('Please draw the extent to query in the map:'));
         element.find('.btn-primary').text(this._('Apply'));
         element.find('.btn-cancel').text(this._('Cancel'));
 
@@ -77,8 +77,7 @@ this.ckan.module('spatial-query', function ($, _) {
           if (module.drawMap) {
             module._setPreviousBBBox(map, zoom=false);
 
-            // TODO
-            $('a.leaflet-draw-draw-rectangle', element).trigger('click');
+            $('a.leaflet-draw-draw-rectangle>span', element).trigger('click');
             return
           }
           var container = element.find('#draw-map-container')[0];
@@ -121,9 +120,8 @@ this.ckan.module('spatial-query', function ($, _) {
             $('#ext_prev_extent').val(map.getBounds().toBBoxString());
           });
 
-          // TODO
-          $('a.leaflet-draw-draw-rectangle', element).trigger('click');
-
+          $('a.leaflet-draw-draw-rectangle>span', element).trigger('click');
+          element.find('.btn-primary').focus()
         })
 
         this.modal.on('hidden.bs.modal', function () {
