@@ -76,6 +76,7 @@ this.ckan.module('spatial-query', function ($, _) {
         this.modal.on('shown.bs.modal', function () {
           if (module.drawMap) {
             module._setPreviousBBBox(map, zoom=false);
+            map.fitBounds(module.mainMap.getBounds());
 
             $('a.leaflet-draw-draw-rectangle>span', element).trigger('click');
             return
@@ -113,11 +114,6 @@ this.ckan.module('spatial-query', function ($, _) {
             $('#ext_bbox').val(extentLayer.getBounds().toBBoxString());
             map.addLayer(extentLayer);
             element.find('.btn-primary').removeClass('disabled').addClass('btn-primary');
-          });
-
-          // Record the current map view so we can replicate it after submitting
-          map.on('moveend', function(e) {
-            $('#ext_prev_extent').val(map.getBounds().toBBoxString());
           });
 
           $('a.leaflet-draw-draw-rectangle>span', element).trigger('click');
@@ -185,38 +181,23 @@ this.ckan.module('spatial-query', function ($, _) {
         this.extentLayer = this._drawExtentFromCoords(previous_bbox.split(','))
         map.addLayer(this.extentLayer);
         if (zoom) {
-          map.fitBounds(this.extentLayer.getBounds());
+          map.fitBounds(this.extentLayer.getBounds(), {"animate": false, "padding": [20, 20]});
         }
-      }
-    },
-
-    // Is there an existing extent from a previous search?
-    _setPreviousExtent: function(map) {
-      previous_extent = this._getParameterByName('ext_prev_extent');
-      if (previous_extent) {
-        coords = previous_extent.split(',');
-        map.fitBounds([[coords[1], coords[0]], [coords[3], coords[2]]], {"animate": false});
       } else {
-        if (!previous_bbox){
-            map.fitBounds(this.options.default_extent, {"animate": false});
-        }
+        map.fitBounds(this.options.default_extent, {"animate": false});
       }
+
     },
 
     _onReady: function() {
-      var module = this;
-      var map;
-      var extentLayer;
-      var form = $("#dataset-search");
-      // CKAN 2.1
-      if (!form.length) {
-          form = $(".search-form");
-      }
+      let module = this;
+      let map;
+      let form = $(".search-form");
 
       var buttons;
 
       // Add necessary fields to the search form if not already created
-      $(['ext_bbox', 'ext_prev_extent']).each(function(index, item){
+      $(['ext_bbox']).each(function(index, item){
         if ($("#" + item).length === 0) {
           $('<input type="hidden" />').attr({'id': item, 'name': item}).appendTo(form);
         }
@@ -224,9 +205,6 @@ this.ckan.module('spatial-query', function ($, _) {
 
       // OK map time
       this.mainMap = map = this._createMap('dataset-map-container');
-
-      // OK add the expander
-      var module = this;
 
       var expandButton = L.Control.extend({
         position: 'topright',
@@ -248,25 +226,7 @@ this.ckan.module('spatial-query', function ($, _) {
       });
       map.addControl(new expandButton());
 
-
-      // When user finishes drawing the box, record it and add it to the map
-      map.on('draw:created', function (e) {
-        if (extentLayer) {
-          map.removeLayer(extentLayer);
-        }
-        extentLayer = e.layer;
-        $('#ext_bbox').val(extentLayer.getBounds().toBBoxString());
-        map.addLayer(extentLayer);
-        $('.apply', buttons).removeClass('disabled').addClass('btn-primary');
-      });
-
-      // Record the current map view so we can replicate it after submitting
-      map.on('moveend', function(e) {
-        $('#ext_prev_extent').val(map.getBounds().toBBoxString());
-      });
-
       module._setPreviousBBBox(map);
-      module._setPreviousExtent(map);
 
     }
   }

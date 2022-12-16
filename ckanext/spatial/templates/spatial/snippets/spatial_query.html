@@ -12,35 +12,11 @@ e.g.
 
 #}
 
-<!--
-
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        HOLA
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
-    </div>
-  </div>
-</div>
- Modal -->
-
-
 <section id="dataset-map" class="module module-narrow module-shallow">
     <h2 class="module-heading">
         <i class="icon-medium icon-globe"></i>
         {{ _('Filter by location') }}
-        <a href="{{ h.remove_url_param(['ext_bbox','ext_prev_extent', 'ext_location']) }}" class="action">{{ _('Clear') }}</a>
+        <a href="{{ h.remove_url_param(['ext_bbox']) }}" class="action">{{ _('Clear') }}</a>
     </h2>
     {% set map_config = h.get_common_map_config() %}
     <div class="dataset-map" data-module="spatial-query" data-default_extent="{{ default_extent }}" data-module-map_config="{{ h.dump_json(map_config) }}">
