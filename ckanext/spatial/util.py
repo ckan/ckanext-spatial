@@ -186,11 +186,11 @@ def get_harvest_object_content(id):
         return None
 
 
-def _transform_to_html(content, xslt_package=None, xslt_path=None):
+def transform_to_html(content, xslt_package=None, xslt_path=None):
 
     xslt_package = xslt_package or __name__
     xslt_path = xslt_path or \
-        '../templates/ckanext/spatial/gemini2-html-stylesheet.xsl'
+        'templates/ckanext/spatial/gemini2-html-stylesheet.xsl'
 
     # optimise -- read transform only once and compile rather
     # than at each request

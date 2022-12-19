@@ -216,6 +216,13 @@ class TestHarvestedMetadataAPI(SpatialTestBase):
             '<?xml version="1.0" encoding="UTF-8"?>\n<xml>Content 1</xml>'
         )
 
+        # Access human-readable view of content
+        url = "/harvest/object/{0}/html".format(object_id_1)
+        r = app.get(url, status=200)
+        assert(
+            r.headers["Content-Type"] == "text/html; charset=utf-8"
+        )
+
         # Access original content in object extra (if present)
         url = "/harvest/object/{0}/original".format(object_id_1)
         r = app.get(url, status=404)
