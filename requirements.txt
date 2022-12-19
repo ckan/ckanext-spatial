@@ -1,5 +1,5 @@
 ckantoolkit
-Shapely>=1.2.13
+Shapely>=1.2.13,<2.0.0
 pyproj==2.6.1
 OWSLib==0.18.0
 lxml>=2.3
