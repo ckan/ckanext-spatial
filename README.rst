@@ -23,6 +23,13 @@ Full documentation, including installation instructions, can be found at:
 
 https://docs.ckan.org/projects/ckanext-spatial/en/latest/
 
+Supported Versions
+------------------
+
+ckanext-spatial >= 2.0.0 supports CKAN 2.9 and CKAN 2.10.
+
+For previous CKAN versions please use the v1.x tags.
+
 
 Community
 ---------
