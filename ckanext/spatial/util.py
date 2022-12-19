@@ -15,9 +15,13 @@ from pprint import pprint
 from ckan import model
 from ckan.model.package_extra import PackageExtra
 
-from ckanext.spatial.lib.reports import validation_report
-from ckanext.spatial.harvesters import SpatialHarvester
-from ckanext.spatial.harvested_metadata import ISODocument
+try:
+    from ckanext.spatial.lib.reports import validation_report
+    from ckanext.spatial.harvesters import SpatialHarvester
+    from ckanext.spatial.harvested_metadata import ISODocument
+except ImportError:
+    # ckanext-harvest not loaded
+    pass
 
 from ckantoolkit import config
 
