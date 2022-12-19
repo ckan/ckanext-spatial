@@ -56,3 +56,7 @@
   border: 1px solid #CCC;
   margin: 0;
 }
+
+.modal-spatial-query {
+  max-width: 900px;
+}

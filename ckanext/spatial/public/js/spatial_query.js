@@ -23,24 +23,42 @@ this.ckan.module('spatial-query', function ($, _) {
         '<a href="javascript:;" class="btn apply disabled">Apply</a>',
         '</div>'
       ].join(''),
-      modal: [
-        '<div class="modal">',
-        '<div class="modal-dialog modal-lg">',
-        '<div class="modal-content">',
-        '<div class="modal-header">',
-        '<button type="button" class="close" data-dismiss="modal">×</button>',
-        '<h3 class="modal-title"></h3>',
-        '</div>',
-        '<div class="modal-body"><div id="draw-map-container"></div></div>',
-        '<div class="modal-footer">',
-        '<button class="btn btn-default btn-cancel" data-dismiss="modal"></button>',
-        '<button class="btn apply btn-primary disabled"></button>',
-        '</div>',
-        '</div>',
-        '</div>',
-        '</div>'
-      ].join('\n')
-
+      modal: {
+        bootstrap3: [
+          '<div class="modal">',
+          '<div class="modal-dialog modal-lg">',
+          '<div class="modal-content">',
+          '<div class="modal-header">',
+          '<button type="button" class="close" data-dismiss="modal">×</button>',
+          '<h3 class="modal-title"></h3>',
+          '</div>',
+          '<div class="modal-body"><div id="draw-map-container"></div></div>',
+          '<div class="modal-footer">',
+          '<button class="btn btn-default btn-cancel" data-dismiss="modal"></button>',
+          '<button class="btn apply btn-primary disabled"></button>',
+          '</div>',
+          '</div>',
+          '</div>',
+          '</div>'
+        ].join('\n'),
+        bootstrap5: [
+          '<div class="modal" tabindex="-1">',
+          '<div class="modal-dialog modal-lg modal-spatial-query">',
+          '<div class="modal-content">',
+          '<div class="modal-header">',
+          '<h4 class="modal-title"></h4>',
+          '<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>',
+          '</div>',
+          '<div class="modal-body"><div id="draw-map-container"></div></div>',
+          '<div class="modal-footer">',
+          '<button type="button" class="btn btn-secondary btn-cancel" data-bs-dismiss="modal"></button>',
+          '<button type="button" class="btn btn-primary apply disabled"></button>',
+          '</div>',
+          '</div>',
+          '</div>',
+          '</div>'
+        ].join('\n')
+      }
     },
 
     initialize: function () {
@@ -60,14 +78,18 @@ this.ckan.module('spatial-query', function ($, _) {
       this.el.ready(this._onReady);
     },
 
+    _getBootstrapVersion: function () {
+      return $.fn.modal.Constructor.VERSION.split(".")[0];
+    },
+
     _createModal: function () {
       if (!this.modal) {
-        var element = this.modal = jQuery(this.template.modal);
+        var element = this.modal = jQuery(this.template.modal["bootstrap" + this._getBootstrapVersion()]);
         element.on('click', '.btn-primary', this._onApply);
         element.on('click', '.btn-cancel', this._onCancel);
         element.modal({show: false});
 
-        element.find('.modal-title').text(this._('Please draw the extent to query in the map:'));
+        element.find('.modal-title').text(this._('Please draw query extent in the map:'));
         element.find('.btn-primary').text(this._('Apply'));
         element.find('.btn-cancel').text(this._('Cancel'));
 
