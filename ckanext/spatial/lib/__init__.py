@@ -191,7 +191,7 @@ def polygon_query(wkt, srid=None):
 
     extents = Session.query(PackageExtent) \
         .filter(PackageExtent.package_id == Package.id) \
-        .filter(PackageExtent.the_geom.intersects(input_geometry)) \
+        .filter(PackageExtent.the_geom.ST_Intersects(input_geometry)) \
         .filter(Package.state == u'active')
 
     return extents
