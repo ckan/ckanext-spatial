@@ -176,7 +176,7 @@ class ISOElement(MappedXmlElement):
         "gcx": "http://standards.iso.org/iso/19115/-3/gcx/1.0",
         "gex": "http://standards.iso.org/iso/19115/-3/gex/1.0",
         "lan": "http://standards.iso.org/iso/19115/-3/lan/1.0",
-        # "mac": "http://standards.iso.org/iso/19115/-3/mac/2.0",
+        "mac": "http://standards.iso.org/iso/19115/-3/mac/2.0",
         # "mas": "http://standards.iso.org/iso/19115/-3/mas/1.0",
         "mcc": "http://standards.iso.org/iso/19115/-3/mcc/1.0",
         "mco": "http://standards.iso.org/iso/19115/-3/mco/1.0",
@@ -1483,7 +1483,7 @@ class ISODocument(MappedXmlDocument):
         ISOElement(
             name="acquisition-information",
             search_paths=[
-                "mac:MI_AcquisitionInformation/",
+                "mac:MI_AcquisitionInformation",
             ],
             multiplicity="0..1",
             elements=[
