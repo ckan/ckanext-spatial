@@ -1669,11 +1669,11 @@ class ISODocument(MappedXmlDocument):
         sub_topic_categories = values['keyword-subject-theme']
         values['subject'] = topic_category + sub_topic_categories
 
-    def get_fully_qualified_package_uri(self, uri_dict):
+    def get_fully_qualified_package_uri(self, uri_dict, default_code_space=None):
         if not uri_dict:
             return ''
         authority = uri_dict.get('authority')
-        code_space = uri_dict.get('code-space')
+        code_space = uri_dict.get('code-space') or default_code_space
         code = uri_dict.get('code')
         version = uri_dict.get('version')
         if not code:
@@ -1681,14 +1681,31 @@ class ISODocument(MappedXmlDocument):
         if is_url(code):
             return code
         code = '/'.join([code_space.strip('/'), code.lstrip('/')])
-        if authority and authority not in code:
-            code = authority.strip('/') + '/' + code.lstrip('/')
+        # if authority and authority not in code:
+        #     code = authority.strip('/') + '/' + code.lstrip('/')
         if is_url(code):
             return code
         code = 'https://' + code.lstrip('/')
         if is_url(code):
             return code
         return uri_dict.get('code')
+
+    def condense_uri_helper(self, field, values, default_code_space=None):
+        uri_field_values = values[field[0]]
+
+        if not uri_field_values or isinstance(uri_field_values, str):
+            return
+        if isinstance(uri_field_values, dict):
+            uri_field_values['code'] = self.get_fully_qualified_package_uri(
+                uri_field_values, default_code_space)
+
+        elif isinstance(uri_field_values, list):
+            for uri_field_value in uri_field_values:
+                value = uri_field_value[field[1]]
+                if not value:
+                    return
+                value['code'] = self.get_fully_qualified_package_uri(
+                    value, default_code_space)
 
     def condense_uri(self, values):
         fields = [
@@ -1700,23 +1717,17 @@ class ISODocument(MappedXmlDocument):
             ['responsible-organisation', 'organisation-uri'],
             ['distributor', 'individual-uri'],
             ['distributor', 'organisation-uri'],
-            ['unique-resource-identifier-full'],
             ['guid'],
         ]
         for field in fields:
-            uri_field_values = values[field[0]]
+            self.condense_uri_helper(field, values)
 
-            if not uri_field_values or isinstance(uri_field_values, str):
-                continue
-            if isinstance(uri_field_values, dict):
-                uri_field_values['code'] = self.get_fully_qualified_package_uri(uri_field_values)
-
-            elif isinstance(uri_field_values, list):
-                for uri_field_value in uri_field_values:
-                    value = uri_field_value[field[1]]
-                    if not value:
-                        continue
-                    value['code'] = self.get_fully_qualified_package_uri(value)
+        doi_fields = [
+            ['unique-resource-identifier-full'],
+        ]
+        for field in doi_fields:
+            self.condense_uri_helper(
+                field, values, default_code_space='doi.org')
 
     def infer_citation(self, values):
         value = values['citation'][0]
