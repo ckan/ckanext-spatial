@@ -109,7 +109,7 @@ Choosing a backend for the spatial search
 
 Ckanext-spatial uses Solr to power the spatial search. The current implementation is tested on Solr 8, which is the supported version, although it might work on previous Solr versions.
 
-The are official `Docker images for Solr <https://github.com/ckan/ckan-solr>`_ that have all the configuration needed to perform spatial searches. This is the easiest way to get started but if you need to customize Solr yourself see below for the modifications needed.
+.. note:: The are official `Docker images for Solr <https://github.com/ckan/ckan-solr>`_ that have all the configuration needed to perform spatial searches (look for the ones with a ``-spatial`` suffix). This is the easiest way to get started but if you need to customize Solr yourself see below for the modifications needed.
 
 There are different backends supported for the spatial search, it is important
 to understand their differences and the necessary setup required when choosing
