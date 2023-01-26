@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+import os
+import datetime
+
 #
 # ckanext-spatial documentation build configuration file, created by
 # sphinx-quickstart on Wed Apr 10 17:17:12 2013.
@@ -11,7 +14,6 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import sys, os
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -41,7 +43,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'ckanext-spatial'
-copyright = u'&copy; 2011-2021 <a href="https://okfn.org/">Open Knowledge Foundation</a> and <a href="https://github.com/ckan/ckanext-spatial/graphs/contributors">contributors</a>.'
+copyright = u'&copy; 2011-{} <a href="https://okfn.org/">Open Knowledge Foundation</a> and <a href="https://github.com/ckan/ckanext-spatial/graphs/contributors">contributors</a>.'.format(datetime.datetime.utcnow().year)
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

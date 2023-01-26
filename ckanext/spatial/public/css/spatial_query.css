@@ -1,5 +1,6 @@
 .module-narrow #dataset-map-container {
   height: 200px;
+  font-size: 14px;
 }
 .module-content #dataset-map-container {
   height: 250px;
@@ -37,7 +38,7 @@
 #dataset-map-edit-buttons {
   display: none;
 }
-.leaflet-draw-toolbar a.leaflet-draw-draw-rectangle {
+.leaflet-touch .leaflet-draw-toolbar a.leaflet-draw-draw-rectangle {
   background-image: url("../img/pencil.png");
   background-repeat: no-repeat;
   background-position: 50% 50%;
@@ -47,46 +48,15 @@
 .leaflet-draw-actions li {
   display: none;
 }
-.dataset-map-expanded #dataset-map {
-  position: absolute;
-  width: 940px;
+
+#draw-map-container {
+  width: 870px;
   height: 384px;
-  top: -384px;
-  left: -1px;
   background-color: white;
   border: 1px solid #CCC;
   margin: 0;
 }
-.dataset-map-expanded #dataset-map #dataset-map-container {
-  height: 300px;
-}
-.dataset-map-expanded #dataset-map #dataset-map-attribution {
-  *zoom: 1;
-}
-.dataset-map-expanded #dataset-map #dataset-map-attribution:before,
-.dataset-map-expanded #dataset-map #dataset-map-attribution:after {
-  display: table;
-  content: "";
-  line-height: 0;
-}
-.dataset-map-expanded #dataset-map #dataset-map-attribution:after {
-  clear: both;
-}
-.dataset-map-expanded #dataset-map #dataset-map-attribution div {
-  float: left;
-  margin-right: 10px;
-}
-.dataset-map-expanded #dataset-map #dataset-map-edit-buttons {
-  display: block;
-  float: right;
-  padding: 10px;
-}
-.dataset-map-expanded #dataset-map #dataset-map-edit {
-  display: none;
-}
-.dataset-map-expanded #dataset-map .module-heading {
-  border-top-color: #000;
-}
-.dataset-map-expanded .wrapper {
-  margin-top: 383px;
+
+.modal-spatial-query {
+  max-width: 900px;
 }
