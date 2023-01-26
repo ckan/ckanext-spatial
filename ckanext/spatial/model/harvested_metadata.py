@@ -20,7 +20,8 @@ class MappedXmlObject(object):
 
 class MappedXmlDocument(MappedXmlObject):
     def __init__(self, xml_str=None, xml_tree=None):
-        assert (xml_str or xml_tree is not None), 'Must provide some XML in one format or another'
+        assert (
+            xml_str or xml_tree is not None), 'Must provide some XML in one format or another'
         self.xml_str = xml_str
         self.xml_tree = xml_tree
 
@@ -129,7 +130,8 @@ class MappedXmlElement(MappedXmlObject):
         if self.multiplicity == "0":
             # 0 = None
             if values:
-                log.warn("Values found for element '%s' when multiplicity should be 0: %s", self.name, values)
+                log.warn(
+                    "Values found for element '%s' when multiplicity should be 0: %s", self.name, values)
             return ""
         elif self.multiplicity == "1":
             # 1 = Mandatory, maximum 1 = Exactly one
@@ -1621,19 +1623,24 @@ class ISODocument(MappedXmlDocument):
         post_remove = 99
         if re.search(r'[+-]\d{4}', value):
             post_remove = -5
-            timedelta = datetime.timedelta(hours=int(value[-5:][1:3]), minutes=int(value[-5:][-2:])) * (-1 if value[-5:][0] == '+' else 1)
+            timedelta = datetime.timedelta(hours=int(
+                value[-5:][1:3]), minutes=int(value[-5:][-2:])) * (-1 if value[-5:][0] == '+' else 1)
         else:
             timedelta = datetime.timedelta(hours=0, minutes=0)
         try:
-            utc_dt = datetime.datetime.strptime(value, '%Y-%m-%d')  # date alone is valid
+            utc_dt = datetime.datetime.strptime(
+                value, '%Y-%m-%d')  # date alone is valid
         except ValueError:
             try:
-                utc_dt = datetime.datetime.strptime(value[:post_remove], '%Y-%m-%dT%H:%M:%S') + timedelta
+                utc_dt = datetime.datetime.strptime(
+                    value[:post_remove], '%Y-%m-%dT%H:%M:%S') + timedelta
             except Exception as e:
                 try:
-                    utc_dt = datetime.datetime.strptime(value[:post_remove], '%Y-%m-%dT%H:%M:%S.%f') + timedelta
+                    utc_dt = datetime.datetime.strptime(
+                        value[:post_remove], '%Y-%m-%dT%H:%M:%S.%f') + timedelta
                 except Exception as e:
-                    log.debug('Could not convert datetime value %s to UTC: %s', value, e)
+                    log.debug(
+                        'Could not convert datetime value %s to UTC: %s', value, e)
                     raise
         return utc_dt.strftime('%Y-%m-%d %H:%M:%S')
 
@@ -1738,7 +1745,8 @@ class ISODocument(MappedXmlDocument):
             else:  # it's an object
                 dates = sorted(dates, key=lambda k: k['value'], reverse=True)
             issued_date = str(dates[0]['value'])
-            value['issued'] = [{"date-parts": [issued_date[:4], issued_date[5:7], issued_date[8:10]]}]
+            value['issued'] = [
+                {"date-parts": [issued_date[:4], issued_date[5:7], issued_date[8:10]]}]
         value['id'] = self.calculate_identifier(value['id'])
 
         # remove duplicate entries
@@ -1748,7 +1756,8 @@ class ISODocument(MappedXmlDocument):
                 "organisation-name": x['organisation-name'],
             } for x in value['author']
         ]
-        author_list = [i for n, i in enumerate(author_list) if i not in author_list[n + 1:]]
+        author_list = [i for n, i in enumerate(
+            author_list) if i not in author_list[n + 1:]]
 
         # clear author list
         value['author'] = []
@@ -1772,14 +1781,17 @@ class ISODocument(MappedXmlDocument):
             else:
                 value['author'].append({"literal": org})
 
-        defaultLangKey = self.cleanLangKey(values.get('metadata-language', 'en'))
+        defaultLangKey = self.cleanLangKey(
+            values.get('metadata-language', 'en'))
         value['title'] = self.local_to_dict(value['title'], defaultLangKey)
-        value['abstract'] = self.local_to_dict(value['abstract'], defaultLangKey)
+        value['abstract'] = self.local_to_dict(
+            value['abstract'], defaultLangKey)
 
         identifier = values.get('unique-resource-identifier-full', {})
         if identifier:
             doi = self.calculate_identifier(identifier)
-            doi = re.sub(r'^http.*doi\.org/', '', doi, flags=re.IGNORECASE)  # strip https://doi.org/ and the like
+            # strip https://doi.org/ and the like
+            doi = re.sub(r'^http.*doi\.org/', '', doi, flags=re.IGNORECASE)
             if doi and re.match(r'^10.\d{4,9}\/[-._;()/:A-Z0-9]+$', doi, re.IGNORECASE):
                 value['DOI'] = doi
         # TODO: could we have more then one doi?
@@ -1822,7 +1834,8 @@ class ISODocument(MappedXmlDocument):
                 value['begin'] = min(blist)[:10]
                 if max(elist):
                     value['end'] = max(elist)[:10]
-                log.warn('Problem converting temporal-extent dates to utc format. Defaulting to %s and %s instead', value.get('begin', ''), value.get('end', ''))
+                log.warn('Problem converting temporal-extent dates to utc format. Defaulting to %s and %s instead',
+                         value.get('begin', ''), value.get('end', ''))
 
             values['temporal-extent'] = value
 
@@ -1869,10 +1882,13 @@ class ISODocument(MappedXmlDocument):
             return encoded_str
 
         while(re.search(r'\\u[0-9a-fA-F]{4}', encoded_str)):
-            if isinstance(encoded_str, str):  # encode to get bytestring as decode only works on bytes
-                encoded_str = encoded_str.encode('raw_unicode_escape').decode('unicode_escape')
+            # encode to get bytestring as decode only works on bytes
+            if isinstance(encoded_str, str):
+                encoded_str = encoded_str.encode(
+                    'raw_unicode_escape').decode('unicode_escape')
             else:  # we have bytes
-                encoded_str = encoded_str.decode().encode('raw_unicode_escape').decode('unicode_escape')
+                encoded_str = encoded_str.decode().encode(
+                    'raw_unicode_escape').decode('unicode_escape')
 
         # newline escape seem to only work with exact matches. regex did not pickup the multi escape
         encoded_str = encoded_str.replace('\\\\n', '\n')
@@ -1914,7 +1930,8 @@ class ISODocument(MappedXmlDocument):
     def infert_keywords(self, values):
         keywords = values['keywords']
 
-        defaultLangKey = self.cleanLangKey(values.get('metadata-language', 'en'))
+        defaultLangKey = self.cleanLangKey(
+            values.get('metadata-language', 'en'))
 
         value = []
         if isinstance(keywords, list):
@@ -1937,7 +1954,8 @@ class ISODocument(MappedXmlDocument):
 
     def infer_multilinguale(self, values, defaultLangKey=''):
         if not defaultLangKey:
-            defaultLangKey = self.cleanLangKey(values.get('metadata-language', 'en'))
+            defaultLangKey = self.cleanLangKey(
+                values.get('metadata-language', 'en'))
 
         for key in values:
             value = values[key]
@@ -1954,7 +1972,8 @@ class ISODocument(MappedXmlDocument):
                 values[key] = json.dumps(LangDict)
 
     def infer_multilinguale_resource(self, values):
-        defaultLangKey = self.cleanLangKey(values.get('metadata-language', 'en'))
+        defaultLangKey = self.cleanLangKey(
+            values.get('metadata-language', 'en'))
         for locator in values['resource-locator']:
             self.infer_multilinguale(locator, defaultLangKey)
 
@@ -1987,7 +2006,8 @@ class ISODocument(MappedXmlDocument):
                     try:
                         geom = ogr.CreateGeometryFromJson(xmlGeom)
                     except Exception:
-                        log.error('Spatial field is not GML, WKT, or GeoJSON. Can not convert spatial field.')
+                        log.error(
+                            'Spatial field is not GML, WKT, or GeoJSON. Can not convert spatial field.')
                         pass
                         return
         if geom:
@@ -1995,7 +2015,8 @@ class ISODocument(MappedXmlDocument):
             if not values.get('bbox'):
                 extent = geom.GetEnvelope()
                 if extent:
-                    values['bbox'].append({'west': '', 'east': '', 'north': '', 'south': ''})
+                    values['bbox'].append(
+                        {'west': '', 'east': '', 'north': '', 'south': ''})
                     values['bbox'][0]['west'], values['bbox'][0]['east'], values['bbox'][0]['north'], values['bbox'][0]['south'] = extent
 
     def clean_metadata_reference_date(self, values):
@@ -2004,7 +2025,8 @@ class ISODocument(MappedXmlDocument):
             date['value'] = self.iso_date_time_to_utc(date['value'])
             dates.append(date)
         if dates:
-            dates.sort(key=lambda x: x['value'])  # sort list of objects by value attribute
+            # sort list of objects by value attribute
+            dates.sort(key=lambda x: x['value'])
             values['metadata-reference-date'] = dates
 
     def clean_dataset_reference_date(self, values):
@@ -2014,11 +2036,13 @@ class ISODocument(MappedXmlDocument):
                 date['value'] = self.iso_date_time_to_utc(date['value'])[:10]
             except Exception as e:
                 date['value'] = date['value'][:10]
-                log.warn('Problem converting dataset-reference-date to utc format. Defaulting to %s instead', date['value'])
+                log.warn(
+                    'Problem converting dataset-reference-date to utc format. Defaulting to %s instead', date['value'])
 
             dates.append(date)
         if dates:
-            dates.sort(key=lambda x: x['value'])  # sort list of objects by value attribute
+            # sort list of objects by value attribute
+            dates.sort(key=lambda x: x['value'])
             values['dataset-reference-date'] = dates
 
     def infer_date_released(self, values):
