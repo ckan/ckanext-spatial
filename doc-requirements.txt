@@ -1,5 +1,5 @@
 -e git+https://github.com/ckan/ckan#egg=ckan
 -r https://raw.githubusercontent.com/ckan/ckan/master/requirements.txt
 -r requirements.txt
-Sphinx==1.8.5
-sphinx-rtd-theme==0.4.3
+sphinx==5.1.1
+sphinx-rtd-theme==1.0.0
