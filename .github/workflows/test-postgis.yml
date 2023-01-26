@@ -5,8 +5,8 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.7'
       - name: Install requirements
@@ -45,7 +45,7 @@ jobs:
       PGPASSWORD: postgres
     
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Create Database
       run: |
         psql --host=postgres --username=postgres --command="CREATE USER ckan_default WITH PASSWORD 'pass' NOSUPERUSER NOCREATEDB NOCREATEROLE;"
@@ -99,6 +99,6 @@ jobs:
       run: pytest --ckan-ini=test-postgis.ini --cov=ckanext.spatial --cov-report=xml --cov-append --disable-warnings ckanext/spatial/tests/postgis
 
     - name: Upload coverage report to codecov
-      uses: codecov/codecov-action@v1
+      uses: codecov/codecov-action@v3
       with:
         file: ./coverage.xml

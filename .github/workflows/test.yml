@@ -5,8 +5,8 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.8'
       - name: Install requirements
@@ -51,7 +51,7 @@ jobs:
       PGPASSWORD: postgres
     
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Install harvester
       run: |
         git clone https://github.com/ckan/ckanext-harvest
@@ -92,6 +92,6 @@ jobs:
       run: pytest --ckan-ini=test.ini --cov=ckanext.spatial --cov-report=xml --cov-append --disable-warnings ckanext/spatial/tests
 
     - name: Upload coverage report to codecov
-      uses: codecov/codecov-action@v1
+      uses: codecov/codecov-action@v3
       with:
         file: ./coverage.xml
