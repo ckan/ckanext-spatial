@@ -19,6 +19,9 @@ class SpatialSearchBackend:
     """Base class for all datastore backends."""
 
     def parse_geojson(self, geom_from_metadata):
+        if not geom_from_metadata:
+            log.error("Metadata does not contain geometry, not indexing")
+            return None
 
         try:
             geometry = json.loads(geom_from_metadata)
