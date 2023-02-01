@@ -723,12 +723,12 @@ class ISOAggregationInfo(ISOElement):
             ],
             multiplicity="0..1",
         ),
-        ISOElement(
+        ISOIdentifier(
             name="aggregate-dataset-identifier",
             search_paths=[
-                "gmd:aggregateDatasetIdentifier/gmd:MD_Identifier/gmd:code/gco:CharacterString/text()",
+                "gmd:aggregateDatasetIdentifier/gmd:MD_Identifier",
                 # ISO19115-3
-                "mri:name/cit:CI_Citation/cit:identifier/mcc:MD_Identifier/mcc:code/gco:CharacterString/text()"
+                "mri:name/cit:CI_Citation/cit:identifier/mcc:MD_Identifier"
             ],
             multiplicity="0..1",
         ),
@@ -1724,6 +1724,7 @@ class ISODocument(MappedXmlDocument):
             ['responsible-organisation', 'organisation-uri'],
             ['distributor', 'individual-uri'],
             ['distributor', 'organisation-uri'],
+            ['aggregation-info', 'aggregate-dataset-identifier']
             ['guid'],
         ]
         for field in fields:
