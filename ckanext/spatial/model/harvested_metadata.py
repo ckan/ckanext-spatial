@@ -1724,7 +1724,7 @@ class ISODocument(MappedXmlDocument):
             ['responsible-organisation', 'organisation-uri'],
             ['distributor', 'individual-uri'],
             ['distributor', 'organisation-uri'],
-            ['aggregation-info', 'aggregate-dataset-identifier']
+            ['aggregation-info', 'aggregate-dataset-identifier'],
             ['guid'],
         ]
         for field in fields:
