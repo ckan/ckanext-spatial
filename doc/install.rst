@@ -174,7 +174,7 @@ When running the spatial harvesters
     File "xmlschema.pxi", line 102, in lxml.etree.XMLSchema.__init__ (src/lxml/lxml.etree.c:154475)
     lxml.etree.XMLSchemaParseError: local list type: A type, derived by list or union, must have the simple ur-type definition as base type, not '{http://www.opengis.net/gml}doubleList'., line 1
 
-The XSD validation used by the spatial harvesters requires libxml2 ersion 2.9.
+The XSD validation used by the spatial harvesters requires libxml2 version 2.9.
 
 With CKAN you would probably have installed an older version from your
 distribution. (e.g. with ``sudo apt-get install libxml2-dev``). You need to

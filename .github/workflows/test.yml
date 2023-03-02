@@ -1,5 +1,5 @@
 name: Tests
-on: [push, pull_request]
+on: pull_request
 
 jobs:
   lint:
@@ -20,13 +20,19 @@ jobs:
         include:
           - ckan-version: "2.10"
             solr-image: "2.10-spatial"
+            harvest-tag: 'v1.4.2'
+            requirements-file: 'requirements.txt'
           - ckan-version: 2.9
             solr-image: 2.9-solr8-spatial
+            harvest-tag: 'v1.4.2'
+            requirements-file: 'requirements.txt'
           - ckan-version: 2.9-py2
             solr-image: 2.9-py2-solr8-spatial
+            harvest-tag: 'v1.4.0'
+            requirements-file: 'requirements-py2.txt'
       fail-fast: false
     
-    name: CKAN ${{ matrix.ckan-version }}
+    name: CKAN ${{ matrix.ckan-version }}, Solr ${{ matrix.solr-image }}
     runs-on: ubuntu-latest
     container:
       image: openknowledge/ckan-dev:${{ matrix.ckan-version }}
@@ -52,13 +58,7 @@ jobs:
     
     steps:
     - uses: actions/checkout@v3
-    - name: Install harvester
-      run: |
-        git clone https://github.com/ckan/ckanext-harvest
-        cd ckanext-harvest
-        pip install -r pip-requirements.txt
-        pip install -r dev-requirements.txt
-        pip install -e .
+  
     - name: Install dependencies (common)
       run: |
         apk add --no-cache \
@@ -71,18 +71,25 @@ jobs:
           gcc \
           libxml2-dev \
           libxslt-dev
-    - name: Install dependencies (python2)
-      if: ${{ matrix.ckan-version == '2.9-py2' || matrix.ckan-version == '2.8' || matrix.ckan-version == '2.7' }}
+
+    - name: Install dependencies from ${{ matrix.requirements-file }}
       run: |
-        apk add --no-cache \
-          python2-dev
-        pip install -r requirements-py2.txt
-    - name: Install dependencies (python3)
-      if: ${{ matrix.ckan-version != '2.9-py2' && matrix.ckan-version != '2.8' && matrix.ckan-version != '2.7' }}
+        pip install -r ${{ matrix.requirements-file }}
+
+    - name: Install harvester
       run: |
-        apk add --no-cache \
-          python3-dev
-        pip install -r requirements.txt
+        echo "Installing harvester from tag ${{ matrix.harvest-tag }}"
+        git clone --depth 1 --branch ${{ matrix.harvest-tag }} https://github.com/ckan/ckanext-harvest
+        cd ckanext-harvest
+        echo "upgrade pip"
+        pip install --upgrade pip
+        echo "Installing harvester requirements"
+        pip install -r pip-requirements.txt
+        echo "Installing harvester dev-requirements"
+        pip install -r dev-requirements.txt
+        echo "Installing harvester extension"
+        pip install -e .
+
     - name: Install requirements
       run: |
         pip install -e .
