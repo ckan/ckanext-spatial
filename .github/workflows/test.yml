@@ -20,15 +20,12 @@ jobs:
         include:
           - ckan-version: "2.10"
             solr-image: "2.10-spatial"
-            harvest-tag: 'v1.4.2'
             requirements-file: 'requirements.txt'
           - ckan-version: 2.9
             solr-image: 2.9-solr8-spatial
-            harvest-tag: 'v1.4.2'
             requirements-file: 'requirements.txt'
           - ckan-version: 2.9-py2
             solr-image: 2.9-py2-solr8-spatial
-            harvest-tag: 'v1.4.0'
             requirements-file: 'requirements-py2.txt'
       fail-fast: false
     
@@ -78,8 +75,8 @@ jobs:
 
     - name: Install harvester
       run: |
-        echo "Installing harvester from tag ${{ matrix.harvest-tag }}"
-        git clone --depth 1 --branch ${{ matrix.harvest-tag }} https://github.com/ckan/ckanext-harvest
+        echo "Installing harvester"
+        git clone --depth 1 https://github.com/ckan/ckanext-harvest
         cd ckanext-harvest
         echo "upgrade pip"
         pip install --upgrade pip
