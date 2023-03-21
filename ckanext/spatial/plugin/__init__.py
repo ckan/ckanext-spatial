@@ -196,9 +196,9 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
         import shapely
         import shapely.geometry
 
-        if pkg_dict.get('extras_spatial', None) and self.search_backend in ('solr', 'solr-spatial-field'):
+        if (pkg_dict.get('extras_spatial', None) or pkg_dict.get('spatial', None)) and self.search_backend in ('solr', 'solr-spatial-field'):
             try:
-                geometry = json.loads(pkg_dict['extras_spatial'])
+                geometry = json.loads(pkg_dict.get('spatial', pkg_dict['extras_spatial']))
             except ValueError as e:
                 log.error('Geometry not valid GeoJSON, not indexing')
                 return pkg_dict
@@ -209,7 +209,7 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
                    and len(geometry['coordinates']) == 1
                    and len(geometry['coordinates'][0]) == 5):
                     try:
-                        log.debug('Coercing geometry into bbox(5 point polygon)')
+                        log.debug('Coercing %s geometry into bbox(5 point polygon)', geometry['type'])
                         geom = shapely.geometry.shape(geometry)
                         minx, miny, maxx, maxy = geom.bounds
                         if (geometry['type'] == 'Point'):
@@ -222,8 +222,8 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
                         geometry = shapely.geometry.mapping(poly)
                     except Exception as e:
                         log.error(e)
-                        log.error('Solr backend only supports bboxes (Polygons with 5 points), ignoring geometry {0}'.format(pkg_dict['extras_spatial']))
-                    return pkg_dict
+                        log.error('Solr backend only supports bboxes (Polygons with 5 points), ignoring geometry {0}'.format(pkg_dict.get('spatial', pkg_dict['extras_spatial'])))
+                        return pkg_dict
 
                 coords = geometry['coordinates']
                 pkg_dict['maxy'] = max(coords[0][2][1], coords[0][0][1])
