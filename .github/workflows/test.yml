@@ -2,6 +2,7 @@ name: Tests
 on: [push, pull_request]
 
 jobs:
+
   lint:
     runs-on: ubuntu-latest
     steps:
@@ -13,6 +14,7 @@ jobs:
         run: pip install flake8 pycodestyle
       - name: Check syntax
         run: flake8 . --count --select=E901,E999,F821,F822,F823 --show-source --statistics --exclude ckan
+
   test:
     needs: lint
     strategy:
@@ -20,13 +22,16 @@ jobs:
         include:
           - ckan-version: "2.10"
             solr-image: "2.10-spatial"
+            requirements-file: 'requirements.txt'
           - ckan-version: 2.9
             solr-image: 2.9-solr8-spatial
+            requirements-file: 'requirements.txt'
           - ckan-version: 2.9-py2
             solr-image: 2.9-py2-solr8-spatial
+            requirements-file: 'requirements-py2.txt'
       fail-fast: false
     
-    name: CKAN ${{ matrix.ckan-version }}
+    name: CKAN ${{ matrix.ckan-version }}, Solr ${{ matrix.solr-image }}
     runs-on: ubuntu-latest
     container:
       image: openknowledge/ckan-dev:${{ matrix.ckan-version }}
@@ -52,13 +57,7 @@ jobs:
     
     steps:
     - uses: actions/checkout@v3
-    - name: Install harvester
-      run: |
-        git clone https://github.com/ckan/ckanext-harvest
-        cd ckanext-harvest
-        pip install -r pip-requirements.txt
-        pip install -r dev-requirements.txt
-        pip install -e .
+  
     - name: Install dependencies (common)
       run: |
         apk add --no-cache \
@@ -71,23 +70,54 @@ jobs:
           gcc \
           libxml2-dev \
           libxslt-dev
-    - name: Install dependencies (python2)
-      if: ${{ matrix.ckan-version == '2.9-py2' || matrix.ckan-version == '2.8' || matrix.ckan-version == '2.7' }}
+
+    - name: Enable pip cache
       run: |
-        apk add --no-cache \
-          python2-dev
-        pip install -r requirements-py2.txt
-    - name: Install dependencies (python3)
-      if: ${{ matrix.ckan-version != '2.9-py2' && matrix.ckan-version != '2.8' && matrix.ckan-version != '2.7' }}
+        echo "PIP version: $(pip --version)"
+        mkdir -p ~/.cache/pip
+        pip install -U pip --cache-dir ~/.cache/pip
+        chown -R $(whoami) ~/.cache/pip
+
+    - uses: actions/cache@v3
+      id: cache
+      with:
+        path: |
+          ~/.cache/pip
+          .
+          /usr/lib/python*/site-packages
+        key: ${{ runner.os }}-spatial-ckan-${{ matrix.ckan-version }}-${{ hashFiles('*requirements*.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-spatial-ckan-${{ matrix.ckan-version }}-${{ hashFiles('*requirements*.txt') }}
+
+    - name: Install dependencies from ${{ matrix.requirements-file }}
+      if: steps.cache.outputs.cache-hit != 'true'
       run: |
-        apk add --no-cache \
-          python3-dev
-        pip install -r requirements.txt
-    - name: Install requirements
+        pip install -r ${{ matrix.requirements-file }}
+
+    - name: Install harvester
+      if: steps.cache.outputs.cache-hit != 'true'
       run: |
+        echo "Installing harvester"
+        git clone --depth 1 https://github.com/ckan/ckanext-harvest
+        cd ckanext-harvest
+        echo "upgrade pip"
+        pip install --upgrade pip
+        echo "Installing harvester requirements"
+        pip install -r pip-requirements.txt
+        echo "Installing harvester dev-requirements"
+        pip install -r dev-requirements.txt
+        echo "Installing harvester extension"
         pip install -e .
+
+    - name: Install requirements
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: pip install -e .
+
+    - name: Replace default path to CKAN
+      run: |
         # Replace default path to CKAN core config file with the one on the container
         sed -i -e 's/use = config:.*/use = config:\/srv\/app\/src\/ckan\/test-core.ini/' test.ini
+
     - name: Run tests
       run: pytest --ckan-ini=test.ini --cov=ckanext.spatial --cov-report=xml --cov-append --disable-warnings ckanext/spatial/tests
 

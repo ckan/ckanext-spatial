@@ -1,10 +1,13 @@
 ckantoolkit
-Shapely>=1.2.13,<2.0.0
-pyproj==2.6.1
-OWSLib==0.18.0
 lxml>=2.3
 argparse
 pyparsing>=2.1.10
 requests>=1.1.0
 six
-geojson==2.5.0
+
+pyproj==2.6.1; python_version < '3.9'
+pyproj==3.4.1; python_version >= '3.9'
+
+Shapely==2.0.1
+OWSLib==0.28.1
+geojson==3.0.1

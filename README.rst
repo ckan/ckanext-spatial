@@ -27,6 +27,9 @@ Supported Versions
 ------------------
 
 ckanext-spatial >= 2.0.0 supports CKAN 2.9 and CKAN 2.10.
+Check the
+[tested enviroments](https://github.com/ckan/ckanext-spatial/blob/master/.github/workflows/test.yml)
+for more details.  
 
 For previous CKAN versions please use the v1.x tags.
 
