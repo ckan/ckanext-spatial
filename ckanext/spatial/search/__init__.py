@@ -19,10 +19,6 @@ class SpatialSearchBackend:
     """Base class for all datastore backends."""
 
     def parse_geojson(self, geom_from_metadata):
-        if not geom_from_metadata:
-            log.error("Metadata does not contain geometry, not indexing")
-            return None
-
         try:
             geometry = json.loads(geom_from_metadata)
         except (AttributeError, ValueError) as e:
@@ -53,6 +49,9 @@ class SolrBBoxSearchBackend(SpatialSearchBackend):
         """
 
         geom_from_metadata = dataset_dict.get("spatial")
+        if not geom_from_metadata:
+            return dataset_dict
+
         geometry = self.parse_geojson(geom_from_metadata)
         shape = self.shape_from_geometry(geometry)
 
@@ -133,6 +132,9 @@ class SolrSpatialFieldSearchBackend(SpatialSearchBackend):
     def index_dataset(self, dataset_dict):
         wkt = None
         geom_from_metadata = dataset_dict.get("spatial")
+        if not geom_from_metadata:
+            return dataset_dict
+
         geometry = self.parse_geojson(geom_from_metadata)
         if not geometry:
             return dataset_dict
