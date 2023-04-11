@@ -19,6 +19,7 @@ class SpatialSearchBackend:
     """Base class for all datastore backends."""
 
     def parse_geojson(self, geom_from_metadata):
+
         try:
             geometry = json.loads(geom_from_metadata)
         except (AttributeError, ValueError) as e:
