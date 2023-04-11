@@ -50,6 +50,9 @@ class SolrBBoxSearchBackend(SpatialSearchBackend):
         """
 
         geom_from_metadata = dataset_dict.get("spatial")
+        if not geom_from_metadata:
+            return dataset_dict
+
         geometry = self.parse_geojson(geom_from_metadata)
         shape = self.shape_from_geometry(geometry)
 
@@ -130,6 +133,9 @@ class SolrSpatialFieldSearchBackend(SpatialSearchBackend):
     def index_dataset(self, dataset_dict):
         wkt = None
         geom_from_metadata = dataset_dict.get("spatial")
+        if not geom_from_metadata:
+            return dataset_dict
+
         geometry = self.parse_geojson(geom_from_metadata)
         if not geometry:
             return dataset_dict
