@@ -101,9 +101,8 @@ class CswService(OwsService):
 
     def getidentifiers(self, qtype=None, typenames="csw:Record", esn="brief",
                        keywords=[], limit=None, page=10, outputschema="gmd",
-                       startposition=0, cql=None, **kw):
+                       startposition=0, cql=None, constraints=[], **kw):
         from owslib.csw import namespaces
-        constraints = []
         csw = self._ows(**kw)
 
         if qtype is not None:
