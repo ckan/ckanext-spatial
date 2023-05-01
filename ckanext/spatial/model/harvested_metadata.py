@@ -1788,6 +1788,14 @@ class ISODocument(MappedXmlDocument):
         value['abstract'] = self.local_to_dict(
             value['abstract'], defaultLangKey)
 
+        # change user version key rather then edition so it is displayed as 'v1.0' instead of '1st Ed'
+        if value.get('edition'):           
+            value['version'] = value['edition']
+            del value['edition']
+        elif value.get('edition-date'):
+            value['version'] = value['edition-date']
+            del value['edition-date']      
+
         identifier = values.get('unique-resource-identifier-full', {})
         if identifier:
             doi = self.calculate_identifier(identifier)
