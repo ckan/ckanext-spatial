@@ -1,0 +1,34 @@
+<?xml-stylesheet type='text/xsl' href='./CodelistDictionary-v32.xsl'?><Dictionary xmlns="http://www.opengis.net/gml/3.2"    xmlns:gml="http://www.opengis.net/gml/3.2"    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="MI_PriorityCode" xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>Description: ordered list of priorities&#13;
+shortName: PriCode&#13;
+</description>
+  <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mac/1.0">MI_PriorityCode</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="_12421_19007">
+      <description>Description: of decisive importance&#13;
+Code: 001</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mac/1.0">critical</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12421_19008">
+      <description>Description: requires resources to be made available&#13;
+Code: 002</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mac/1.0">highImportance</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12421_19009">
+      <description>Description: normal operation priority&#13;
+Code: 003</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mac/1.0">mediumImportance</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12421_19010">
+      <description>Description: to be completed when resources are available&#13;
+Code: 004</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mac/1.0">lowImportance</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

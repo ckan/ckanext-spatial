@@ -1,0 +1,131 @@
+<?xml-stylesheet type='text/xsl' href='./CodelistDictionary-v32.xsl'?><Dictionary xmlns="http://www.opengis.net/gml/3.2"    xmlns:gml="http://www.opengis.net/gml/3.2"    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="MD_TopicCategoryCode" xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>high-level geographic data thematic classification to assist in the grouping and search of available geographic data sets. Can be used to group keywords as well. Listed examples are not exhaustive. NOTE: It is understood there are overlaps between general categories and the user is encouraged to select the one most appropriate.</description>
+  <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">MD_TopicCategoryCode</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="_12479_19203">
+      <description>rearing of animals and/or cultivation of plantsExamples: agriculture, irrigation, aquaculture, plantations, herding, pests and diseases affecting crops and livestock</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">farming</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12479_19204">
+      <description>flora and/or fauna in natural environment Examples: wildlife, vegetation, biological sciences, ecology, wilderness, sealife, wetlands, habitat</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">biota</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12479_19205">
+      <description>legal land descriptions Examples: political and administrative boundaries</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">boundaries</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12479_19206">
+      <description>processes and phenomena of the atmosphere Examples: cloud cover, weather, climate, atmospheric conditions, climate change, precipitation</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">climatologyMeteorologyAtmosphere</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12479_19207">
+      <description>economic activities, conditions and employment Examples: production, labour, revenue, commerce, industry, tourism and ecotourism, forestry, fisheries, commercial or subsistence hunting, exploration and exploitation of resources such as minerals, oil and gas</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">economy</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12479_19208">
+      <description>height above or below a vertical datumExamples: altitude, bathymetry, digital elevation models, slope, derived products</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">elevation</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12479_19209">
+      <description>environmental resources, protection and conservation Examples: environmental pollution, waste storage and treatment, environmental impact assessment, monitoring environmental risk, nature reserves, landscape</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">environment</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12479_19210">
+      <description>information pertaining to earth sciences Examples: geophysical features and processes, geology, minerals, sciences dealing with the composition, structure and origin of the earth's rocks, risks of earthquakes, volcanic activity, landslides, gravity information, soils, permafrost, hydrogeology, erosion</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">geoscientificInformation</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12479_19211">
+      <description>health, health services, human ecology, and safety Examples: disease and illness, factors affecting health, hygiene, substance abuse, mental and physical health, health services</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">health</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12479_19212">
+      <description>base maps Examples: land cover, topographic maps, imagery, unclassified images, annotations</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">imageryBaseMapsEarthCover</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12479_19213">
+      <description>military bases, structures, activities Examples: barracks, training grounds, military transportation, information collection</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">intelligenceMilitary</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12479_19214">
+      <description>inland water features, drainage systems and their characteristics Examples: rivers and glaciers, salt lakes, water utilization plans, dams, currents, floods, water quality, hydrographic charts</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">inlandWaters</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12479_19215">
+      <description>positional information and services Examples: addresses, geodetic networks, control points, postal zones and services, place names</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">location</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12479_19216">
+      <description>features and characteristics of salt water bodies (excluding inland waters) Examples: tides, tidal waves, coastal information, reefs</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">oceans</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12479_19217">
+      <description>information used for appropriate actions for future use of the land Examples: land use maps, zoning maps, cadastral surveys, land ownership</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">planningCadastre</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12479_19218">
+      <description>characteristics of society and cultures Examples: settlements, anthropology, archaeology, education, traditional beliefs, manners and customs, demographic data, recreational areas and activities, social impact assessments, crime and justice, census information</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">society</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12479_19219">
+      <description>man-made construction Examples: buildings, museums, churches, factories, housing, monuments, shops, towers</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">structure</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12479_19220">
+      <description>means and aids for conveying persons and/or goods Examples: roads, airports/airstrips, shipping routes, tunnels, nautical charts, vehicle or vessel location, aeronautical charts, railways</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">transportation</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12479_19221">
+      <description>energy, water and waste systems and communications infrastructure and servicesExamples: hydroelectricity, geothermal, solar and nuclear sources of energy, water purification and distribution, sewage collection and disposal, electricity and gas distribution, data communication, telecommunication, radio, communication networks</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">utilitiesCommunication</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12479_19222">
+      <description>region more than 100 km above the surface of the Earth</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">extraTerrestrial</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12479_19223">
+      <description>
+      </description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">disaster</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='./CodelistDictionary-v32.xsl'?><Dictionary xmlns="http://www.opengis.net/gml/3.2"    xmlns:gml="http://www.opengis.net/gml/3.2"    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="MD_MaintenanceFrequencyCode" xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>frequency with which modifications and deletions are made to the data after it is first produced</description>
+  <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mmi/1.0">MD_MaintenanceFrequencyCode</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="_12472_19172">
+      <description>resource is repeatedly and frequently updated</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mmi/1.0">continual</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12472_19173">
+      <description>resource is updated each day</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mmi/1.0">daily</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12472_19174">
+      <description>resource is updated on a weekly basis</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mmi/1.0">weekly</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12472_19175">
+      <description>resource is updated every two weeks</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mmi/1.0">fortnightly</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12472_19176">
+      <description>resource is updated each month</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mmi/1.0">monthly</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12472_19177">
+      <description>resource is updated every three months</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mmi/1.0">quarterly</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12472_19178">
+      <description>resource is updated twice each year</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mmi/1.0">biannually</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12472_19179">
+      <description>resource is updated every year</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mmi/1.0">annually</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12472_19180">
+      <description>resource is updated as deemed necessary</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mmi/1.0">asNeeded</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12472_19181">
+      <description>resource is updated in intervals that are uneven in duration</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mmi/1.0">irregular</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12472_19182">
+      <description>there are no plans to update the data</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mmi/1.0">notPlanned</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12472_19183">
+      <description>frequency of maintenance for the data is not known</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mmi/1.0">unknown</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12472_19184">
+      <description>resource is updated at regular intervals</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mmi/1.0">periodic</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12472_19185">
+      <description>resource updated twice a monthl</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mmi/1.0">semimonthly</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12472_19186">
+      <description>resource is updated every 2 years</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mmi/1.0">biennially</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

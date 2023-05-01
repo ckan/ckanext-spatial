@@ -1,0 +1,27 @@
+<?xml-stylesheet type='text/xsl' href='./CodelistDictionary-v32.xsl'?><Dictionary xmlns="http://www.opengis.net/gml/3.2"    xmlns:gml="http://www.opengis.net/gml/3.2"    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="MI_TransferFunctionTypeCode" xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>Description: transform function to be used when scaling a physical value for a given element&#13;
+shortName: XfrFuncTypeCode&#13;
+</description>
+  <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mrc/1.0">MI_TransferFunctionTypeCode</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="_12493_19294">
+      <description>Description: TBD&#13;
+Code: 001</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mrc/1.0">linear</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12493_19295">
+      <description>Description: TBD&#13;
+Code: 002</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mrc/1.0">logarithmic</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12493_19296">
+      <description>Description: TBD&#13;
+Code: 003</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mrc/1.0">exponential</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

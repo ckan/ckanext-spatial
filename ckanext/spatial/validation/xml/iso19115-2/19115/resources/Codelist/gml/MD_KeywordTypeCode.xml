@@ -1,0 +1,94 @@
+<?xml-stylesheet type='text/xsl' href='./CodelistDictionary-v32.xsl'?><Dictionary xmlns="http://www.opengis.net/gml/3.2"    xmlns:gml="http://www.opengis.net/gml/3.2"    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="MD_KeywordTypeCode" xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>methods used to group similar keywords</description>
+  <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">MD_KeywordTypeCode</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="_12482_19235">
+      <description>keyword identifies a branch of instruction or specialized learning</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">discipline</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12482_19236">
+      <description>keyword identifies a location</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">place</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12482_19237">
+      <description>keyword identifies the layer(s) of any deposited substance or levels within an ordered system</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">stratum</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12482_19238">
+      <description>keyword identifies a time period related to the resource</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">temporal</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12482_19239">
+      <description>keyword identifies a particular subject or topic</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">theme</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12482_19240">
+      <description>keyword identifies a a repository or archive that manages and distributes data</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">dataCentre</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12482_19241">
+      <description>keyword identifies a resource containing or about a collection of feature instances with common characteristics</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">featureType</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12482_19242">
+      <description>keyword identifies a device used to measure or compare physical properties</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">instrument</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12482_19243">
+      <description>keyword identifies a structure upon which an instrument is mounted</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">platform</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12482_19244">
+      <description>keyword identifies a series of actions or natural occurrences</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">process</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12482_19245">
+      <description>keyword identifies an endeavour undertaken to create or modify a product or service</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">project</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12482_19246">
+      <description>keyword identifies an activity carried out by one party for the benefit of another</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">service</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12482_19247">
+      <description>keyword identifies a type of product</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">product</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12482_19248">
+      <description>refinement of a topic category for the purpose of geographic data classification</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">subTopicCategory</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12482_19249">
+      <description>keyword identifies a taxonomy of the resource</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">taxon</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

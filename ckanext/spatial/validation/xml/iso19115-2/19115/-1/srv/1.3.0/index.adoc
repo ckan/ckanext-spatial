@@ -1,0 +1,151 @@
+﻿= Metadata for Services (SRV)
+:edition: 1.3
+:revdate: 2019-01-04
+
+== metadata for SeRVices (SRV) Version: 1.3
+
+.Classes in the srv namespace
+image::ServiceClass.png[UML diagram of metadata for SeRVices classes in the srv namespace,750]
+
+.Codelists in the srv namespace
+image::ServiceCodelist.png[UML diagram of Metadata for SeRVices codelists in the srv namespace,400]
+
+=== Description
+
+SRV 1.3 is an XML Schema implementation derived from ISO 19115-1, Geographic
+Information - Metadata - Part 1: Fundamentals, Clause 6.5.14. It includes elements
+for describing services. The XML schema was encoded using the rules described in
+ISO/TS 19139:2007.
+
+=== XML Namespace for srv 1.3
+
+The namespace URI for srv 1.3 is `https://schemas.isotc211.org/19115/-1/srv/1.3`.
+
+=== XML Schema for srv 1.3
+
+https://schemas.isotc211.org/19115/-1/srv/1.3.0/srv.xsd[srv.xsd] is the XML Schema document to
+be referenced by XML documents containing XML elements in the srv 1.3 namespace or by
+XML Schema documents importing the srv 1.3 namespace. This XML schema includes
+(indirectly) all the implemented concepts of the srv namespace, but it does not
+contain the declaration of any types.
+
+=== Related XML Schema for srv 1.3
+
+https://schemas.isotc211.org/19115/-1/srv/1.3.0/serviceInformation.xsd[serviceInformation.xsd]
+implements the UML conceptual schema defined in ISO 19115-1, Geographic Information -
+Metadata - Part 1: Fundamentals, Clause 6.5.14. It was created using the encoding
+rules defined in ISO 19118, ISO 19139.
+
+https://schemas.isotc211.org/19115/-1/srv/1.3.0/serviceInformation.xsd contains the following
+classes:
+
+* SV_ServiceIdentification
+* SV_OperationMetadata
+* SV_OperationChainMetadata
+* SV_Parameter
+* SV_CoupledResource
+
+https://schemas.isotc211.org/19115/-1/srv/1.3.0/serviceInformation.xsd contains references to the
+following codelists:
+
+* DCPList
+* SV_CouplingType
+* SV_ParameterDirection
+
+=== Related XML Namespaces for srv 1.3
+
+The srv 1.3 namespace imports these other namespaces: mrd cit
+
+[%unnumbered]
+[options=header,cols=4]
+|===
+| Name | Standard Prefix | Namespace Location | Schema Location
+
+| Geographic Common Objects | gco |
+`https://schemas.isotc211.org/19103/-/gco/1.2.0` | https://schemas.isotc211.org/19103/-/gco/1.2/gco.xsd[gco.xsd]
+| Metadata Common Classes | mcc |
+`https://schemas.isotc211.org/19115/-1/mcc/1.3.0` | https://schemas.isotc211.org/19115/-1/mcc/1.3.0/mcc.xsd[mcc.xsd]
+| Metadata for Resource Identification | mri |
+`https://schemas.isotc211.org/19115/-1/mri/1.3.0` | https://schemas.isotc211.org/19115/-1/mri/1.3.0/mri.xsd[mri.xsd]
+| CITation and Responsibility | cit |
+`https://schemas.isotc211.org/19115/-1/cit/1.3.0` | https://schemas.isotc211.org/19115/-1/cit/1.3.0/cit.xsd[cit.xsd]
+| Metadata for Resource Distribution | cit |
+`https://schemas.isotc211.org/19115/-1/mrd/1.3.0` | https://schemas.isotc211.org/19115/-1/mrd/1.3.0/mrd.xsd[mrd.xsd]
+|===
+
+=== Schematron Validation Rules for srv 1.3
+
+Schematron rules for validating instance documents required for a complete validation
+are:
+
+[%unnumbered]
+[options=header,cols=4]
+|===
+| Package name | File name | Location | Constraint tested
+
+| metadata for SeRVive identification | srv.sch |
+https://schemas.isotc211.org/19115/-1/srv/1.3.0/srv.sch a|
+* SV_ServiceIdentification - count(containsChain + containsOperations) \> 0
+* SV_ServiceIdentification - If coupledResource exists then count(coupledResource) \> 0
+* SV_ServiceIdentification - If coupledResource exists then count(couplingType) \> 0
+* SV_ServiceIdentification - If operatedDataset used then count (operatesOn) = 0
+* SV_ServiceIdentification - If operatesOn used count(operatedDataset) = 0
+* SV_CoupledResource - count(resourceReference + resource) \> 0
+* SV_CoupledResource - If resource used then count(resourceReference) = 0
+* SV_CoupledResource - If resourceReference used then count(resource) = 0
+| Metadata Resource Identification | mri.sch |
+https://schemas.isotc211.org/19115/-1/mri/1.3.0/mri.sch a|
+* MD_MetadataScope/MD_Identification -
+MD_Metadata.metadataScope.MD_MetadataScope.resourceScope)='dataset' implies
+count(extent.geographicElement.EX_GeographicBoundingBox + extent.geographicElement.EX_GeographicDescription) \>= 1
+* MD_MetadataScope/MD_Identification -
+MD_Metadata.metadataScope.MD_Scope.resourceScope) = ('dataset' or 'series') implies
+topicCategory is mandatory
+* MD_DataIdentification - defaultLocale documented if resource includes textual
+information (test attempt only)
+* MD_DataIdentification - defaultLocale.PT_Locale.characterEncoding default value is
+UTF-8
+* MD_AssociatedResource - count(name + metadataReference
+* MD_Keywords/[SV_ServiceIdentification] - When the resource described is a service,
+one instance of MD_Keyword shall refer to the service taxonomy defined in ISO 19119
+| CITation and responsibility | cit.sch |
+https://schemas.isotc211.org/19115/-1/cit/1.3.0/cit.sch a|
+* CI_Individual - count(name + positionName) \> 0
+* CI_organisation - count(name + logo) \> 0
+|===
+
+Other schematron rule sets that maybe required for a complete validation (optional
+direct from MD_Metadata or indirectly through associations) are:
+
+* Metadata EXtension
+https://schemas.isotc211.org/19115/-1/mex/1.3.0/mex.sch[mex.sch]
+* Metadata for Resource Lineage
+https://schemas.isotc211.org/19115/-1//mrl/1.3.0/mrl.sch[mrl.sch]
+* Metadata for Maintenance Information
+https://schemas.isotc211.org/19115/-1/mmi/1.3.0/mmi.sch[mmi.sch]
+* Metadata for Resource Content
+https://schemas.isotc211.org/19115/-1/mrc/1.3.0/mrc.sch[mrc.sch]
+* Metadata for Resource Distribution
+https://schemas.isotc211.org/19115/-1/mrd/1.3.0/mrd.sch[mrd.sch]
+* Metadata for Reference Systems
+https://schemas.isotc211.org/19115/-1/mrs/1.3.0/mrs.sch[mrs.sch]
+* metadata for SeRVice identification
+https://schemas.isotc211.org/19115/-1/srv/1.3.0/srv.sch[srv.sch]
+* Metadata for ACquisition information
+https://schemas.isotc211.org/19115/-2/mac/2.2.0/mac.sch[mac.sch]
+* Metadata for Resource Lineage extension
+https://schemas.isotc211.org/19115/-2/mrl/2.2.0/mrlExt.sch[mrlExt.sch]
+* Metadata for Data Quality
+https://schemas.isotc211.org/19157/-/mdq/1.1.0/mdq.sch[mdq.sch]
+* Data Quality Measurement
+https://schemas.isotc211.org/19157/-/dqm/1.1.0/dqm.sch[dqm.sch]
+
+=== Schematron Validation Rules for srv 1.3
+
+Schematron rules for validating instance documents of the srv 1.3 namespace are in
+https://schemas.isotc211.org/19115/-1/srv/1.3.0/srv.sch[srv.sch].
+
+=== Working Versions
+
+When revisions to these schema become necessary, they will be managed in the
+https://github.com/ISO-TC211/XML[ISO TC211 Git Repository].

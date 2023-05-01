@@ -1,0 +1,54 @@
+﻿= Codelist Catalog
+:edition: 1.0
+:revdate: 2017-09-10
+
+== Codelist Catalog
+
+This report describes the ISO TC211 codelist catalogs, the codelists they contain,
+and the values and definitions of the codes.
+
+Please contact mailto:rehabermann@me.com[Ted Habermann] if you have questions or
+suggestions.
+
+=== Catalog
+
+Name:: Codelists from the Metadata for Data Transfer (mdt) Namespace
+Scope:: Codelists from the Metadata for Data Transfer (mdt) Namespace
+Field of application:: ISO TC211 Metadata Standards
+Version:: 1.0
+Date:: 2015-04-18
+Number of CodeLists:: 1
+Number of items:: 8
+
+=== Codelists
+
+
+=== MX_ScopeCode
+
+Description:: class of information to which the referencing entity applies
+CodeSpace:: http://standards.iso.org/iso/19115
+Number of items:: 8
+
+[%unnumbered]
+[options=header,cols=2]
+|===
+| Entry | Definition
+
+| MX_ScopeCode_initiative | The referencing entity applies to a transfer aggregate
+which was originally identified as an initiative (DS_Initiative)
+| MX_ScopeCode_stereoMate | The referencing entity applies to a transfer aggregate
+which was originally identified as a stereo mate (DS_StereoMate)
+| MX_ScopeCode_sensor | The referencing entity applies to a transfer aggregate which
+was originally identified as a sensor (DS_Sensor)
+| MX_ScopeCode_platformSeries | The referencing entity applies to a transfer
+aggregate which was originally identified as a platform series (DS_PlatformSeries)
+| MX_ScopeCode_sensorSeries | The referencing entity applies to a transfer aggregate
+which was originally identified as a sensor series (DS_SensorSeries)
+| MX_ScopeCode_productionSeries | The referencing entity applies to a transfer
+aggregate which was originally identified as a sensor series (DS_SensorSeries)
+| MX_ScopeCode_transferAggregate | The referencing entity applies to a transfer
+aggregate which has no existence outside of the transfer context
+| MX_ScopeCode_otherAggregate | The referencing entity applies to a transfer
+aggregate which has an existence outside of the transfer context, but which does not
+pertains to a specific aggregate type.
+|===

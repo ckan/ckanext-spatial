@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='./CodelistDictionary-v32.xsl'?><Dictionary xmlns="http://www.opengis.net/gml/3.2"    xmlns:gml="http://www.opengis.net/gml/3.2"    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="MD_GeometricObjectTypeCode" xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>name of point or vector objects used to locate zero-, one-, two-, or three-dimensional spatial locations in the dataset</description>
+  <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">MD_GeometricObjectTypeCode</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="_12523_19422">
+      <description>set of geometric primitives such that their boundaries can be represented as a union of other primitives</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">complex</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12523_19423">
+      <description>connected set of curves, solids or surfaces</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">composite</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12523_19424">
+      <description>bounded, 1-dimensional geometric primitive, representing the continuous image of a line</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">curve</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12523_19425">
+      <description>zero-dimensional geometric primitive, representing a position but not having an extent</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">point</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12523_19426">
+      <description>bounded, connected 3-dimensional geometric primitive, representing the continuous image of a region of space</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">solid</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12523_19427">
+      <description>bounded, connected 2-dimensional geometric primitive, representing the continuous image of a region of a plane</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">surface</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

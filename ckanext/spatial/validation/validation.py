@@ -88,6 +88,23 @@ class ISO19115Schema(XsdValidator):
             errors.insert(0, ('{0} Validation Error'.format(xsd_name), None))
         return is_valid, errors
 
+class ISO19115v2Schema(XsdValidator):
+    name = 'iso19115v2'
+    title = 'ISO19115-2 XSD Schema'
+
+    @classmethod
+    def is_valid(cls, xml):
+        xsd_path = 'xml/iso19115-2/19115/-2'
+        mdb_xsd_filepath = os.path.join(os.path.dirname(__file__),
+                                        xsd_path, 'gmi/1.0/gmi.xsd')
+        xsd_name = 'Dataset schema 2.0 (gmi.xsd)'
+        is_valid, errors = cls._is_valid(xml, mdb_xsd_filepath, xsd_name)
+        if not is_valid:
+            # TODO: not sure if we need this one,
+            # keeping for backwards compatibility
+            errors.insert(0, ('{0} Validation Error'.format(xsd_name), None))
+        return is_valid, errors
+
 
 class ISO19115v1Schema(XsdValidator):
     name = 'iso19115v1'
@@ -388,6 +405,7 @@ class Gemini2Schematron13(SchematronValidator):
             return [cls.schematron(schema)]
 
 all_validators = (ISO19115Schema,
+                  ISO19115v2Schema,
                   ISO19115v1Schema,
                   ISO19139Schema,
                   ISO19139EdenSchema,

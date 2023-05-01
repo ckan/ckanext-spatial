@@ -1,0 +1,173 @@
+<?xml-stylesheet type='text/xsl' href='./CodelistDictionary-v32.xsl'?>
+<Dictionary xmlns="http://www.opengis.net/gml/3.2"    xmlns:gml="http://www.opengis.net/gml/3.2"    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="MD_ReferenceSystemTypeTypeCode" xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>defines type of reference system used</description>
+  <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">MD_ReferenceSystemTypeCode</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="MD_ReferenceSystemTypeCode_compoundEngineeringParametric">
+      <description>compound statio-parametric coordinate reference system containing an engineering coordinate reference system and a parametric reference system. e.g. [local] x, y, pressure</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">compoundEngineeringParametric</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="MD_ReferenceSystemTypeCode_compoundEngineeringParametricTemporal">
+      <description>compound statio-parametric-temporal coordinate reference system containing an engineering, a parametric, and a temporal coordinate reference system. e.g. [local] x, y, pressure, time</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">compoundEngineeringParametricTemporal</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="MD_ReferenceSystemTypeCode_compoundEngineeringTemporal">
+      <description>compound spatio-temporal coordinate reference system containing an engineering and a temporal coordinate reference system. e.g. [local] x, y, time</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">compoundEngineeringTemporal</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="MD_ReferenceSystemTypeCode_compoundEngineeringVertical">
+      <description>compound spatial reference system containing a horizontal engineering coordinate reference system and a vertical coordinate reference system. e.g. [local] x, y, height</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">compoundEngineeringVertical</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="MD_ReferenceSystemTypeCode_compoundEngineeringVerticalTemporal">
+      <description>compound spatio-temporal coordinate reference system containing an engineering, a vertical, and a temporal coordinate reference system. e.g. [local] x, y, height, time</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">compoundEngineeringVerticalTemporal</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="MD_ReferenceSystemTypeCode_compoundGeodeticParametric">
+      <description>compound statio-parametric coordinate reference system containing a 2 dimensional geographic horizontal coordinate reference system and a parametric reference system. e.g. latitude, longitude, pressure</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">compoundGeodeticParametric</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="MD_ReferenceSystemTypeCode_compoundGeodeticParametricTemporal">
+      <description>compound statio-parametric-temporal coordinate reference system containing a 2 dimensional geographic horizontal, a parametric and a temporal coordinate reference system. e.g. latitude, longitude, pressure, time</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">compoundGeodeticParametricTemporal</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="MD_ReferenceSystemTypeCode_compoundGeographic2DTemporal">
+      <description>compound spatio-temporal coordinate reference system containing a 2 dimensional geographic horizontal coordinate reference system and a temporal reference system. e.g. latitude, longitude, time</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">compoundGeographic2DTemporal</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="MD_ReferenceSystemTypeCode_compoundGeographic2DVertical">
+      <description>compound coordinate reference system in which one constituent coordinate reference system is a horizontal geodetic coordinate reference system and one is a vertical coordinate reference system. e.g. latitude, longitude, [gravity-related] height or depth</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">compoundGeographic2DVertical</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="MD_ReferenceSystemTypeCode_compoundGeographicVerticalTemporal">
+      <description>compound spatio-temporal coordinate reference system containing a 2 dimensional geographic horizontal, a vertical, and a temporal coordinate reference system. e.g. latitude, longitude, height, time</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">compoundGeographicVerticalTemporal</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="MD_ReferenceSystemTypeCode_compoundGeographic3DTemporal">
+      <description>compound spatio-temporal coordinate reference system containing a 3 dimensional geographic and a temporal coordinate reference system. e.g. latitude, longitude, ellipsoidal height, time</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">compoundGeographic3DTemporal</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="MD_ReferenceSystemTypeCode_compoundProjected2DParametric">
+      <description>compound statio-parametric coordinate reference system containing a projected horizontal coordinate reference system and a parametric reference system.  e.g. easting, northing, density</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">compoundProjected2DParametric</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="MD_ReferenceSystemTypeCode_compoundProjected2DParametricTemporal">
+      <description>compound statio-parametric-temporal coordinate reference system containing a projected horizontal, a parametric, and a temporal coordinate reference system. e.g. easting, northing, density, time</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">compoundProjected2DParametricTemporal</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="MD_ReferenceSystemTypeCode_compoundProjectedTemporal">
+      <description>compound spatio-temporal coordinate reference system containing a projected horizontal and a temporal coordinate reference system. e.g. easting, northing, time</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">compoundProjectedTemporal</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="MD_ReferenceSystemTypeCode_compoundProjectedVertical">
+      <description>compound spatial reference system containing a horizontal projected coordinate reference system and a vertical coordinate reference system. e.g. easting, northing, [gravity-related] height or depth</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">compoundProjectedVertical</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="MD_ReferenceSystemTypeCode_compoundProjectedVerticalTemporal">
+      <description>compound spatio-temporal coordinate reference system containing a projected horizontal, a vertical, and a temporal coordinate reference system. e.g. easting, northing, height, time</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">compoundProjectedVerticalTemporal</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="MD_ReferenceSystemTypeCode_engineering">
+      <description>coordinate reference system based on an engineering datum (datum describing the relationship of a coordinate system to a local reference). e.g. [local] x,y</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">engineering</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="MD_ReferenceSystemTypeCode_engineeringDesign">
+      <description>engineering coordinate reference system in which the base representation of a moving object is specified. e.g. [local] x,y</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">engineeringDesign</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="MD_ReferenceSystemTypeCode_engineeringImage">
+      <description>coordinate reference system based on an image datum (engineering datum which defines the relationship of a coordinate system to an image). e.g. row, column</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">engineeringImage</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="MD_ReferenceSystemTypeCode_geodeticGeocentric">
+      <description>geodetic CRS having a Cartesian 3D coordinate system. e.g. [geocentric] X,Y,Z</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">geodeticGeocentric</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="MD_ReferenceSystemTypeCode_geodeticGeographic2D">
+      <description>geodetic CRS having an ellipsoidal 2D coordinate system. e.g. latitude, longitude</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">geodeticGeographic2D</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="MD_ReferenceSystemTypeCode_geodeticGeographic3D">
+      <description>geodetic CRS having an ellipsoidal 3D coordinate system. e.g. latitude, longitude, ellipsoidal height</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">geodeticGeographic3D</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="MD_ReferenceSystemTypeCode_geographicIdentifier">
+      <description>spatial reference in the form of a label or code that identifies a location. e.g. post code</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">geographicIdentifier</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="MD_ReferenceSystemTypeCode_linear">
+      <description>set of Linear Referencing Methods and the policies, records and procedures for implementing them. reference system that identifies a location by reference to a segment of a linear geographic feature and distance along that segment from a given point. e.g. x km along road</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">linear</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="MD_ReferenceSystemTypeCode_parametric">
+      <description>coordinate reference system based on a parametric datum (datum describing the relationship of a parametric coordinate system to an object). e.g. pressure</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">parametric</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="MD_ReferenceSystemTypeCode_projected">
+      <description>coordinate reference system derived from a two-dimensional geodetic coordinate reference system by applying a map projection. e.g. easting, northing</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">projected</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="MD_ReferenceSystemTypeCode_temporal">
+      <description>reference system against which time is measured. e.g. time</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">temporal</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="MD_ReferenceSystemTypeCode_vertical">
+      <description>one-dimensional coordinate reference system based on a vertical datum (datum describing the relation of gravity-related heights or depths to the Earth). e.g. [gravity-related] height or depth</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">vertical</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

@@ -1,0 +1,58 @@
+<?xml-stylesheet type='text/xsl' href='./CodelistDictionary-v32.xsl'?><Dictionary xmlns="http://www.opengis.net/gml/3.2"    xmlns:gml="http://www.opengis.net/gml/3.2"    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="MD_TopologyLevelCode" xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>degree of complexity of the spatial relationships</description>
+  <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">MD_TopologyLevelCode</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="_12530_19452">
+      <description>geometry objects without any additional structure which describes topology</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">geometryOnly</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12530_19453">
+      <description>1-dimensional topological complex - commonly called 'chain-node' topology</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">topology1D</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12530_19454">
+      <description>1-dimensional topological complex that is planar. (A planar graph is a graph that can be drawn in a plane in such a way that no two edges intersect except at a vertex.)</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">planarGraph</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12530_19455">
+      <description>2-dimensional topological complex that is planar. (A 2-dimensional topological complex is commonly called 'full topology' in a cartographic 2D environment.)</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">fullPlanarGraph</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12530_19456">
+      <description>1-dimensional topological complex that is isomorphic to a subset of a surface. (A geometric complex is isomorphic to a topological complex if their elements are in a one-to-one, dimensional-and boundary-preserving correspondence to one another.)</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">surfaceGraph</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12530_19457">
+      <description>2-dimensional topological complex that is isomorphic to a subset of a surface</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">fullSurfaceGraph</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12530_19458">
+      <description>3-dimensional topological complex. (A topological complex is a collection of topological primitives that are closed under the boundary operations.)</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">topology3D</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12530_19459">
+      <description>complete coverage of a 3D Euclidean coordinate space</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">fullTopology3D</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12530_19460">
+      <description>topological complex without any specified geometric realisation</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">abstract</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

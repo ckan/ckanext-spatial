@@ -1,0 +1,115 @@
+﻿= Codelist Catalog
+:edition: 0.1
+:revdate: 2017-09-10
+
+== Codelist Catalog
+
+This report describes the ISO TC211 codelist catalogs, the codelists they contain,
+and the values and definitions of the codes.
+
+Please contact mailto:rehabermann@me.com[Ted Habermann] if you have questions or
+suggestions.
+
+=== Catalog
+
+Name:: Codelists from the Metadata for Reference System (mrs) Namespace
+Scope:: Codelists from the Metadata for Reference System (mrs) Namespace
+Field of application:: ISO TC211 Metadata Standards
+Version:: 0.1
+Date:: 2017-09-10
+Number of CodeLists:: 1
+Number of items:: 28
+
+=== Codelists
+
+
+=== MD_ReferenceSystemTypeCode
+
+Description:: defines type of reference system used
+CodeSpace:: http://standards.iso.org/iso/19115/-3/mrs/1.0
+Number of items:: 28
+
+[%unnumbered]
+[options=header,cols=2]
+|===
+| Entry | Definition
+
+| compoundEngineeringParametric | compound statio-parametric coordinate reference
+system containing an engineering coordinate reference system and a parametric
+reference system. e.g. [local] x, y, pressure
+| compoundEngineeringParametricTemporal | compound statio-parametric-temporal
+coordinate reference system containing an engineering, a parametric, and a temporal
+coordinate reference system. e.g. [local] x, y, pressure, time
+| compoundEngineeringTemporal | compound spatio-temporal coordinate reference system
+containing an engineering and a temporal coordinate reference system. e.g. [local] x,
+y, time
+| compoundEngineeringVertical | compound spatial reference system containing a
+horizontal engineering coordinate reference system and a vertical coordinate
+reference system. e.g. [local] x, y, height
+| compoundEngineeringVerticalTemporal | compound spatio-temporal coordinate reference
+system containing an engineering, a vertical, and a temporal coordinate reference
+system. e.g. [local] x, y, height, time
+| compoundGeodeticParametric | compound statio-parametric coordinate reference system
+containing a 2 dimensional geographic horizontal coordinate reference system and a
+parametric reference system. e.g. latitude, longitude, pressure
+| compoundGeodeticParametricTemporal | compound statio-parametric-temporal coordinate
+reference system containing a 2 dimensional geographic horizontal, a parametric and a
+temporal coordinate reference system. e.g. latitude, longitude, pressure, time
+| compoundGeographic2DTemporal | compound spatio-temporal coordinate reference system
+containing a 2 dimensional geographic horizontal coordinate reference system and a
+temporal reference system. e.g. latitude, longitude, time
+| compoundGeographic2DVertical | compound coordinate reference system in which one
+constituent coordinate reference system is a horizontal geodetic coordinate reference
+system and one is a vertical coordinate reference system. e.g. latitude, longitude,
+[gravity-related] height or depth
+| compoundGeographicVerticalTemporal | compound spatio-temporal coordinate reference
+system containing a 2 dimensional geographic horizontal, a vertical, and a temporal
+coordinate reference system. e.g. latitude, longitude, height, time
+| compoundGeographic3DTemporal | compound spatio-temporal coordinate reference system
+containing a 3 dimensional geographic and a temporal coordinate reference system.
+e.g. latitude, longitude, ellipsoidal height, time
+| compoundProjected2DParametric | compound statio-parametric coordinate reference
+system containing a projected horizontal coordinate reference system and a parametric
+reference system. e.g. easting, northing, density
+| compoundProjected2DParametricTemporal | compound statio-parametric-temporal
+coordinate reference system containing a projected horizontal, a parametric, and a
+temporal coordinate reference system. e.g. easting, northing, density, time
+| compoundProjectedTemporal | compound spatio-temporal coordinate reference system
+containing a projected horizontal and a temporal coordinate reference system. e.g.
+easting, northing, time
+| compoundProjectedVertical | compound spatial reference system containing a
+horizontal projected coordinate reference system and a vertical coordinate reference
+system. e.g. easting, northing, [gravity-related] height or depth
+| compoundProjectedVerticalTemporal | compound spatio-temporal coordinate reference
+system containing a projected horizontal, a vertical, and a temporal coordinate
+reference system. e.g. easting, northing, height, time
+| engineering | coordinate reference system based on an engineering datum (datum
+describing the relationship of a coordinate system to a local reference). e.g.
+[local] x,y
+| engineeringDesign | engineering coordinate reference system in which the base
+representation of a moving object is specified. e.g. [local] x,y
+| engineeringImage | coordinate reference system based on an image datum (engineering
+datum which defines the relationship of a coordinate system to an image). e.g. row,
+column
+| geodeticGeocentric | geodetic CRS having a Cartesian 3D coordinate system. e.g.
+[geocentric] X,Y,Z
+| geodeticGeographic2D | geodetic CRS having an ellipsoidal 2D coordinate system.
+e.g. latitude, longitude
+| geodeticGeographic3D | geodetic CRS having an ellipsoidal 3D coordinate system.
+e.g. latitude, longitude, ellipsoidal height
+| geographicIdentifier | spatial reference in the form of a label or code that
+identifies a location. e.g. post code
+| linear | set of Linear Referencing Methods and the policies, records and procedures
+for implementing them. reference system that identifies a location by reference to a
+segment of a linear geographic feature and distance along that segment from a given
+point. e.g. x km along road
+| parametric | coordinate reference system based on a parametric datum (datum
+describing the relationship of a parametric coordinate system to an object). e.g.
+pressure
+| projected | coordinate reference system derived from a two-dimensional geodetic
+coordinate reference system by applying a map projection. e.g. easting, northing
+| temporal | reference system against which time is measured. e.g. time
+| vertical | one-dimensional coordinate reference system based on a vertical datum
+(datum describing the relation of gravity-related heights or depths to the Earth).
+e.g. [gravity-related] height or depth
+|===

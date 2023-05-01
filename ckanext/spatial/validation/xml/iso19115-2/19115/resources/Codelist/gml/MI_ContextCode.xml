@@ -1,0 +1,26 @@
+<?xml-stylesheet type='text/xsl' href='./CodelistDictionary-v32.xsl'?><Dictionary xmlns="http://www.opengis.net/gml/3.2"    xmlns:gml="http://www.opengis.net/gml/3.2"    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="MI_ContextCode" xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>Description: context of activation&#13;
+shortName: CntxtCode</description>
+  <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mac/1.0">MI_ContextCode</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="_12409_18966">
+      <description>Description: Event related to a specific collection&#13;
+Code: 001</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mac/1.0">acquisition</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12409_18967">
+      <description>Description: Event related to general collection&#13;
+Code: 002</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mac/1.0">pass</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12409_18968">
+      <description>Description: Event related to a navigational manoeuvre&#13;
+Code: 003</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mac/1.0">wayPoint</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

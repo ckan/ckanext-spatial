@@ -1,0 +1,23 @@
+<?xml-stylesheet type='text/xsl' href='./CodelistDictionary-v32.xsl'?><Dictionary xmlns="http://www.opengis.net/gml/3.2"    xmlns:gml="http://www.opengis.net/gml/3.2"    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="RE_AmendmentType" xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>&lt;UsedBy&gt;&#13;
+&lt;NameSpace&gt;ISO 19135 Procedures for registration&lt;/NameSpace&gt;&#13;
+&lt;Class&gt;RE_AmendmentInformation&lt;/Class&gt;&#13;
+&lt;Attribute&gt;amendmentType&lt;/Attribute&gt;&#13;
+&lt;Type&gt;RE_AmendmentType&lt;/Type&gt;&#13;
+&lt;UsedBy&gt;</description>
+  <identifier codeSpace="https://schemas.isotc211.org/19135/-2/reg/1.0">RE_AmendmentType</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="_9350_12348">
+      <description>
+      </description>
+      <identifier codeSpace="https://schemas.isotc211.org/19135/-2/reg/1.0">supersession</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_9350_12349">
+      <description>
+      </description>
+      <identifier codeSpace="https://schemas.isotc211.org/19135/-2/reg/1.0">retirement</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='./CodelistDictionary-v32.xsl'?><Dictionary xmlns="http://www.opengis.net/gml/3.2"    xmlns:gml="http://www.opengis.net/gml/3.2"    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="MD_ObligationCode" xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>obligation of the element or entity</description>
+  <identifier codeSpace="https://schemas.isotc211.org/19157/-2/mex/1.0">MD_ObligationCode</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="_12455_19112">
+      <description>element is always required</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19157/-2/mex/1.0">mandatory</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12455_19113">
+      <description>element is not required</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19157/-2/mex/1.0">optional</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12455_19114">
+      <description>element is required when a specific condition is met</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19157/-2/mex/1.0">conditional</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

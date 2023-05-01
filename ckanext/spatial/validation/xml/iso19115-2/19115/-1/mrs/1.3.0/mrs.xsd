@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:mcc="https://schemas.isotc211.org/19115/-1/mcc/1.3"
+  xmlns:mrs="https://schemas.isotc211.org/19115/-1/mrs/1.3" 
+  elementFormDefault="qualified"
+  targetNamespace="https://schemas.isotc211.org/19115/-1/mrs/1.3" 
+  version="1.3.0"
+    >
+  <annotation>
+    <documentation>Namespace for XML elements &lt;font color="#1f497d"&gt;used to document the
+      spatial reference system used to geolocate information content of a
+      resource&lt;/font&gt;</documentation>
+  </annotation>
+  <include schemaLocation="referenceSystem.xsd"/>
+  <import namespace="https://schemas.isotc211.org/19115/-1/mcc/1.3" schemaLocation="../../../../19115/-1/mcc/1.3.0/mcc.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+</schema>

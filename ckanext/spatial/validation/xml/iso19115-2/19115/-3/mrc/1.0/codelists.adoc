@@ -1,0 +1,82 @@
+﻿= Codelist Catalog
+:edition: 1.1
+:revdate: 2017-09-10
+
+== Codelist Catalog
+
+This report describes the ISO TC211 codelist catalogs, the codelists they contain,
+and the values and definitions of the codes.
+
+Please contact mailto:rehabermann@me.com[Ted Habermann] if you have questions or
+suggestions.
+
+=== Catalog
+
+Name:: Codelists from the Metadata for Resource Content (mrc) Namespace
+Scope:: Codelists related to Metadata for Resource Content (mrc) Namespace
+Field of application:: ISO TC211 Metadata Standards
+Version:: 1.1
+Date:: 2017-09-10
+Number of CodeLists:: 2
+Number of items:: 19
+
+=== Codelists
+
+
+=== MD_CoverageContentTypeCode
+
+Description:: specific type of information represented in the cell
+CodeSpace:: http://standards.iso.org/iso/19115/-3/mrc/1.0
+Number of items:: 8
+
+[%unnumbered]
+[options=header,cols=2]
+|===
+| Entry | Definition
+
+| image | meaningful numerical representation of a physical parameter that is not the
+actual value of the physical parameter
+| thematicClassification | code value with no quantitative meaning, used to represent
+a physical quantity
+| physicalMeasurement | value in physical units of the quantity being measured
+| auxillaryInformation | data, usually a physical measurement, used to support the
+calculation of the primary physicalMeasurement coverages in the dataset (e.g. grid of
+aerosol optical thickness used in the calculation of a sea surface temperature
+product).
+| qualityInformation | data used to characterize the quality of the
+physicalMeasurement coverages in the dataset. Typically included in a
+gmi:QE_CoverageResult.
+| referenceInformation | reference information used to support the calculation or use
+of the physicalMeasurement coverages in the dataset (e.g. grids of latitude/longitude
+used to geolocate the physical measurements).
+| modelResult | resources with values that are calculated using a model rather than
+being observed or calculated from observations.
+| coordinate | data used to provide coordinate axis values
+|===
+
+=== MD_ImagingConditionCode
+
+Description:: code which indicates conditions which may affect the image
+CodeSpace:: http://standards.iso.org/iso/19115/-3/mrc/1.0
+Number of items:: 11
+
+[%unnumbered]
+[options=header,cols=2]
+|===
+| Entry | Definition
+
+| blurredImage | portion of the image is blurred
+| cloud | portion of the image is partially obscured by cloud cover
+| degradingObliquity | acute angle between the plane of the ecliptic (the plane of
+the Earth s orbit) and the plane of the celestial equator
+| fog | portion of the image is partially obscured by fog
+| heavySmokeOrDust | portion of the image is partially obscured by heavy smoke or dust
+| night | image was taken at night
+| rain | image was taken during rainfall
+| semiDarkness | image was taken during semi-dark conditions; twilight conditions
+| shadow | portion of the image is obscured by shadow
+| snow | portion of the image is obscured by snow
+| terrainMasking | the absence of collection data of a given point or area caused by
+the relative location of topographic features which obstruct the collection path
+between the collector(s) and the subject(s) of interest
+|===

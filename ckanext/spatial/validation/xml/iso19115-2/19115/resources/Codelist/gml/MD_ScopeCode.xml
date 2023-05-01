@@ -1,0 +1,160 @@
+<?xml-stylesheet type='text/xsl' href='./CodelistDictionary-v32.xsl'?><Dictionary xmlns="http://www.opengis.net/gml/3.2"    xmlns:gml="http://www.opengis.net/gml/3.2"    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="MD_ScopeCode" xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>class of information to which the referencing entity applies</description>
+  <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mcc/1.0">MD_ScopeCode</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="_12310_18746">
+      <description>information applies to the attribute value</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mcc/1.0">attribute</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12310_18747">
+      <description>information applies to the characteristic of a feature</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mcc/1.0">attributeType</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12310_18748">
+      <description>information applies to the collection hardware class</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mcc/1.0">collectionHardware</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12310_18749">
+      <description>information applies to the collection session</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mcc/1.0">collectionSession</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12310_18750">
+      <description>information applies to the dataset</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mcc/1.0">dataset</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12310_18751">
+      <description>information applies to the series</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mcc/1.0">series</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12310_18752">
+      <description>information applies to non-geographic data</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mcc/1.0">nonGeographicDataset</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12310_18753">
+      <description>information applies to a dimension group</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mcc/1.0">dimensionGroup</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12310_18754">
+      <description>information applies to a feature</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mcc/1.0">feature</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12310_18755">
+      <description>information applies to a feature type</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mcc/1.0">featureType</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12310_18756">
+      <description>information applies to a property type</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mcc/1.0">propertyType</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12310_18757">
+      <description>information applies to a field session</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mcc/1.0">fieldSession</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12310_18758">
+      <description>information applies to a computer program or routine</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mcc/1.0">software</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12310_18759">
+      <description>information applies to a capability which a service provider entity makes available to a service user entity through a set of interfaces that define a behaviour, such as a use case</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mcc/1.0">service</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12310_18760">
+      <description>information applies to a copy or imitation of an existing or hypothetical object</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mcc/1.0">model</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12310_18761">
+      <description>information applies to a tile, a spatial subset of geographic data</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mcc/1.0">tile</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12310_18762">
+      <description>information applies to metadata</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mcc/1.0">metadata</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12310_18763">
+      <description>information applies to an initiative</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mcc/1.0">initiative</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12310_18764">
+      <description>information applies to a sample</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mcc/1.0">sample</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12310_18765">
+      <description>information applies to a document</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mcc/1.0">document</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12310_18766">
+      <description>information applies to a repository</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mcc/1.0">repository</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12310_18767">
+      <description>information applies to an aggregate resource</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mcc/1.0">aggregate</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12310_18768">
+      <description>metadata describing an ISO 19131 data product specification</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mcc/1.0">product</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12310_18769">
+      <description>information applies to an unstructured set</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mcc/1.0">collection</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12310_18770">
+      <description>information applies to a coverage</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mcc/1.0">coverage</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12310_18771">
+      <description>information resource hosted on a specific set of hardware and accessible over a network</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mcc/1.0">application</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

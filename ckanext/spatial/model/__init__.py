@@ -9,3 +9,4 @@ except ImportError:
 
 from .package_extent import *
 from .harvested_metadata import *
+from .harvested_metadata_iso19139 import *

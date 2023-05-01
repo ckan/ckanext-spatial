@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mdb:MD_Metadata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://standards.iso.org/iso/19115/-3/mds/1.0 https://schemas.isotc211.org/19115/-3/mds/1.0/mds.xsd" 
+ xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/1.0" 
+ xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+ xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
+ xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/1.0">
+   <mdb:metadataIdentifier></mdb:metadataIdentifier>
+   <mdb:contact></mdb:contact>
+   <mdb:dateInfo></mdb:dateInfo>
+   <mdb:identificationInfo></mdb:identificationInfo>
+   <mdb:distributionInfo>
+      <mrd:MD_Distribution>
+         <mrd:distributor>
+            <mrd:MD_Distributor>
+               <mrd:distributorContact>
+                  <cit:CI_Responsibility>
+                     <cit:role>
+                        <cit:CI_RoleCode codeList="http://w3.energistics.org/energyml/profiles/EIP/ISO/catCodelists19115-3.xml#CI_RoleCode" codeListValue="pointOfContact">contact for resource dis-tribution
+                        </cit:CI_RoleCode>
+                     </cit:role>
+                     <cit:party>
+                        <cit:CI_Individual>
+                           <cit:name>
+                              <gco:CharacterString>Arizona Geological Survey WebMaster
+                              </gco:CharacterString>
+                           </cit:name>
+                           <cit:contactInfo>
+                              <cit:CI_Contact>
+                                 <cit:phone>
+                                    <cit:CI_Telephone>
+                                       <cit:number>
+                                          <gco:CharacterString>520-770-3500
+                                          </gco:CharacterString>
+                                       </cit:number>
+                                    </cit:CI_Telephone>
+                                 </cit:phone>
+                                 <cit:address>
+                                    <cit:CI_Address>
+                                       <cit:electronicMailAddress>
+                                          <gco:CharacterString>
+                                             webServices@azgs.az.gov</gco:CharacterString>
+                                       </cit:electronicMailAddress>
+                                    </cit:CI_Address>
+                                 </cit:address>
+                              </cit:CI_Contact>
+                           </cit:contactInfo>
+                           <cit:positionName>
+                              <gco:CharacterString>webmaster</gco:CharacterString>
+                           </cit:positionName>
+                        </cit:CI_Individual>
+                     </cit:party>
+                  </cit:CI_Responsibility>
+               </mrd:distributorContact>
+            </mrd:MD_Distributor>
+            
+         </mrd:distributor>
+         <mrd:transferOptions>
+            <mrd:MD_DigitalTransferOptions>
+               <mrd:offLine>
+                  
+                  <!-- Invalid for rule.mrd.mediumunit -->
+                  <mrd:MD_Medium>
+                     <mrd:density>
+                        <gco:Real>75</gco:Real>
+                     </mrd:density>
+                     <mrd:densityUnits>
+                        <gco:CharacterString>cm</gco:CharacterString>
+                     </mrd:densityUnits>
+                  </mrd:MD_Medium>
+               </mrd:offLine>
+            </mrd:MD_DigitalTransferOptions>
+         </mrd:transferOptions>
+      </mrd:MD_Distribution>
+   </mdb:distributionInfo>
+</mdb:MD_Metadata>

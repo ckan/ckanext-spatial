@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mdb:MD_Metadata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xsi:schemaLocation="http://standards.iso.org/iso/19115/-3/mdb/1.0 ../../mdb/1.0/mdb.xsd"
+   xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/1.0" 
+   xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" 
+   xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
+   xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0" 
+   xmlns:gml="http://www.opengis.net/gml/3.2">
+   <mdb:metadataIdentifier/>
+   <mdb:metadataScope/>
+   <mdb:contact/>
+   <mdb:dateInfo/>
+   <mdb:identificationInfo>
+      <mri:MD_DataIdentification>
+         <mri:citation/>
+         <mri:abstract/>
+         <!-- Valid for rule.gex.extenthasoneelement -->
+         <mri:extent>
+            <gex:EX_Extent>
+               <gex:description>
+                  <gco:CharacterString>description</gco:CharacterString>
+               </gex:description>
+            </gex:EX_Extent>
+         </mri:extent>
+         <mri:extent>
+            <gex:EX_Extent>
+               <gex:geographicElement>
+                  <gex:EX_GeographicDescription>
+                     <gex:geographicIdentifier/>
+                  </gex:EX_GeographicDescription>
+               </gex:geographicElement>
+               <gex:geographicElement>
+                  <gex:EX_GeographicBoundingBox>
+                     <gex:westBoundLongitude>
+                        <gco:Decimal>9</gco:Decimal>
+                     </gex:westBoundLongitude>
+                     <gex:eastBoundLongitude>
+                        <gco:Decimal>10</gco:Decimal>
+                     </gex:eastBoundLongitude>
+                     <gex:southBoundLatitude>
+                        <gco:Decimal>-14</gco:Decimal>
+                     </gex:southBoundLatitude>
+                     <gex:northBoundLatitude>
+                        <gco:Decimal>-13</gco:Decimal>
+                     </gex:northBoundLatitude>
+                  </gex:EX_GeographicBoundingBox>
+               </gex:geographicElement>
+               <gex:geographicElement>
+                  <gex:EX_BoundingPolygon>
+                     <gex:polygon>
+                        <gml:Polygon gml:id="A1">
+                           <gml:exterior>
+                              <gml:LinearRing>
+                                 <gml:posList> 1 1 1 2 2 2 0 4 1 1 </gml:posList>
+                              </gml:LinearRing>
+                           </gml:exterior>
+                        </gml:Polygon>
+                     </gex:polygon>
+                  </gex:EX_BoundingPolygon>
+               </gex:geographicElement>
+            </gex:EX_Extent>
+         </mri:extent>
+         <mri:extent>
+            <gex:EX_Extent>
+               <gex:verticalElement>
+                  <gex:EX_VerticalExtent>
+                     <gex:minimumValue>
+                        <gco:Real>-1000</gco:Real>
+                     </gex:minimumValue>
+                     <gex:maximumValue>
+                        <gco:Real>0</gco:Real>
+                     </gex:maximumValue>
+                     <gex:verticalCRSId gco:nilReason="inapplicable"/>
+                  </gex:EX_VerticalExtent>
+               </gex:verticalElement>
+            </gex:EX_Extent>
+         </mri:extent>
+         <mri:extent>
+            <gex:EX_Extent>
+               <gex:temporalElement>
+                  <gex:EX_TemporalExtent>
+                     <gex:extent>
+                        <gml:TimeInstant gml:id="Atime">
+                           <gml:timePosition> 2014-12-25T12:00:00 </gml:timePosition>
+                        </gml:TimeInstant>
+                     </gex:extent>
+                  </gex:EX_TemporalExtent>
+               </gex:temporalElement>
+            </gex:EX_Extent>
+         </mri:extent>
+         <mri:extent>
+            <gex:EX_Extent>
+               <gex:description>
+                  <gco:CharacterString>description</gco:CharacterString>
+               </gex:description>
+               <gex:geographicElement>
+                  <gex:EX_GeographicDescription>
+                     <gex:geographicIdentifier/>
+                  </gex:EX_GeographicDescription>
+               </gex:geographicElement>
+               <gex:temporalElement>
+                  <gex:EX_TemporalExtent>
+                     <gex:extent/>
+                  </gex:EX_TemporalExtent>
+               </gex:temporalElement>
+               <gex:verticalElement>
+                  <gex:EX_VerticalExtent>
+                     <gex:minimumValue>
+                        <gco:Real>-1000</gco:Real>
+                     </gex:minimumValue>
+                     <gex:maximumValue>
+                        <gco:Real>0</gco:Real>
+                     </gex:maximumValue>
+                     <gex:verticalCRSId gco:nilReason="inapplicable"/>                     
+                  </gex:EX_VerticalExtent>
+               </gex:verticalElement>
+            </gex:EX_Extent>
+         </mri:extent>
+         <mri:extent>
+            <gex:EX_Extent>
+               <gex:description>
+                  <gco:CharacterString>description</gco:CharacterString>
+               </gex:description>
+               <gex:verticalElement>
+                  <!-- valid for rule.gex.verticalhascrsorcrsid -->
+                  <gex:EX_VerticalExtent>
+                     <gex:minimumValue/>
+                     <gex:maximumValue/>
+                     <gex:verticalCRS>
+                        <gml:GeographicCRS gml:id="epsg4326">
+                           <gml:identifier codeSpace="epsg">4326</gml:identifier>
+                           <gml:scope/>
+                           <gml:usesEllipsoidalCS/>
+                           <gml:usesGeodeticDatum/>
+                        </gml:GeographicCRS>
+                     </gex:verticalCRS>
+                  </gex:EX_VerticalExtent>
+               </gex:verticalElement>
+            </gex:EX_Extent>
+         </mri:extent>
+      </mri:MD_DataIdentification>
+   </mdb:identificationInfo>
+</mdb:MD_Metadata>

@@ -1,0 +1,94 @@
+<?xml-stylesheet type='text/xsl' href='./CodelistDictionary-v32.xsl'?><Dictionary xmlns="http://www.opengis.net/gml/3.2"    xmlns:gml="http://www.opengis.net/gml/3.2"    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="MD_DatatypeCode" xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>datatype of element or entity</description>
+  <identifier codeSpace="https://schemas.isotc211.org/19157/-2/mex/1.0">MD_DatatypeCode</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="_12457_19128">
+      <description>descriptor of a set of objects that share the same attributes, operations, methods, relationships, and behaviour</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19157/-2/mex/1.0">class</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12457_19129">
+      <description>flexible enumeration useful for expressing a long list of values, can be extended</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19157/-2/mex/1.0">codelist</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12457_19130">
+      <description>data type whose instances form a list of named literal values, not extendable</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19157/-2/mex/1.0">enumeration</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12457_19131">
+      <description>permissible value for a codelist or enumeration</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19157/-2/mex/1.0">codelistElement</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12457_19132">
+      <description>class that cannot be directly instantiated</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19157/-2/mex/1.0">abstractClass</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12457_19133">
+      <description>class that is composed of classes it is connected to by an aggregate relationship</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19157/-2/mex/1.0">aggregateClass</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12457_19134">
+      <description>subclass that may be substituted for its superclass</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19157/-2/mex/1.0">specifiedClass</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12457_19135">
+      <description>class with few or no operations whose primary purpose is to hold the abstract state of another class for transmittal, storage, encoding or persistent storage</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19157/-2/mex/1.0">datatypeClass</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12457_19136">
+      <description>named set of operations that characterize the behaviour of an element</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19157/-2/mex/1.0">interfaceClass</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12457_19137">
+      <description>class describing a selection of one of the specified types</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19157/-2/mex/1.0">unionClass</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12457_19138">
+      <description>class whose instances are classes</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19157/-2/mex/1.0">metaClass</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12457_19139">
+      <description>class used for specification of a domain of instances (objects), together with the operations applicable to the objects. A type may have attributes and associations</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19157/-2/mex/1.0">typeClass</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12457_19140">
+      <description>free text field</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19157/-2/mex/1.0">characterString</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12457_19141">
+      <description>numerical field</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19157/-2/mex/1.0">integer</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12457_19142">
+      <description>semantic relationship between two classes that involves connections among their instances</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19157/-2/mex/1.0">association</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

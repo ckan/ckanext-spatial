@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mdb:MD_Metadata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://standards.iso.org/iso/19115/-3/mdt/1.0 ../../mdt/1.0/mdt.xsd"
+ xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/1.0"
+ xmlns:cat="http://standards.iso.org/iso/19115/-3/cat/1.0"
+    xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
+ xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+    xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+ xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
+    xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
+    xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
+ xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
+    xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/1.0"
+    xmlns:mrc="https://schemas.isotc211.org/19115/-3/mrc/1.0">
+   
+   <mdb:metadataIdentifier></mdb:metadataIdentifier>
+   
+   <!-- Some rules applies to dataset only -->
+   <mdb:metadataScope>
+      <mdb:MD_MetadataScope>
+         <mdb:resourceScope>
+            <mcc:MD_ScopeCode codeList="codeListLocation#MD_ScopeCode" 
+               codeListValue="dataset">dataset</mcc:MD_ScopeCode>
+         </mdb:resourceScope>
+      </mdb:MD_MetadataScope>
+   </mdb:metadataScope>
+   
+   <mdb:contact></mdb:contact>
+   <mdb:dateInfo></mdb:dateInfo>
+   <mdb:identificationInfo>
+      <mri:MD_DataIdentification>
+         <mri:citation></mri:citation>
+         <mri:abstract></mri:abstract>
+         
+         <!-- Valid for rule rule.mri.topicategoryfordsandseries -->
+         <mri:topicCategory>
+            <mri:MD_TopicCategoryCode>boundaries</mri:MD_TopicCategoryCode>
+         </mri:topicCategory>
+         <mri:topicCategory>
+            <mri:MD_TopicCategoryCode>disaster</mri:MD_TopicCategoryCode>
+         </mri:topicCategory>
+         
+         <!-- Valid for rule rule.mri.datasetextent -->
+         <mri:extent>
+            <gex:EX_Extent>
+               <gex:geographicElement>
+                  <gex:EX_GeographicDescription>
+                     <gex:geographicIdentifier>
+                        <mcc:MD_Identifier>
+                           <mcc:code>
+                              <gcx:Anchor xlink:href="http://fr.wikipedia.org/wiki/Saint-Jeoire-Prieur%C3%A9">
+                              Saint-Jeoire-Prieuré
+                              </gcx:Anchor>
+                           </mcc:code>
+                        </mcc:MD_Identifier>
+                     </gex:geographicIdentifier>
+                  </gex:EX_GeographicDescription>
+               </gex:geographicElement>
+               <gex:geographicElement>
+                  <gex:EX_GeographicBoundingBox>
+                     <gex:westBoundLongitude>
+                        <gco:Decimal>9</gco:Decimal>
+                     </gex:westBoundLongitude>
+                     <gex:eastBoundLongitude>
+                        <gco:Decimal>10</gco:Decimal>
+                     </gex:eastBoundLongitude>
+                     <gex:southBoundLatitude>
+                        <gco:Decimal>-14</gco:Decimal>
+                     </gex:southBoundLatitude>
+                     <gex:northBoundLatitude>
+                        <gco:Decimal>-13</gco:Decimal>
+                     </gex:northBoundLatitude>
+                  </gex:EX_GeographicBoundingBox>
+               </gex:geographicElement>
+               <gex:geographicElement>
+                  <gex:EX_GeographicBoundingBox>
+                     <gex:westBoundLongitude>
+                        <gco:Decimal>9</gco:Decimal>
+                     </gex:westBoundLongitude>
+                     <gex:eastBoundLongitude>
+                        <gco:Decimal>10</gco:Decimal>
+                     </gex:eastBoundLongitude>
+                     <gex:southBoundLatitude>
+                        <gco:Decimal>13</gco:Decimal>
+                     </gex:southBoundLatitude>
+                     <gex:northBoundLatitude>
+                        <gco:Decimal>14</gco:Decimal>
+                     </gex:northBoundLatitude>
+                  </gex:EX_GeographicBoundingBox>
+               </gex:geographicElement>
+            </gex:EX_Extent>
+         </mri:extent>
+                                    
+         <!-- Valid for rule rule.mri.associatedresource -->
+         <mri:associatedResource>
+            <mri:MD_AssociatedResource>
+               <mri:associationType></mri:associationType>
+               <mri:metadataReference xlink:href="MD01"/>
+            </mri:MD_AssociatedResource>
+         </mri:associatedResource>
+         <mri:associatedResource>
+            <mri:MD_AssociatedResource>
+               <mri:name xlink:href="MD02"/>
+               <mri:associationType></mri:associationType>
+            </mri:MD_AssociatedResource>
+         </mri:associatedResource>
+         <mri:associatedResource>
+            <mri:MD_AssociatedResource>
+               <mri:name>
+                  <cit:CI_Citation>
+                     <cit:title>
+                        <gco:CharacterString>MD03</gco:CharacterString>
+                     </cit:title>
+                  </cit:CI_Citation>
+               </mri:name>
+               <mri:associationType></mri:associationType>
+            </mri:MD_AssociatedResource>
+         </mri:associatedResource>
+         <mri:associatedResource>
+            <mri:MD_AssociatedResource>
+               <mri:name>
+                  <cit:CI_Citation>
+                     <cit:title xsi:type="lan:PT_FreeText_PropertyType">
+                        <lan:PT_FreeText>
+                           <lan:textGroup>
+                              <lan:LocalisedCharacterString>MD04</lan:LocalisedCharacterString>
+                           </lan:textGroup>
+                        </lan:PT_FreeText>
+                     </cit:title>
+                  </cit:CI_Citation>
+               </mri:name>
+               <mri:associationType></mri:associationType>
+            </mri:MD_AssociatedResource>
+         </mri:associatedResource>
+
+         <mri:defaultLocale>
+            <lan:PT_Locale>
+               <lan:language>
+                  <lan:LanguageCode codeList="" codeListValue="eng"/>
+               </lan:language>
+               <lan:characterEncoding>
+                  <lan:MD_CharacterSetCode codeList="" codeListValue=""/>
+               </lan:characterEncoding>
+            </lan:PT_Locale>
+         </mri:defaultLocale>
+         
+         <mri:otherLocale>
+            <lan:PT_Locale>
+               <lan:language>
+                  <lan:LanguageCode codeList="" codeListValue="fre"/>
+               </lan:language>
+               <lan:characterEncoding>
+                  <lan:MD_CharacterSetCode codeList="" codeListValue="UTF-16"/>
+               </lan:characterEncoding>
+            </lan:PT_Locale>
+         </mri:otherLocale>
+         
+      </mri:MD_DataIdentification>
+   </mdb:identificationInfo>
+   <mdb:identificationInfo>
+      <srv:SV_ServiceIdentification>
+         <mri:citation></mri:citation>
+         <mri:abstract></mri:abstract>
+         
+         <mri:descriptiveKeywords>
+            <mri:MD_Keywords>
+               <mri:keyword>
+                  <gco:CharacterString>Geographic processing services</gco:CharacterString>
+               </mri:keyword>
+            </mri:MD_Keywords>
+         </mri:descriptiveKeywords>
+         <mri:associatedResource>
+            <mri:MD_AssociatedResource>
+               <mri:name>
+                  <cit:CI_Citation>
+                     <cit:title><gco:CharacterString>MD01SRV</gco:CharacterString></cit:title>
+                  </cit:CI_Citation>
+               </mri:name>
+               <mri:associationType></mri:associationType>
+            </mri:MD_AssociatedResource>
+         </mri:associatedResource>
+         <srv:serviceType></srv:serviceType>
+      </srv:SV_ServiceIdentification>
+   </mdb:identificationInfo>
+<mdb:contentInfo>
+      <!-- rule.mri.defaultlocalewhenhastext 
+      This may be a way to check if resource contains textual information
+      -->
+   <!--      <mrc:MD_FeatureCatalogue>
+         <mrc:featureCatalogue></mrc:featureCatalogue>
+      </mrc:MD_FeatureCatalogue>
+    -->
+</mdb:contentInfo>
+
+</mdb:MD_Metadata>

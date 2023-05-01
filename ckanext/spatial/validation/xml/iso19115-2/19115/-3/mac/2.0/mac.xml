@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mac:MI_AcquisitionInformation xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"    xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"    xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"    xmlns:mac="http://standards.iso.org/iso/19115/-3/mac/2.0"    xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"    xmlns:mrc="http://standards.iso.org/iso/19115/-3/mrc/2.0"
+    xmlns:sml="http://www.opengis.net/sensorml/2.0"    xmlns:swe="http://www.opengis.net/swe/2.0"    xmlns:xlink="http://www.w3.org/1999/xlink"    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://standards.iso.org/iso/19115/-3/mac/2.0 mac.xsd 
+    http://standards.iso.org/iso/19115/-3/mdt/2.0 ../../mdt/2.0/mdt.xsd
+    http://standards.iso.org/iso/19115/-3/mrc/2.0 ../../mrc/2.0/mrc.xsd
+    http://standards.iso.org/iso/19115/-3/cit/2.0 ../../cit/2.0/cit.xsd">
+    <mac:scope>
+        <mcc:MD_Scope>
+            <mcc:level>
+                <mcc:MD_ScopeCode codeList="https://schemas.isotc211.org/19115/resources/Codelist/cat/codelists.xml#" codeListValue="mcc:MD_ScopeCode">mcc:MD_ScopeCode</mcc:MD_ScopeCode>
+            </mcc:level>
+            <mcc:extent>
+                <gex:EX_Extent>
+                    <gex:description>
+                        <gco:CharacterString>gex:description/gco:CharacterString</gco:CharacterString>
+                    </gex:description>
+                </gex:EX_Extent>
+            </mcc:extent>
+            <mcc:levelDescription>
+                <mcc:MD_ScopeDescription>
+                    <mcc:other>
+                        <gco:CharacterString>mcc:other/gco:CharacterString</gco:CharacterString>
+                    </mcc:other>
+                </mcc:MD_ScopeDescription>
+            </mcc:levelDescription>
+        </mcc:MD_Scope>
+    </mac:scope>
+    <mac:instrument>
+        <mac:MI_Instrument id="instrumentIdentifier">
+            <mac:identifier/>
+            <mac:type/>
+            <mac:description/>
+            <mac:mountedOn xlink:href="#platformIdentifier"/>
+            <mac:otherPropertyType/>
+            <mac:otherProperty/>
+            <mac:content xlink:href="#contentInformationTarget">
+                <mrc:MD_CoverageDescription>
+                    <mrc:attributeDescription/>
+                    <mrc:attributeGroup xlink:href="#MD_AttributeGroupTarget"/>
+                </mrc:MD_CoverageDescription>
+            </mac:content>
+            <mac:sensor xlink:href="#sensorIdentifier"/>
+            <mac:history>
+                <mac:MI_InstrumentationEventList>
+                    <mac:citation>
+                        <cit:CI_Citation>
+                            <cit:title>
+                                <gco:CharacterString>cit:title/gco:CharacterString</gco:CharacterString>
+                            </cit:title>
+                            <cit:onlineResource>
+                                <cit:CI_OnlineResource>
+                                    <cit:linkage>
+                                        <gco:CharacterString>cit:linkage/gco:CharacterString</gco:CharacterString>
+                                    </cit:linkage>
+                                </cit:CI_OnlineResource>
+                            </cit:onlineResource>
+                        </cit:CI_Citation>
+                    </mac:citation>
+                    <mac:description>
+                        <gco:CharacterString/>
+                    </mac:description>
+                    <mac:instrumentationEvent/>
+                </mac:MI_InstrumentationEventList>
+            </mac:history>
+        </mac:MI_Instrument>
+    </mac:instrument>
+    <mac:instrument>
+        <mac:MI_Sensor id="sensorIdentifier">
+            <mac:identifier/>
+            <mac:type/>
+            <mac:mountedOn xlink:href="#platformIdentifier"/>
+            <mac:otherPropertyType>
+                <gco:RecordType xlink:href="http://schemas.opengis.net/sensorML/2.0/core.xsd#xpointer(//complexType[@name='ParameterListType'])">Sensor Markup Language ParameterList</gco:RecordType>
+            </mac:otherPropertyType>
+            <mac:otherProperty>
+                <gco:Record>
+                    <sml:ParameterList>
+                        <sml:parameter name="Parameter">
+                            <swe:Quantity definition="definition of Parameter">
+                                <swe:identifier/>
+                                <swe:label>Parameter</swe:label>
+                                <swe:uom/>
+                                <swe:value>parameterValue</swe:value>
+                            </swe:Quantity>
+                        </sml:parameter>
+                    </sml:ParameterList>
+                </gco:Record>
+            </mac:otherProperty>
+            <mac:content xlink:href="#contentInformationTarget"/>
+            <mac:history>
+                <mac:MI_InstrumentationEventList>
+                    <mac:citation/>
+                    <mac:description/>
+                    <mac:instrumentationEvent/>
+                    <mac:instrumentationEvent/>
+                </mac:MI_InstrumentationEventList>
+            </mac:history>
+            <mac:hosted xlink:href="#instrumentIdentifier"/>
+        </mac:MI_Sensor>
+    </mac:instrument>
+    <mac:operation>
+        <mac:MI_Operation>
+            <mac:status/>
+            <mac:otherPropertyType/>
+            <mac:otherProperty/>
+        </mac:MI_Operation>
+    </mac:operation>
+    <mac:platform>
+        <mac:MI_Platform id="platformIdentifier">
+            <mac:identifier/>
+            <mac:description/>
+            <mac:sponsor>
+                <cit:CI_Responsibility id="sponsorOrg">
+                    <cit:role>
+                        <cit:CI_RoleCode codeList="codeListLocation#CI_RoleCode" codeListValue="pointOfContact">cit:role/cit:CI_RoleCode</cit:CI_RoleCode>
+                    </cit:role>
+                    <cit:party>
+                        <cit:CI_Organisation>
+                            <cit:name>
+                                <gco:CharacterString>cit:name/gco:CharacterString</gco:CharacterString>
+                            </cit:name>
+                            <cit:contactInfo>
+                                <cit:CI_Contact>
+                                    <cit:address>
+                                        <cit:CI_Address>
+                                            <cit:electronicMailAddress>
+                                                <gco:CharacterString>cit:electronicMailAddress/gco:CharacterString</gco:CharacterString>
+                                            </cit:electronicMailAddress>
+                                        </cit:CI_Address>
+                                    </cit:address>
+                                </cit:CI_Contact>
+                            </cit:contactInfo>
+                        </cit:CI_Organisation>
+                    </cit:party>
+                </cit:CI_Responsibility>
+            </mac:sponsor>
+            <mac:instrument xlink:href="#instrumentIdentifier"/>
+            <mac:instrument xlink:href="#sensorIdentifier"/>
+            <mac:otherPropertyType/>
+            <mac:otherProperty/>
+            <mac:history>
+                <mac:MI_InstrumentationEventList>
+                    <mac:citation/>
+                    <mac:description/>
+                    <mac:instrumentationEvent>
+                        <mac:MI_InstrumentationEvent>
+                            <mac:description/>
+                            <mac:type/>
+                            <mac:revisionHistory>
+                                <mac:MI_Revision>
+                                    <mac:author>
+                                        <cit:CI_Responsibility>
+                                            <cit:role/>
+                                            <cit:party/>
+                                        </cit:CI_Responsibility>
+                                    </mac:author>
+                                    <mac:dateInfo/>
+                                </mac:MI_Revision>
+                            </mac:revisionHistory>
+                        </mac:MI_InstrumentationEvent>
+                    </mac:instrumentationEvent>
+                </mac:MI_InstrumentationEventList>
+            </mac:history>
+        </mac:MI_Platform>
+    </mac:platform>
+    <mac:environmentalConditions>
+        <mac:MI_EnvironmentalRecord>
+            <mac:averageAirTemperature/>
+            <mac:maxRelativeHumidity/>
+            <mac:maxAltitude/>
+            <mac:meterologicalConditions/>
+            <mac:solarAzimuth/>
+            <mac:solarElevation/>
+        </mac:MI_EnvironmentalRecord>
+    </mac:environmentalConditions>
+</mac:MI_AcquisitionInformation>

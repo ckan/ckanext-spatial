@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cit:CI_Responsibility xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0" 
+    xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
+    xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+    xsi:schemaLocation="http://standards.iso.org/iso/19115/-3/mdt/1.0 ../../mdt/2.0/mdt.xsd 
+    http://standards.iso.org/iso/19115/-3/cit/2.0 cit.xsd">
+    <cit:role/>
+    <cit:party>
+    <cit:CI_Organisation>
+        <cit:name/>
+        <cit:contactInfo/>
+        <!-- partyIdentifier: An identifier for people or organizations. -->
+        <cit:partyIdentifier>
+            <mcc:MD_Identifier>
+                <mcc:code>
+                    <gco:CharacterString>mcc:code/gco:CharacterString</gco:CharacterString>
+                </mcc:code>
+            </mcc:MD_Identifier>
+        </cit:partyIdentifier>
+        <cit:individual/>
+    </cit:CI_Organisation>
+    </cit:party>
+</cit:CI_Responsibility>
+

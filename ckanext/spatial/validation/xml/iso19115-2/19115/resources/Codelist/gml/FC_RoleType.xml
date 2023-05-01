@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type='text/xsl' href='./CodelistDictionary-v32.xsl'?>
+<Dictionary xmlns="http://www.opengis.net/gml/3.2" 
+  xmlns:gml="http://www.opengis.net/gml/3.2"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  gml:id="FC_RoleType"
+  xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>Code list for the classifications of roles.&#13;
+</description>
+  <identifier codeSpace="https://schemas.isotc211.org/19110/gfc/1.1">FC_RoleType</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="_9016_11462">
+      <description>Indicates an ordinary association</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19110/gfc/1.1">ordinary</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_9016_11463">
+      <description>Indicates a UML aggregation (part role).</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19110/gfc/1.1">aggregation</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_9016_11464">
+      <description>Indicates a UML composition (part role).</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19110/gfc/1.1">composition</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

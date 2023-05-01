@@ -1,0 +1,193 @@
+﻿= Codelist Catalog
+:edition: 0.1
+:revdate: 2017-09-10
+
+== Codelist Catalog
+
+This report describes the ISO TC211 codelist catalogs, the codelists they contain,
+and the values and definitions of the codes.
+
+Please contact mailto:rehabermann@me.com[Ted Habermann] if you have questions or
+suggestions.
+
+=== Catalog
+
+Name:: Codelists from the Metadata for Resource Identification (mri) Namespace
+Scope:: Codelists from the Metadata for Resource Identification (mri) Namespace
+Field of application:: ISO TC211 Metadata Standards
+Version:: 0.1
+Date:: 2017-09-10
+Number of CodeLists:: 4
+Number of items:: 60
+
+=== Codelists
+
+
+=== DS_AssociationTypeCode
+
+Description:: justification for the correlation of two resources
+CodeSpace:: http://standards.iso.org/iso/19115/-3/mri/1.0
+Number of items:: 9
+
+[%unnumbered]
+[options=header,cols=2]
+|===
+| Entry | Definition
+
+| crossReference | reference from one resource to another
+| largerWorkCitation | reference to a master resource of which this one is a part
+| partOfSeamlessDatabase | part of same structured set of data held in a computer
+| stereoMate | part of a set of imagery that when used together, provides
+three-dimensional images
+| isComposedOf | reference to resources that are parts of this resource
+| collectiveTitle | common title for a collection of resources. NOTE: title
+identifies elements of a series collectively, combined with information about what
+volumes are available at the source cite
+| series | associated through a common heritage such as produced to a common product
+specification
+| dependency | associated through a dependency
+| revisionOf | resource is a revision of associated resource
+|===
+
+
+=== DS_InitiativeTypeCode
+
+Description:: type of aggregation activity in which resources are related
+CodeSpace:: http://standards.iso.org/iso/19115/-3/mri/1.0
+Number of items:: 15
+
+[%unnumbered]
+[options=header,cols=2]
+|===
+| Entry | Definition
+
+| campaign | series of organized planned actions
+| collection | accumulation of resources assembled for a specific purpose
+| exercise | specific performance of a function or group of functions
+| experiment | process designed to find if something is effective or valid
+| investigation | search or systematic inquiry
+| mission | specific operation of a data collection system
+| sensor | device or piece of equipment which detects or records
+| operation | action that is part of a series of actions
+| platform | vehicle or other support base that holds a sensor
+| process | method of doing something involving a number of steps
+| program | specific planned activity
+| project | organized undertaking, research, or development
+| study | examination or investigation
+| task | piece of work
+| trial | process of testing to discover or demonstrate something
+|===
+
+
+=== MD_KeywordTypeCode
+
+Description:: methods used to group similar keywords
+CodeSpace:: http://standards.iso.org/iso/19115/-3/mri/1.0
+Number of items:: 15
+
+[%unnumbered]
+[options=header,cols=2]
+|===
+| Entry | Definition
+
+| discipline | keyword identifies a branch of instruction or specialized learning
+| place | keyword identifies a location
+| stratum | keyword identifies the layer(s) of any deposited substance or levels
+within an ordered system
+| temporal | keyword identifies a time period related to the resource
+| theme | keyword identifies a particular subject or topic
+| dataCentre | keyword identifies a repository or archive that manages and
+distributes data
+| featureType | keyword identifies a resource containing or about a collection of
+feature instances with common characteristics
+| instrument | keyword identifies a device used to measure or compare physical
+properties
+| platform | keyword identifies a structure upon which an instrument is mounted
+| process | keyword identifies a series of actions or natural occurrences
+| project | keyword identifies an endeavour undertaken to create or modify a product
+or service
+| service | keyword identifies an activity carried out by one party for the benefit
+of another
+| product | keyword identifies a type of product
+| subTopicCategory | refinement of a topic category for the purpose of geographic
+data classification
+| taxon | keyword identifies a taxonomy of the resource
+|===
+
+
+=== MD_TopicCategoryCode
+
+Description:: high-level geographic data thematic classification to assist in the
+grouping and search of available geographic data sets. Can be used to group keywords
+as well. Listed examples are not exhaustive.
++
+NOTE: It is understood there are
+overlaps between general categories and the user is encouraged to select the one most
+appropriate.
+
+CodeSpace:: http://standards.iso.org/iso/19115/-3/mri/1.0
+Number of items:: 21
+
+[%unnumbered]
+[options=header,cols=2]
+|===
+| Entry | Definition
+
+| farming | rearing of animals and/or cultivation of plants. Examples: agriculture,
+irrigation, aquaculture, plantations, herding, pests and diseases affecting crops and
+livestock
+| biota | flora and/or fauna in natural environment. Examples: wildlife, vegetation,
+biological sciences, ecology, wilderness, sealife, wetlands, habitat
+| boundaries | legal land descriptions, maritime boundaries. Examples: political and
+administrative boundaries, territorial seas, EEZ, port security zones
+| climatologyMeteorologyAtmosphere | processes and phenomena of the atmosphere.
+Examples: cloud cover, weather, climate, atmospheric conditions, climate change,
+precipitation
+| economy | economic activities, conditions and employment. Examples: production,
+labour, revenue, commerce, industry, tourism and ecotourism, forestry, fisheries,
+commercial or subsistence hunting, exploration and exploitation of resources such as
+minerals, oil and gas
+| elevation | height above or below a vertical datum. Examples: altitude, bathymetry,
+digital elevation models, slope, derived products
+| environment | environmental resources, protection and conservation. Examples:
+environmental pollution, waste storage and treatment, environmental impact
+assessment, monitoring environmental risk, nature reserves, landscape
+| geoscientificInformation | information pertaining to earth sciences. Examples:
+geophysical features and processes, geology, minerals, sciences dealing with the
+composition, structure and origin of the earth's rocks, risks of earthquakes,
+volcanic activity, landslides, gravity information, soils, permafrost, hydrogeology,
+erosion
+| health | health, health services, human ecology, and safety. Examples: disease and
+illness, factors affecting health, hygiene, substance abuse, mental and physical
+health, health services
+| imageryBaseMapsEarthCover | base maps. Examples: land cover, topographic maps,
+imagery, unclassified images, annotations
+| intelligenceMilitary | military bases, structures, activities. Examples: barracks,
+training grounds, military transportation, information collection
+| inlandWaters | inland water features, drainage systems and their characteristics.
+Examples: rivers and glaciers, salt lakes, water utilization plans, dams, currents,
+floods, water quality, hydrologic information
+| location | positional information and services. Examples: addresses, geodetic
+networks, control points, postal zones and services, place names
+| oceans | features and characteristics of salt water bodies (excluding inland
+waters) Examples: tides, tsunamis, coastal information, reefs
+| planningCadastre | information used for appropriate actions for future use of the
+land. Examples: land use maps, zoning maps, cadastral surveys, land ownership
+| society | characteristics of society and cultures. Examples: settlements,
+anthropology, archaeology, education, traditional beliefs, manners and customs,
+demographic data, recreational areas and activities, social impact assessments, crime
+and justice, census information
+| structure | man-made construction. Examples: buildings, museums, churches,
+factories, housing, monuments, shops, towers
+| transportation | means and aids for conveying persons and/or goods. Examples:
+roads, airports/airstrips, shipping routes, tunnels, nautical charts, vehicle or
+vessel location, aeronautical charts, railways
+| utilitiesCommunication | energy, water and waste systems and communications
+infrastructure and services. Examples: hydroelectricity, geothermal, solar and
+nuclear sources of energy, water purification and distribution, sewage collection and
+disposal, electricity and gas distribution, data communication, telecommunication,
+radio, communication networks
+| extraTerrestrial | region more than 100 km above the surface of the Earth
+| disaster | Information related to disasters. Examples: site of the disaster,
+evacuation zone, disaster-prevention facility, disaster relief activities
+|===

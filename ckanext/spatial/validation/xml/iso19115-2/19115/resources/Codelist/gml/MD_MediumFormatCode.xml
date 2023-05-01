@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='./CodelistDictionary-v32.xsl'?><Dictionary xmlns="http://www.opengis.net/gml/3.2"    xmlns:gml="http://www.opengis.net/gml/3.2"    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="MD_MediumFormatCode" xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>method used to write to the medium</description>
+  <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mrd/1.0">MD_MediumFormatCode</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="_12447_19080">
+      <description>CoPy In / Out (UNIX file format and command)</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mrd/1.0">cpio</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12447_19081">
+      <description>Tape ARchive</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mrd/1.0">tar</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12447_19082">
+      <description>high sierra file system</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mrd/1.0">highSierra</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12447_19083">
+      <description>information processing - volume and file structure of CD-ROM</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mrd/1.0">iso9660</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12447_19084">
+      <description>rock ridge interchange protocol (UNIX)</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mrd/1.0">iso9660RockRidge</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12447_19085">
+      <description>hierarchical file system (Macintosh)</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mrd/1.0">iso9660AppleHFS</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12447_19086">
+      <description>universal disk format</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mrd/1.0">udf</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

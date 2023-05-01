@@ -34,9 +34,11 @@ from ckanext.harvest.harvesters.base import HarvesterBase
 from ckanext.harvest.model import HarvestObject
 
 from ckanext.spatial.validation import Validators, all_validators
-from ckanext.spatial.model import ISODocument
+from ckanext.spatial.model import ISODocument, ISODocument_iso19139
 from ckanext.spatial.interfaces import ISpatialHarvester
 from ckantoolkit import config
+
+from unidecode import unidecode
 
 log = logging.getLogger(__name__)
 
@@ -338,8 +340,10 @@ class SpatialHarvester(HarvesterBase):
                 remote_org = remote_org_name or remote_org or None
 
             if remote_org:
+                # transliterat any unicode characters in org name into something similar in ascii
+                remote_org_clean = unidecode(remote_org)
                 # ckan supports only alphanumeric with underscores and dashes in org names
-                remote_org_clean = re.sub(r"[^\w_-]+", "-",remote_org).lower()
+                remote_org_clean = re.sub(r"[^\w_-]+", "-",remote_org_clean).lower()
                 remote_org_clean = remote_org_clean.replace("--","-")
                 remote_org_clean = remote_org_clean[:100]
                 try:
@@ -351,7 +355,7 @@ class SpatialHarvester(HarvesterBase):
                     log.info('Organization %s is not available', remote_org)
                     if remote_orgs == 'create':
                         try:
-                            org = logic.get_action('organization_create')(base_context.copy(), {'name': remote_org_clean, 'title': remote_org})
+                            org = logic.get_action('organization_create')(base_context.copy(), {'name': remote_org_clean, 'title': remote_org, 'title_translated': '{"en":"%s", "fr":"%s"}' % (remote_org,remote_org)})
                             log.info('Organization %s has been newly created', remote_org)
                             validated_org = org['id']
                         except (e):
@@ -424,6 +428,8 @@ class SpatialHarvester(HarvesterBase):
 
             context = {'model': model, 'session': model.Session, 'user': self._get_user_name()}
             license_list = p.toolkit.get_action('license_list')(context, {})
+            if isinstance(use_constraints, str):
+                use_constraints = [use_constraints]
 
             for constraint in use_constraints:
                 package_license = None
@@ -646,8 +652,12 @@ class SpatialHarvester(HarvesterBase):
 
         # Parse ISO document
         try:
-
-            iso_parser = ISODocument(harvest_object.content)
+            if self.source_config.get('parser') == 'iso19139':
+                log.debug('Using ISO19139 parser')
+                iso_parser = ISODocument_iso19139(harvest_object.content)
+            else:
+                log.debug('Using ISO19115-3 parser')
+                iso_parser = ISODocument(harvest_object.content)
             iso_values = iso_parser.read_values()
         except Exception as e:
             log.exception(e)
