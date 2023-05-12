@@ -1990,7 +1990,7 @@ class ISODocument(MappedXmlDocument):
                 if isinstance(local, dict):
                     langKey = self.cleanLangKey(local.get('language_code'))
                     transMethod = local.get('translation_method')
-                    toAdd[key + '_translation_method'] = json.dumps({langKey: transMethod})
+                    toAdd[key + '_translation_method'] = json.dumps({**{defaultLangKey: ""}, **{langKey: transMethod}})
         values.update(toAdd)
 
     def infer_multilinguale_resource(self, values):
