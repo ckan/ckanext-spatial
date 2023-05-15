@@ -1665,17 +1665,19 @@ class ISODocument_iso19139(MappedXmlDocument_iso19139):
                 ktype = klist.get('type')
                 for item in klist.get('keywords', []):
                     LangDict = self.local_to_dict(item, defaultLangKey)
-                    value.append({
-                        'keyword': json.dumps(LangDict),
-                        'type': ktype
-                    })
+                    if LangDict != {}:
+                        value.append({
+                            'keyword': json.dumps(LangDict),
+                            'type': ktype
+                        })
         else:
             for item in keywords:
                 LangDict = self.local_to_dict(item, defaultLangKey)
-                value.append({
-                    'keyword': json.dumps(LangDict),
-                    'type': item.get('type')
-                })
+                if LangDict != {}:
+                    value.append({
+                        'keyword': json.dumps(LangDict),
+                        'type': item.get('type')
+                    })
         values['keywords'] = value
 
     def infer_multilinguale(self, values):

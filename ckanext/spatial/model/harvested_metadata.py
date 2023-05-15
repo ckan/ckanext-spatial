@@ -1665,7 +1665,7 @@ class ISODocument(MappedXmlDocument):
         self.infer_contact_email(values)
         self.infer_spatial(values)
         self.infer_metadata_language(values)
-        self.infert_keywords(values)
+        self.infer_keywords(values)
         self.infer_multilinguale(values)
         self.infer_multilinguale_resource(values)
         self.infer_guid(values)
@@ -1941,7 +1941,7 @@ class ISODocument(MappedXmlDocument):
 
         return out
 
-    def infert_keywords(self, values):
+    def infer_keywords(self, values):
         keywords = values['keywords']
 
         defaultLangKey = self.cleanLangKey(
@@ -1953,17 +1953,19 @@ class ISODocument(MappedXmlDocument):
                 ktype = klist.get('type')
                 for item in klist.get('keywords', []):
                     LangDict = self.local_to_dict(item, defaultLangKey)
-                    value.append({
-                        'keyword': json.dumps(LangDict),
-                        'type': ktype
-                    })
+                    if LangDict != {}:
+                        value.append({
+                            'keyword': json.dumps(LangDict),
+                            'type': ktype
+                        })
         else:
             for item in keywords:
                 LangDict = self.local_to_dict(item, defaultLangKey)
-                value.append({
-                    'keyword': json.dumps(LangDict),
-                    'type': item.get('type')
-                })
+                if LangDict != {}:
+                    value.append({
+                        'keyword': json.dumps(LangDict),
+                        'type': item.get('type')
+                    })
         values['keywords'] = value
 
     def infer_multilinguale(self, values, defaultLangKey=''):

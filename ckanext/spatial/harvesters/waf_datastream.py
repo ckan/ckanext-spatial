@@ -127,7 +127,7 @@ class DatastreamSitemapHarvester(WAFHarvester, SingletonPlugin):
                     item['keyword'] = '{"en": "%s", "fr": "%s"}' % (en_string,fr_string)
                     package_dict['keywords_translation_method'] = 'Keyword ' + self.translation_method_text
         else:
-            iso_values['keywords'] = [{'keyword': '{"en": "other"}', 'type': ''}, {'keyword': '{"fr": "autre"}', 'type': ''}]
+            iso_values['keywords'] = [{'keyword': '{"en": "other", "fr": "autre"}', 'type': ''}]
 
         # Title auto translated
         title = json.loads(package_dict["title"])
