@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:gco="https://schemas.isotc211.org/19103/-/gco/1.2"
+  xmlns:mas="https://schemas.isotc211.org/19115/-1/mas/1.3"
+  xmlns:mcc="https://schemas.isotc211.org/19115/-1/mcc/1.3" 
+  targetNamespace="https://schemas.isotc211.org/19115/-1/mas/1.3" 
+  elementFormDefault="qualified"
+  version="1.3.0"
+  >
+  <include schemaLocation="mas.xsd"/>
+  <import namespace="https://schemas.isotc211.org/19103/-/gco/1.2" schemaLocation="../../../../19103/-/gco/1.2.0/gco.xsd"/>
+  <import namespace="https://schemas.isotc211.org/19115/-1/mcc/1.3" schemaLocation="../../../../19115/-1/mcc/1.3.0/mcc.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <!-- =========================================================================== -->
+   <element name="MD_ApplicationSchemaInformation" substitutionGroup="mcc:Abstract_ApplicationSchemaInformation" type="mas:MD_ApplicationSchemaInformation_Type" id="ISO19115-1.292">
+    <annotation>
+      <documentation>information about the application schema used to build the
+        dataset</documentation>
+    </annotation>
+  </element>
+  <!-- ........................................................................ -->
+  <complexType name="MD_ApplicationSchemaInformation_Type">
+    <complexContent>
+      <extension base="mcc:Abstract_ApplicationSchemaInformation_Type">
+        <sequence>
+          <element name="name" type="mcc:Abstract_Citation_PropertyType" id="ISO19115-1.293_ISO19115-1.361">
+            <annotation>
+              <documentation>name of the application schema used</documentation>
+            </annotation>
+          </element>
+          <element name="schemaLanguage" type="gco:CharacterString_PropertyType" id="ISO19115-1.294_ISO19103.CharacterString">
+            <annotation>
+              <documentation>identification of the schema language used</documentation>
+            </annotation>
+          </element>
+          <element name="constraintLanguage" type="gco:CharacterString_PropertyType" id="ISO19115-1.295_ISO19103.CharacterString">
+            <annotation>
+              <documentation>formal language used in Application Schema</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="schemaAscii" type="gco:CharacterString_PropertyType" id="ISO19115-1.296_ISO19103.CharacterString">
+            <annotation>
+              <documentation>full application schema given as an ASCII file</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="graphicsFile" type="mcc:Abstract_OnlineResource_PropertyType" id="ISO19115-1.297_ISO19115-1.405">
+            <annotation>
+              <documentation>full application schema given as a graphics file</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="softwareDevelopmentFile" type="mcc:Abstract_OnlineResource_PropertyType" id="ISO19115-1.298_ISO19115-1.405">
+            <annotation>
+              <documentation>full application schema given as a software development
+                file</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="softwareDevelopmentFileFormat" type="gco:CharacterString_PropertyType" id="ISO19115-1.299_ISO19103.CharacterString">
+            <annotation>
+              <documentation>software dependent format used for the application schema software
+                dependent file</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <!-- ........................................................................ -->
+  <complexType name="MD_ApplicationSchemaInformation_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mas:MD_ApplicationSchemaInformation"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- =========================================================================== -->
+</schema>

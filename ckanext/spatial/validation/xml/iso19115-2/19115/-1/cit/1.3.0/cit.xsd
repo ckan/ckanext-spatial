@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+  xmlns="http://www.w3.org/2001/XMLSchema" 
+  xmlns:cit="https://schemas.isotc211.org/19115/-1/cit/1.3" 
+  targetNamespace="https://schemas.isotc211.org/19115/-1/cit/1.3" 
+  elementFormDefault="qualified"
+  version="1.3.0"
+  >
+  <annotation>
+    <documentation>Namespace for XML elements for constructing citations to resources.</documentation>
+  </annotation>
+  <include schemaLocation="citation.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+</schema>

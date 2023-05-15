@@ -1,0 +1,25 @@
+<?xml-stylesheet type='text/xsl' href='./CodelistDictionary-v32.xsl'?>
+<Dictionary xmlns="http://www.opengis.net/gml/3.2"    xmlns:gml="http://www.opengis.net/gml/3.2"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="CD_PixelinCell"
+  xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>Specification of the way the image grid is associated with the image data
+    attributes.&#13; </description>
+  <identifier codeSpace="http://www.isotc211.org/2014/rbc/1.0"
+    >CD_PixelinCell</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="_9507_12545">
+      <description>The origin of the image coordinate system is the centre of a grid cell or image
+        pixel.</description>
+      <identifier codeSpace="http://www.isotc211.org/2014/rbc/1.0"
+        >cellCenter</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_9507_12546">
+      <description>The origin of the image coordinate system is the corner of a grid cell, or
+        half-way between the centres of adjacent image pixels.</description>
+      <identifier codeSpace="http://www.isotc211.org/2014/rbc/1.0"
+        >cellCorner</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

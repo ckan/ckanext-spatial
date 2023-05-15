@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mdb:MD_Metadata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://standards.iso.org/iso/19115/-3/mds/1.0 ../../mds/1.0/mds.xsd" 
+ xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/1.0" 
+ xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+ xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0">
+   <mdb:metadataIdentifier></mdb:metadataIdentifier>
+   <mdb:contact></mdb:contact>
+   <mdb:dateInfo></mdb:dateInfo>
+   <mdb:identificationInfo></mdb:identificationInfo>
+   <mdb:distributionInfo>
+      <mrd:MD_Distribution>
+         <mrd:transferOptions>
+            <mrd:MD_DigitalTransferOptions>
+               <mrd:offLine>
+                  
+                  <!-- rule.mrd.mediumunit -->
+                  <mrd:MD_Medium>
+                     <mrd:density>
+                        <gco:Real>75</gco:Real>
+                     </mrd:density>
+                  </mrd:MD_Medium>
+               </mrd:offLine>
+            </mrd:MD_DigitalTransferOptions>
+         </mrd:transferOptions>
+      </mrd:MD_Distribution>
+   </mdb:distributionInfo>
+</mdb:MD_Metadata>

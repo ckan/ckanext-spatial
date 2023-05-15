@@ -1,0 +1,59 @@
+<?xml-stylesheet type='text/xsl' href='./CodelistDictionary-v32.xsl'?><Dictionary xmlns="http://www.opengis.net/gml/3.2"    xmlns:gml="http://www.opengis.net/gml/3.2"    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="DS_AssociationTypeCode" xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>justification for the correlation of two resources</description>
+  <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">DS_AssociationTypeCode</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="_12478_19194">
+      <description>reference from one resource to another</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">crossReference</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12478_19195">
+      <description>reference to a master resource of which this one is a part</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">largerWorkCitation</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12478_19196">
+      <description>part of same structured set of data held in a computer</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">partOfSeamlessDatabase</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12478_19197">
+      <description>part of a set of imagery that when used together, provides three-dimensional images</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">stereoMate</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12478_19198">
+      <description>reference to resources that are parts of this data set</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">isComposedOf</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12478_19199">
+      <description>common title with holdings note NOTE: title identifies elements of a series collectively, combined with information about what volumes are available at the source cited</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">collectiveTitle</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12478_19200">
+      <description>associated through a common heritage such as produced to a common product specification</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">series</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12478_19201">
+      <description>associate through a dependency</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">dependency</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12478_19202">
+      <description>
+      </description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mri/1.0">revisionOf</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

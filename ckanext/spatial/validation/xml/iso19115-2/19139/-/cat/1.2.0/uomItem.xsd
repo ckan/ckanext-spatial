@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:cat="https://schemas.isotc211.org/19139/-/cat/1.2"
+  xmlns:gco="https://schemas.isotc211.org/19103/-/gco/1.2" 
+  elementFormDefault="qualified"
+  targetNamespace="https://schemas.isotc211.org/19139/-/cat/1.2" 
+  version="1.2.0">
+  <include schemaLocation="../../../../19139/-/cat/1.2.0/cat.xsd"/>
+  <import namespace="https://schemas.isotc211.org/19103/-/gco/1.2" schemaLocation="../../../../19103/-/gco/1.2.0/gco.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <!-- ___________________________________ -->
+  <element name="CT_UnitOfMeasure" substitutionGroup="cat:AbstractCT_Item" type="cat:CT_UnitOfMeasure_Type" id="ISO19115-3.notFound.001"/>
+  <complexType name="CT_UnitOfMeasure_Type">
+    <complexContent>
+      <extension base="cat:AbstractCT_Item_Type">
+        <sequence>
+          <element minOccurs="0" name="quantityType" type="gco:CharacterString_PropertyType" id="ISO19115-3.notFound.002_ISO19103.CharacterString"/>
+          <element minOccurs="0" name="uomSymbol" type="gco:CharacterString_PropertyType" id="ISO19115-3.notFound.003_ISO19103.CharacterString"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CT_UnitOfMeasure_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cat:CT_UnitOfMeasure"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- ___________________________________ -->
+  <element name="CT_UomCatalogue" substitutionGroup="cat:AbstractCT_Catalogue" type="cat:CT_UomCatalogue_Type" id="ISO19139.63"/>
+  <complexType name="CT_UomCatalogue_Type">
+    <complexContent>
+      <extension base="cat:AbstractCT_Catalogue_Type">
+        <sequence>
+          <element minOccurs="1" maxOccurs="unbounded" name="uomItem" type="cat:CT_UnitOfMeasure_PropertyType" id="ISO19139.64_ISO19139.CT_UnitOfMeasure"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="CT_UomCatalogue_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cat:CT_UomCatalogue"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- ___________________________________ -->
+</schema>

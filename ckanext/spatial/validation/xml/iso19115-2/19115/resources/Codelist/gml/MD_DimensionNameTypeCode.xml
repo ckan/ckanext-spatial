@@ -1,0 +1,52 @@
+<?xml-stylesheet type='text/xsl' href='./CodelistDictionary-v32.xsl'?><Dictionary xmlns="http://www.opengis.net/gml/3.2"    xmlns:gml="http://www.opengis.net/gml/3.2"    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="MD_DimensionNameTypeCode" xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>name of the dimension</description>
+  <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">MD_DimensionNameTypeCode</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="_12528_19440">
+      <description>ordinate (y) axis</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">row</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12528_19441">
+      <description>abscissa (x) axis</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">column</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12528_19442">
+      <description>vertical (z) axis</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">vertical</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12528_19443">
+      <description>along the direction of motion of the scan point</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">track</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12528_19444">
+      <description>perpendicular to the direction of motion of the scan point</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">crossTrack</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12528_19445">
+      <description>scan line of a sensor</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">line</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12528_19446">
+      <description>element along a scan line</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">sample</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12528_19447">
+      <description>duration</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">time</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

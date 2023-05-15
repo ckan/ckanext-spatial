@@ -1,0 +1,1198 @@
+﻿= ISO/TC 211 Namespaces
+:revdate: 2021-03-24
+
+== Summary
+
+This table summarizes the namespaces used in the XML implementation of
+https://committee.iso.org/home/tc211[ISO/TC 211] Standards for Geospatial
+Metadata.
+
+The current official versions of these namespaces are located at
+https://schemas.isotc211.org[schemas.isotc211.org].
+
+Working versions and information are at the
+https://github.com/ISO-TC211/XML[ISO/TC 211 Git Repository].
+
+== Newer set of namespaces (2021)
+
+[%unnumbered]
+[options=header,cols="a,a,a,a,a,a,a,a,a,a,a,a,a"]
+|===
+| Year | Standard Prefix | Title | Version | Scope | Standard, Paragraph | Requirements Name | Namespace URI | Thumbnail | UML Package | XML Schema | XML Schema Included | Imported Namespaces
+
+| 2021
+| https://schemas.isotc211.org/19139/-/cat/1.2.0/[cat]
+| CATalogue
+| 1.2.0
+| Elements for codelist catalogues, and example catalogues.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 7.4.4
+| catalogue
+| `https://schemas.isotc211.org/19139/-/cat/1.2`
+| image::/19139/-/cat/1.2.0/cat.png[thumbnail of Catalogue UML and attributes,200]
+| Catalog, Code List Item, uom Item, CRS Item
+| https://schemas.isotc211.org/19139/-/cat/1.2.0/cat.xsd[cat.xsd]
+a|
+https://schemas.isotc211.org/19139/-/cat/1.2.0/catalogues.xsd[catalogues.xsd] +
+https://schemas.isotc211.org/19139/-/cat/1.2.0/codelistItem.xsd[codelistItem.xsd] +
+https://schemas.isotc211.org/19139/-/cat/1.2.0/crsItem.xsd[crsItem.xsd] +
+https://schemas.isotc211.org/19139/-/cat/1.2.0/uomItem.xsd[uomItem.xsd]
+| lan.1.3, gco.1.2
+
+| 2021
+| https://schemas.isotc211.org/19115/-1/cit/1.3.0/[cit]
+| Citation and responsible party information
+| 1.3.0
+| Utility elements for citation, identification, and web linkage of resources.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 6.6.2
+| citation-metadata
+| `https://schemas.isotc211.org/19115/-1/cit/1.3`
+| image::/19115/-1/cit/1.3.0/citationClass.png[thumbnail of CIT UML and attributes,200]
+| `<<Leaf>>` Citation
+| https://schemas.isotc211.org/19115/-1/cit/1.3.0/cit.xsd[cit.xsd]
+| https://schemas.isotc211.org/19115/-1/cit/1.3.0/citation.xsd[citation.xsd]
+| gco.1.2, mcc.1.3
+
+| 2021
+| https://schemas.isotc211.org/19157/-/dqc/1.2.0/[dqc]
+| Data Quality Common Classes
+| 1.2.0
+| abstract classes shared by multiple namespaces and is required in order to enable modularization of the XML implementation.
+| ISO 19157, Geographic Information - Data Quality, 6.4
+| data-quality-common
+| `https://schemas.isotc211.org/19157/-/dqc/1.2.0`
+| image::/19157/-/dqc/1.2.0/dqc.png[Thumbnail of data quality common UML and attributes,200]
+| Data Quality
+| https://schemas.isotc211.org/19157/-2/dqc/1.2.0/dqc.xsd[dqc.xsd]
+| https://schemas.isotc211.org/19157/-2/dqc/1.2.0/abstract.xsd[abstract.xsd]
+| gco.1.2
+
+| 2021
+| https://schemas.isotc211.org/19157/-/dqm/1.2.0/[dqm]
+| Data Quality Measures
+| 1.2.0
+| Elements for describing data quality measures.
+| ISO 19157, Geographic Information - Data Quality, 6.5
+| quality-measures
+| `https://schemas.isotc211.org/19157/-/dqm/1.2.0`
+| image::/19157/-/dqm/1.2.0/DtaQualMeasrClass.png[Thumbnail of Data Quality Measures UML and attributes,200]
+| Data Quality
+| https://schemas.isotc211.org/19157/-/dqm/1.2.0/dqm.xsd[dqm.xsd]
+| https://schemas.isotc211.org/19157/-/dqm/1.2.0/qualityMeasures.xsd[qualityMeasures.xsd]
+| cat.1.2, mcc.1.3, pre.1.1, gco.1.2
+
+| 2021
+| https://schemas.isotc211.org/19110/-/fcc/1.0/[fcc]
+| Feature Catalog Common
+| 2.2.0
+| abstract classes shared by multiple namespaces and is required in order to enable modularization of the XML implementation.
+| ISO 19110, Geographic information -- Methodology for feature cataloguing
+| feature-catalog-common
+| `https://schemas.isotc211.org/19110/-/fcc/2.2.0`
+| image::/19110/-/fcc/2.2.0/FeatCatComClass.png[Thumbnail of Feature Catalogue Classes and attributes,200]
+|
+| https://schemas.isotc211.org/19110/-/fcc/2.2.0/fcc.xsd[fcc.xsd]
+| https://schemas.isotc211.org/19110/-/fcc/2.2.0/abstract.xsd[abstract.xsd]
+| gco.1.2, cat.1.3
+
+| 2021
+| https://schemas.isotc211.org/19103/-/gco/1.2.0/[gco]
+| Geographic COmmon
+| 1.2.0
+| Elements for describing basic types from ISO/TS 19103 and conceptual elements from ISO 19118 required in XML implementations of ISO metadata standards.
+| ISO 19115-1, ISO/TS 19139 Geographic information - Metadata - XML schema implementation
+| geographic-common
+| `https://schemas.isotc211.org/19103/-/gco/1.2.0`
+| No image available
+| None
+| https://schemas.isotc211.org/19103/-/gco/1.2.0/gco.xsd[gco.xsd]
+| https://schemas.isotc211.org/19103/-/gco/1.2.0/baseTypes.xsd[baseTypes.xsd]
+| xlink.1999
+
+| 2021
+| https://schemas.isotc211.org/19103/-/gcx/1.2.0/[gcx]
+| Geospatial Common eXtension
+| 1.2.0
+| Elements for xml implementation, from ISO 19139 updated for compatibility with 19115-3.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 7.2
+| extended-types
+| `https://schemas.isotc211.org/19103/-/gcx/1.2.0`
+| image::/19103/-/gcx/1.2.0/gcx.png[Thumbnail of Geographic Common objects Extension UML and attributes,200]
+| `<<Leaf>>` Extended Types
+| https://schemas.isotc211.org/19103/-/gcx/1.2.0/gcx.xsd[gcx.xsd]
+| https://schemas.isotc211.org/19103/-/gcx/1.2.0/extendedTypes.xsd[extendedTypes.xsd]
+| gco.1.2, xlink.1999, mcc.1.3
+
+| 2021
+| https://schemas.isotc211.org/19115/-1/gex/1.3.0/[gex]
+| Geospatial EXtent
+| 1.3.0
+| Elements for specifying geospatial properties of a resource,
+including extent and spatial reference systems.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 6.6.1
+| geospatial-extent
+| `https://schemas.isotc211.org/19115/-1/gex/1.3.0`
+| image::/19115/-1/gex/1.3.0/extentClass.png[Thumbnail of Geographic EXtent UML and attributes,200]
+| `<<Leaf>>` Extent
+| https://schemas.isotc211.org/19115/-1/gex/1.3.0/gex.xsd[gex.xsd]
+| https://schemas.isotc211.org/19115//-1/gex/1.3.0/extent.xsd[extent.xsd]
+| mcc.1.3, gco.1.2, gmw.1.2
+
+| 2021
+| https://schemas.isotc211.org/19110/-/gfc/2.2.0/[gfc]
+| General Feature Catalog
+| 2.2.0
+| ISO 19110:2005 defines the methodology for cataloguing
+feature types and specifies how the classification of feature types is organized into
+a feature catalogue and presented to the users of a set of geographic data. ISO
+19110:2005 is applicable to creating catalogues of feature types in previously
+uncatalogued domains and to revising existing feature catalogues to comply with
+standard practice. ISO 19110:2005 applies to the cataloguing of feature types that
+are represented in digital form. Its principles can be extended to the cataloguing of
+other forms of geographic data.
+| ISO 19110, Geographic information -- Methodology for feature cataloguing
+| feature-catalog
+| `https://schemas.isotc211.org/19110/-/gfc/2.2`
+| image::/19110/-/gfc/2.2.0/CncptMdiFeatCatClass.png[Thumbnail of General Feature Classes UML and attributes,200]
+|
+| https://schemas.isotc211.org/19110/-/gfc/2.2.0/gfc.xsd[gfc.xsd]
+| https://schemas.isotc211.org/19110/-/gfc/2.2.0/featureCatalogue.xsd[featureCatalogue.xsd]
+| cit.1.3, fcc.2.2, lan.1.3, mcc.1.3, gco.1.2
+
+| 2021
+| https://schemas.isotc211.org/19123/-2/cis/1.1.0/[gmlcov]
+| Geographic Markup Language for COVerages
+| 1.1.0
+|
+|
+|
+| `http://www.opengis.net/gmlcov/1.0`
+| image::/19123/-2/cis/1.1.0/AppSchmaCoverages.png[Thumbnail of Geographic Markup Language for COVerages,200]
+| None
+| https://schemas.isotc211.org/19123/-2/cis/1.1.0/gmlcovAll.xsd[gmlcovAll.xsd]
+a|
+https://schemas.isotc211.org/19123/-2/cis/1.1.0/gmlcovAll.xsd[coverage.xsd] +
+https://schemas.isotc211.org/19123/-2/cis/1.1.0/gmlcovAll.xsd[grids.xsd] +
+https://schemas.isotc211.org/19123/-/cis/1.1.0/gmlcovAll.xsd[codeLists.xsd] +
+https://schemas.isotc211.org/19123/-/cis/1.1.0/gmlcovAll.xsd[gridPoint.xsd]
+| gml, xlink.1999, gco.1.2
+
+| 2021
+| https://schemas.isotc211.org/19136/-1/gmw/1.1.0/[gmw]
+| Geographic Markup Wrappers
+| 1.1.0
+| Wrappers for gml dependencies.
+| ISO 19136-1
+| geographic-wrappers
+| `https://schemas.isotc211.org/19136/-1/gmw/1.1`
+| image::/19136/-1/gmw/1.1.0/gmwBasePackage.png[Thumbnail of Geographic Markup Wrappers,200]
+| None
+| https://schemas.isotc211.org/19136/-1/gmw/1.1.0/gmw.xsd[gmw.xsd]
+| https://schemas.isotc211.org/19136/-1/gmw/1.1.0/gmlWrapperTypes2014.xsd[gmlWrapperTypes2014.xsd]
+| gml, xlink.1999, baseTypes2014.1.0
+
+| 2021
+| https://schemas.isotc211.org/19163/-1/igd/1.1.0/[lan]
+| Image and Gridded Data
+| 1.3.0
+| Elements for managing Image and Gridded Data.
+| ISO 19163-1, Geographic Information - Content components and encoding rules for imagery and gridded data - Part 1: Content model
+|
+| `https://schemas.isotc211.org/19163/-1/igd/1.1`
+| image::/19163/-1/igd/1.1.0/igdStandardsPackageRelationships.png[Thumbnail of Image and Gridded Data UML and attributes,200]
+| `<<Leaf>>` Image and Gridded Data
+| https://schemas.isotc211.org/19163/-1/igd/1.1.0/igd.xsd[igd.xsd]
+a| https://schemas.isotc211.org/19163/-1/igd/1.1.0/IE_Imagery.xsd[IE_Imagery.xsd] +
+https://schemas.isotc211.org/19163/-1/igd/1.1.0/IE_ImageryAndGriddedData.xsd[IE_ImageryAndGriddedData.xsd] +
+https://schemas.isotc211.org/19163/-1/igd/1.1.0/IE_ThematicGriddedData.xsd[IE_ThematicGriddedData.xsd]
+| gco/1.2; cit/1.3; gex/1.3; mri/1.3 msr/1.3; mrc/1.3; mac/2.2; gml/3.2; gmw/1.1; gmlcov0/1.0
+
+| 2021
+| https://schemas.isotc211.org/19115/-1/lan/1.3.0/[lan]
+| Language localization
+| 1.3.0
+| Elements for cultural and linguistic adapatiblity.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 7.3
+| language-localization
+| `https://schemas.isotc211.org/19115/-1/lan/1.3`
+| image::/19115/-1/lan/1.3.0/languageClass.png[Thumbnail of LNguage and localization UML and attributes,200]
+| `<<Leaf>>` Language
+| https://schemas.isotc211.org/19115/-1/lan/1.3.0/lan.xsd[lan.xsd]
+| https://schemas.isotc211.org/19115/-1/lan/1.3.0/language.xsd[language.xsd]
+| gco.1.1, cit.1.3
+
+| 2021
+| https://schemas.isotc211.org/19115/-2/mac/2.2.0/[mac]
+| Metadata for Acquisition
+| 2.2.0
+| Information related to acquisition platforms, instruments, operations and other details.
+| ISO 19115-2, Geographic Information - Metadata - Part 2: Extensions for acquisition and processing, 6.3.2
+|
+| `https://schemas.isotc211.org/19115/-2/mac/2.2`
+| image::/19115/-2/mac/2.2.0/AcquisitionClass.png[Thumbnail of Metadata for ACquisition UML and attributes,200]
+| Acquisition Details
+| https://schemas.isotc211.org/19115/-2/mac/2.2.0/mac.xsd[mac.xsd]
+a|
+https://schemas.isotc211.org/19115/-2/mac/2.2.0/acquisitionInformationImagery.xsd[acquisitionInformationImagery.xsd] +
+https://schemas.isotc211.org/19115/-2/mac/2.2.0/event.xsd[event.xsd]
+| gco.1.2, gmw.1.2, mcc.1.3, lan.1.3
+
+| 2021
+| https://schemas.isotc211.org/19115/-1/mas/1.3.0/[mas]
+| Metadata for Application Schema
+| 1.3.0
+| Elements for referencing Application Schema.
+| ISO
+19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 6.5.13
+| application-schema
+| `https://schemas.isotc211.org/19115/-1/mas/1.3.0`
+| image::/19115/-1/mas/1.3.0/appSchemaClass.png[Thumbnail of Metadata for Application Schema UML and attributes,200]
+| `<<Leaf>>` Application Schema
+| https://schemas.isotc211.org/19115/-1/mas/1.3.0/mas.xsd[mas.xsd]
+| https://schemas.isotc211.org/19115/-1/mas/1.3.0/applicationSchema.xsd[applicationSchema.xsd]
+| gco.1.2, mcc.1.3, cit.1.30
+
+| 2021
+| https://schemas.isotc211.org/19115/-1/mcc/1.3.0/[mcc]
+| Metadata Common Classes
+| 1.3.0
+| abstract classes shared by multiple namespaces and is required in order to enable modularization of the XML implementation.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 6.6.4
+| common-classes
+| `https://schemas.isotc211.org/19115/-1/mcc/1.3.0`
+| image::/19115/-1/mcc/1.3.0/CommonClass.png[Thumbnail of Metadata Common Classes UML and attributes,200]
+| `<<Leaf>>`
+| https://schemas.isotc211.org/19115/-1/mcc/1.3.0/mcc.xsd[mcc.xsd]
+a|
+https://schemas.isotc211.org/19115/-1/mcc/1.3.0/AbstractCommonClasses.xsd[AbstractCommonClasses.xsd] +
+https://schemas.isotc211.org/19115/-1/mcc/1.3.0/commonClasses.xsd[commonClasses.xsd]
+| gco.1.2
+
+| 2021
+| https://schemas.isotc211.org/19115/-1/mco/1.3.0/[mco]
+| Metadata for Constraints
+| 1.3.0
+| Elements for describing resource and metadata constraints.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 6.5.4 and ISO 19115-2, Geographic Information - Metadata - Part 2: Extensions for  acquisition
+| constraints
+| `https://schemas.isotc211.org/19115/-1/mco/1.3.0`
+| image::/19115/-1/mco/1.3.0/ConstraintClass.png[Thumbnail of Metadata for COnstraints UML and attributes,200]
+| `<<Leaf>>` Constraints
+| https://schemas.isotc211.org/19115/-1/mco/1.3.0/mco.xsd[mco.xsd]
+| https://schemas.isotc211.org/19115/-1/mco/1.3.0/constraints.xsd[constraints.xsd]
+| gco.1.2, mcc.1.3
+
+| 2021
+| https://schemas.isotc211.org/19115/-1/mda/1.3.0/[mda]
+| MetaData Application
+| 1.3.0
+| Elements to represent resources that may be aggregated and described by metadata records (DS_*)
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 6.2
+| metadata-application
+| `https://schemas.isotc211.org/19115/-1/mda/1.3.0`
+| image::/19115/-1/mda/1.3.0/MetadataApplicationClass.png[Thumbnail of metadata-application UML and attributes,200]
+| `<<Leaf>>` Metadata Application
+| https://schemas.isotc211.org/19115/-1/mda/1.3.0/mda.xsd[mda.xsd]
+| https://schemas.isotc211.org/19115/-1/mda/1.3.0/metadataApplication.xsd[metadataApplication.xsd]
+| gco.1.2, mdb.1.3
+
+| 2021
+| https://schemas.isotc211.org/19115/-1/mdb/1.3.0/[mdb]
+| Metadata Base
+| 1.3.0
+| Mandatory elements for describing resources that are not services. This namespace is used for metadata records that include only mandatory elements.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 6.5.2
+| metadata-base
+| `https://schemas.isotc211.org/19115/-1/mdb/1.3.0`
+| image::/19115/-1/mdb/1.3.0/MdBaseClass.png[Thumbnail of Metadata Base UML and attributes,200]
+|
+| https://schemas.isotc211.org/19115/-1/mdb/1.3.0/mdb.xsd[mdb.xsd]
+| https://schemas.isotc211.org/19115/-1/mdb/1.3.0/metadataBase.xsd[metadataBase.xsd]
+| cit.1.3, dqc.1.1, lan.1.3, mcc.1.3, mri.1.3, gex.1.2, gco.1.2
+
+| 2021
+| https://schemas.isotc211.org/19157/-/mdq/1.2.0/[mdq]
+| Metadata for Data Quality
+| 1.21.0
+| Elements for describing the quality of resources.
+| ISO 19157, Geographic Information - Data Quality, 6.4
+| data-quality
+| `https://schemas.isotc211.org/19157/-/mdq/1.2`
+| image::/19157/-/mdq/1.2.0/mdqElementsClass.png[Thumbnail of Metadata for Data Quality UML and attributes,200]
+| Data Quality
+| https://schemas.isotc211.org/19157/-/mdq/1.2.0/mdq.xsd[mdq.xsd]
+a|
+https://schemas.isotc211.org/19157/-/mdq/1.2.0/dataQualityElement.xsd[dataQualityElement.xsd] +
+https://schemas.isotc211.org/19157/-/mdq/1.2.0/dataQualityEvaluation.xsd[dataQualityEvaluation.xsd] +
+https://schemas.isotc211.org/19157/-/mdq/1.2.0/dataQualityImagery.xsd[dataQualityImagery.xsd] +
+https://schemas.isotc211.org/19157/-/mdq/1.2.0/dataQualityResult.xsd[dataQualityResult.xsd] +
+https://schemas.isotc211.org/19157/-/mdq/1.2.0/metaquality.xsd[metaquality.xsd]
+| dqc.1.1, gcx.1.2, mcc.1.3, gco.1.2, gmw.1.2, mrd.1.3
+
+| 2021
+| https://schemas.isotc211.org/19115/-1/mex/1.3.0/[mex]
+| Metadata with Schema Extensions
+| 1.3.0
+| Elements describing extensions to metadata standards.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 6.5.12
+| metadata-extension
+| `https://schemas.isotc211.org/19115/-1/mex/1.3.0`
+| image::/19115/-1/mex/1.3.0/MdExtensionClass.png[Thumbnail of Metadata with schema EXtensions UML and attributes,200]
+| `<<Leaf>>` Metadata Extension
+| https://schemas.isotc211.org/19115/-1/mex/1.3.0/mex.xsd[mex.xsd]
+| https://schemas.isotc211.org/19115/-1/mex/1.3.0/metadataExtension.xsd[metadataExtension.xsd]
+| mcc.1.3, gco.1.2
+
+| 2021
+| https://schemas.isotc211.org/19115/-1/mmi/1.3.0/[mmi]
+| Metadata for Maintenance Information
+| 1.3.0
+| Elements describing resource and metadata maintenance.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 6.5.6
+| maintenance-information
+| `https://schemas.isotc211.org/19115/-1/mmi/1.3.0`
+| image::/19115/-1/mmi/1.3.0/MaintenanceClass.png[Thumbnail of Metadata for Maintenance Information UML and attributes,200]
+| `<<Leaf>>` Maintenance
+| https://schemas.isotc211.org/19115/-1/mmi/1.3.0/mmi.xsd[mmi.xsd]
+| https://schemas.isotc211.org/19115/-1/mmi/1.3.0/maintenance.xsd[maintenance.xsd]
+| mcc.1.3, gco.1.2
+
+| 2021
+| https://schemas.isotc211.org/19115/-1/mpc/1.3.0/[mpc]
+| Metadata for Portrayal Catalog
+| 1.3.0
+| Elements for referencing portrayal catalogs.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 6.5.10
+| portrayal-catalog
+| `https://schemas.isotc211.org/19115/-1/mpc/1.3.0`
+| image::/19115/-1/mpc/1.3.0/PortrayalCatClass.png[Thumbnail of Metadata for Portrayal Catalog UML and attributes,200]
+| `<<Leaf>>` Portrayal Catalog
+| https://schemas.isotc211.org/19115/-1/mpc/1.3.0/mpc.xsd[mpc.xsd]
+| https://schemas.isotc211.org/19115/-1/mpc/1.3.0/portrayalCatalogue.xsd[portrayalCatalogue.xsd]
+| gco.1.2, mcc.1.3
+
+| 2021
+| https://schemas.isotc211.org/19115/-1/mrc/1.3.0/[mrc]
+| Metadata for Resource Content
+| 1.3.0
+| Elements for describing resource structure and content.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 6.5.9 and ISO 19115-2, Geographic Information - Metadata - Part 2: Extensions for acquisition
+| resource-content
+| `https://schemas.isotc211.org/19115/-1/mrc/1.3.0`
+| image::/19115/-1/mrc/1.3.0/ContentClass.png[Thumbnail of Metadata for Resource Content UML and attributes,200]
+| `<<Leaf>>` Resource Content
+| https://schemas.isotc211.org/19115/-1/mrc/1.3.0/mrc.xsd[mrc.xsd]
+a|
+https://schemas.isotc211.org/19115/-1/mrc/1.3.0/content.xsd[content.xsd] +
+https://schemas.isotc211.org/19115/-2/mrc/2.2.0/contentInformationImagery.xsd[contentInformationImagery.xsd]
+| gco.1.2, fcc.2.2, lan.1.3, mcc.1.3, gmw.1.2
+
+| 2021
+| https://schemas.isotc211.org/19115/-1/mrd/1.3.0/[mrd]
+| Metadata
+for Resource Distribution
+| 1.3.0
+| Elements specifying how a resource is accessed.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 6.5.11
+| resource-distribution
+| `https://schemas.isotc211.org/19115/-1/mrd/1.3.0`
+| image::/19115/-1/mrd/1.3.0/DistributionClass.png[Thumbnail of Metadata for Resource Distribution UML and attributes,200]
+| `<<Leaf>>` Distribution Information
+| https://schemas.isotc211.org/19115/-1/mrd/1.3.0/mrd.xsd[mrd.xsd]
+| https://schemas.isotc211.org/19115/-1/mrd/1.3.0/distribution.xsd[distribution.xsd]
+| gco.1.2, mcc.1.3
+
+| 2021
+| https://schemas.isotc211.org/19115/-1/mri/1.3.0/[mri]
+| Metadata for Resource Identification
+| 1.3.0
+| Elements for identifying resources.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 6.5.3
+| resource-identification
+| `https://schemas.isotc211.org/19115/-1/mri/1.3.0`
+| image::/19115/-1/mri/1.3.0/IdentificationClass.png[Thumbnail of Metadata for Resource Identification UML and attributes,200]
+| `<<Leaf>>` Identification Information
+| https://schemas.isotc211.org/19115/-1/mri/1.3.0/mri.xsd[mri.xsd]
+| https://schemas.isotc211.org/19115/-1/mri/1.3.0/identification.xsd[identification.xsd]
+| lan.1.3, mcc.1.3, gco.1.2, gmw.1.2
+
+| 2021
+| https://schemas.isotc211.org/19115/-1/mrl/1.3.0/[mrl]
+| Metadata for Resource Lineage
+| 1.3.0
+| Elements for describing resource lineage.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals and ISO 19115-2, Geographic Information - Metadata - Part 2: Extensions for acquisition, 6.3.3
+| lineage
+| `https://schemas.isotc211.org/19115/-1/mrl/1.3.0`
+| image::/19115/-1/mrl/1.3.0/LineageClass.png[Thumbnail of Metadata for Resource Lineage UML and attributes,200]
+| `<<Leaf>>`
+| https://schemas.isotc211.org/19115/-1/mrl/1.3.0/mrl.xsd[mrl.xsd]
+a|
+https://schemas.isotc211.org/19115/-1/mrl/1.3.0/lineage.xsd[lineage.xsd] +
+https://schemas.isotc211.org/19115/-2/mrl/2.2.0/lineageImagery.xsd[lineageImagery.xsd]
+| gco.1.2, mcc.1.3, srv.1.3, gmw.1.2
+
+| 2021
+| https://schemas.isotc211.org/19115/-1/mrs/1.3.0/[mrs]
+| Metadata for Reference System
+| 1.3.0
+| Elements for describing Reference Systems.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 6.5.8
+| reference-system
+| `https://schemas.isotc211.org/19115/-1/mrs/1.3.0`
+| image::/19115/-1/mrs/1.3.0/ReferenceSysClass.png[Thumbnail of Metadata for Reference System UML and attributes,200]
+| `<<Leaf>>` Reference System
+| https://schemas.isotc211.org/19115/-1/mrs/1.3.0/mrs.xsd[mrs.xsd]
+| https://schemas.isotc211.org/19115/-1/mrs/1.3.0/referenceSystem.xsd[referenceSystem.xsd]
+| gco.1.2, mcc.1.3
+
+| 2021
+| https://schemas.isotc211.org/19115/-1/msr/1.3.0/[msr]
+| Metadata for Spatial Representation
+| 2.0
+| Elements for describing spatial representations of resources.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals AMENDMENT 1, 6.5.7 and ISO 19115-2, Geographic Information - Metadata - Part 2: Extensions for acquisition
+| spatial-representation
+| `https://schemas.isotc211.org/19115/-1/msr/1.3.0`
+| image::/19115/-1/msr/1.3.0/SpatialRepClass.png[Thumbnail of Metadata for Spatial Representation UML and attributes,200]
+| `<<Leaf>>` Spatial Representation
+| https://schemas.isotc211.org/19115/-1/msr/1.3.0/msr.xsd[msr.xsd]
+a|
+https://schemas.isotc211.org/19115/-1/msr/1.3.0/spatialRepresentation.xsd[spatialRepresentation.xsd]
+https://schemas.isotc211.org/19115/-2/msr/2.2.0/spatialRepresentationImagery.xsd[spatialRepresentationImagery.xsd]
+| gco.1.2, gmw.1.2, mcc.1.2, dqc.1.1
+
+| 2021
+| https://schemas.isotc211.org/19135/-1/pir/1.1.0/[rbc]
+| Referencing By Coordinates
+| 3.1.0
+| This part of ISO 19135 specifies procedures for
+the registration of items of geographic information. ISO/IEC JTC 1 defines
+registration as the assignment of an unambiguous name to an object in a way that
+makes the assignment available to interested parties.
+| ISO 19135, Geographic information - Procedures for item registration - Part 1: Fundamentals
+| Procedures for Item Registration
+| `https://schemas.isotc211.org/19135/-1/pir/1.1`
+| image::/19135/-1/pir/1.1.0/19135-1ItemRegistrationClassesWeb.png[Thumbnail of Referencing By Coordinates UML and attributes,200]
+|
+| https://schemas.isotc211.org/19135/-1/pir/1.1.0/pir.xsd[pir.xsd]
+a| https://schemas.isotc211.org/19135/-1/pir/1.1.0/core.xsd[core.xsd]
+https://schemas.isotc211.org/19135/-1/pir/1.1.0/hierarchy.xsd[hierarchy.xsd]
+https://schemas.isotc211.org/19135/-1/pir/1.1.0/extended.xsd[extended.xsd]
+| gco.1.2, cit.1.3
+
+| 2021
+| https://schemas.isotc211.org/19111/-/rbc/3.1.0/[rbc]
+| Referencing By Coordinates
+| 3.1.0
+| ISO 19111:2019 defines the conceptual schema for the
+description of spatial referencing by coordinates, optionally extended to
+spatio-temporal referencing. It describes the minimum data required to define one-,
+two- and three-dimensional spatial coordinate reference systems with an extension to
+merged spatial-temporal reference systems. It allows additional descriptive
+information to be provided. It also describes the information required to change
+coordinates from one coordinate reference system to another.
+| ISO 19111, Geographic information -- Spatial referencing by coordinates
+| Reference by Coordinate
+| `https://schemas.isotc211.org/19111/-/rbc/3.1`
+| image::/19111/-/rbc/3.1.0/CoordRefSysClass.png[Thumbnail of Reference by Coordinate UML and attributes,200]
+|
+| https://schemas.isotc211.org/19111/-/rbc/3.1.0/rbc.xsd[rbc.xsd]
+| https://schemas.isotc211.org/19111/-/rbc/3.1.0/rbcStubs.xsd[rbcStubs.xsd]
+| gco.1.2, mcc.1.3
+
+| 2021
+| https://schemas.isotc211.org/19115/-1/srv/1.3.0/[srv]
+| metadata for SeRVices
+| 1.3.0
+| Elements for describing services.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 6.5.14
+| services
+| `https://schemas.isotc211.org/19115/-1/srv/1.3.0`
+| image::/19115/-1/srv/1.3.0/ServiceClass.png[Thumbnail of Metadata for SeRVices UML and attributes,200]
+| `<<Leaf>>` Services
+| https://schemas.isotc211.org/19115/-1/srv/1.3.0/srv.xsd[srv.xsd]
+| https://schemas.isotc211.org/19115/-1/srv/1.3.0/serviceInformation.xsd[serviceInformation.xsd]
+| gco.1.2, mcc.1.3, mri.1.3
+
+|===
+
+== Previous sets of namespaces (pre-2020)
+
+[%unnumbered]
+[options=header,cols="a,a,a,a,a,a,a,a,a,a,a,a,a"]
+|===
+| Year | Standard Prefix | Title | Version | Scope | Standard, Paragraph | Requirements Name | Namespace URI | Thumbnail | UML Package | XML Schema | XML Schema Included | Imported Namespaces
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/cat/1.0/[cat]
+| CATalogue
+| 1.0
+| Elements for codelist catalogues, and example catalogues.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 7.4.4
+| catalogue
+| `https://schemas.isotc211.org/19115/-3/cat/1.0`
+| image::/19115/-3/cat/1.0/cat.png[,200]
+| Catalog, Code List Item, uom Item, CRS Item
+| https://schemas.isotc211.org/19115/-3/cat/1.0/cat.xsd[cat.xsd]
+| https://schemas.isotc211.org/19115/-3/cat/1.0/catalogues.xsd[catalogues.xsd]
+https://schemas.isotc211.org/19115/-3/cat/1.0/codelistItem.xsd[codelistItem.xsd]
+https://schemas.isotc211.org/19115/-3/cat/1.0/crsItem.xsd[crsItem.xsd]
+https://schemas.isotc211.org/19115/-3/cat/1.0/uomItem.xsd[uomItem.xsd]
+| lan.1.0, gco.1.0
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/cit/2.0/[cit]
+| Citation and responsible party information
+| 2.0
+| Utility elements for citation, identification, and web linkage of resources.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals AMENDMENT 1, 6.6.2
+| citation-metadata
+| `https://schemas.isotc211.org/19115/-3/cit/2.0`
+| image::/19115/-3/cit/2.0/cit.png[,200]
+| `<<Leaf>>` Citation
+| https://schemas.isotc211.org/19115/-3/cit/2.0/cit.xsd[cit.xsd]
+| https://schemas.isotc211.org/19115/-3/cit/2.0/citation.xsd[citation.xsd]
+| gco.1.0, mcc.1.0
+
+| 2019
+| https://schemas.isotc211.org/19157/-2/dqc/1.0/[dqc]
+| Data Quality Common Classes
+| 1.0
+| abstract classes shared by multiple namespaces and is required in order to enable modularization of the XML implementation.
+| ISO 19157, Geographic Information - Data Quality, 6.4
+| data-quality-common
+| `https://schemas.isotc211.org/19157/-2/dqc/1.0`
+| image::/19157/-2/dqc/1.0/dqc.png[,200]
+| Data Quality
+| https://schemas.isotc211.org/19157/-2/dqc/1.0/dqc.xsd[dqc.xsd]
+| https://schemas.isotc211.org/19157/-2/dqc/1.0/abstract.xsd[abstract.xsd]
+| gco.1.0
+
+| 2019
+| https://schemas.isotc211.org/19157/-2/dqm/1.0/[dqm]
+| Data Quality
+Measures
+| 1.0
+| Elements for describing data quality measures.
+| ISO 19157,
+Geographic Information - Data Quality, 6.5
+| quality-measures
+| `https://schemas.isotc211.org/19157/-2/dqm/1.0`
+| image::/19157/-2/dqm/1.0/dqm.png[,200]
+| Data Quality
+| https://schemas.isotc211.org/19157/-2/dqm/1.0/dqm.xsd[dqm.xsd]
+| https://schemas.isotc211.org/19157/-2/dqm/1.0/qualityMeasures.xsd[qualityMeasures.xsd]
+| cat.1.0, mcc.1.0, pre.1.0, gco.1.0
+
+| 2019
+| https://schemas.isotc211.org/19110/fcc/1.0/[fcc]
+| Feature Catalog Common
+| 1.0
+| abstract classes shared by multiple namespaces and is required in order to enable modularization of the XML implementation.
+| ISO 19110, Geographic information -- Methodology for feature cataloguing
+| feature-catalog-common
+| `https://schemas.isotc211.org/19110/fcc/1.0`
+| image::/19110/fcc/1.0/fcc.png[,200]
+|
+| https://schemas.isotc211.org/19110/fcc/1.0/fcc.xsd[fcc.xsd]
+| https://schemas.isotc211.org/19110/fcc/1.0/abstract.xsd[abstract.xsd]
+| gco.1.0, cat.1.0
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/gco/1.0/[gco]
+| Geographic COmmon
+| 1.0
+| Elements for describing basic types from ISO/TS 19103 and conceptual elements from ISO 19118 required in XML implementations of ISO metadata standards.
+| ISO 19115-1, ISO/TS 19139 Geographic information - Metadata - XML schema implementation
+| geographic-common
+| `https://schemas.isotc211.org/19115/-3/gco/1.0`
+| No image available
+| None
+| https://schemas.isotc211.org/19115/-3/gco/1.0/gco.xsd[gco.xsd]
+| https://schemas.isotc211.org/19115/-3/gco/1.0/baseTypes2014.xsd[baseTypes2014.xsd]
+| xlink.1999
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/gcx/1.0/[gcx]
+| Geospatial Common eXtension
+| 1.0
+| Elements for xml implementation, from ISO 19139 updated for compatibility with 19115-3.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 7.2
+| extended-types
+| `https://schemas.isotc211.org/19115/-3/gcx/1.0`
+| image::/19115/-3/gcx/1.0/gcx.png[,200]
+| `<<Leaf>>` Extended Types
+| https://schemas.isotc211.org/19115/-3/gcx/1.0/gcx.xsd[gcx.xsd]
+| https://schemas.isotc211.org/19115/-3/gcx/1.0/extendedTypes.xsd[extendedTypes.xsd]
+| gco.1.0, xlink.1999, mcc.1.0
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/gex/1.0/[gex]
+| Geospatial EXtent
+| 1.0
+| Elements for specifying geospatial properties of a resource, including extent and spatial reference systems.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 6.6.1
+| geospatial-extent
+| `https://schemas.isotc211.org/19115/-3/gex/1.0`
+| image::/19115/-3/gex/1.0/gex.png[,200]
+| `<<Leaf>>` Extent
+| https://schemas.isotc211.org/19115/-3/gex/1.0/gex.xsd[gex.xsd]
+| https://schemas.isotc211.org/19115/-3/gex/1.0/extent.xsd[extent.xsd]
+| mcc.1.0, gco.1.0, gmw.1.0
+
+| 2019
+| https://schemas.isotc211.org/19110/gfc/1.1/[gfc]
+| General Feature Catalog
+| 1.1
+| ISO 19110:2005 defines the methodology for cataloguing feature types
+and specifies how the classification of feature types is organized into a feature
+catalogue and presented to the users of a set of geographic data. ISO 19110:2005 is
+applicable to creating catalogues of feature types in previously uncatalogued domains
+and to revising existing feature catalogues to comply with standard practice. ISO
+19110:2005 applies to the cataloguing of feature types that are represented in
+digital form. Its principles can be extended to the cataloguing of other forms of
+geographic data.
+| ISO 19110, Geographic information -- Methodology for feature cataloguing
+| feature-catalog
+| `https://schemas.isotc211.org/19110/gfc/1.1`
+| image::/19110/gfc/1.1/gfc.png[,200]
+|
+| https://schemas.isotc211.org/19110/gfc/1.1/gfc.xsd[gfc.xsd]
+| https://schemas.isotc211.org/19110/gfc/1.1/featureCatalogue.xsd[featureCatalogue.xsd]
+| cit.1.0, fcc.1.0, lan.1.0, mcc.1.0, gco.1.0
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/gmw/1.0/[gmw]
+| Geographic Markup Wrappers
+| 1.0
+| Wrappers for gml dependencies.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals
+| geographic-wrappers
+| `https://schemas.isotc211.org/19115/-3/gmw/1.0`
+| No image available
+| None
+| https://schemas.isotc211.org/19115/-3/gmw/1.0/gmw.xsd[gmw.xsd]
+| https://schemas.isotc211.org/19115/-3/gmw/1.0/gmlWrapperTypes2014.xsd[gmlWrapperTypes2014.xsd]
+| gml, xlink.1999, baseTypes2014.1.0
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/lan/1.0/[lan]
+| Language localization
+| 1.0
+| Elements for cultural and linguistic adapatiblity.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 7.3
+| language-localization
+| `https://schemas.isotc211.org/19115/-3/lan/1.0`
+| image::/19115/-3/lan/1.0/lan.png[,200]
+| `<<Leaf>>` Language
+| https://schemas.isotc211.org/19115/-3/lan/1.0/lan.xsd[lan.xsd]
+| https://schemas.isotc211.org/19115/-3/lan/1.0/language.xsd[language.xsd]
+| gco.1.0, cit.1.0
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/mac/1.0/[mac]
+| Metadata for Acquisition
+| 1.0
+| Information related to acquisition platforms, instruments, operations and other details.
+| ISO 19115-2, Geographic Information - Metadata - Part 2: Extensions for imagery and gridded data, A.2.5
+|
+| `https://schemas.isotc211.org/19115/-3/mac/1.0`
+| image::/19115/-3/mac/1.0/mac.png[,200]
+| Acquisition Details
+| https://schemas.isotc211.org/19115/-3/mac/1.0/mac.xsd[mac.xsd]
+| https://schemas.isotc211.org/19115/-3/mac/1.0/acquisitionInformationImagery.xsd[acquisitionInformationImagery.xsd]
+| gco.1.0, gmw.1.0, mcc.1.0
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/mac/2.0/[mac]
+| Metadata for Acquisition
+| 2.0
+| Information related to acquisition platforms, instruments, operations and other details.
+| ISO 19115-2, Geographic Information - Metadata - Part 2: Extensions for acquisition and processing, 6.3.2
+|
+| `https://schemas.isotc211.org/19115/-3/mac/2.0`
+| image::/19115/-3/mac/2.0/mac.png[,200]
+| Acquisition Details
+| https://schemas.isotc211.org/19115/-3/mac/2.0/mac.xsd[mac.xsd]
+| https://schemas.isotc211.org/19115/-3/mac/2.0/acquisitionInformationImagery.xsd[acquisitionInformationImagery.xsd]
+https://schemas.isotc211.org/19115/-3/mac/2.0/event.xsd[event.xsd]
+| gco.1.0, gmw.1.0, mcc.1.0, lan.1.0
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/mas/1.0/[mas]
+| Metadata for Application Schema
+| 1.0
+| Elements for referencing Application Schema.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 6.5.13
+| application-schema
+| `https://schemas.isotc211.org/19115/-3/mas/1.0`
+| image::/19115/-3/mas/1.0/mas.png[,200]
+| `<<Leaf>>` Application Schema
+| https://schemas.isotc211.org/19115/-3/mas/1.0/mas.xsd[mas.xsd]
+| https://schemas.isotc211.org/19115/-3/mas/1.0/applicationSchema.xsd[applicationSchema.xsd]
+| gco.1.0, mcc.1.0, cit.1.0
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/mcc/1.0/[mcc]
+| Metadata Common Classes
+| 1.0
+| abstract classes shared by multiple namespaces and is required in order to enable modularization of the XML implementation.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 6.6.4
+| common-classes
+| `https://schemas.isotc211.org/19115/-3/mcc/1.0`
+| image::/19115/-3/mcc/1.0/mcc.png[,200]
+| `<<Leaf>>`
+| https://schemas.isotc211.org/19115/-3/mcc/1.0/mcc.xsd[mcc.xsd]
+| https://schemas.isotc211.org/19115/-3/mcc/1.0/AbstractCommonClasses.xsd[AbstractCommonClasses.xsd]
+https://schemas.isotc211.org/19115/-3/mcc/1.0/commonClasses.xsd[commonClasses.xsd]
+| gco.1.0
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/mco/1.0/[mco]
+| Metadata for Constraints
+| 1.0
+| Elements for describing resource and metadata constraints.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 6.5.4
+| constraints
+| `https://schemas.isotc211.org/19115/-3/mco/1.0`
+| image::/19115/-3/mco/1.0/mco.png[,200]
+| `<<Leaf>>` Constraints
+| https://schemas.isotc211.org/19115/-3/mco/1.0/mco.xsd[mco.xsd]
+| https://schemas.isotc211.org/19115/-3/mco/1.0/constraints.xsd[constraints.xsd]
+| gco.1.0, mcc.1.0
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/md1/1.0/[md1]
+| Metadata for Data and Services with Geospatial Common Extensions
+| 1.0
+| This namespace contains all classes needed for a complete metadata record for any resource and enables the use of FileName, MimeType, and Anchor elements (gex).
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, A.2.3.4
+| metadata-extended-types-instance
+| `https://schemas.isotc211.org/19115/-3/md1/1.0`
+| image::/19115/-3/md1/1.0/md1.png[,200]
+| Implementation Model Only
+| https://schemas.isotc211.org/19115/-3/md1/1.0/md1.xsd[md1.xsd]
+| https://schemas.isotc211.org/19115/-3/md1/1.0/metadataWExtendedType.xsd[metadataWExtendedType.xsd]
+| gcx.1.0, mds.1.0
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/md1/2.0/[md1]
+| Metadata for Data and Services with Geospatial Common Extensions
+| 2.0
+| This namespace contains all classes needed for a complete metadata record for any resource and enables the use of FileName, MimeType, and Anchor elements (gex).
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, A.2.3.4
+| metadata-extended-types-instance
+| `https://schemas.isotc211.org/19115/-3/md1/2.0`
+| image::/19115/-3/md1/2.0/md1.png[,200]
+| Implementation Model Only
+| https://schemas.isotc211.org/19115/-3/md1/2.0/md1.xsd[md1.xsd]
+| https://schemas.isotc211.org/19115/-3/md1/2.0/metadataWExtendedType.xsd[metadataWExtendedType.xsd]
+| gcx.1.0, mds.2.0
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/md2/1.0/[md2]
+| Metadata
+with Extended Schema
+| 1.0
+| This namespace contains all classes needed for a
+complete metadata record for any resource and enables the description of schema
+extensions (MD_MetadataExtensionInformation) elements (mex).
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, A.2.3.5
+| extended-metadata-instance
+| `https://schemas.isotc211.org/19115/-3/md2/1.0`
+| image::/19115/-3/md2/1.0/md2.png[,200]
+| Implementation Model Only
+| https://schemas.isotc211.org/19115/-3/md2/1.0/md2.xsd[md2.xsd]
+| https://schemas.isotc211.org/19115/-3/md2/1.0/metadataWithExtensions.xsd[metadataWithExtensions.xsd]
+| cit.1.0, gcx.1.0, lan.1.0, mcc.1.0, md1.1.0, mex.1.0, mpc.1.0, mri.1.0
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/md2/2.0/[md2]
+| Metadata with Extended Schema
+| 2.0
+| This namespace contains all classes needed for a
+complete metadata record for any resource and enables the description of schema
+extensions (MD_MetadataExtensionInformation) elements (mex).
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, A.2.3.5
+| extended-metadata-instance
+| `https://schemas.isotc211.org/19115/-3/md2/2.0`
+| image::/19115/-3/md2/2.0/md2.png[,200]
+| Implementation Model Only
+| https://schemas.isotc211.org/19115/-3/md2/2.0/md2.xsd[md2.xsd]
+| https://schemas.isotc211.org/19115/-3/md2/2.0/metadataWithExtensions.xsd[metadataWithExtensions.xsd]
+| cit.2.0, gcx.1.0, lan.1.0, mcc.1.0, md1.2.0, mex.1.0, mpc.1.0, mri.1.0
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/mda/1.0/[mda]
+| MetaData Application
+| 1.0
+| Elements to represent resources that may be aggregated and described by metadata records (DS_*)
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 6.2
+| metadata-application
+| `https://schemas.isotc211.org/19115/-3/mda/1.0`
+| image::/19115/-3/mda/1.0/mda.png[,200]
+| `<<Leaf>>` Metadata Application
+| https://schemas.isotc211.org/19115/-3/mda/1.0/mda.xsd[mda.xsd]
+| https://schemas.isotc211.org/19115/-3/mda/1.0/metadataApplication.xsd[metadataApplication.xsd]
+| md2.1.0, gco.1.0, mdb.1.0
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/mda/2.0/[mda]
+| MetaData Application
+| 2.0
+| Elements to represent resources that may be aggregated and described by metadata records (DS_*)
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 6.2
+| metadata-application
+| `https://schemas.isotc211.org/19115/-3/mda/2.0`
+| image::/19115/-3/mda/2.0/mda.png[,200]
+| `<<Leaf>>` Metadata Application
+| https://schemas.isotc211.org/19115/-3/mda/2.0/mda.xsd[mda.xsd]
+| https://schemas.isotc211.org/19115/-3/mda/2.0/metadataApplication.xsd[metadataApplication.xsd]
+| md2.2.0, gco.1.0, mdb.2.0
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/mdb/1.0/[mdb]
+| Metadata Base
+| 1.0
+| Mandatory elements for describing resources that are not services. This
+namespace is used for metadata records that include only mandatory elements.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 6.5.2
+| metadata-base
+| `https://schemas.isotc211.org/19115/-3/mdb/1.0`
+| image::/19115/-3/mdb/1.0/mdb.png[,200]
+|
+| https://schemas.isotc211.org/19115/-3/mdb/1.0/mdb.xsd[mdb.xsd]
+| https://schemas.isotc211.org/19115/-3/mdb/1.0/metadataBase.xsd[metadataBase.xsd]
+| cit.1.0, dqc.1.0, lan.1.0, mcc.1.0, mri.1.0, gex.1.0, gco.1.0
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/mdb/2.0/[mdb]
+| Metadata Base
+| 2.0
+| Mandatory elements for describing resources that are not services. This
+namespace is used for metadata records that include only mandatory elements.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 6.5.2
+| metadata-base
+| `https://schemas.isotc211.org/19115/-3/mdb/2.0`
+| image::/19115/-3/mdb/2.0/mdb.png[,200]
+|
+| https://schemas.isotc211.org/19115/-3/mdb/2.0/mdb.xsd[mdb.xsd]
+| https://schemas.isotc211.org/19115/-3/mdb/2.0/metadataBase.xsd[metadataBase.xsd]
+| cit.2.0, dqc.1.0, lan.1.0, mcc.1.0, mri.1.0, gex.1.0, gco.1.0
+
+| 2019
+| https://schemas.isotc211.org/19157/-2/mdq/1.0/[mdq]
+| Metadata for Data Quality
+| 1.0
+| Elements for describing the quality of resources.
+| ISO 19157, Geographic Information - Data Quality, 6.4
+| data-quality
+| `https://schemas.isotc211.org/19157/-2/mdq/1.0`
+| image::/19157/-2/mdq/1.0/mdq.png[,200]
+| Data Quality
+| https://schemas.isotc211.org/19157/-2/mdq/1.0/mdq.xsd[mdq.xsd]
+| https://schemas.isotc211.org/19157/-2/mdq/1.0/dataQualityElement.xsd[dataQualityElement.xsd]
+https://schemas.isotc211.org/19157/-2/mdq/1.0/dataQualityEvaluation.xsd[dataQualityEvaluation.xsd]
+https://schemas.isotc211.org/19157/-2/mdq/1.0/dataQualityImagery.xsd[dataQualityImagery.xsd]
+https://schemas.isotc211.org/19157/-2/mdq/1.0/dataQualityResult.xsd[dataQualityResult.xsd] https://schemas.isotc211.org/19157/-2/mdq/1.0/metaquality.xsd[metaquality.xsd]
+| dqc.1.0, gcx.1.0, mcc.1.0, gco.1.0, gmw.1.0, mrd.1.0
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/mds/1.0/[mds]
+| Metadata for Data and Services
+| 1.0
+| This namespace contains all classes needed for a complete
+metadata record for any resource. It is used for metadata records that do not include
+geospatial common extensions (gex), extenbsions to the schema (mex), data series
+(DS_*) elements (mda) or metadata for data transfer (mdt).
+| ISO 19115-1, Geographic
+Information - Metadata - Part 1: Fundamentals, 6.5.2
+| metadata-data-or-services
+| `https://schemas.isotc211.org/19115/-3/mds/1.0`
+| image::/19115/-3/mds/1.0/mds.png[,200]
+| `<<Leaf>>`
+| https://schemas.isotc211.org/19115/-3/mds/1.0/mds.xsd[mds.xsd]
+| https://schemas.isotc211.org/19115/-3/mds/1.0/metadataDataServices.xsd[metadataDataServices.xsd]
+| fcc.1.0, gex.1.0, mac.1.0, mas.1.0, mco.1.0, mdb.1.0, mdq.1.0, mmi.1.0, mpc.1.0, mrc.1.0, mrd.1.0, mrl.1.0, mrs.1.0, msr.1.0, srv.2.0
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/mds/2.0/[mds]
+| Metadata for Data and Services
+| 2.0
+| This namespace contains all classes needed for a complete
+metadata record for any resource. It is used for metadata records that do not include
+geospatial common extensions (gex), extenbsions to the schema (mex), data series
+(DS_*) elements (mda) or metadata for data transfer (mdt).
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 6.5.2
+| metadata-data-or-services
+| `https://schemas.isotc211.org/19115/-3/mds/2.0`
+| image::/19115/-3/mds/2.0/mds.png[,200]
+| `<<Leaf>>`
+| https://schemas.isotc211.org/19115/-3/mds/2.0/mds.xsd[mds.xsd]
+| https://schemas.isotc211.org/19115/-3/mds/2.0/metadataDataServices.xsd[metadataDataServices.xsd]
+| fcc.1.0, gex.1.0, mac.2.0, mas.1.0, mco.1.0, mdb.2.0, mdq.1.0, mmi.1.0, mpc.1.0, mrc.2.0, mrd.1.0, mrl.2.0, mrs.1.0, msr.2.0, srv.2.0
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/mdt/1.0/[mdt]
+| Metadata for Data Transfer
+| 1.0
+| This namespace contains all classes needed for a complete
+metadata record for any resource and enables the description of data transfer (MX_*)
+elements. This is the most inclusive of the ISO 19115-3 namespaces so it should be
+used in situations where all 19115-3 capabilities are required.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 7.4.2, 7.4.3
+| data-transfer
+| `https://schemas.isotc211.org/19115/-3/mdt/1.0`
+| image::/19115/-3/mdt/1.0/mdt.png[,200]
+| `<<Leaf>>` Metadata-based Data Transfers
+| https://schemas.isotc211.org/19115/-3/mdt/1.0/mdt.xsd[mdt.xsd]
+| https://schemas.isotc211.org/19115/-3/mdt/1.0/metadataTransfer.xsd[metadataTransfer.xsd]
+| cat.1.0, gcx.1.0, mda.1.0, gco.1.0
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/mdt/2.0/[mdt]
+| Metadata for Data Transfer
+| 2.0
+| This namespace contains all classes needed for a complete
+metadata record for any resource and enables the description of data transfer (MX_*)
+elements. This is the most inclusive of the ISO 19115-3 namespaces so it should be
+used in situations where all 19115-3 capabilities are required.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 7.4.2, 7.4.3
+| data-transfer
+| `https://schemas.isotc211.org/19115/-3/mdt/2.0`
+| image::/19115/-3/mdt/2.0/mdt.png[,200]
+| `<<Leaf>>` Metadata-based Data Transfers
+| https://schemas.isotc211.org/19115/-3/mdt/2.0/mdt.xsd[mdt.xsd]
+| https://schemas.isotc211.org/19115/-3/mdt/2.0/metadataTransfer.xsd[metadataTransfer.xsd]
+| cat.1.0, gcx.1.0, mda.2.0, gco.1.0
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/mex/1.0/[mex]
+| Metadata with Schema Extensions
+| 1.0
+| Elements describing extensions to metadata standards.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 6.5.12
+| metadata-extension
+| `https://schemas.isotc211.org/19115/-3/mex/1.0`
+| image::/19115/-3/mex/1.0/mex.png[,200]
+| `<<Leaf>>` Metadata Extension
+| https://schemas.isotc211.org/19115/-3/mex/1.0/mex.xsd[mex.xsd]
+| https://schemas.isotc211.org/19115/-3/mex/1.0/metadataExtension.xsd[metadataExtension.xsd]
+| mcc.1.0, gco.1.0
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/mmi/1.0/[mmi]
+| Metadata for Maintenance Information
+| 1.0
+| Elements describing resource and metadata maintenance.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 6.5.6
+| maintenance-information
+| `https://schemas.isotc211.org/19115/-3/mmi/1.0`
+| image::/19115/-3/mmi/1.0/mmi.png[,200]
+| `<<Leaf>>` Maintenance
+| https://schemas.isotc211.org/19115/-3/mmi/1.0/mmi.xsd[mmi.xsd]
+| https://schemas.isotc211.org/19115/-3/mmi/1.0/maintenance.xsd[maintenance.xsd]
+| mcc.1.0, gco.1.0
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/mpc/1.0/[mpc]
+| Metadata for Portrayal Catalog
+| 1.0
+| Elements for referencing portrayal catalogs.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 6.5.10
+| portrayal-catalog
+| `https://schemas.isotc211.org/19115/-3/mpc/1.0`
+| image::/19115/-3/mpc/1.0/mpc.png[,200]
+| `<<Leaf>>` Portrayal Catalog
+| https://schemas.isotc211.org/19115/-3/mpc/1.0/mpc.xsd[mpc.xsd]
+| https://schemas.isotc211.org/19115/-3/mpc/1.0/portrayalCatalogue.xsd[portrayalCatalogue.xsd]
+| gco.1.0, mcc.1.0
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/mrc/1.0/[mrc]
+| Metadata for Resource Content
+| 1.0
+| Elements for describing resource structure and content.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 6.5.9
+| resource-content
+| `https://schemas.isotc211.org/19115/-3/mrc/1.0`
+| image::/19115/-3/mrc/1.0/mrc.png[,200]
+| `<<Leaf>>` Resource Content
+| https://schemas.isotc211.org/19115/-3/mrc/1.0/mrc.xsd[mrc.xsd]
+|
+https://schemas.isotc211.org/19115/-3/mrc/1.0/content.xsd[content.xsd]
+
+https://schemas.isotc211.org/19115/-3/mrc/1.0/contentInformationImagery.xsd[contentInformationImagery.xsd]
+| gco.1.0, fcc.1.0, lan.1.0, mcc.1.0, gmw.1.0
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/mrc/2.0/[mrc]
+| Metadata for Resource Content
+| 2.0
+| Elements for describing resource structure and content.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals AMENDMENT 1, 6.5.9
+| resource-content
+| `https://schemas.isotc211.org/19115/-3/mrc/2.0`
+| image::/19115/-3/mrc/2.0/mrc.png[,200]
+| `<<Leaf>>` Resource Content
+| https://schemas.isotc211.org/19115/-3/mrc/2.0/mrc.xsd[mrc.xsd]
+|
+https://schemas.isotc211.org/19115/-3/mrc/2.0/content.xsd[content.xsd]
+
+https://schemas.isotc211.org/19115/-3/mrc/2.0/contentInformationImagery.xsd[contentInformationImagery.xsd]
+| gco.1.0, mac.2.0, fcc.1.0, lan.1.0, mcc.1.0, gmw.1.0
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/mrd/1.0/[mrd]
+| Metadata for Resource Distribution
+| 1.0
+| Elements specifying how a resource is accessed.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 6.5.11
+| resource-distribution
+| `https://schemas.isotc211.org/19115/-3/mrd/1.0`
+| image::/19115/-3/mrd/1.0/mrd.png[,200]
+| `<<Leaf>>` Distribution Information
+| https://schemas.isotc211.org/19115/-3/mrd/1.0/mrd.xsd[mrd.xsd]
+| https://schemas.isotc211.org/19115/-3/mrd/1.0/distribution.xsd[distribution.xsd]
+| gco.1.0, mcc.1.0
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/mri/1.0/[mri]
+| Metadata for Resource Identification
+| 1.0
+| Elements for identifying resources.
+| ISO 19115-1,
+Geographic Information - Metadata - Part 1: Fundamentals, 6.5.3
+| resource-identification
+| `https://schemas.isotc211.org/19115/-3/mri/1.0`
+| image::/19115/-3/mri/1.0/mri.png[,200]
+| `<<Leaf>>` Identification Information
+| https://schemas.isotc211.org/19115/-3/mri/1.0/mri.xsd[mri.xsd]
+| https://schemas.isotc211.org/19115/-3/mri/1.0/identification.xsd[identification.xsd]
+| lan.1.0, mcc.1.0, gco.1.0, gmw.1.0
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/mrl/1.0/[mrl]
+| Metadata for Resource Lineage
+| 1.0
+| Elements for describing resource lineage.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 6.5.5
+| lineage
+| `https://schemas.isotc211.org/19115/-3/mrl/1.0`
+| image::/19115/-3/mrl/1.0/mrl.png[,200]
+| `<<Leaf>>`
+| https://schemas.isotc211.org/19115/-3/mrl/1.0/mrl.xsd[mrl.xsd]
+|
+https://schemas.isotc211.org/19115/-3/mrl/1.0/lineage.xsd[lineage.xsd]
+
+https://schemas.isotc211.org/19115/-3/mrl/1.0/lineageImagery.xsd[lineageImagery.xsd]
+| gco.1.0, mcc.1.0, gmw.1.0
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/mrl/2.0/[mrl]
+| Metadata for Resource Lineage
+| 2.0
+| Elements for describing resource lineage.
+| ISO 19115-1, Geographic Information - Metadata - Part 2: Extensions for acquisition and processing, 6.3.3
+| lineage
+| `https://schemas.isotc211.org/19115/-3/mrl/2.0`
+| image::/19115/-3/mrl/2.0/mrl.png[,200]
+| `<<Leaf>>`
+| https://schemas.isotc211.org/19115/-3/mrl/2.0/mrl.xsd[mrl.xsd]
+| https://schemas.isotc211.org/19115/-3/mrl/2.0/lineage.xsd[lineage.xsd]
+https://schemas.isotc211.org/19115/-3/mrl/2.0/lineageImagery.xsd[lineageImagery.xsd]
+| gco.1.0, mcc.1.0, srv.2.0, gmw.1.0
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/mrs/1.0/[mrs]
+| Metadata for Reference System
+| 1.0
+| Elements for describing Reference Systems.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 6.5.8
+| reference-system
+| `https://schemas.isotc211.org/19115/-3/mrs/1.0`
+| image::/19115/-3/mrs/1.0/mrs.png[,200]
+| `<<Leaf>>` Reference System
+| https://schemas.isotc211.org/19115/-3/mrs/1.0/mrs.xsd[mrs.xsd]
+| https://schemas.isotc211.org/19115/-3/mrs/1.0/referenceSystem.xsd[referenceSystem.xsd]
+| gco.1.0, mcc.1.0
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/msr/1.0/[msr]
+| Metadata for Spatial Representation
+| 1.0
+| Elements for describing spatial representations of resources.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 6.5.7
+| spatial-representation
+| `https://schemas.isotc211.org/19115/-3/msr/1.0`
+| image::/19115/-3/msr/1.0/msr.png[,200]
+| `<<Leaf>>` Spatial Representation
+| https://schemas.isotc211.org/19115/-3/msr/1.0/msr.xsd[msr.xsd]
+| https://schemas.isotc211.org/19115/-3/msr/1.0/spatialRepresentation.xsd[spatialRepresentation.xsd]
+https://schemas.isotc211.org/19115/-3/msr/1.0/spatialRepresentationImagery.xsd[spatialRepresentationImagery.xsd]
+| gco.1.0, gmw.1.0, mcc.1.0, dqc.1.0
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/msr/2.0/[msr]
+| Metadata for Spatial Representation
+| 2.0
+| Elements for describing spatial representations of resources.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals AMENDMENT 1, 6.5.7
+| spatial-representation
+| `https://schemas.isotc211.org/19115/-3/msr/2.0`
+| image::/19115/-3/msr/2.0/msr.png[,200]
+| `<<Leaf>>` Spatial Representation
+| https://schemas.isotc211.org/19115/-3/msr/2.0/msr.xsd[msr.xsd]
+| https://schemas.isotc211.org/19115/-3/msr/2.0/spatialRepresentation.xsd[spatialRepresentation.xsd]
+https://schemas.isotc211.org/19115/-3/msr/2.0/spatialRepresentationImagery.xsd[spatialRepresentationImagery.xsd]
+| gco.1.0, gmw.1.0, mcc.1.0, dqc.1.0
+
+| 2019
+| https://schemas.isotc211.org/19111/rbc/1.0/[rbc]
+| Referencing By Coordinates
+| 1.0
+| ISO 19111:2007 defines the conceptual schema for the description
+of spatial referencing by coordinates, optionally extended to spatio-temporal
+referencing. It describes the minimum data required to define one-, two- and
+three-dimensional spatial coordinate reference systems with an extension to merged
+spatial-temporal reference systems. It allows additional descriptive information to
+be provided. It also describes the information required to change coordinates from
+one coordinate reference system to another.
+| ISO 19111, Geographic information -- Spatial referencing by coordinates
+| reference-coordinate
+| `https://schemas.isotc211.org/19111/rbc/1.0`
+| No image available
+|
+| https://schemas.isotc211.org/19111/rbc/1.0/rbc.xsd[rbc.xsd]
+| https://schemas.isotc211.org/19111/rbc/1.0/No_Other_Schema[No Other Schema]
+|
+
+| 2019
+| https://schemas.isotc211.org/19111/rce/1.0/[rce]
+| Referencing By Coordinates Common
+| 1.0
+| abstract classes shared by multiple namespaces and is required in order to enable modularization of the XML implementation.
+| ISO 19111, Geographic information -- Spatial referencing by coordinates
+| coordinate-system-common
+| `https://schemas.isotc211.org/19111/rce/1.0`
+| No image available
+|
+| https://schemas.isotc211.org/19111/rce/1.0/rce.xsd[rce.xsd]
+| https://schemas.isotc211.org/19111/rce/1.0/No_Other_Schema[No Other Schema]
+|
+
+| 2019
+| https://schemas.isotc211.org/19115/-3/srv/2.0/[srv]
+| Metadata for Services
+| 2.0
+| Elements for describing services.
+| ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals, 6.5.14
+| services
+| `https://schemas.isotc211.org/19115/-3/srv/2.0`
+| image::/19115/-3/srv/2.0/srv.png[,200]
+| `<<Leaf>>` Services
+| https://schemas.isotc211.org/19115/-3/srv/2.0/srv.xsd[srv.xsd]
+| https://schemas.isotc211.org/19115/-3/srv/2.0/serviceInformation.xsd[serviceInformation.xsd]
+| gco.1.0, mcc.1.0, mri.1.0
+
+|===

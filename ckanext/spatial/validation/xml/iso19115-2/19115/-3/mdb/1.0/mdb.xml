@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mdb:MD_Metadata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/1.0"
+ xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+ xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
+ xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
+ xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
+ xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/1.0">
+   <!-- 
+   This is a sample metadata record for the minimal metadata conformance class.
+   It contains required elements from the mdb, mcc (cit, gco), lan, and mri
+   namespaces.
+   -->
+   <mdb:contact>
+      <cit:CI_Responsibility>
+         <cit:role>
+            <cit:CI_RoleCode codeList="codeListLocation#CI_RoleCode" codeListValue="pointOfContact">pointOfContact</cit:CI_RoleCode>
+         </cit:role>
+         <cit:party>
+            <cit:CI_Organisation>
+               <cit:name>
+                  <gco:CharacterString>Organisation Name</gco:CharacterString>
+               </cit:name>
+            </cit:CI_Organisation>
+         </cit:party>
+      </cit:CI_Responsibility>
+   </mdb:contact>
+   <mdb:dateInfo>
+      <cit:CI_Date>
+         <cit:date>
+            <gco:DateTime>2014-04-03T16:00:00</gco:DateTime>
+         </cit:date>
+         <cit:dateType>
+            <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="creation">creation</cit:CI_DateTypeCode>
+         </cit:dateType>
+      </cit:CI_Date>
+   </mdb:dateInfo>
+   <mdb:identificationInfo>
+      <mri:MD_DataIdentification>
+         <mri:citation>
+            <cit:CI_Citation>
+               <cit:title>
+                  <gco:CharacterString>Sample Metadata for Minimal Conformance Class</gco:CharacterString>
+               </cit:title>
+            </cit:CI_Citation>
+         </mri:citation>
+         <mri:abstract>
+            <gco:CharacterString>This sample record has all required elements for minimal ISO 19115:2013 metadata</gco:CharacterString>
+         </mri:abstract>
+      </mri:MD_DataIdentification>
+   </mdb:identificationInfo>
+</mdb:MD_Metadata>

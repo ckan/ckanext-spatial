@@ -1,0 +1,631 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- VMAP 0 gmd based instance document -->
+<mdb:MD_Metadata xmlns="http://standards.iso.org/iso/19115/-3/mds/1.0"
+    xmlns:fcc="http://standards.iso.org/iso/19110/fcc/1.0"
+    xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
+    xmlns:mac="http://standards.iso.org/iso/19115/-3/mac/1.0"
+    xmlns:mas="http://standards.iso.org/iso/19115/-3/mas/1.0"
+    xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0"
+    xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/1.0"
+    xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
+    xmlns:mds="http://standards.iso.org/iso/19115/-3/mds/1.0"
+    xmlns:mmi="http://standards.iso.org/iso/19115/-3/mmi/1.0"
+    xmlns:mpc="http://standards.iso.org/iso/19115/-3/mpc/1.0"
+    xmlns:mrc="http://standards.iso.org/iso/19115/-3/mrc/1.0"
+    xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
+    xmlns:mrl="http://standards.iso.org/iso/19115/-3/mrl/1.0"
+    xmlns:mrs="http://standards.iso.org/iso/19115/-3/mrs/1.0"
+    xmlns:msr="http://standards.iso.org/iso/19115/-3/msr/1.0"
+    xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
+    xmlns:dqc="http://standards.iso.org/iso/19157/-2/dqc/1.0"
+    xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+    xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
+    xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
+    xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/1.0"
+    xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0" 
+    xmlns:gml="http://www.opengis.net/gml/3.2"
+    xmlns:xlink="http://www.w3.org/1999/xlink" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://standards.iso.org/iso/19115/-3/mds/1.0 mds.xsd" 
+    uuid="US_NGA_VPF_VMAP0"
+    id="VMAP0">
+    <mdb:defaultLocale>
+        <lan:PT_Locale>
+            <lan:language>
+                <lan:LanguageCode codeList="https://schemas.isotc211.org/19115/resources/Codelist/lan/LanguageCode.xml" codeListValue="eng">English</lan:LanguageCode>
+            </lan:language>
+            <lan:characterEncoding>
+                <lan:MD_CharacterSetCode codeList="https://schemas.isotc211.org/19115/resources/Codelist/lan/CharacterSetCode.xml" codeListValue="utf8">UTF-8</lan:MD_CharacterSetCode>
+            </lan:characterEncoding>
+        </lan:PT_Locale>
+    </mdb:defaultLocale>
+    <mdb:contact>
+        <cit:CI_Responsibility>
+            <cit:role>
+                <cit:CI_RoleCode codeList="https://schemas.isotc211.org/19115/resources/Codelist/cat/codeList.xml#CI_RoleCode" codeListValue="publisher"/>
+            </cit:role>
+            <cit:party>
+                <cit:CI_Organisation>
+                    <cit:name>
+                        <gco:CharacterString>US National Geospatial-Intelligence Agen-cy</gco:CharacterString>
+                    </cit:name>
+                    <cit:contactInfo>
+                        <cit:CI_Contact>
+                            <cit:phone/>
+                            <cit:address xlink:href="#ID00003"/>
+                            <cit:onlineResource xlink:href="#ID00009"/>
+                        </cit:CI_Contact>
+                    </cit:contactInfo>
+                </cit:CI_Organisation>
+            </cit:party>
+        </cit:CI_Responsibility>
+    </mdb:contact>
+    <!-- Date the metadata was created -->
+    <mdb:dateInfo>
+        <cit:CI_Date>
+            <cit:date>
+                <gco:DateTime>2004-03-14T12:00:00</gco:DateTime>
+            </cit:date>
+            <cit:dateType>
+                <cit:CI_DateTypeCode codeList="https://schemas.isotc211.org/19115/resources/Codelist/cat/codeList.xml#CI_DateTypeCode" codeListValue="creation"/>
+            </cit:dateType>
+        </cit:CI_Date>
+    </mdb:dateInfo>
+    <mdb:metadataStandard>
+        <cit:CI_Citation>
+            <cit:title>
+                <gco:CharacterString>ISO 19115-1</gco:CharacterString>
+            </cit:title>
+            <cit:edition>
+                <gco:CharacterString>2003</gco:CharacterString>
+            </cit:edition>
+        </cit:CI_Citation>
+    </mdb:metadataStandard>
+
+    <!-- REFERENCE SYSTEM INFORMATION -->
+    <mdb:referenceSystemInfo>
+        <mrs:MD_ReferenceSystem>
+            <mrs:referenceSystemIdentifier>
+                <mcc:MD_Identifier>
+                    <mcc:authority>
+                        <cit:CI_Citation>
+                            <cit:title>
+                                <gco:CharacterString>World Geodetic System</gco:CharacterString>
+                            </cit:title>
+                        </cit:CI_Citation>
+                    </mcc:authority>
+                    <mcc:code>
+                        <gco:CharacterString>WGS 84</gco:CharacterString>
+                    </mcc:code>
+                </mcc:MD_Identifier>
+            </mrs:referenceSystemIdentifier>
+        </mrs:MD_ReferenceSystem>
+    </mdb:referenceSystemInfo>
+    <!-- END REFERENCE SYSTEM INFORMATION -->
+    <!-- IDENTIFICATION INFORMATION -->
+    <mdb:identificationInfo>
+        <mri:MD_DataIdentification>
+            <mri:citation>
+                <cit:CI_Citation>
+                    <cit:title>
+                        <gco:CharacterString>VMAPLV0</gco:CharacterString>
+                    </cit:title>
+                    <cit:date>
+                        <cit:CI_Date>
+                            <cit:date>
+                                <gco:DateTime>2000-09-03T12:00:00</gco:DateTime>
+                            </cit:date>
+                            <cit:dateType>
+                                <cit:CI_DateTypeCode codeList="https://schemas.isotc211.org/19115/resources/Codelist/cat/codeList.xml#CI_DateTypeCode" codeListValue="publication"/>
+                            </cit:dateType>
+                        </cit:CI_Date>
+                    </cit:date>
+                    <cit:presentationForm>
+                        <cit:CI_PresentationFormCode codeList="https://schemas.isotc211.org/19115/resources/Codelist/cat/codeList.xml#CI_PresentationFormCode" codeListValue="mapDigital"/>
+                    </cit:presentationForm>
+                </cit:CI_Citation>
+            </mri:citation>
+            <mri:abstract>
+                <gco:CharacterString>Vector Map: a general purpose database design to support GIS
+                    applications</gco:CharacterString>
+            </mri:abstract>
+            <mri:status>
+                <mcc:MD_ProgressCode codeList="https://schemas.isotc211.org/19115/resources/Codelist/cat/codeList.xml#MD_ProgressCode" codeListValue="completed"/>
+            </mri:status>
+            <mri:pointOfContact>
+                <cit:CI_Responsibility id="ID00001">
+                    <cit:role>
+                        <cit:CI_RoleCode codeList="https://schemas.isotc211.org/19115/resources/Codelist/cat/codeList.xml#CI_RoleCode" codeListValue="originator"/>
+                    </cit:role>
+                    <cit:party>
+                        <cit:CI_Organisation>
+                            <cit:name>
+                                <gco:CharacterString>US National Geospatial-Intelligence
+                        Agency</gco:CharacterString>
+                            </cit:name>
+                            <cit:contactInfo>
+                                <cit:CI_Contact id="ID00002">
+                                    <cit:phone>
+                                        <cit:CI_Telephone>
+                                            <cit:number>
+                                                <gco:CharacterString>888-888-8888</gco:CharacterString>
+                                            </cit:number>
+                                        </cit:CI_Telephone>
+                                    </cit:phone>
+                                    <cit:address>
+                                        <cit:CI_Address id="ID00003">
+                                            <cit:deliveryPoint>
+                                                <gco:CharacterString>4600 Sangamore Rd</gco:CharacterString>
+                                            </cit:deliveryPoint>
+                                            <cit:city>
+                                                <gco:CharacterString>Bethesda</gco:CharacterString>
+                                            </cit:city>
+                                            <cit:administrativeArea>
+                                                <gco:CharacterString>MD</gco:CharacterString>
+                                            </cit:administrativeArea>
+                                            <cit:postalCode>
+                                                <gco:CharacterString>20816-5003</gco:CharacterString>
+                                            </cit:postalCode>
+                                            <cit:country>
+                                                <gco:CharacterString>United States</gco:CharacterString>
+                                            </cit:country>
+                                        </cit:CI_Address>
+                                    </cit:address>
+                                    <cit:onlineResource>
+                                        <cit:CI_OnlineResource id="ID00004">
+                                            <cit:linkage>
+                                                <gco:CharacterString>http://geoengine.nga.mil</gco:CharacterString>
+                                            </cit:linkage>
+
+                                            <cit:protocol>
+                                                <gco:CharacterString>http</gco:CharacterString>
+                                            </cit:protocol>
+                                            <cit:function>
+                                                <cit:CI_OnLineFunctionCode codeList="https://schemas.isotc211.org/19115/resources/Codelist/cat/codeList.xml#CI_OnLineFunctionCode" codeListValue="download"/>
+                                            </cit:function>
+                                        </cit:CI_OnlineResource>
+                                    </cit:onlineResource>
+                                </cit:CI_Contact>
+                            </cit:contactInfo>
+                            <cit:individual>
+                                <cit:CI_Individual>
+                                    <cit:positionName>
+                                        <gco:CharacterString>Director, NGA, ATTN:COD, MS P-37</gco:CharacterString>
+                                    </cit:positionName>
+                                </cit:CI_Individual>
+                            </cit:individual>
+                        </cit:CI_Organisation>
+                    </cit:party>
+                </cit:CI_Responsibility>
+            </mri:pointOfContact>
+            <mri:spatialRepresentationType>
+
+                <mcc:MD_SpatialRepresentationTypeCode codeList="https://schemas.isotc211.org/19115/resources/Codelist/cat/codeList.xml#MD_SpatialRepresentationTypeCode" codeListValue="vector"/>
+            </mri:spatialRepresentationType>
+            <mri:spatialResolution>
+                <mri:MD_Resolution>
+                    <mri:equivalentScale>
+                        <mri:MD_RepresentativeFraction>
+                            <mri:denominator>
+                                <gco:Integer>1000000</gco:Integer>
+                            </mri:denominator>
+                        </mri:MD_RepresentativeFraction>
+                    </mri:equivalentScale>
+                </mri:MD_Resolution>
+            </mri:spatialResolution>
+            <mri:topicCategory>
+                <mri:MD_TopicCategoryCode>boundaries</mri:MD_TopicCategoryCode>
+            </mri:topicCategory>
+            <mri:topicCategory>
+                <mri:MD_TopicCategoryCode>elevation</mri:MD_TopicCategoryCode>
+            </mri:topicCategory>
+            <mri:topicCategory>
+                <mri:MD_TopicCategoryCode>inlandWaters</mri:MD_TopicCategoryCode>
+            </mri:topicCategory>
+            <mri:topicCategory>
+                <mri:MD_TopicCategoryCode>oceans</mri:MD_TopicCategoryCode>
+            </mri:topicCategory>
+            <mri:topicCategory>
+                <mri:MD_TopicCategoryCode>society</mri:MD_TopicCategoryCode>
+            </mri:topicCategory>
+            <mri:topicCategory>
+                <mri:MD_TopicCategoryCode>structure</mri:MD_TopicCategoryCode>
+            </mri:topicCategory>
+            <mri:topicCategory>
+                <mri:MD_TopicCategoryCode>transportation</mri:MD_TopicCategoryCode>
+            </mri:topicCategory>
+            <mri:topicCategory>
+                <mri:MD_TopicCategoryCode>utilitiesCommunication</mri:MD_TopicCategoryCode>
+            </mri:topicCategory>
+            <!-- Method one for indicating data coverage area -->
+            <!-- Use EX_GeographicBoundingBoxType to describe -->
+            <!-- the data coverage area using approximate coordinates -->
+            <!-- THIS METHOD IS MANDATORY IF THE HIERARCHY  -->
+            <!-- LEVEL OF THIS METADATA IS "DATASET" -->
+            <mri:extent>
+                <gex:EX_Extent>
+                    <gex:description>
+                        <gco:CharacterString>location description</gco:CharacterString>
+                    </gex:description>
+                    <gex:geographicElement>
+                        <gex:EX_GeographicBoundingBox>
+                            <gex:extentTypeCode>
+                                <gco:Boolean>false</gco:Boolean>
+                            </gex:extentTypeCode>
+                            <gex:westBoundLongitude>
+                                <gco:Decimal>-180.00</gco:Decimal>
+                            </gex:westBoundLongitude>
+                            <gex:eastBoundLongitude>
+                                <gco:Decimal>180.00</gco:Decimal>
+                            </gex:eastBoundLongitude>
+                            <gex:southBoundLatitude>
+                                <gco:Decimal>-90.00</gco:Decimal>
+                            </gex:southBoundLatitude>
+                            <gex:northBoundLatitude>
+                                <gco:Decimal>90.00</gco:Decimal>
+                            </gex:northBoundLatitude>
+                        </gex:EX_GeographicBoundingBox>
+                    </gex:geographicElement>
+                </gex:EX_Extent>
+            </mri:extent>
+            <!-- Method two for indicating data coverage area -->
+            <!-- Use EX_GeographicBoundingPolygonType to describe -->
+            <!-- the data coverage area using more accurate coordinates -->
+            <!-- Make sure to include the proper coordinate reference   -->
+            <!-- system information when using this method -->
+            <mri:extent>
+                <gex:EX_Extent>
+                    <gex:description>
+                        <gco:CharacterString>location description</gco:CharacterString>
+                    </gex:description>
+                    <gex:geographicElement>
+                        <gex:EX_BoundingPolygon>
+                            <gex:extentTypeCode>
+                                <gco:Boolean>false</gco:Boolean>
+                            </gex:extentTypeCode>
+                            <gex:polygon>
+                                <gml:Polygon gml:id="p1">
+                                    <gml:exterior>
+                                        <gml:LinearRing>
+                                            <gml:posList>180.000000</gml:posList>
+                                        </gml:LinearRing>
+                                    </gml:exterior>
+                                </gml:Polygon>
+                            </gex:polygon>
+                        </gex:EX_BoundingPolygon>
+                    </gex:geographicElement>
+                </gex:EX_Extent>
+            </mri:extent>
+            <mri:extent>
+                <gex:EX_Extent>
+                    <gex:description>
+                        <gco:CharacterString>temporal extent of source information</gco:CharacterString>
+                    </gex:description>
+                    <gex:temporalElement>
+                        <gex:EX_TemporalExtent>
+                            <gex:extent>
+                                <gml:TimePeriod gml:id="tp1">
+                                    <gml:begin>
+                                        <gml:TimeInstant gml:id="ti1">
+                                            <gml:timePosition>1992-04-01T00:00:00-00:00</gml:timePosition>
+                                        </gml:TimeInstant>
+                                    </gml:begin>
+                                    <gml:end>
+                                        <gml:TimeInstant gml:id="ti2">
+                                            <gml:timePosition>2002-02-23T00:00:00-00:00</gml:timePosition>
+                                        </gml:TimeInstant>
+                                    </gml:end>
+                                </gml:TimePeriod>
+                            </gex:extent>
+                        </gex:EX_TemporalExtent>
+                    </gex:temporalElement>
+                </gex:EX_Extent>
+            </mri:extent>
+            <mri:resourceFormat>
+                <mrd:MD_Format id="ID00005">
+                    <mrd:formatSpecificationCitation>
+                        <cit:CI_Citation>
+                            <cit:title>
+                                <gco:CharacterString>VPF</gco:CharacterString>
+                            </cit:title>
+                            <cit:edition>
+                                <gco:CharacterString>9606</gco:CharacterString>
+                            </cit:edition>
+                        </cit:CI_Citation>
+                    </mrd:formatSpecificationCitation>
+                </mrd:MD_Format>
+            </mri:resourceFormat>
+            <mri:resourceFormat>
+                <mrd:MD_Format id="ID00006">
+                    <mrd:formatSpecificationCitation>
+                        <cit:CI_Citation>
+                            <cit:title>
+                                <gco:CharacterString>VMap 0</gco:CharacterString>
+                            </cit:title>
+                            <cit:identifier>
+                                <mcc:MD_Identifier>
+                                    <mcc:code>
+                                        <gco:CharacterString>MIL-V-89039</gco:CharacterString>
+                                    </mcc:code>
+                                </mcc:MD_Identifier>
+                            </cit:identifier>
+                        </cit:CI_Citation>
+                    </mrd:formatSpecificationCitation>
+                    <mrd:amendmentNumber>
+                        <gco:CharacterString>Ammendment 1</gco:CharacterString>
+                    </mrd:amendmentNumber>
+                </mrd:MD_Format>
+            </mri:resourceFormat>
+        </mri:MD_DataIdentification>
+    </mdb:identificationInfo>
+    <!-- END OF IDENTIFICATION INFORMATION -->
+    <mdb:distributionInfo>
+        <mrd:MD_Distribution>
+            <mrd:distributor>
+                <mrd:MD_Distributor>
+                    <mrd:distributorContact>
+                        <cit:CI_Responsibility>
+                            <cit:role>
+                                <cit:CI_RoleCode codeList="https://schemas.isotc211.org/19115/resources/Codelist/cat/codeList.xml#CI_RoleCode" codeListValue="distributor"/>
+                            </cit:role>
+                            <cit:party>
+                                <cit:CI_Individual>
+                                    <cit:positionName>
+                                        <gco:CharacterString>Director, NGA, ATTN:COD, MS P-37</gco:CharacterString>
+                                    </cit:positionName>
+                                </cit:CI_Individual>
+                            </cit:party>
+                            <cit:party>
+                                <cit:CI_Organisation>
+                                    <cit:name>
+                                        <gco:CharacterString>US National Geospatial-Intelligence
+                                Agency</gco:CharacterString>
+                                    </cit:name>
+                                    <cit:contactInfo>
+                                        <cit:CI_Contact>
+                                            <cit:phone>
+                                                <cit:CI_Telephone>
+                                                  <cit:number>
+                                                  <gco:CharacterString>555-555-5555</gco:CharacterString>
+                                                  </cit:number>
+                                                  <cit:numberType>
+                                                  <cit:CI_TelephoneTypeCode codeList="https://schemas.isotc211.org/19115/resources/Codelist/cat/codeList.xml#CI_TelephoneTypeCode" codeListValue="office"/>
+                                                  </cit:numberType>
+                                                </cit:CI_Telephone>
+                                            </cit:phone>
+                                            <cit:address xlink:href="#ID00003"/>
+                                        </cit:CI_Contact>
+                                    </cit:contactInfo>
+                                </cit:CI_Organisation>
+                            </cit:party>
+                        </cit:CI_Responsibility>
+                    </mrd:distributorContact>
+                    <mrd:distributorFormat>
+                        <mrd:MD_Format>
+                            <mrd:formatSpecificationCitation>
+                                <cit:CI_Citation>
+                                    <cit:title>
+                                        <gco:CharacterString>gzip</gco:CharacterString>
+                                    </cit:title>
+                                    <cit:alternateTitle>
+                                        <gco:CharacterString>GNU RFC 1952</gco:CharacterString>
+                                    </cit:alternateTitle>
+                                </cit:CI_Citation>
+                            </mrd:formatSpecificationCitation>
+                            <mrd:amendmentNumber>
+                                <gco:CharacterString>1.2.4</gco:CharacterString>
+                            </mrd:amendmentNumber>
+                        </mrd:MD_Format>
+                    </mrd:distributorFormat>
+                    <mrd:distributorTransferOptions>
+                        <mrd:MD_DigitalTransferOptions>
+                            <mrd:onLine>
+                                <cit:CI_OnlineResource>
+                                    <cit:linkage>
+                                        <gco:CharacterString>http://geoengine.nga.mil/ftpdir/archive/vpf_data/v0noa.tar.gz</gco:CharacterString>
+                                    </cit:linkage>
+                                    <cit:function>
+                                        <cit:CI_OnLineFunctionCode codeList="https://schemas.isotc211.org/19115/resources/Codelist/cat/codeList.xml#CI_OnLineFunctionCode" codeListValue="download"/>
+                                    </cit:function>
+                                </cit:CI_OnlineResource>
+                            </mrd:onLine>
+                            <mrd:onLine>
+                                <cit:CI_OnlineResource>
+                                    <cit:linkage>
+                                        <gco:CharacterString>http://geoengine.nga.mil/ftpdir/archive/vpf_data/v0sas.tar.gz</gco:CharacterString>
+                                    </cit:linkage>
+                                    <cit:function>
+                                        <cit:CI_OnLineFunctionCode codeList="https://schemas.isotc211.org/19115/resources/Codelist/cat/codeList.xml#CI_OnLineFunctionCode" codeListValue="download"/>
+                                    </cit:function>
+                                </cit:CI_OnlineResource>
+                            </mrd:onLine>
+                            <mrd:onLine>
+                                <cit:CI_OnlineResource>
+                                    <cit:linkage>
+                                        <gco:CharacterString>http://geoengine.nga.mil/ftpdir/archive/vpf_data/v0soa.tar.gz</gco:CharacterString>
+                                    </cit:linkage>
+                                    <cit:function>
+                                        <cit:CI_OnLineFunctionCode codeList="https://schemas.isotc211.org/19115/resources/Codelist/cat/codeList.xml#CI_OnLineFunctionCode" codeListValue="download"/>
+                                    </cit:function>
+                                </cit:CI_OnlineResource>
+                            </mrd:onLine>
+                        </mrd:MD_DigitalTransferOptions>
+                    </mrd:distributorTransferOptions>
+                </mrd:MD_Distributor>
+            </mrd:distributor>
+            <!-- CD-Ordering for Military Customers -->
+            <mrd:distributor>
+                <mrd:MD_Distributor>
+                    <mrd:distributorContact>
+                        <cit:CI_Responsibility>
+                            <cit:role>
+                                <cit:CI_RoleCode codeList="https://schemas.isotc211.org/19115/resources/Codelist/cat/codeList.xml#CI_RoleCode" codeListValue="distributor"/>
+                            </cit:role>
+                            <cit:party>
+                                <cit:CI_Individual>
+                                    <cit:name>
+                                        <gco:CharacterString>Defense Supply Center Rich-mond
+                                (DLA)</gco:CharacterString>
+                                    </cit:name>
+                                    <cit:contactInfo>
+                                        <cit:CI_Contact id="ID00007">
+                                            <cit:phone gco:nilReason="missing"/>
+                                            <cit:address>
+                                                <cit:CI_Address id="ID00008">
+                                                  <cit:deliveryPoint>
+                                                  <gco:CharacterString>8000 Jefferson Davis
+                                                Hwy</gco:CharacterString>
+                                                  </cit:deliveryPoint>
+                                                  <cit:city>
+                                                  <gco:CharacterString>Richmond</gco:CharacterString>
+                                                  </cit:city>
+                                                  <cit:administrativeArea>
+                                                  <gco:CharacterString>VA</gco:CharacterString>
+                                                  </cit:administrativeArea>
+                                                  <cit:postalCode>
+                                                  <gco:CharacterString>23297</gco:CharacterString>
+                                                  </cit:postalCode>
+                                                  <cit:country>
+                                                  <gco:CharacterString>United
+                                                States</gco:CharacterString>
+                                                  </cit:country>
+                                                </cit:CI_Address>
+                                            </cit:address>
+                                            <cit:onlineResource>
+                                                <cit:CI_OnlineResource>
+                                                  <cit:linkage>
+                                                  <gco:CharacterString>http://www.dscr.dla.mil/pc9</gco:CharacterString>
+                                                  </cit:linkage>
+                                                  <cit:function>
+                                                  <cit:CI_OnLineFunctionCode codeList="https://schemas.isotc211.org/19115/resources/Codelist/cat/codeList.xml#CI_OnLineFunctionCode" codeListValue="order"/>
+                                                  </cit:function>
+                                                </cit:CI_OnlineResource>
+                                            </cit:onlineResource>
+                                        </cit:CI_Contact>
+                                    </cit:contactInfo>
+                                </cit:CI_Individual>
+                            </cit:party>
+                        </cit:CI_Responsibility>
+                    </mrd:distributorContact>
+                    <mrd:distributorFormat>
+                        <mrd:MD_Format>
+                            <mrd:formatSpecificationCitation>
+                                <cit:CI_Citation>
+                                    <cit:title>
+                                        <gco:CharacterString>VPF</gco:CharacterString>
+                                    </cit:title>
+                                    <cit:identifier>
+                                        <mcc:MD_Identifier>
+                                            <mcc:code>
+                                                <gco:CharacterString>MIL-STD-2407</gco:CharacterString>
+                                            </mcc:code>
+                                        </mcc:MD_Identifier>
+                                    </cit:identifier>
+                                </cit:CI_Citation>
+                            </mrd:formatSpecificationCitation>
+                            <mrd:amendmentNumber>
+                                <gco:CharacterString>9606</gco:CharacterString>
+                            </mrd:amendmentNumber>
+                        </mrd:MD_Format>
+                    </mrd:distributorFormat>
+                    <mrd:distributorTransferOptions>
+                        <mrd:MD_DigitalTransferOptions>
+                            <mrd:offLine>
+                                <mrd:MD_Medium>
+                                    <mrd:name>
+                                        <cit:CI_Citation>
+                                            <cit:title>
+                                                <gco:CharacterString>cdROM</gco:CharacterString>
+                                            </cit:title>
+                                        </cit:CI_Citation>
+                                    </mrd:name>
+                                    <mrd:volumes>
+                                        <gco:Integer>4</gco:Integer>
+                                    </mrd:volumes>
+                                    <mrd:mediumFormat>
+                                        <mrd:MD_MediumFormatCode codeList="https://schemas.isotc211.org/19115/resources/Codelist/cat/codeList.xml#MD_MediumFormatCode" codeListValue="iso9660"/>
+                                    </mrd:mediumFormat>
+                                </mrd:MD_Medium>
+                            </mrd:offLine>
+                        </mrd:MD_DigitalTransferOptions>
+                    </mrd:distributorTransferOptions>
+                </mrd:MD_Distributor>
+            </mrd:distributor>
+        </mrd:MD_Distribution>
+    </mdb:distributionInfo>
+    <!-- DATA QUALITY AND LINEAGE (No XML schema yet, can't validate this part, so is com-mented out…-->
+    <mdb:dataQualityInfo>
+        <mdq:DQ_DataQuality>
+            <mdq:scope>
+                <mcc:MD_Scope>
+                    <mcc:level>
+                        <mcc:MD_ScopeCode codeList="https://schemas.isotc211.org/19115/resources/Codelist/cat/codeList.xml#MD_ScopeCode" codeListValue="dataset"/>
+                    </mcc:level>
+                </mcc:MD_Scope>
+            </mdq:scope>
+            <mdq:report>
+                <mdq:DQ_DomainConsistency>
+                    <mdq:measure>
+                        <mdq:DQ_MeasureReference>
+                            <mdq:nameOfMeasure>
+                                <gco:CharacterString>Attribute Completeness Percentage</gco:CharacterString>
+                            </mdq:nameOfMeasure>
+                        </mdq:DQ_MeasureReference>
+                    </mdq:measure>
+                    <mdq:result>
+                        <mdq:DQ_ConformanceResult>
+                            <mdq:specification>
+                                <cit:CI_Citation>
+                                    <cit:title>
+                                        <gco:CharacterString>MIL-V-89039</gco:CharacterString>
+                                    </cit:title>
+                                    <cit:date>
+                                        <cit:CI_Date>
+                                            <cit:date>
+
+                                                <gco:DateTime>1995-02-09T00:00:00Z</gco:DateTime>
+                                            </cit:date>
+                                            <cit:dateType>
+                                                <cit:CI_DateTypeCode codeList="https://schemas.isotc211.org/19115/resources/Codelist/cat/codeList.xml#CI_DateTypeCode" codeListValue="creation"/>
+                                            </cit:dateType>
+                                        </cit:CI_Date>
+                                    </cit:date>
+                                </cit:CI_Citation>
+                            </mdq:specification>
+                            <mdq:explanation>
+                                <gco:CharacterString>All features in this library have valid
+                                    attribute codes assigned to them in accordance with this
+                                    specification</gco:CharacterString>
+                            </mdq:explanation>
+                            <mdq:pass>
+                                <gco:Boolean>true</gco:Boolean>
+                            </mdq:pass>
+                        </mdq:DQ_ConformanceResult>
+                    </mdq:result>
+                </mdq:DQ_DomainConsistency>
+            </mdq:report>
+        </mdq:DQ_DataQuality>
+    </mdb:dataQualityInfo>
+    <mdb:resourceLineage>
+        <mrl:LI_Lineage>
+            <mrl:statement>
+                <gco:CharacterString>HISTORICAL BACKGROUND - While the fifth edition of NOAMER has evolved from previous digital version, the majority of the feature content is based on the National Imagery and Mapping Agency's  (NIMA) hardcopy Operational Navigational Chart (ONC) series. The initial digital version of VMap0 was the Digital Chart of the World and was NIMA's first Vector Product Format (VPF) product. The DCW was released in 1992. With the ongoing development of the VPF Military Standard and the advent of the VMap0 product specification, a new version of the database was needed. VMap 0 library, NOAMER, Edition 4 was released in 1997.</gco:CharacterString>
+            </mrl:statement>
+        </mrl:LI_Lineage>
+    </mdb:resourceLineage>
+    <!-- END OF DATA QUALITY & LINEAGE -->
+
+    <!-- CONSTRAINTS -->
+    <mdb:metadataConstraints>
+        <mco:MD_SecurityConstraints>
+            <mco:classification>
+                <mco:MD_ClassificationCode codeList="https://schemas.isotc211.org/19115/resources/Codelist/cat/codeList.xml#MD_ClassificationCode" codeListValue="unclassified"/>
+            </mco:classification>
+            <mco:handlingDescription>
+                <gco:CharacterString>RELEASABILITY - unrestricted</gco:CharacterString>
+            </mco:handlingDescription>
+        </mco:MD_SecurityConstraints>
+    </mdb:metadataConstraints>
+    <!-- END OF CONSTRAINTS -->
+
+</mdb:MD_Metadata>

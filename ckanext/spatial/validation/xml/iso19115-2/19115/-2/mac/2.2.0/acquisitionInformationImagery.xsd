@@ -1,0 +1,1018 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+  xmlns="http://www.w3.org/2001/XMLSchema" 
+  xmlns:gml="http://www.opengis.net/gml/3.2"
+  xmlns:gco="https://schemas.isotc211.org/19103/-/gco/1.2" 
+  xmlns:gmw="https://schemas.isotc211.org/19136/-1/gmw/1.1" 
+  xmlns:mac="https://schemas.isotc211.org/19115/-2/mac/2.2" 
+  xmlns:mdb="https://schemas.isotc211.org/19115/-1/mdb/1.3" 
+  xmlns:mcc="https://schemas.isotc211.org/19115/-1/mcc/1.3" 
+  xmlns:lan="https://schemas.isotc211.org/19115/-1/lan/1.3"
+  xmlns:mco="https://schemas.isotc211.org/19115/-1/mco/1.3"
+  xmlns:gex="https://schemas.isotc211.org/19115/-1/gex/1.3"
+  xmlns:cit="https://schemas.isotc211.org/19115/-1/cit/1.3"
+  elementFormDefault="qualified" 
+  targetNamespace="https://schemas.isotc211.org/19115/-2/mac/2.2" 
+  version="2.2.0"
+    >
+  <import namespace="http://www.opengis.net/gml/3.2" schemaLocation="http://schemas.opengis.net/gml/3.2.1/gml.xsd"/>
+  <import namespace="https://schemas.isotc211.org/19103/-/gco/1.2" schemaLocation="../../../../19103/-/gco/1.2.0/gco.xsd"/>
+  <import namespace="https://schemas.isotc211.org/19136/-1/gmw/1.1" schemaLocation="../../../../19136/-1/gmw/1.1.0/gmw.xsd"/>
+  <import namespace="https://schemas.isotc211.org/19115/-1/mcc/1.3" schemaLocation="../../../../19115/-1/mcc/1.3.0/mcc.xsd"/>
+  <import namespace="https://schemas.isotc211.org/19115/-1/mdb/1.3" schemaLocation="../../../../19115/-1/mdb/1.3.0/mdb.xsd"/>
+  <import namespace="https://schemas.isotc211.org/19115/-1/lan/1.3" schemaLocation="../../../../19115/-1/lan/1.3.0/lan.xsd"/>
+  <import namespace="https://schemas.isotc211.org/19115/-1/mco/1.3" schemaLocation="../../../../19115/-1/mco/1.3.0/mco.xsd"/>
+  <import namespace="https://schemas.isotc211.org/19115/-1/gex/1.3" schemaLocation="../../../../19115/-1/gex/1.3.0/gex.xsd"/>
+  <import namespace="https://schemas.isotc211.org/19115/-1/cit/1.3" schemaLocation="../../../../19115/-1/cit/1.3.0/cit.xsd"/>
+  <!-- <include schemaLocation="../../../../19115/-2/mac/2.2.0/event.xsd"/> -->
+<!-- Added for completenes - match ISO 19115-2:2019 -->
+  <complexType name="MI_Metadata_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mac:MI_Metadata"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <element name="MI_Metadata" substitutionGroup="mdb:MD_Metadata" type="mac:MI_Metadata_Type" id="ISO19115-2.001">
+    <annotation>
+      <documentation>root entity which defines metadata about a resource or
+        resources</documentation>
+    </annotation>
+  </element>
+  <complexType name="MI_Metadata_Type">
+    <complexContent>
+      <extension base="mdb:MD_Metadata_Type">
+        <sequence>
+          <element name="acquisitionInformation" minOccurs="0" maxOccurs="unbounded" type="mac:MI_AcquisitionInformation_PropertyType" id="ISO19115-2.002_ISO19115-2.003">
+            <annotation>
+              <documentation>Provides information about the acquisition of the data</documentation>
+            </annotation>
+          </element>
+       </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <!-- =========================================================================== -->
+  <element name="MI_AcquisitionInformation" substitutionGroup="mcc:Abstract_AcquisitionInformation" type="mac:MI_AcquisitionInformation_Type" id="ISO19115-2.003">
+    <annotation>
+      <documentation>Description: Designations for the measuring instruments and their bands, the platform carrying them, and the mission to which the data contributes FGDC: Platform_and_Instrument_Identification, Mission_Information shortName: PltfrmInstId</documentation>
+    </annotation>
+  </element>
+  <!-- ........................................................................ -->
+  <complexType name="MI_AcquisitionInformation_Type">
+    <complexContent>
+      <extension base="mcc:Abstract_AcquisitionInformation_Type">
+        <sequence>
+          <!-- Order Change -->          
+          <!--           
+          <element maxOccurs="unbounded" minOccurs="0" name="instrument" type="mac:MI_Instrument_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="operation" type="mac:MI_Operation_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="platform" type="mac:MI_Platform_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="acquisitionPlan" type="mac:MI_Plan_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="objective" type="mac:MI_Objective_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="acquisitionRequirement" type="mac:MI_Requirement_PropertyType"/>
+          <element minOccurs="0" name="environmentalConditions" type="mac:MI_EnvironmentalRecord_PropertyType"/>
+          -->       
+          <element name="scope" maxOccurs="unbounded" minOccurs="0" type="mcc:MD_Scope_PropertyType" id="ISO19115-2.004_ISO19115-1.420">
+            <annotation>
+              <documentation>the specific data to which the acquisition information applies</documentation>
+            </annotation>
+          </element>
+          <element name="acquisitionPlan" maxOccurs="unbounded" minOccurs="0" type="mac:MI_Plan_PropertyType" id="ISO19115-2.005_ISO19115-2.054"/>
+          <element name="acquisitionRequirement" maxOccurs="unbounded" minOccurs="0" type="mac:MI_Requirement_PropertyType" id="ISO19115-2.006_ISO19115-2.084"/>
+          <element name="environmentalConditions" maxOccurs="1" minOccurs="0" type="mac:MI_EnvironmentalRecord_PropertyType" id="ISO19115-2.007_ISO19115-2.012"/>
+          <element name="instrument" maxOccurs="unbounded" minOccurs="0" type="mac:MI_Instrument_PropertyType" id="ISO19115-2.008_ISO19115-2.019"/>
+          <element name="objective" maxOccurs="unbounded" minOccurs="0" type="mac:MI_Objective_PropertyType" id="ISO19115-2.009_ISO19115-2.031"/>
+          <element name="operation" maxOccurs="unbounded" minOccurs="0" type="mac:MI_Operation_PropertyType" id="ISO19115-2.010_ISO19115-2.040"/>
+          <element name="platform" maxOccurs="unbounded" minOccurs="0" type="mac:MI_Platform_PropertyType" id="ISO19115-2.011_ISO19115-2.069"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <!-- ........................................................................ -->
+  <complexType name="MI_AcquisitionInformation_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mac:MI_AcquisitionInformation"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- =========================================================================== -->
+  <element name="MI_EnvironmentalRecord" substitutionGroup="gco:AbstractObject" type="mac:MI_EnvironmentalRecord_Type" id="ISO19115-2.012"/>
+  <!-- ........................................................................ -->
+  <complexType name="MI_EnvironmentalRecord_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="averageAirTemperature" minOccurs="0" maxOccurs="1" type="gco:Real_PropertyType" id="ISO19115-2.013_ISO19103.Real"/>
+          <element name="maxRelativeHumidity" minOccurs="0" maxOccurs="1" type="gco:Real_PropertyType" id="ISO19115-2.014_ISO19103.Real"/>
+          <element name="maxAltitude" minOccurs="0" maxOccurs="1" type="gco:Real_PropertyType" id="ISO19115-2.015_ISO19103.Real"/>
+          <element name="meterologicalConditions" minOccurs="0" maxOccurs="1" type="gco:CharacterString_PropertyType" id="ISO19115-2.016_ISO19103.CharacterString"/>
+          <element name="solarAzimuth" minOccurs="0" maxOccurs="1" type="gco:Real_PropertyType" id="ISO19115-2.017_ISO19103.Real"/>
+          <element name="solarElevation" minOccurs="0" maxOccurs="1" type="gco:Real_PropertyType" id="ISO19115-2.018_ISO19103.Real"/>          
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <!-- ........................................................................ -->
+  <complexType name="MI_EnvironmentalRecord_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mac:MI_EnvironmentalRecord"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- =========================================================================== -->
+  <element name="MI_Instrument" substitutionGroup="gco:AbstractObject" type="mac:MI_Instrument_Type" id="ISO19115-2.019">
+    <annotation>
+      <documentation>Description: Designations for the measuring instruments FGDC: Platform_and_Instrument_Identification shortName: PltfrmInstId</documentation>
+    </annotation>
+  </element>
+  <!-- ........................................................................ -->
+  <complexType name="MI_Instrument_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <!-- Order Change -->
+           <!-- <element maxOccurs="unbounded" minOccurs="0" name="citation" type="mcc:Abstract_Citation_PropertyType">
+            <annotation>
+              <documentation>Description: complete citation of the instrument FGDC: Instrument_Full_Name Position: 1 shortName: instNam Conditional: if shortName not specified</documentation>
+            </annotation>
+          </element>
+          <element name="identifier" type="mcc:MD_Identifier_PropertyType">
+            <annotation>
+              <documentation>Description: complete citation of the instrument FGDC: Instrument_Full_Name Position: 1 shortName: instNam Conditional: if shortName not specified</documentation>
+            </annotation>
+          </element>
+          <element name="type" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>Description: Code describing the type of instrument shortName: instType</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="description" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>Description: Textual description of the instrument shortName: instDesc</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="mountedOn" type="mac:MI_Platform_PropertyType"/>
+          <element name="otherPropertyType" type="gco:RecordType_PropertyType" minOccurs="0" maxOccurs="1">
+            <annotation>
+              <documentation>type of other property description (i.e. netcdf/variable in ncml.xsd or AdditionalAttribute in ECHO)</documentation>
+            </annotation>
+          </element>
+          <element name="otherProperty" type="gco:Record_PropertyType" minOccurs="0" maxOccurs="1">
+            <annotation>
+              <documentation>instance of otherPropertyType that defines attributes not explicitly included in MI_Platform</documentation>
+            </annotation>
+          </element> -->
+          <!-- Removed "content" consistent with discussion OMIYA 2019-12-09 
+          <element name="content" type="mcc:Abstract_ContentInformation_PropertyType" maxOccurs="1" minOccurs="0"/> -->
+          <!-- <element name="sensor" type="mac:MI_Sensor_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+          <element name="history" type="mac:MI_InstrumentationEventList_PropertyType" minOccurs="0" maxOccurs="unbounded"/> -->
+          <!-- Elements reordered to match ISO 19115-2:2014 -->
+          <element name="citation" maxOccurs="unbounded" minOccurs="0" type="mcc:Abstract_Citation_PropertyType" id="ISO19115-2.020_ISO19115-1.361">
+            <annotation>
+              <documentation>Description: complete citation of the instrument FGDC: Instrument_Full_Name Position: 1 shortName: instNam Conditional: if shortName not specified</documentation>
+            </annotation>
+          </element>
+          <element name="identifier" type="mcc:MD_Identifier_PropertyType" id="ISO19115-2.021_ISO19115-1.431">
+            <annotation>
+              <documentation>Description: complete citation of the instrument FGDC: Instrument_Full_Name Position: 1 shortName: instNam Conditional: if shortName not specified</documentation>
+            </annotation>
+          </element>
+          <element name="type" type="gco:CharacterString_PropertyType" id="ISO19115-2.022_ISO19103.CharacterString">
+            <annotation>
+              <documentation>Description: Code describing the type of instrument shortName: instType</documentation>
+            </annotation>
+          </element>
+          <element name="description" minOccurs="0" type="gco:CharacterString_PropertyType" id="ISO19115-2.023_ISO19103.CharacterString">
+            <annotation>
+              <documentation>Description: Textual description of the instrument shortName: instDesc</documentation>
+            </annotation>
+          </element>
+          <element name="otherProperty" type="gco:Record_PropertyType" minOccurs="0" maxOccurs="1" id="ISO19115-2.024_ISO19103.Record">
+            <annotation>
+              <documentation>instance of otherPropertyType that defines attributes not explicitly included in MI_Platform</documentation>
+            </annotation>
+          </element>
+          <element name="otherPropertyType" type="gco:RecordType_PropertyType" minOccurs="0" maxOccurs="1" id="ISO19115-2.025_ISO19103.RecordType">
+            <annotation>
+              <documentation>type of other property description (i.e. netcdf/variable in ncml.xsd or AdditionalAttribute in ECHO)</documentation>
+            </annotation>
+          </element>
+          <element name="mountedOn" minOccurs="0" type="mac:MI_Platform_PropertyType" id="ISO19115-2.026_ISO19115-2.069"/>
+          <element name="sensor" type="mac:MI_Sensor_PropertyType" minOccurs="0" maxOccurs="unbounded" id="ISO19115-2.027_ISO19115-2.029"/>
+          <element name="history" type="mac:MI_InstrumentationEventList_PropertyType" minOccurs="0" maxOccurs="unbounded" id="ISO19115-2.028_ISO19115-2.093"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <!-- ........................................................................ -->
+  <complexType name="MI_Instrument_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mac:MI_Instrument"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- =========================================================================== -->
+  <complexType name="MI_Sensor_Type">
+    <annotation>
+      <documentation>Sensor Description</documentation>
+    </annotation>
+    <complexContent>
+      <extension base="mac:MI_Instrument_Type">
+        <sequence>
+          <element name="hosted" maxOccurs="unbounded" minOccurs="0" type="mac:MI_Instrument_PropertyType" id="ISO19115-2.030_ISO19115-2.019"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <!-- ........................................................................ -->
+  <element name="MI_Sensor" substitutionGroup="mac:MI_Instrument" type="mac:MI_Sensor_Type" id="ISO19115-2.029"/>
+  <!-- ........................................................................ -->
+  <complexType name="MI_Sensor_PropertyType">
+    <sequence>
+      <element ref="mac:MI_Sensor" minOccurs="0"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- =========================================================================== -->
+  <element name="MI_Objective" substitutionGroup="gco:AbstractObject" type="mac:MI_Objective_Type" id="ISO19115-2.031">
+    <annotation>
+      <documentation>Description: Describes the characteristics, spatial and temportal extent of the intended object to be observed shortName: TargetId</documentation>
+    </annotation>
+  </element>
+  <!-- ........................................................................ -->
+  <complexType name="MI_Objective_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <!-- Order Change -->
+          <!-- 
+            <element maxOccurs="unbounded" name="identifier" type="mcc:MD_Identifier_PropertyType">
+            <annotation>
+              <documentation>Description: Registered code used to identify the objective Postion: 1 shortName: targetId</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="priority" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>Description: priority applied to the target Position: 3 shortName: trgtPriority</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="type" type="mac:MI_ObjectiveTypeCode_PropertyType">
+            <annotation>
+              <documentation>Description: collection technique for the objective Position: 4 shortName: trgtType</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="function" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>Description: function performed by or at the objective Position: 5 shortName: trgtFunct</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="extent" type="mcc:Abstract_Extent_PropertyType">
+            <annotation>
+              <documentation>Description: extent information including the bounding box, bounding polygon, vertical and temporal extent of the objective Position: 6 shortName: trgtExtent</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="sensingInstrument" type="mac:MI_Instrument_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="pass" type="mac:MI_PlatformPass_PropertyType"/>
+          <element maxOccurs="unbounded" name="objectiveOccurence" type="mac:MI_Event_PropertyType"/>
+
+          -->
+          <element maxOccurs="unbounded" name="identifier" type="mcc:MD_Identifier_PropertyType" id="ISO19115-2.032_ISO19115-1.431">
+            <annotation>
+              <documentation>Description: Registered code used to identify the objective Postion: 1 shortName: targetId</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="priority" type="gco:CharacterString_PropertyType" id="ISO19115-2.033_ISO19103.CharacterString">
+            <annotation>
+              <documentation>Description: priority applied to the target Position: 3 shortName: trgtPriority</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="type" type="mac:MI_ObjectiveTypeCode_PropertyType" id="ISO19115-2.034_ISO19115-2.MI_ObjectiveTypeCode">
+            <annotation>
+              <documentation>Description: collection technique for the objective Position: 4 shortName: trgtType</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="function" type="gco:CharacterString_PropertyType" id="ISO19115-2.035_ISO19193.CharacterString">
+            <annotation>
+              <documentation>Description: function performed by or at the objective Position: 5 shortName: trgtFunct</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="extent" type="mcc:Abstract_Extent_PropertyType" id="ISO19115-2.036_ISO19115-1.335">
+            <annotation>
+              <documentation>Description: extent information including the bounding box, bounding polygon, vertical and temporal extent of the objective Position: 6 shortName: trgtExtent</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="objectiveOccurence" type="mac:MI_Event_PropertyType" id="ISO19115-2.037_ISO19115-2.060"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="pass" type="mac:MI_PlatformPass_PropertyType" id="ISO19115-2.038_ISO19115-2.077"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="sensingInstrument" type="mac:MI_Instrument_PropertyType" id="ISO19115-2.039_ISO19115-2.019"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <!-- ........................................................................ -->
+  <complexType name="MI_Objective_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mac:MI_Objective"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- =========================================================================== -->
+  <element name="MI_Operation" substitutionGroup="gco:AbstractObject" type="mac:MI_Operation_Type" id="ISO19115-2.040">
+    <annotation>
+      <documentation>Description: Designations for the operation used to acquire the dataset shortName: MssnId</documentation>
+    </annotation>
+  </element>
+  <!-- ........................................................................ -->
+  <complexType name="MI_Operation_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <!-- Order Change  -->
+          <!-- 
+                   <element minOccurs="0" name="description" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>Description: Description of the mission on which the platform observations are part and the objectives of that mission FGDC: Mission_Description Position: 3 shortName: mssnDesc</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="citation" type="mcc:Abstract_Citation_PropertyType">
+            <annotation>
+              <documentation>Description: character string by which the mission is known FGDC: Mission_Name Position: 1 shortName: pltMssnNam NITF_ACFTA:AC_MSN_ID</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="identifier" type="mcc:MD_Identifier_PropertyType">
+            <annotation>
+              <documentation>Description: character string by which the mission is known FGDC: Mission_Name Position: 1 shortName: pltMssnNam NITF_ACFTA:AC_MSN_ID</documentation>
+            </annotation>
+          </element>
+          <element name="status" type="mcc:MD_ProgressCode_PropertyType">
+            <annotation>
+              <documentation>Description: status of the data acquisition FGDC: Mission_Start_Date Position: 4 shortName: mssnStatus</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="type" type="mac:MI_OperationTypeCode_PropertyType">
+            <annotation>
+              <documentation>Description: status of the data acquisition FGDC: Mission_Start_Date Position: 4 shortName: mssnStatus</documentation>
+            </annotation>
+          </element>
+          <element name="parentOperation" type="mac:MI_Operation_PropertyType" minOccurs="0"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="childOperation" type="mac:MI_Operation_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="platform" type="mac:MI_Platform_PropertyType">
+            <annotation>
+              <documentation>Description: Platform (or platforms) used in the operation.</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="objective" type="mac:MI_Objective_PropertyType"/>
+          <element minOccurs="0" name="plan" type="mac:MI_Plan_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="significantEvent" type="mac:MI_Event_PropertyType"/>
+          <element name="otherPropertyType" type="gco:RecordType_PropertyType" minOccurs="0" maxOccurs="1">
+            <annotation>
+              <documentation>type of other property description (i.e. netcdf/variable in ncml.xsd or AdditionalAttribute in ECHO)</documentation>
+            </annotation>
+          </element>
+          <element name="otherProperty" type="gco:Record_PropertyType" minOccurs="0" maxOccurs="1">
+            <annotation>
+              <documentation>instance of otherPropertyType that defines attributes not explicitly included in MI_Operation</documentation>
+            </annotation>
+          </element>
+          -->
+          <element name="description" minOccurs="0" type="gco:CharacterString_PropertyType" id="ISO19115-2.041_ISO19103.CharacterString">
+            <annotation>
+              <documentation>Description: Description of the mission on which the platform observations are part and the objectives of that mission FGDC: Mission_Description Position: 3 shortName: mssnDesc</documentation>
+            </annotation>
+          </element>
+          <element name="citation" minOccurs="0" type="mcc:Abstract_Citation_PropertyType" id="ISO19115-2.042_ISO19115-1.361">
+            <annotation>
+              <documentation>Description: character string by which the mission is known FGDC: Mission_Name Position: 1 shortName: pltMssnNam NITF_ACFTA:AC_MSN_ID</documentation>
+            </annotation>
+          </element>
+          <element name="identifier" minOccurs="0" type="mcc:MD_Identifier_PropertyType" id="ISO19115-2.043_ISO19115-1.431">
+            <annotation>
+              <documentation>Description: character string by which the mission is known FGDC: Mission_Name Position: 1 shortName: pltMssnNam NITF_ACFTA:AC_MSN_ID</documentation>
+            </annotation>
+          </element>
+          <element name="status" type="mcc:MD_ProgressCode_PropertyType" id="ISO19115-2.044_ISO19115.1.MD_ProgressCode">
+            <annotation>
+              <documentation>Description: status of the data acquisition FGDC: Mission_Start_Date Position: 4 shortName: mssnStatus</documentation>
+            </annotation>
+          </element>
+          <element name="type" minOccurs="0" type="mac:MI_OperationTypeCode_PropertyType" id="ISO19115-2.045_ISO19115-2.MI_OperationTypeCode">
+            <annotation>
+              <documentation>Description: status of the data acquisition FGDC: Mission_Start_Date Position: 4 shortName: mssnStatus</documentation>
+            </annotation>
+          </element>
+          <element name="otherProperty" type="gco:Record_PropertyType" minOccurs="0" maxOccurs="1" id="ISO19115-2.046_ISO19103.Record">
+            <annotation>
+              <documentation>instance of otherPropertyType that defines attributes not explicitly included in MI_Operation</documentation>
+            </annotation>
+          </element>
+          <element name="otherPropertyType" type="gco:RecordType_PropertyType" minOccurs="0" maxOccurs="1" id="ISO19115-2.047_ISO19103.RecordType">
+            <annotation>
+              <documentation>type of other property description (i.e. netcdf/variable in ncml.xsd or AdditionalAttribute in ECHO)</documentation>
+            </annotation>
+          </element>
+          <element name="childOperation" maxOccurs="unbounded" minOccurs="0" type="mac:MI_Operation_PropertyType" id="ISO19115-2.048_ISO19115-2.040"/>
+          <element name="objective" maxOccurs="unbounded" minOccurs="0" type="mac:MI_Objective_PropertyType" id="ISO19115-2.049_ISO19115-2.031"/>
+          <element name="parentOperation" type="mac:MI_Operation_PropertyType" minOccurs="1" id="ISO19115-2.050_ISO19115-2.040"/>
+          <element name="plan" minOccurs="0" type="mac:MI_Plan_PropertyType" id="ISO19115-2.051_ISO19115-2.054"/>
+          <element name="platform" maxOccurs="unbounded" minOccurs="0" type="mac:MI_Platform_PropertyType" id="ISO19115-2.052_ISO19115-2.069">
+            <annotation>
+              <documentation>Description: Platform (or platforms) used in the operation.</documentation>
+            </annotation>
+          </element>
+          <element name="significantEvent" maxOccurs="unbounded" minOccurs="0" type="mac:MI_Event_PropertyType" id="ISO19115-2.053_ISO19115-2.060"/>
+          
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <!-- ........................................................................ -->
+  <complexType name="MI_Operation_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mac:MI_Operation"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- =========================================================================== -->
+  <element name="MI_Plan" substitutionGroup="gco:AbstractObject" type="mac:MI_Plan_Type" id="ISO19115-2.054">
+    <annotation>
+      <documentation>Description: Designations for the planning information related to meeting requirements shortName: PlanId</documentation>
+    </annotation>
+  </element>
+  <!-- ........................................................................ -->
+  <complexType name="MI_Plan_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <!-- Order Change -->
+          <!-- 
+                   <element name="citation" type="mcc:Abstract_Citation_PropertyType" minOccurs="0" maxOccurs="unbounded">
+            <annotation>
+              <documentation>Description: complete citation of the platform FGDC: Platform_Full_Name Position: 3 shortName: pltNam Conditional: if shortName not specified</documentation>
+            </annotation>
+          </element>
+          <element name="identifier" type="mcc:MD_Identifier_PropertyType">
+            <annotation>
+              <documentation>Unique identification of the platform</documentation>
+            </annotation>
+          </element>
+          <element name="description" type="gco:CharacterString_PropertyType">
+            <annotation>
+              <documentation>Description: Narrative description of the platform supporting the instrument FGDC: Platform_Description Position: 2 shortName: pltfrmDesc</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="sponsor" type="mcc:Abstract_Responsibility_PropertyType">
+            <annotation>
+              <documentation>Description: organization responsible for building, launch, or operation of the platform FGDC: Platform_Sponsor Position: 6 shortName: pltfrmSpnsr</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" name="instrument" type="mac:MI_Instrument_PropertyType"/>
+          <element name="otherPropertyType" type="gco:RecordType_PropertyType" minOccurs="0" maxOccurs="1">
+            <annotation>
+              <documentation>type of other property description (i.e. netcdf/variable in ncml.xsd or AdditionalAttribute in ECHO)</documentation>
+            </annotation>
+          </element>
+          <element name="otherProperty" type="gco:Record_PropertyType" minOccurs="0" maxOccurs="1">
+            <annotation>
+              <documentation>instance of otherPropertyType that defines attributes not explicitly included in MI_Platform</documentation>
+            </annotation>
+          </element>
+          <element name="history" type="mac:MI_InstrumentationEventList_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+
+          -->
+          <element name="type" minOccurs="0" type="mac:MI_GeometryTypeCode_PropertyType" id="ISO19115-2.055_ISO19115-2.MI_GeometryTypeCode">
+            <annotation>
+              <documentation>Description: manner of sampling geometry the planner expects for collection of the objective data Postion: 2 shortName: planType</documentation>
+            </annotation>
+          </element>
+          <element name="status" type="mcc:MD_ProgressCode_PropertyType" id="ISO19115-2.056_ISO19115-1.MD_ProgressCode">
+            <annotation>
+              <documentation>Description: current status of the plan (pending, completed, etc.) shortName: planStatus</documentation>
+            </annotation>
+          </element>
+          <element name="citation" type="mcc:Abstract_Citation_PropertyType" id="ISO19115-2.057_ISO19115-1.361">
+            <annotation>
+              <documentation>Description: Identification of authority requesting target collection Postion: 1 shortName: planReqId</documentation>
+            </annotation>
+          </element>
+          <element name="operation" maxOccurs="unbounded" minOccurs="0" type="mac:MI_Operation_PropertyType" id="ISO19115-2.058_ISO19115-2.040"/>
+          <element name="satisfiedRequirement" maxOccurs="unbounded" minOccurs="0" type="mac:MI_Requirement_PropertyType" id="ISO19115-2.059_ISO19115-2.084"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <!-- ........................................................................ -->
+  <complexType name="MI_Plan_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mac:MI_Plan"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- =========================================================================== -->
+  <element name="MI_Event" substitutionGroup="gco:AbstractObject" type="mac:MI_Event_Type" id="ISO19115-2.060">
+    <annotation>
+      <documentation>Description: identification of a significant collection point within an operation shortName: Event</documentation>
+    </annotation>
+  </element>
+  <!-- ........................................................................ -->
+  <complexType name="MI_Event_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <!-- Order Change -->          
+            <!--           
+            <element name="identifier" type="mcc:MD_Identifier_PropertyType">
+            <annotation>
+              <documentation>Description: Event name or number shortName: evtId</documentation>
+            </annotation>
+          </element>
+          <element name="trigger" type="mac:MI_TriggerCode_PropertyType">
+            <annotation>
+              <documentation>Description: Initiator of the event shortName: evtTrig</documentation>
+            </annotation>
+          </element>
+          <element name="context" type="mac:MI_ContextCode_PropertyType">
+            <annotation>
+              <documentation>Description: Meaning of the event shortName: evtCntxt</documentation>
+            </annotation>
+          </element>
+          <element name="sequence" type="mac:MI_SequenceCode_PropertyType">
+            <annotation>
+              <documentation>Description: Relative time ordering of the event shortName: evtSeq</documentation>
+            </annotation>
+          </element>
+          <element name="time" type="gco:DateTime_PropertyType">
+            <annotation>
+              <documentation>Description: Time the event occured shortName: evtTime</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="relatedPass" type="mac:MI_PlatformPass_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="relatedSensor" type="mac:MI_Instrument_PropertyType"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="expectedObjective" type="mac:MI_Objective_PropertyType"/>
+-->
+          <element name="identifier" type="mcc:MD_Identifier_PropertyType" id="ISO19115-2.061_ISO19115-1.431">
+            <annotation>
+              <documentation>Description: Event name or number shortName: evtId</documentation>
+            </annotation>
+          </element>
+          <element name="trigger" type="mac:MI_TriggerCode_PropertyType" id="ISO19115-2.062_ISO19115-2.MI_TriggerCode">
+            <annotation>
+              <documentation>Description: Initiator of the event shortName: evtTrig</documentation>
+            </annotation>
+          </element>
+          <element name="context" type="mac:MI_ContextCode_PropertyType" id="ISO19115-2.063_ISO19115-2.MI_ContextCode">
+            <annotation>
+              <documentation>Description: Meaning of the event shortName: evtCntxt</documentation>
+            </annotation>
+          </element>
+          <element name="sequence" type="mac:MI_SequenceCode_PropertyType" id="ISO19115-2.064_ISO19115-2.MI_SequenceCode">
+            <annotation>
+              <documentation>Description: Relative time ordering of the event shortName: evtSeq</documentation>
+            </annotation>
+          </element>
+          <element name="time" type="gco:DateTime_PropertyType" id="ISO19115-2.065_ISO19103.DateTime">
+            <annotation>
+              <documentation>Description: Time the event occured shortName: evtTime</documentation>
+            </annotation>
+          </element>
+          <element name="expectedObjective" maxOccurs="unbounded" minOccurs="0" type="mac:MI_Objective_PropertyType" id="ISO19115-2.066_ISO19115-2.031"/>
+          <element name="relatedPass" minOccurs="0" type="mac:MI_PlatformPass_PropertyType" id="ISO19115-2.067_ISO19115-2.077"/>
+          <element name="relatedInstrument" maxOccurs="unbounded" minOccurs="0" type="mac:MI_Instrument_PropertyType" id="ISO19115-2.068_ISO19115-2.019"/>
+         </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <!-- ........................................................................ -->
+  <complexType name="MI_Event_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mac:MI_Event"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- =========================================================================== -->
+  <element name="MI_Platform" substitutionGroup="mcc:Abstract_Platform" type="mac:MI_Platform_Type" id="ISO19115-2.069">
+    <annotation>
+      <documentation>Description: Designations for the platform used to acquire the dataset shortName: PltfrmId</documentation>
+    </annotation>
+  </element>
+  <!-- ........................................................................ -->
+  <complexType name="MI_Platform_Type">
+    <complexContent>
+      <extension base="mcc:Abstract_Platform_Type">
+        <sequence>
+          <element name="citation" type="mcc:Abstract_Citation_PropertyType" minOccurs="0" maxOccurs="unbounded" id="ISO19115-2.070_ISO19115-1.361">
+            <annotation>
+              <documentation>Description: complete citation of the platform FGDC: Platform_Full_Name Position: 3 shortName: pltNam Conditional: if shortName not specified</documentation>
+            </annotation>
+          </element>
+          <element name="identifier" type="mcc:MD_Identifier_PropertyType" id="ISO19115-2.071_ISO19115-1.431">
+            <annotation>
+              <documentation>Unique identification of the platform</documentation>
+            </annotation>
+          </element>
+          <element name="description" type="gco:CharacterString_PropertyType" id="ISO19115-2.072_ISO19103.CharacterString">
+            <annotation>
+              <documentation>Description: Narrative description of the platform supporting the instrument FGDC: Platform_Description Position: 2 shortName: pltfrmDesc</documentation>
+            </annotation>
+          </element>
+          <element name="sponsor" maxOccurs="unbounded" minOccurs="0" type="mcc:Abstract_Responsibility_PropertyType"  id="ISO19115-2.073_ISO19115-1.376">
+            <annotation>
+              <documentation>Description: organization responsible for building, launch, or operation of the platform FGDC: Platform_Sponsor Position: 6 shortName: pltfrmSpnsr</documentation>
+            </annotation>
+          </element>
+          <element name="otherProperty" type="gco:Record_PropertyType" minOccurs="0" maxOccurs="1" id="ISO19115-2.074_ISO19103.Record">
+            <annotation>
+              <documentation>instance of otherPropertyType that defines attributes not explicitly included in MI_Platform</documentation>
+            </annotation>
+          </element>
+          <element name="otherPropertyType" type="gco:RecordType_PropertyType" minOccurs="0" maxOccurs="1" id="ISO19115-2.075_ISO19103.RecordType">
+            <annotation>
+              <documentation>type of other property description (i.e. netcdf/variable in ncml.xsd or AdditionalAttribute in ECHO)</documentation>
+            </annotation>
+          </element>
+          <element name="instrument" maxOccurs="unbounded" type="mac:MI_Instrument_PropertyType" id="ISO19115-2.076_ISO19115-2.019"/>
+          <!--  not in data dictionary -->
+          
+          <element name="history" type="mac:MI_InstrumentationEventList_PropertyType" minOccurs="0" maxOccurs="unbounded" id="ISO19115-2.076.1_ISO19115-2.093"/>
+          
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <!-- ........................................................................ -->
+  <complexType name="MI_Platform_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mac:MI_Platform"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- =========================================================================== -->
+  <element name="MI_PlatformPass" substitutionGroup="gco:AbstractObject" type="mac:MI_PlatformPass_Type" id="ISO19115-2.077">
+    <annotation>
+      <documentation>Description: identification of collection coverage shortName: PlatformPass</documentation>
+    </annotation>
+  </element>
+  <!-- ........................................................................ -->
+  <complexType name="MI_PlatformPass_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="identifier" type="mcc:MD_Identifier_PropertyType" id="ISO19115-2.078_ISO19115-1.431">
+            <annotation>
+              <documentation>Description: unique name of the pass shortName: passId</documentation>
+            </annotation>
+          </element>
+          <element name="extent" minOccurs="0" type="gex:EX_Extent_PropertyType" id="ISO19115-2.079_ISO19115-1.335">
+            <annotation>
+              <documentation>Description: Area covered by the pass shortName: passExt</documentation>
+            </annotation>
+          </element>
+          <element name="relatedEvent" maxOccurs="unbounded" minOccurs="0" type="mac:MI_Event_PropertyType" id="ISO19115-2.080_ISO19115-2.060"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <!-- ........................................................................ -->
+  <complexType name="MI_PlatformPass_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mac:MI_PlatformPass"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- =========================================================================== -->
+  <element name="MI_RequestedDate" substitutionGroup="gco:AbstractObject" type="mac:MI_RequestedDate_Type" id="ISO19115-2.081">
+    <annotation>
+      <documentation>Description: range of date validity shortName: ReqstDate</documentation>
+    </annotation>
+  </element>
+  <!-- ........................................................................ -->
+  <complexType name="MI_RequestedDate_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="requestedDateOfCollection" type="gco:DateTime_PropertyType" id="ISO19115-2.082_ISO19103.DateTime">
+            <annotation>
+              <documentation>Description: preferred date and time of collection shortName: collectDate</documentation>
+            </annotation>
+          </element>
+          <element name="latestAcceptableDate" type="gco:DateTime_PropertyType" id="ISO19115-2.083_ISO19103.DateTime">
+            <annotation>
+              <documentation>Description: latest date and time collection must be completed shortName: latestDate</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <!-- ........................................................................ -->
+  <complexType name="MI_RequestedDate_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mac:MI_RequestedDate"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- =========================================================================== -->
+  <element name="MI_Requirement" substitutionGroup="gco:AbstractObject" type="mac:MI_Requirement_Type" id="ISO19115-2.084">
+    <annotation>
+      <documentation>Description: requirement to be satisfied by the planned data acquisition shortName: Requirement</documentation>
+    </annotation>
+  </element>
+  <!-- ........................................................................ -->
+  <complexType name="MI_Requirement_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="citation" minOccurs="0" type="mcc:Abstract_Citation_PropertyType" id="ISO19115-2.085_ISO19115-1.361">
+            <annotation>
+              <documentation>Description: identification of reference or guidance material for the requirement shortName: reqRef</documentation>
+            </annotation>
+          </element>
+          <element name="identifier" type="mcc:MD_Identifier_PropertyType" id="ISO19115-2.086_ISO19115-1.431">
+            <annotation>
+              <documentation>Description: unique name, or code, for the requirement shortName: reqId</documentation>
+            </annotation>
+          </element>
+          <element name="requestor" maxOccurs="unbounded" type="mcc:Abstract_Responsibility_PropertyType" id="ISO19115-2.087_ISO19115-1.376">
+            <annotation>
+              <documentation>Description: origin of requirement shortName: requestor</documentation>
+            </annotation>
+          </element>
+          <element name="recipient" maxOccurs="unbounded" type="mcc:Abstract_Responsibility_PropertyType" id="ISO19115-2.088_ISO19115-1.376">
+            <annotation>
+              <documentation>Description: person(s), or body(ies), to recieve results of requirement shortName: recipient</documentation>
+            </annotation>
+          </element>
+          <element name="priority" type="mac:MI_PriorityCode_PropertyType" id="ISO19115-2.089_ISO19115-2.MI_PriorityCode">
+            <annotation>
+              <documentation>Description: relative ordered importance, or urgency, of the requirement shortName: reqPri</documentation>
+            </annotation>
+          </element>
+          <element name="requestedDate" type="mac:MI_RequestedDate_PropertyType" id="ISO19115-2.090_ISO19115-2.081">
+            <annotation>
+              <documentation>Description: required or preferred acquisition date and time shortName: reqDate</documentation>
+            </annotation>
+          </element>
+          <element name="expiryDate" type="gco:DateTime_PropertyType" id="ISO19115-2.091_ISO19103.DateTime">
+            <annotation>
+              <documentation>Description: date and time after which collection is no longer valid shortName: reqExpire</documentation>
+            </annotation>
+          </element>
+          <element name="satisifiedPlan" maxOccurs="unbounded" minOccurs="0" type="mac:MI_Plan_PropertyType" id="ISO19115-2.092_ISO19115-2.054"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <!-- ........................................................................ -->
+  <complexType name="MI_Requirement_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mac:MI_Requirement"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- =========================================================================== -->
+  <element name="MI_InstrumentationEventList" substitutionGroup="gco:AbstractObject" type="mac:MI_InstrumentationEventList_Type" id="ISO19115-2.093">
+    <annotation>
+      <documentation>Description: requirement to be satisfied by the planned data acquisition shortName: Requirement</documentation>
+    </annotation>
+  </element>
+  <!-- ........................................................................ -->
+  <complexType name="MI_InstrumentationEventList_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="citation" minOccurs="0" maxOccurs="unbounded" type="mcc:Abstract_Citation_PropertyType" id="ISO19115-2.094_ISO19115-1.361">
+            <annotation>
+              <documentation>citation of the instrumentation event list</documentation>
+            </annotation>
+          </element>
+          <element name="description" minOccurs="1" maxOccurs="1" type="gco:CharacterString_PropertyType" id="ISO19115-2.095_ISO19103.CharacterString">
+            <annotation>
+              <documentation>description of the language and characterset used for the instrumentation event list</documentation>
+            </annotation>
+          </element>
+          <element name="locale" minOccurs="0" maxOccurs="1" type="lan:PT_Locale_PropertyType" id="ISO19115-2.096_ISO19115-1.447">
+            <annotation>
+              <documentation>description of the language and character set used for the instrumentation event list</documentation>
+            </annotation>
+          </element>
+          <element name="constraints" minOccurs="0" maxOccurs="unbounded" type="mco:MD_Constraints_PropertyType" id="ISO19115-2.097_ISO19115-1.098">
+            <annotation>
+              <documentation>use and access constraints</documentation>
+            </annotation>
+          </element>
+          <element name="instrumentationEvent" minOccurs="0" maxOccurs="unbounded" type="mac:MI_InstrumentationEvent_PropertyType" id="ISO19115-2.098_ISO19115-2.099">
+            <annotation>
+              <documentation>event(s) in the list of events</documentation>
+            </annotation>
+          </element>
+         </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <!-- ........................................................................ -->
+  <complexType name="MI_InstrumentationEventList_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mac:MI_InstrumentationEventList"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- =========================================================================== -->
+  <element name="MI_InstrumentationEvent" substitutionGroup="gco:AbstractObject" type="mac:MI_InstrumentationEvent_Type" id="ISO19115-2.099">
+    <annotation>
+      <documentation>Description: requirement to be satisfied by the planned data acquisition shortName: Requirement</documentation>
+    </annotation>
+  </element>
+  <!-- ........................................................................ -->
+  <complexType name="MI_InstrumentationEvent_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="citation" minOccurs="0" maxOccurs="unbounded" type="mcc:Abstract_Citation_PropertyType" id="ISO19115-2.100_ISO19115-1.361">
+            <annotation>
+              <documentation>citation of the instrumentation event</documentation>
+            </annotation>
+          </element>
+          <element name="description" minOccurs="1" maxOccurs="1" type="gco:CharacterString_PropertyType" id="ISO19115-2.101_ISO19103.CharacterString">
+            <annotation>
+              <documentation>description of the instrumentation event</documentation>
+            </annotation>
+          </element>
+          <element name="extent" minOccurs="0" maxOccurs="unbounded" type="mcc:Abstract_Extent_PropertyType" id="ISO19115-2.102_ISO19115-1.335">
+            <annotation>
+              <documentation>extent for the instrumentation event</documentation>
+            </annotation>
+          </element>
+          <element name="type" minOccurs="1" maxOccurs="1" type="mac:MI_EventTypeCode_PropertyType" id="ISO19115-2.103_ISO19115-2.MI_EventTypeCode">
+            <annotation>
+              <documentation>type for the instrumentation event</documentation>
+            </annotation>
+          </element>
+          <element name="revisionHistory" minOccurs="0" maxOccurs="unbounded" type="mac:MI_Revision_PropertyType" id="ISO19115-2.104_ISO19115-2.105">
+            <annotation>
+              <documentation>history of revisions to the instrumentation event</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <!-- ........................................................................ -->
+  <complexType name="MI_InstrumentationEvent_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mac:MI_InstrumentationEvent"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- =========================================================================== -->
+  <element name="MI_Revision" substitutionGroup="gco:AbstractObject" type="mac:MI_Revision_Type" id="ISO19115-2.105">
+    <annotation>
+      <documentation>Description: requirement to be satisfied by the planned data acquisition shortName: Requirement</documentation>
+    </annotation>
+  </element>
+  <!-- ........................................................................ -->
+  <complexType name="MI_Revision_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="description" minOccurs="1" maxOccurs="1" type="gco:CharacterString_PropertyType" id="ISO19115-2.106_ISO19103.CharacterString">
+            <annotation>
+              <documentation>description of the revision</documentation>
+            </annotation>
+          </element>
+          <element name="responsibleParty" minOccurs="1" maxOccurs="unbounded" type="cit:CI_Responsibility_PropertyType" id="ISO19115-2.107_ISO19115-1.376">
+            <annotation>
+              <documentation>individual or organisation responsible for the revision</documentation>
+            </annotation>
+          </element>
+          <element name="dateInfo" minOccurs="1" maxOccurs="unbounded" type="cit:CI_Date_PropertyType" id="ISO19115-2.108_ISO19115-1.402">
+            <annotation>
+              <documentation>type for the instrumentation event</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <!-- ........................................................................ -->
+  <complexType name="MI_Revision_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mac:MI_Revision"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- =========================================================================== -->
+  <element name="MI_ContextCode" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type"  id="ISO19115-2.B.31">
+    <annotation>
+      <documentation>Description: context of activation shortName: CntxtCode</documentation>
+    </annotation>
+  </element>
+  <!-- ........................................................................ -->
+  <complexType name="MI_ContextCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mac:MI_ContextCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+   <!-- =========================================================================== -->
+  <element name="MI_GeometryTypeCode" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type" id="ISO19115-2.B.33">
+    <annotation>
+      <documentation>Description: geometric description of collection shortName: GeoTypeCode</documentation>
+    </annotation>
+  </element>
+  <!-- ........................................................................ -->
+  <complexType name="MI_GeometryTypeCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mac:MI_GeometryTypeCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+   <!-- =========================================================================== -->
+  <element name="MI_ObjectiveTypeCode" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type"  id="ISO19115-2.B.34">
+    <annotation>
+      <documentation>Description: temporal persistence of collection objective shortName: ObjTypeCode</documentation>
+    </annotation>
+  </element>
+  <!-- ........................................................................ -->
+  <complexType name="MI_ObjectiveTypeCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mac:MI_ObjectiveTypeCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- =========================================================================== -->
+  <element name="MI_OperationTypeCode" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type" id="ISO19115-2.B.35"/>
+  <!-- ........................................................................ -->
+  <complexType name="MI_OperationTypeCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mac:MI_OperationTypeCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+   <!-- =========================================================================== -->
+  <element name="MI_PriorityCode" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type" id="ISO19115-2.B.38">
+    <annotation>
+      <documentation>Description: ordered list of priorities shortName: PriCode</documentation>
+    </annotation>
+  </element>
+  <!-- ........................................................................ -->
+  <complexType name="MI_PriorityCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mac:MI_PriorityCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- =========================================================================== -->
+  <element name="MI_SequenceCode" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type" id="ISO19115-2.B.39">
+    <annotation>
+      <documentation>Description: temporal relation of activation shortName: SeqCode</documentation>
+    </annotation>
+  </element>
+  <!-- ........................................................................ -->
+  <complexType name="MI_SequenceCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mac:MI_SequenceCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- =========================================================================== -->
+  <element name="MI_TriggerCode" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type" id="ISO19115-2.B.41">
+    <annotation>
+      <documentation>Description: mechanism of activation shortName: TriggerCode</documentation>
+    </annotation>
+  </element>
+  <!-- ........................................................................ -->
+  <complexType name="MI_TriggerCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mac:MI_TriggerCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- =========================================================================== -->
+  <element name="MI_EventTypeCode" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type"  id="ISO19115-2.B.32">
+    <annotation>
+      <documentation>Description: mechanism of activation shortName: TriggerCode</documentation>
+    </annotation>
+  </element>
+  <!-- ........................................................................ -->
+  <complexType name="MI_EventTypeCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mac:MI_EventTypeCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- =========================================================================== -->
+</schema>

@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:gco="https://schemas.isotc211.org/19103/-/gco/1.2"
+  xmlns:mcc="https://schemas.isotc211.org/19115/-1/mcc/1.3"
+  xmlns:mco="https://schemas.isotc211.org/19115/-1/mco/1.3"
+  targetNamespace="https://schemas.isotc211.org/19115/-1/mco/1.3"
+  elementFormDefault="qualified"
+  version="1.3.0"
+    >
+  <include schemaLocation="mco.xsd"/>
+  <import namespace="https://schemas.isotc211.org/19103/-/gco/1.2" schemaLocation="../../../../19103/-/gco/1.2.0/gco.xsd"/>
+  <import namespace="https://schemas.isotc211.org/19115/-1/mcc/1.3" schemaLocation="../../../../19115/-1/mcc/1.3.0/mcc.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <!-- =========================================================================== -->
+  <element name="MD_Constraints" substitutionGroup="mcc:Abstract_Constraints" type="mco:MD_Constraints_Type" id="ISO19115-1.098">
+    <annotation>
+      <documentation>restrictions on the access and use of a resource or metadata</documentation>
+    </annotation>
+  </element>
+  <!-- ........................................................................ -->
+  <complexType name="MD_Constraints_Type">
+    <complexContent>
+      <extension base="mcc:Abstract_Constraints_Type">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="useLimitation" type="gco:CharacterString_PropertyType" id="ISO19115-1.099_ISO19103.CharacterString">
+            <annotation>
+              <documentation>limitation affecting the fitness for use of the resource or metadata.
+                Example, "not to be used for navigation"</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="constraintApplicationScope" type="mcc:MD_Scope_PropertyType" id="ISO19115-1.100_ISO19115-1.420">
+            <annotation>
+              <documentation>Spatial and temporal extent of the application of the constraint
+                restrictions</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="graphic" type="mcc:MD_BrowseGraphic_PropertyType" id="ISO19115-1.101_ISO19115-1.437">
+            <annotation>
+              <documentation>graphic /symbol indicating the constraint Eg.</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="reference" type="mcc:Abstract_Citation_PropertyType" id="ISO19115-1.102_ISO19115-1.361">
+            <annotation>
+              <documentation>citation/URL for the limitation or constraint, e.g. copyright
+                statement, license agreement, etc</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="releasability" type="mco:MD_Releasability_PropertyType" id="ISO19115-1.103_ISO19115-1.114">
+            <annotation>
+              <documentation>information concerning the parties to whom the resource can or cannot
+                be released and the party responsible for determining the
+                releasibility</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="responsibleParty" type="mcc:Abstract_Responsibility_PropertyType" id="ISO19115-1.104_ISO19115-1.376">
+            <annotation>
+              <documentation>party responsible for the resource constraints</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <!-- ........................................................................ -->
+  <complexType name="MD_Constraints_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mco:MD_Constraints"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- =========================================================================== -->
+  <element name="MD_LegalConstraints" substitutionGroup="mco:MD_Constraints" type="mco:MD_LegalConstraints_Type" id="ISO19115-1.105">
+    <annotation>
+      <documentation>restrictions and legal prerequisites for accessing and using the resource or
+        metadata</documentation>
+    </annotation>
+  </element>
+  <!-- ........................................................................ -->
+  <complexType name="MD_LegalConstraints_Type">
+    <complexContent>
+      <extension base="mco:MD_Constraints_Type">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="accessConstraints" type="mco:MD_RestrictionCode_PropertyType" id="ISO19115-1.106_ISO19115-1.MD_RestrictionCode">
+            <annotation>
+              <documentation>access constraints applied to assure the protection of privacy or
+                intellectual property, and any special restrictions or limitations on obtaining the
+                resource or metadata</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="useConstraints" type="mco:MD_RestrictionCode_PropertyType" id="ISO19115-1.107_ISO19115-1.MD_RestrictionCode">
+            <annotation>
+              <documentation>constraints applied to assure the protection of privacy or intellectual
+                property, and any special restrictions or limitations or warnings on using the
+                resource or metadata</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="otherConstraints" type="gco:CharacterString_PropertyType" id="ISO19115-1.108_ISO19103.CharacterString">
+            <annotation>
+              <documentation>other restrictions and legal prerequisites for accessing and using the
+                resource or metadata</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <!-- ........................................................................ -->
+  <complexType name="MD_LegalConstraints_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mco:MD_LegalConstraints"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- =========================================================================== -->
+  <element name="MD_SecurityConstraints" substitutionGroup="mco:MD_Constraints" type="mco:MD_SecurityConstraints_Type"  id="ISO19115-1.109">
+    <annotation>
+      <documentation>handling restrictions imposed on the resource or metadata for national security
+        or similar security concerns</documentation>
+    </annotation>
+  </element>
+  <!-- ........................................................................ -->
+  <complexType name="MD_SecurityConstraints_Type">
+    <complexContent>
+      <extension base="mco:MD_Constraints_Type">
+        <sequence>
+          <element name="classification" type="mco:MD_ClassificationCode_PropertyType"  id="ISO19115-1.110_ISO19115-1.MD_ClassificationCode">
+            <annotation>
+              <documentation>name of the handling restrictions on the resource or
+                metadata</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="userNote" type="gco:CharacterString_PropertyType" id="ISO19115-1.111_ISO19103.CharacterString">
+            <annotation>
+              <documentation>explanation of the application of the legal constraints or other
+                restrictions and legal prerequisites for obtaining and using the resource or
+                metadata</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="classificationSystem" type="gco:CharacterString_PropertyType" id="ISO19115-1.112_ISO19103.CharacterString">
+            <annotation>
+              <documentation>name of the classification system</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="handlingDescription" type="gco:CharacterString_PropertyType" id="ISO19115-1.113_ISO19103.CharacterString">
+            <annotation>
+              <documentation>additional information about the restrictions on handling the resource
+                or metadata</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <!-- ........................................................................ -->
+  <complexType name="MD_SecurityConstraints_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mco:MD_SecurityConstraints"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- =========================================================================== -->
+  <element name="MD_Releasability" substitutionGroup="gco:AbstractObject" type="mco:MD_Releasability_Type" id="ISO19115-1.114">
+    <annotation>
+      <documentation>state, nation or organization to which resource can be released to e.g. NATO
+        unclassified releasable to PfP</documentation>
+    </annotation>
+  </element>
+  <!-- ........................................................................ -->
+  <complexType name="MD_Releasability_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element maxOccurs="unbounded" minOccurs="0" name="addressee" type="mcc:Abstract_Responsibility_PropertyType" id="ISO19115-1.115_ISO19115-1.376">
+            <annotation>
+              <documentation>party responsible for the Release statement</documentation>
+            </annotation>
+          </element>
+          <element minOccurs="0" name="statement" type="gco:CharacterString_PropertyType" id="ISO19115-1.116_ISO19103.CharacterString">
+            <annotation>
+              <documentation>release statement</documentation>
+            </annotation>
+          </element>
+          <element maxOccurs="unbounded" minOccurs="0" name="disseminationConstraints" type="mco:MD_RestrictionCode_PropertyType" id="ISO19115-1.117_ISO19115-1.MD_RestrictionCode">
+            <annotation>
+              <documentation>component in determining releasability</documentation>
+            </annotation>
+          </element>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <!-- ........................................................................ -->
+  <complexType name="MD_Releasability_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mco:MD_Releasability"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- =========================================================================== -->
+  <!-- =========================================================================== -->
+  <element name="MD_ClassificationCode" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type" id="ISO19115-1.B.3.13">
+    <annotation>
+      <documentation>name of the handling restrictions on the resource</documentation>
+    </annotation>
+  </element>
+  <!-- ........................................................................ -->
+  <complexType name="MD_ClassificationCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mco:MD_ClassificationCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- =========================================================================== -->
+  <element name="MD_RestrictionCode" substitutionGroup="gco:CharacterString" type="gco:CodeListValue_Type" id="ISO19115-1.B.3.27">
+    <annotation>
+      <documentation>limitation(s) placed upon the access or use of the data</documentation>
+    </annotation>
+  </element>
+  <!-- ........................................................................ -->
+  <complexType name="MD_RestrictionCode_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mco:MD_RestrictionCode"/>
+    </sequence>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- =========================================================================== -->
+</schema>

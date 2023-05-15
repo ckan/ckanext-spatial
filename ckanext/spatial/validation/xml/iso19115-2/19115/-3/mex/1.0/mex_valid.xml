@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mdb:MD_Metadata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://standards.iso.org/iso/19115/-3/mdt/1.0 ../../mdt/1.0/mdt.xsd" 
+ xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/1.0" 
+ xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+ xmlns:mex="http://standards.iso.org/iso/19115/-3/mex/1.0">
+   <mdb:metadataIdentifier></mdb:metadataIdentifier>
+   <mdb:contact></mdb:contact>
+   <mdb:dateInfo></mdb:dateInfo>
+   <mdb:metadataExtensionInfo>
+      <mex:MD_MetadataExtensionInformation>
+         
+         <!-- Valid for rule.mex.datatypedetails -->
+         <mex:extendedElementInformation>
+            <mex:MD_ExtendedElementInformation>
+               <mex:name>
+                  <gco:CharacterString>sss</gco:CharacterString>
+               </mex:name>
+               <mex:definition></mex:definition>
+               <mex:dataType>
+                  <mex:MD_DatatypeCode 
+                     codeList="" 
+                     codeListValue="datatypeClass"/>
+               </mex:dataType>
+               <mex:maximumOccurrence>
+                  <gco:CharacterString>3</gco:CharacterString>
+               </mex:maximumOccurrence>
+               <mex:domainValue>
+                  <gco:CharacterString>Sin Sin Sin</gco:CharacterString>
+               </mex:domainValue>
+               <mex:parentEntity></mex:parentEntity>
+               <mex:rule></mex:rule>
+               <mex:source></mex:source>
+            </mex:MD_ExtendedElementInformation>
+         </mex:extendedElementInformation>
+         
+         
+         
+         <!-- Valid for rule.mex.conditional -->
+         <mex:extendedElementInformation>
+            <mex:MD_ExtendedElementInformation>
+               <mex:name>
+                  <gco:CharacterString>conditional element</gco:CharacterString>
+               </mex:name>
+               <mex:definition></mex:definition>
+               <mex:obligation>
+                  <mex:MD_ObligationCode>conditional</mex:MD_ObligationCode>
+               </mex:obligation>
+               <mex:condition>
+                  <gco:CharacterString>if ... then ...</gco:CharacterString>
+               </mex:condition>
+               <mex:dataType></mex:dataType>
+               <mex:parentEntity></mex:parentEntity>
+               <mex:rule></mex:rule>
+               <mex:source></mex:source>
+            </mex:MD_ExtendedElementInformation>
+         </mex:extendedElementInformation>
+         
+         
+         
+         
+         
+         <!-- Valid for rule.mex.mandatorycode -->
+         <mex:extendedElementInformation>
+            <mex:MD_ExtendedElementInformation>
+               <mex:name>
+                  <gco:CharacterString>codelist</gco:CharacterString>
+               </mex:name>
+               <mex:definition></mex:definition>
+               <mex:dataType>
+                  <mex:MD_DatatypeCode 
+                     codeList="" 
+                     codeListValue="codelist"/>
+               </mex:dataType>
+               <mex:parentEntity></mex:parentEntity>
+               <mex:rule></mex:rule>
+               <mex:source></mex:source>
+               <mex:conceptName>
+                  <gco:CharacterString>concept name</gco:CharacterString>
+               </mex:conceptName>
+               <mex:code>
+                  <gco:CharacterString>CD_3</gco:CharacterString>
+               </mex:code>
+            </mex:MD_ExtendedElementInformation>
+         </mex:extendedElementInformation>
+         <mex:extendedElementInformation>
+            <mex:MD_ExtendedElementInformation>
+               <mex:name>
+                  <gco:CharacterString>codelist element</gco:CharacterString>
+               </mex:name>
+               <mex:definition></mex:definition>
+               <mex:dataType>
+                  <mex:MD_DatatypeCode 
+                     codeList="" 
+                     codeListValue="codelistElement"/>
+               </mex:dataType>
+               <mex:parentEntity></mex:parentEntity>
+               <mex:rule></mex:rule>
+               <mex:source></mex:source>
+               <mex:conceptName>
+                  <gco:CharacterString>concept name</gco:CharacterString>
+               </mex:conceptName>
+               <mex:code>
+                  <gco:CharacterString>CDE_3</gco:CharacterString>
+               </mex:code>
+            </mex:MD_ExtendedElementInformation>
+         </mex:extendedElementInformation>
+         <mex:extendedElementInformation>
+            <mex:MD_ExtendedElementInformation>
+               <mex:name>
+                  <gco:CharacterString>enumeration</gco:CharacterString>
+               </mex:name>
+               <mex:definition></mex:definition>
+               <mex:dataType>
+                  <mex:MD_DatatypeCode 
+                     codeList="" 
+                     codeListValue="enumeration"/>
+               </mex:dataType>
+               <mex:parentEntity></mex:parentEntity>
+               <mex:rule></mex:rule>
+               <mex:source></mex:source>
+               <mex:conceptName>
+                  <gco:CharacterString>concept name</gco:CharacterString>
+               </mex:conceptName>
+               <mex:code>
+                  <gco:CharacterString>ENU_3</gco:CharacterString>
+               </mex:code>
+            </mex:MD_ExtendedElementInformation>
+         </mex:extendedElementInformation>
+         
+         
+         
+      </mex:MD_MetadataExtensionInformation>
+   </mdb:metadataExtensionInfo>
+   <mdb:identificationInfo/>
+</mdb:MD_Metadata>

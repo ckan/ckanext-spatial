@@ -1,0 +1,11 @@
+<?xml-stylesheet type='text/xsl' href='./CodelistDictionary-v32.xsl'?><Dictionary xmlns="http://www.opengis.net/gml/3.2"    xmlns:gml="http://www.opengis.net/gml/3.2"    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="MI_SensorTypeCode" xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>&lt;UsedBy&gt;&#13;
+&lt;NameSpace&gt;ISO 19115-2 Metadata - Imagery&lt;/NameSpace&gt;&#13;
+&lt;Class&gt;MI_Instrument&lt;/Class&gt;&#13;
+&lt;Package&gt;Acquisition information - Imagery&lt;/Package&gt;&#13;
+&lt;Attribute&gt;type&lt;/Attribute&gt;&#13;
+&lt;Type&gt;MI_SensorTypeCode&lt;/Type&gt;&#13;
+&lt;UsedBy&gt;&#13;
+</description>
+  <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mac/1.0">MI_SensorTypeCode</identifier>
+</Dictionary>

@@ -91,3 +91,12 @@
 .dataset-map-expanded .wrapper {
   margin-top: 383px;
 }
+
+.leaflet-control-layers label:after {
+  content: unset;
+}
+
+.leaflet-touch .leaflet-control-layers-toggle {
+  width: 30px;
+  height: 30px;
+}

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='./CodelistDictionary-v32.xsl'?><Dictionary xmlns="http://www.opengis.net/gml/3.2"    xmlns:gml="http://www.opengis.net/gml/3.2"    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="SC_DerivedCRSType" xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>The type of the derived CRS, according to the classification of principal CRS types.&#13;
+</description>
+  <identifier codeSpace="http://www.isotc211.org/2014/rbc/1.0">SC_DerivedCRSType</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="_9478_12489">
+      <description>A coordinate reference system based on a geodetic datum; provides an accurate representation of the geometry of geographic features for a large portion of the earth's surface.</description>
+      <identifier codeSpace="http://www.isotc211.org/2014/rbc/1.0">geodetic</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_9478_12490">
+      <description>A coordinate reference system used for recording of heights or depths. Vertical CRSs make use of the direction of gravity to define the concept of height or depth, but the relationship with gravity may not be straightforward.</description>
+      <identifier codeSpace="http://www.isotc211.org/2014/rbc/1.0">vertical</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_9478_12491">
+      <description>A contextually local coordinate reference system; which can be divided into two broad categories:&#13;
+- earth-fixed systems applied to engineering activities on or near the surface of the earth;&#13;
+- CRSs on moving platforms such as road vehicles, vessels, aircraft or spacecraft.</description>
+      <identifier codeSpace="http://www.isotc211.org/2014/rbc/1.0">engineering</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_9478_12492">
+      <description>An engineering coordinate reference system applied to locations in images.</description>
+      <identifier codeSpace="http://www.isotc211.org/2014/rbc/1.0">image</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

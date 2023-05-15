@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<schema 
+	xmlns="http://www.w3.org/2001/XMLSchema" 
+	xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+	xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
+	xmlns:gmw="http://standards.iso.org/iso/19115/-3/gmw/1.0"
+	xmlns:mac="http://standards.iso.org/iso/19115/-3/mac/2.0"
+	xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" 
+	elementFormDefault="qualified"
+	targetNamespace="http://standards.iso.org/iso/19115/-3/mac/2.0" 
+	version="1.0">
+	<annotation>
+		<documentation>This file was transfered from gmi to mac by E J Bleys
+			original created by Ted Habermann during May 2015 to correct omissions (gmx, MI_EnvironmentalRecord) in existing gmi schema ======
+		</documentation>
+	</annotation>
+	<include schemaLocation="mac.xsd"/>
+	<include schemaLocation="acquisitionInformationImagery.xsd"/>
+	<include schemaLocation="event.xsd"/>  
+	<!-- ================================== Imports ================================== -->
+	<import namespace="http://standards.iso.org/iso/19115/-3/gco/1.0" schemaLocation="https://schemas.isotc211.org/19115/-3/gco/1.0/gco.xsd"/>
+	<import namespace="http://standards.iso.org/iso/19115/-3/gmw/1.0" schemaLocation="https://schemas.isotc211.org/19115/-3/gmw/1.0/gmw.xsd"/>
+	<import namespace="http://standards.iso.org/iso/19115/-3/mdb/2.0" schemaLocation="https://schemas.isotc211.org/19115/-3/mdb/2.0/mdb.xsd"/>
+	<!-- ########################################################################### -->
+	<!-- ########################################################################### -->
+	<!-- ================================== Classes ================================= -->
+	<complexType name="MI_Metadata_Type">
+		<annotation>
+			<documentation>Description: Root entity that defines information about imagery or gridded data - shortName: IMetadata</documentation>
+		</annotation>
+		<complexContent>
+			<extension base="mdb:MD_Metadata_Type">
+				<sequence>
+					<element name="acquisitionInformation" type="mac:MI_AcquisitionInformation_PropertyType" minOccurs="0" maxOccurs="unbounded"/>
+				</sequence>
+			</extension>
+		</complexContent>
+	</complexType>
+	<!-- ........................................................................ -->
+	<element name="MI_Metadata" type="mac:MI_Metadata_Type" substitutionGroup="mdb:MD_Metadata"/>
+	<!-- ........................................................................ -->
+	<complexType name="MI_Metadata_PropertyType">
+		<sequence>
+			<element ref="mac:MI_Metadata" minOccurs="0"/>
+		</sequence>
+		<attributeGroup ref="gco:ObjectReference"/>
+		<attribute ref="gco:nilReason"/>
+	</complexType>
+	<!-- =========================================================================== -->
+</schema>

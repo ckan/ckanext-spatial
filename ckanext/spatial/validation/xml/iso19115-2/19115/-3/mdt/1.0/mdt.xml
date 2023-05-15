@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mdt:MX_Aggregate xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://standards.iso.org/iso/19115/-3/mdt/1.0 https://schemas.isotc211.org/19115/-3/mdt/1.0/mdt.xsd"
+    xmlns:mda="http://standards.iso.org/iso/19115/-3/mda/1.0"
+    xmlns:cat="http://standards.iso.org/iso/19115/-3/cat/1.0"
+    xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/1.0"
+    xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
+    xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+ xmlns:mdt="http://standards.iso.org/iso/19115/-3/mdt/1.0"
+    xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
+    xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
+ xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/1.0">
+    <!-- 
+        This sample record demonstrates some of the structures available in the Metadata Application conformance class 
+    -->
+    <mda:has>
+        <mdb:MD_Metadata>
+            <!--
+                This MD_Metadata record describes the entire DS_OtherAggregate. In 19115 it was called seriesMetadata.
+            -->
+            <mdb:contact>
+                <cit:CI_Responsibility>
+                    <cit:role>
+                        <cit:CI_RoleCode codeList="codeListLocation#CI_RoleCode" codeListValue="pointOfContact">pointOfContact</cit:CI_RoleCode>
+                    </cit:role>
+                    <cit:party>
+                        <cit:CI_Organisation>
+                            <cit:name>
+                                <gco:CharacterString>Organisation Name</gco:CharacterString>
+                            </cit:name>
+                        </cit:CI_Organisation>
+                    </cit:party>
+                </cit:CI_Responsibility>
+            </mdb:contact>
+            <mdb:dateInfo>
+                <cit:CI_Date>
+                    <cit:date>
+                        <gco:DateTime>2014-04-03T16:00:00</gco:DateTime>
+                    </cit:date>
+                    <cit:dateType>
+                        <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="creation">creation</cit:CI_DateTypeCode>
+                    </cit:dateType>
+                </cit:CI_Date>
+            </mdb:dateInfo>
+            <mdb:identificationInfo>
+                <mri:MD_DataIdentification>
+                    <mri:citation>
+                        <cit:CI_Citation>
+                            <cit:title>
+                                <gco:CharacterString>Sample Metadata for Minimal Conformance Class</gco:CharacterString>
+                            </cit:title>
+                        </cit:CI_Citation>
+                    </mri:citation>
+                    <mri:abstract>
+                        <gco:CharacterString>This sample record has all required elements for minimal ISO 19115:2013 metadata</gco:CharacterString>
+                    </mri:abstract>
+                </mri:MD_DataIdentification>
+            </mdb:identificationInfo>
+        </mdb:MD_Metadata>
+    </mda:has>
+    <mda:composedOf>
+        <mdt:MX_Aggregate>
+            <mda:has>
+                <mdb:MD_Metadata>
+                    <mdb:contact/>
+                    <mdb:dateInfo/>
+                    <mdb:identificationInfo/>
+                </mdb:MD_Metadata>
+            </mda:has>
+            <mda:composedOf>
+                <mdt:MX_DataSet>
+                    <mda:has>
+                        <mdb:MD_Metadata>
+                            <mdb:contact/>
+                            <mdb:dateInfo/>
+                            <mdb:identificationInfo/>
+                        </mdb:MD_Metadata>
+                    </mda:has>
+                    <mdt:datasetCatalogue>
+                        <cat:CT_CodelistCatalogue xmlns="https://schemas.isotc211.org/19115/-3/cat/1.0">
+                            <cat:name></cat:name>
+                            <cat:scope></cat:scope>
+                            <cat:versionNumber></cat:versionNumber>
+                            <cat:versionDate></cat:versionDate>
+                            <cat:codelistItem></cat:codelistItem>
+                        </cat:CT_CodelistCatalogue>
+                    </mdt:datasetCatalogue>
+                    <mdt:supportFile/>
+                    <mdt:supportFile/>
+                    <mdt:dataFile/>
+                    <mdt:dataFile/>
+                </mdt:MX_DataSet>
+            </mda:composedOf>
+        </mdt:MX_Aggregate>
+    </mda:composedOf>
+</mdt:MX_Aggregate>

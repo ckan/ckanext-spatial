@@ -1,0 +1,123 @@
+<?xml-stylesheet type='text/xsl' href='./CodelistDictionary-v32.xsl'?>
+<Dictionary xmlns="http://www.opengis.net/gml/3.2"    xmlns:gml="http://www.opengis.net/gml/3.2"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="CI_DateTypeCode"
+  xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>identification of when a given event occurred</description>
+  <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0"
+    >CI_DateTypeCode</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="_12378_18854">
+      <description>date identifies when the resource was brought into existence</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0"
+        >creation</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12378_18855">
+      <description>date identifies when the resource was issued</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0"
+        >publication</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12378_18856">
+      <description>date identifies when the resource was examined or re-examined and improved or
+        amended</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0"
+        >revision</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12378_18857">
+      <description>date identifies when resource expires</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0"
+        >expiry</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12378_18858">
+      <description>date identifies when resource was last updated</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0"
+        >lastUpdate</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12378_18859">
+      <description>date identifies when resource was last reviewed</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0"
+        >lastRevision</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12378_18860">
+      <description>date identifies when resource will be next updated</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0"
+        >nextUpdate</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12378_18861">
+      <description>date identifies when resource became not available or obtainable</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0"
+        >unavailable</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12378_18862">
+      <description>date identifies when resource became in force</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0"
+        >inForce</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12378_18863">
+      <description>date identifies when resource was adopted</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0"
+        >adopted</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12378_18864">
+      <description>date identifies when resource was deprecated</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0"
+        >deprecated</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12378_18865">
+      <description>date identifies when resource was superseded or replaced by another
+        resource</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0"
+        >superseded</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12378_18866">
+      <description>time at which the data is considered to become valid. Note: There could be quite
+        a delay between creation and validity begins</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0"
+        >validityBegins</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12378_18867">
+      <description>time at which the data is no longer considered to be valid</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0"
+        >validityExpires</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12378_18868">
+      <description>the date that the resource shall be released for public access</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0"
+        >released</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12378_18869">
+      <description>date identifies when an instance of the resource was distributed</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0"
+        >distribution</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

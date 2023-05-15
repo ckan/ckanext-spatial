@@ -1,0 +1,48 @@
+<?xml-stylesheet type='text/xsl' href='./CodelistDictionary-v32.xsl'?><Dictionary xmlns="http://www.opengis.net/gml/3.2"    xmlns:gml="http://www.opengis.net/gml/3.2"    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="MI_PolarisationOrientationCode" xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>Description: polarisation of the antenna relative to the waveform&#13;
+shortName: PolarOrienCode&#13;
+</description>
+  <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mrc/1.0">MI_PolarisationOrientationCode</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="_12494_19297">
+      <description>Description: TBD&#13;
+Code: 001</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mrc/1.0">horizontal</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12494_19298">
+      <description>Description: TBD&#13;
+Code: 002</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mrc/1.0">vertical</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12494_19299">
+      <description>Description: TBD&#13;
+Code: 003</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mrc/1.0">leftCircular</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12494_19300">
+      <description>Description: TBD&#13;
+Code: 004</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mrc/1.0">rightCircular</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12494_19301">
+      <description>Description: TBD&#13;
+Code: 005</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mrc/1.0">theta</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12494_19302">
+      <description>Description: TBD&#13;
+Code: 006</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mrc/1.0">phi</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

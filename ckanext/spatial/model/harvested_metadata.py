@@ -234,7 +234,12 @@ class ISOLocalised(ISOElement):
                         "lan:LocalisedCharacterString/@locale",
                     ],
                     multiplicity="0..1",
-                )
+                ),
+                ISOElement(
+                    name="translation_method",
+                    search_paths=["@xlink:title"],
+                    multiplicity="0..1",
+                ),
             ]
         )
     ]
@@ -1660,7 +1665,7 @@ class ISODocument(MappedXmlDocument):
         self.infer_contact_email(values)
         self.infer_spatial(values)
         self.infer_metadata_language(values)
-        self.infert_keywords(values)
+        self.infer_keywords(values)
         self.infer_multilinguale(values)
         self.infer_multilinguale_resource(values)
         self.infer_guid(values)
@@ -1787,6 +1792,14 @@ class ISODocument(MappedXmlDocument):
         value['title'] = self.local_to_dict(value['title'], defaultLangKey)
         value['abstract'] = self.local_to_dict(
             value['abstract'], defaultLangKey)
+
+        # change user version key rather then edition so it is displayed as 'v1.0' instead of '1st Ed'
+        if value.get('edition'):           
+            value['version'] = value['edition']
+            del value['edition']
+        elif value.get('edition-date'):
+            value['version'] = value['edition-date']
+            del value['edition-date']      
 
         identifier = values.get('unique-resource-identifier-full', {})
         if identifier:
@@ -1928,7 +1941,7 @@ class ISODocument(MappedXmlDocument):
 
         return out
 
-    def infert_keywords(self, values):
+    def infer_keywords(self, values):
         keywords = values['keywords']
 
         defaultLangKey = self.cleanLangKey(
@@ -1940,17 +1953,19 @@ class ISODocument(MappedXmlDocument):
                 ktype = klist.get('type')
                 for item in klist.get('keywords', []):
                     LangDict = self.local_to_dict(item, defaultLangKey)
-                    value.append({
-                        'keyword': json.dumps(LangDict),
-                        'type': ktype
-                    })
+                    if LangDict != {}:
+                        value.append({
+                            'keyword': json.dumps(LangDict),
+                            'type': ktype
+                        })
         else:
             for item in keywords:
                 LangDict = self.local_to_dict(item, defaultLangKey)
-                value.append({
-                    'keyword': json.dumps(LangDict),
-                    'type': item.get('type')
-                })
+                if LangDict != {}:
+                    value.append({
+                        'keyword': json.dumps(LangDict),
+                        'type': item.get('type')
+                    })
         values['keywords'] = value
 
     def infer_multilinguale(self, values, defaultLangKey=''):
@@ -1958,6 +1973,7 @@ class ISODocument(MappedXmlDocument):
             defaultLangKey = self.cleanLangKey(
                 values.get('metadata-language', 'en'))
 
+        toAdd = {}
         for key in values:
             value = values[key]
 
@@ -1971,6 +1987,13 @@ class ISODocument(MappedXmlDocument):
             ):
                 LangDict = self.local_to_dict(values[key], defaultLangKey)
                 values[key] = json.dumps(LangDict)
+
+                local = value.get('local')
+                if isinstance(local, dict):
+                    langKey = self.cleanLangKey(local.get('language_code'))
+                    transMethod = local.get('translation_method')
+                    toAdd[key + '_translation_method'] = json.dumps({**{defaultLangKey: ""}, **{langKey: transMethod}})
+        values.update(toAdd)
 
     def infer_multilinguale_resource(self, values):
         defaultLangKey = self.cleanLangKey(

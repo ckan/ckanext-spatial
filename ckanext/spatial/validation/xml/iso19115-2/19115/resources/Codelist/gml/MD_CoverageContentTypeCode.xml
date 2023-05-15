@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='./CodelistDictionary-v32.xsl'?><Dictionary xmlns="http://www.opengis.net/gml/3.2"    xmlns:gml="http://www.opengis.net/gml/3.2"    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="MD_CoverageContentTypeCode" xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>specific type of information represented in the cell</description>
+  <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mrc/1.0">MD_CoverageContentTypeCode</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="_12506_19358">
+      <description>meaningful numerical representation of a physical parameter that is not the actual value of the physical parameter</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mrc/1.0">image</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12506_19359">
+      <description>code value with no quantitative meaning, used to represent a physical quantity</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mrc/1.0">thematicClassification</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12506_19360">
+      <description>value in physical units of the quantity being measured</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mrc/1.0">physicalMeasurement</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12506_19361">
+      <description>data, usually a physical measurement, used to support the calculation of the primary physicalMeasurement coverages in the dataset (e.g. grid of aerosol optical thickness used in the calculation of a sea surface temperature product).</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mrc/1.0">auxilliaryInformation</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12506_19362">
+      <description>data used to characterize the quality of the physicalMeasurement coverages in the dataset. Typically included in a gmi:QE_CoverageResult.</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mrc/1.0">qualityInformation</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12506_19363">
+      <description>reference intofmation used to support the calculation or use of the physicalMeasurement coverages in the dataset (e.g. grids of latitude/longitude used to geolocate the physical measurements).</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mrc/1.0">referenceInformation</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12506_19364">
+      <description>resources with values that are calculated using a model rather than being observed or calculated from observations.</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mrc/1.0">modelResult</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12506_19365">
+      <description>
+      </description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mrc/1.0">coordinate</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

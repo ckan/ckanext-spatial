@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='./CodelistDictionary-v32.xsl'?><Dictionary xmlns="http://www.opengis.net/gml/3.2"    xmlns:gml="http://www.opengis.net/gml/3.2"    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="MD_SpatialRepresentationTypeCode" xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>method used to represent geographic information in the resource</description>
+  <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mcc/1.0">MD_SpatialRepresentationTypeCode</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="_12311_18772">
+      <description>vector data is used to represent geographic data</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mcc/1.0">vector</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12311_18773">
+      <description>grid data is used to represent geographic data</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mcc/1.0">grid</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12311_18774">
+      <description>textual or tabular data is used to represent geographic data</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mcc/1.0">textTable</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12311_18775">
+      <description>triangulated irregular network</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mcc/1.0">tin</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12311_18776">
+      <description>three-dimensional view formed by the intersecting homologous rays of an overlapping pair of images</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mcc/1.0">stereoModel</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12311_18777">
+      <description>scene from a video recording</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mcc/1.0">video</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

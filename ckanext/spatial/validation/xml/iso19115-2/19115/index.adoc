@@ -1,0 +1,138 @@
+﻿= Base for ISO 19115 schemas
+:revdate: 2021-03-23
+
+== Base for ISO 19115 schemas
+
+=== Description
+
+Base for:
+
+* ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals and ISO
+ISO 19115-2, Geographic Information - Metadata - Part 2: Extensions for acquisition
+and processing. +
+Implemented to align with the original ISO 19115-1:2014 + Amd1:2018 + Amd 2:2021, ISO
+19115-2 Ed2:2019 (plus items that are particularly important to the ISO 19115 group):
+
+** Geographic Common Objects (ISO 19103)
+https://schemas.isotc211.org/19103/-/gco/1.2
+** Geographic Common objects eXtended (ISO 19103)
+https://schemas.isotc211.org/19103/-/gcx/1.2
+** Feature Catalogue Classes (ISO 19110)
+https://schemas.isotc211.org/19110/-/fcc/2.2
+** General Feature Classes (ISO 19110)
+https://schemas.isotc211.org/19110/-/gfc/2.2
+** Reference By Coordinates (ISO 19111)
+https://schemas.isotc211.org/19111/-/rbc/3.1
+** metadata for CITation and responsibility (ISO 19115-1)
+https://schemas.isotc211.org/19115/-1/cit/1.3
+** metadata for Geographic EXtent (ISO 19115-1)
+https://schemas.isotc211.org/19115/-1/gex/1.3
+** metadata for LANguage and localization (ISO 19115-1)
+https://schemas.isotc211.org/19115/-1/lan/1.3
+** Metadata for ACquisition (ISO 19115-2)
+https://schemas.isotc211.org/19115/-2/mac/2.2
+** Metadata for Application Schemas (ISO 19115-1)
+https://schemas.isotc211.org/19115/-1/mas/1.3
+** Metadata Common Classes (ISO 19115-1)
+https://schemas.isotc211.org/19115/-1/mcc/1.3
+** Metadata for COnstraints (ISO 19115-1)
+https://schemas.isotc211.org/19115/-1/mco/1.3
+** MetaData for Applications (ISO 19115-1)
+https://schemas.isotc211.org/19115/-1/mda/1.3
+** MetaData Base (ISO 19115-1)
+https://schemas.isotc211.org/19115/-1/mdb/1.3
+** Metadata EXtensions (ISO 19115-1)
+https://schemas.isotc211.org/19115/-1/mex/1.3
+** Metadata for Maintenance Information (ISO 19115-1)
+https://schemas.isotc211.org/19115/-1/mmi/1.3
+** Metadata for Portrayal Catalogues (ISO 19115-1)
+https://schemas.isotc211.org/19115/-1/mpc/1.3
+** Metadata for Resource Content (ISO 19115-1)
+https://schemas.isotc211.org/19115/-1/mrc/1.3
+** Metadata for Resource Content Imagery (ISO 19115-2)
+https://schemas.isotc211.org/19115/-1/mrc/1.3
+** Metadata for Resource Distribution (ISO 19115-1)
+https://schemas.isotc211.org/19115/-1/mrd/1.3
+** Metadata for Resource Identification (ISO 19115-1)
+https://schemas.isotc211.org/19115/-1/mri/1.3
+** Metadata for Resource Lineage (ISO 19115-1)
+https://schemas.isotc211.org/19115/-1/mrl/1.3
+** Metadata for Resource Lineage (ISO 19115-2)
+https://schemas.isotc211.org/19115/-1/mrl/1.3
+** Metadata for Reference Systems (ISO 19115-1)
+https://schemas.isotc211.org/19115/-1/mrs/1.3
+** Metadata for Spatial Representation (ISO 19115-1)
+https://schemas.isotc211.org/19115/-1/msr/1.3
+** Metadata for Spatial Representation (ISO 19115-2)
+https://schemas.isotc211.org/19115/-1/msr/1.3
+** Metadata for SeRVices (ISO 19115-1)
+https://schemas.isotc211.org/19115/-1/srv/1.3
+** Geographic Markup Wrapper (ISO 19136)
+https://schemas.isotc211.org/19136/-/gmw/1.1
+** Dara Quality abstract Classes (ISO 19157)
+https://schemas.isotc211.org/19157/-/dqc/1.2
+** Metadata for Data Quality (ISO 19157)
+https://schemas.isotc211.org/19157/-/mdq/1.2
+** Geospatial Meta-Language
+http://www.opengis.net/gml/3.2[http://schemas.opengis.net/gml/3.2.1/gml.xsd]
+
+* ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals and ISO
+ISO 19115-2, Geographic Information - Metadata - Part 2: Extensions for acquisition
+and processing. +
+As implemented by ISO 19115-3:2016:
+
+** Geographic Common Objects (ISO 19103)
+https://schemas.isotc211.org/19115/-3/gco/1.0
+** Geographic Common objects eXtended (ISO 19103)
+https://schemas.isotc211.org/19115/-3/gcx/1.0
+** metadata for CITation and responsibility
+https://schemas.isotc211.org/19115/-3/cit/2.0
+** metadata for Geographic EXtent
+https://schemas.isotc211.org/19115/-3/gex/1.0
+** metadata for LANguage and localization
+https://schemas.isotc211.org/19115/-3/lan/1.0
+** Metadata for ACquisition
+https://schemas.isotc211.org/19115/-2/mac/2.0
+** Metadata for Application Schemas
+https://schemas.isotc211.org/19115/-3/mas/1.0
+** Metadata Common Classes
+https://schemas.isotc211.org/19115/-3/mcc/1.0
+** Metadata for COnstraints
+https://schemas.isotc211.org/19115/-3/mco/1.0
+** MetaData for Applications
+https://schemas.isotc211.org/19115/-3/mda/2.0
+** MetaData Base
+https://schemas.isotc211.org/19115/-3/mdb/2.0
+** MetaData for Service identification
+https://schemas.isotc211.org/19115/-3/mds/2.0
+** Metadata for Data Transfer
+https://schemas.isotc211.org/19115/-3/mdt/2.0
+** Metadata EXtensions
+https://schemas.isotc211.org/19115/-3/mex/1.0
+** Metadata for Maintenance Information
+https://schemas.isotc211.org/19115/-3/mmi/1.0
+** Metadata for Portrayal Catalogues
+https://schemas.isotc211.org/19115/-3/mpc/1.0
+** Metadata for Resource Content
+https://schemas.isotc211.org/19115/-3/mrc/2.0
+** Metadata for Resource Distribution
+https://schemas.isotc211.org/19115/-3/mrd/1.0
+** Metadata for Resource Identification
+https://schemas.isotc211.org/19115/-3/mri/1.0
+** Metadata for Resource Lineage
+https://schemas.isotc211.org/19115/-3/mrl/2.0
+** Metadata for Reference Systems
+https://schemas.isotc211.org/19115/-3/mrs/1.0
+** Metadata for Spatial Representation
+https://schemas.isotc211.org/19115/-3/msr/2.0
+** Metadata for SeRVices
+https://schemas.isotc211.org/19115/-3/srv/2.0
+** Geographic Markup Wrapper (ISO 19136)
+https://schemas.isotc211.org/19115/-3/gmw/1.0
+** CATalogues (ISO 19139)
+https://schemas.isotc211.org/19115/-3/cat/1.0
+
+=== Working Versions
+
+When revisions to these schema become necessary, they will be managed in the
+https://github.com/ISO-TC211/XML[ISO TC211 Git Repository].

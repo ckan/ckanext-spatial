@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mdb:MD_Metadata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://standards.iso.org/iso/19115/-3/mdb/1.0 ../../mdb/1.0/mdb.xsd"
+   xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/1.0"    xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"    xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
+   xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"    xmlns:gml="http://www.opengis.net/gml/3.2">
+   <mdb:metadataIdentifier/>
+   <mdb:metadataScope/>
+   <mdb:contact/>
+   <mdb:dateInfo/>
+   <mdb:identificationInfo>
+      <mri:MD_DataIdentification>
+         <mri:citation/>
+         <mri:abstract/>
+         <!-- invalid for rule.gex.extenthasoneelement -->
+         <mri:extent>
+            <gex:EX_Extent>
+               <gex:description/>
+            </gex:EX_Extent>
+         </mri:extent>
+         <mri:extent>
+            <gex:EX_Extent>
+               <gex:description>
+                  <gco:CharacterString>description</gco:CharacterString>
+               </gex:description>
+               <gex:verticalElement>
+                  <!-- invalid for rule.gex.verticalhascrsorcrsid -->
+                  <gex:EX_VerticalExtent>
+                     <gex:minimumValue/>
+                     <gex:maximumValue/>
+                  </gex:EX_VerticalExtent>
+               </gex:verticalElement>
+            </gex:EX_Extent>
+         </mri:extent>
+      </mri:MD_DataIdentification>
+   </mdb:identificationInfo>
+</mdb:MD_Metadata>

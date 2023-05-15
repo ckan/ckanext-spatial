@@ -1,0 +1,34 @@
+<?xml-stylesheet type='text/xsl' href='./CodelistDictionary-v32.xsl'?><Dictionary xmlns="http://www.opengis.net/gml/3.2"    xmlns:gml="http://www.opengis.net/gml/3.2"    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="MD_PixelOrientationCode" xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>point in a pixel corresponding to the Earth location of the pixel</description>
+  <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">MD_PixelOrientationCode</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="_12521_19410">
+      <description>point halfway between the lower left and the upper right of the pixel</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">centre</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12521_19411">
+      <description>the corner in the pixel closest to the origin of the SRS; if two are at the same distance from the origin, the one with the smallest x-value</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">lowerLeft</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12521_19412">
+      <description>next corner counterclockwise from the lower left</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">lowerRight</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12521_19413">
+      <description>next corner counterclockwise from the lower right</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">upperRight</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12521_19414">
+      <description>next corner counterclockwise from the upper right</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">upperLeft</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

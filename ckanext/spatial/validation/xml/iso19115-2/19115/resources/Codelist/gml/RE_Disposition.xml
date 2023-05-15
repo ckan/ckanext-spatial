@@ -1,0 +1,30 @@
+<?xml-stylesheet type='text/xsl' href='./CodelistDictionary-v32.xsl'?>
+<Dictionary xmlns="http://www.opengis.net/gml/3.2" 
+  xmlns:gml="http://www.opengis.net/gml/3.2"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  gml:id="RE_Disposition"
+  xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>Attributedisposition[0..1] Type RE_Disposition</description>
+  <identifier codeSpace="https://schemas.isotc211.org/19135/-2/reg/1.0">RE_Disposition</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="_9344_12326">
+      <description>
+      </description>
+      <identifier codeSpace="https://schemas.isotc211.org/19135/-2/reg/1.0">withdrawn</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_9344_12327">
+      <description>
+      </description>
+      <identifier codeSpace="https://schemas.isotc211.org/19135/-2/reg/1.0">accepted</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_9344_12328">
+      <description>
+      </description>
+      <identifier codeSpace="https://schemas.isotc211.org/19135/-2/reg/1.0">notAccepted</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

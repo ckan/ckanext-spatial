@@ -1,0 +1,44 @@
+﻿= Codelist Catalog
+:edition: 0.1
+:revdate: 2017-09-10
+
+== Codelist Catalog
+
+This report describes the ISO TC211 codelist catalogs, the codelists they contain,
+and the values and definitions of the codes.
+
+Please contact mailto:rehabermann@me.com[Ted Habermann] if you have questions or
+suggestions.
+
+=== Catalog
+
+Name:: Codelists from the Metadata for Resource Distribution (mrd) Namespace
+Scope:: Codelists from the Metadata for Resource Distribution (mrd) Namespace
+Field of application:: ISO TC211 Metadata Standards
+Version:: 0.1
+Date:: 2017-09-10
+Number of CodeLists:: 1
+Number of items:: 7
+
+=== Codelists
+
+
+=== MD_MediumFormatCode
+
+Description:: method used to write to the medium
+CodeSpace:: http://standards.iso.org/iso/19115/-3/mrd/1.0
+Number of items:: 7
+
+[%unnumbered]
+[options=header,cols=2]
+|===
+| Entry | Definition
+
+| cpio | Copy In / Out (UNIX file format and command)
+| tar | Tape Archive
+| highSierra | high sierra file system
+| iso9660 | information processing volume and file structure of CD-ROM
+| iso9660RockRidge | rock ridge interchange protocol (UNIX)
+| iso9660AppleHFS | hierarchical file system (Macintosh)
+| udf | universal disk format
+|===
