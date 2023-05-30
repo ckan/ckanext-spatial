@@ -89,6 +89,8 @@ class DatastreamSitemapHarvester(WAFHarvester, SingletonPlugin):
 
         # All DataStream datasets have a DOI so we use that to populate the citation
         iso_values["citation"] = '{"fr": "%s", "en": "%s"}' % (iso_values['unique-resource-identifier'], iso_values['unique-resource-identifier'])
+        package_dict['unique-resource-identifier-full'] = []
+        package_dict['unique-resource-identifier-full'].append({'code': iso_values['unique-resource-identifier']})
 
         # TODO: determin if we can set EOV to something useful
         if not package_dict.get("eov"):
