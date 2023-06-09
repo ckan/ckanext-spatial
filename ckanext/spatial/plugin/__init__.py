@@ -2,7 +2,7 @@ import os
 import mimetypes
 from logging import getLogger
 
-import six
+
 import geojson
 
 import shapely.geometry
@@ -138,10 +138,10 @@ class SpatialMetadata(p.SingletonPlugin):
         try:
             log.debug("Received geometry: {}".format(geometry))
 
-            geometry = geojson.loads(six.text_type(geometry))
+            geometry = geojson.loads(str(geometry))
         except ValueError as e:
             error_dict = {
-                "spatial": ["Error decoding JSON object: {}".format(six.text_type(e))]}
+                "spatial": ["Error decoding JSON object: {}".format(str(e))]}
             raise tk.ValidationError(error_dict)
 
         if not hasattr(geometry, "is_valid") or not geometry.is_valid:
@@ -158,7 +158,7 @@ class SpatialMetadata(p.SingletonPlugin):
             except Exception as e:
                 if bool(os.getenv('DEBUG')):
                     raise
-                error_dict = {"spatial": ["Error: {}".format(six.text_type(e))]}
+                error_dict = {"spatial": ["Error: {}".format(str(e))]}
                 raise tk.ValidationError(error_dict)
 
     # ITemplateHelpers

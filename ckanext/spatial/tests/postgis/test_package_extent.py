@@ -1,5 +1,5 @@
 import pytest
-import six
+
 import time
 import random
 
@@ -151,7 +151,7 @@ def create_package(**package_dict):
 )
 class TestCompareGeometries(SpatialTestBase):
     def _get_extent_object(self, geometry):
-        if isinstance(geometry, six.string_types):
+        if isinstance(geometry, str):
             geometry = json.loads(geometry)
         geom_obj = shape(geometry)
         return PackageExtent(package_id="xxx", the_geom=WKTElement(geom_obj.wkt, 4326))
@@ -190,8 +190,8 @@ class SpatialQueryTestBase(SpatialTestBase):
             bbox = self.x_values_to_bbox(fixture_x)
             bbox_geojson = bbox_2_geojson(bbox)
             create_package(
-                name=munge_title_to_name(six.text_type(fixture_x)),
-                title=six.text_type(fixture_x),
+                name=munge_title_to_name(str(fixture_x)),
+                title=str(fixture_x),
                 extras=[{"key": "spatial", "value": bbox_geojson}],
             )
 

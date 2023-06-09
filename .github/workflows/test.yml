@@ -22,13 +22,8 @@ jobs:
         include:
           - ckan-version: "2.10"
             solr-image: "2.10-spatial"
-            requirements-file: 'requirements.txt'
           - ckan-version: 2.9
             solr-image: 2.9-solr8-spatial
-            requirements-file: 'requirements.txt'
-          - ckan-version: 2.9-py2
-            solr-image: 2.9-py2-solr8-spatial
-            requirements-file: 'requirements-py2.txt'
       fail-fast: false
     
     name: CKAN ${{ matrix.ckan-version }}, Solr ${{ matrix.solr-image }}
@@ -89,10 +84,10 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-spatial-ckan-${{ matrix.ckan-version }}-${{ hashFiles('*requirements*.txt') }}
 
-    - name: Install dependencies from ${{ matrix.requirements-file }}
+    - name: Install dependencies
       if: steps.cache.outputs.cache-hit != 'true'
       run: |
-        pip install -r ${{ matrix.requirements-file }}
+        pip install -r requirements.txt
 
     - name: Install harvester
       if: steps.cache.outputs.cache-hit != 'true'

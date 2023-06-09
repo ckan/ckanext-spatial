@@ -27,6 +27,8 @@ Supported Versions
 ------------------
 
 ckanext-spatial >= 2.0.0 supports CKAN 2.9 and CKAN 2.10.
+ckanext-spatial >= 2.1.0 supports Python 3 only.
+
 Check the
 [tested enviroments](https://github.com/ckan/ckanext-spatial/blob/master/.github/workflows/test.yml)
 for more details.  
