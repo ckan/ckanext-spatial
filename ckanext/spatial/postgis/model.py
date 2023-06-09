@@ -1,7 +1,7 @@
 import logging
 from string import Template
 
-import six
+
 from sqlalchemy import Table, Column, types, func
 
 from geoalchemy2.elements import WKTElement
@@ -228,7 +228,7 @@ def bbox_query_ordered(bbox, srid=None):
     input_geometry = _bbox_2_wkt(bbox, srid)
 
     params = {
-        "query_bbox": six.text_type(input_geometry),
+        "query_bbox": str(input_geometry),
         "query_srid": input_geometry.srid,
     }
 

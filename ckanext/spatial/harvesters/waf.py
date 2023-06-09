@@ -1,7 +1,6 @@
 from __future__ import print_function
 
-import six
-from six.moves.urllib.parse import urljoin
+from urllib.parse import urljoin
 import logging
 import hashlib
 
@@ -9,7 +8,6 @@ import dateutil.parser
 import pyparsing as parse
 import requests
 from sqlalchemy.orm import aliased
-from sqlalchemy.exc import DataError
 
 from ckan import model
 
@@ -98,7 +96,7 @@ class WAFHarvester(SpatialHarvester, SingletonPlugin):
 
         url_to_modified_harvest = {} ## mapping of url to last_modified in harvest
         try:
-            for url, modified_date in _extract_waf(six.text_type(content),source_url,scraper):
+            for url, modified_date in _extract_waf(str(content),source_url,scraper):
                 url_to_modified_harvest[url] = modified_date
         except Exception as e:
             msg = 'Error extracting URLs from %s, error was %s' % (source_url, e)
@@ -316,16 +314,16 @@ def _extract_waf(content, base_url, scraper, results = None, depth=0):
                 response = requests.get(new_url)
                 content = response.content
             except Exception as e:
-                print(six.text_type(e))
+                print(str(e))
                 continue
-            _extract_waf(six.text_type(content), new_url, scraper, results, new_depth)
+            _extract_waf(str(content), new_url, scraper, results, new_depth)
             continue
         if not url.endswith('.xml'):
             continue
         date = record.date
         if date:
             try:
-                date = six.text_type(dateutil.parser.parse(date))
+                date = str(dateutil.parser.parse(date))
             except Exception as e:
                 raise
                 date = None

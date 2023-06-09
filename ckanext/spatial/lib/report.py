@@ -3,9 +3,9 @@ Library for creating reports that can be displayed easily in an HTML table
 and then saved as a CSV.
 '''
 
-from six import text_type, StringIO
 import datetime
 import csv
+from io import StringIO
 
 
 class ReportTable(object):
@@ -52,9 +52,9 @@ class ReportTable(object):
                 if isinstance(cell, datetime.datetime):
                     cell = cell.strftime('%Y-%m-%d %H:%M')
                 elif isinstance(cell, int):
-                    cell = text_type(cell)
+                    cell = str(cell)
                 elif isinstance(cell, (list, tuple)):
-                    cell = text_type(cell)
+                    cell = str(cell)
                 elif cell is None:
                     cell = ''
                 else:
@@ -63,6 +63,6 @@ class ReportTable(object):
             try:
                 csvwriter.writerow(row_formatted)
             except Exception as e:
-                raise Exception("%s: %s, %s"%(e, row, row_formatted))
+                raise Exception("%s: %s, %s" % (e, row, row_formatted))
         csvout.seek(0)
         return csvout.read()
