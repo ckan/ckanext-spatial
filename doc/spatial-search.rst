@@ -67,7 +67,7 @@ processing on the geometries before indexing.
 
 In this case you need to implement the ``before_dataset_index()`` method of the `IPackageController <https://docs.ckan.org/en/latest/extensions/plugin-interfaces.html#ckan.plugins.interfaces.IPackageController.before_dataset_index>`_ interface::
 
-    def before_dataset_search(self, dataset_dict):
+    def before_dataset_index(self, dataset_dict):
 
         # When using the default `solr-bbox` backend (based on bounding boxes), you need to
         # include the following fields in the returned dataset_dict:
