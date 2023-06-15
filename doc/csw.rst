@@ -90,9 +90,8 @@ Setup
 
     sudo -u postgres createdb -O ckan_default pycsw -E utf-8
 
-   It is strongly recommended that you install PostGIS in the pycsw databaset,
-   so its spatial functions are used. See the :ref:`install_postgis`
-   section for details.
+   It is strongly recommended that you install PostGIS in the pycsw database,
+   so its spatial functions are used.
 
 3. Configure pycsw. An example configuration file is included on the source::
 

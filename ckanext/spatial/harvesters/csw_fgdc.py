@@ -28,7 +28,7 @@ from ckanext.spatial.harvesters.base import (SpatialHarvester,
                                              text_traceback,
                                              guess_resource_format)
 
-from ckanext.spatial.model import FGDCDocument
+from ckanext.spatial.harvested_metadata_fgdc import FGDCDocument
 from ckanext.spatial.interfaces import ISpatialHarvester
 from ckantoolkit import config
 
