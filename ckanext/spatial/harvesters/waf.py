@@ -235,6 +235,16 @@ apache  = parse.SkipTo(parse.CaselessLiteral("<a href="), include=True).suppress
         ,adjacent=False, joinString=' ').setResultsName('date')
         )
 
+nginx   = parse.SkipTo(parse.CaselessLiteral("<a href="), include=True).suppress() \
+        + parse.quotedString.setParseAction(parse.removeQuotes).setResultsName('url') \
+        + parse.SkipTo("</a>", include=True).suppress() \
+        + parse.Optional(parse.Literal('</td><td align="right">')).suppress() \
+        + parse.Optional(parse.Combine(
+            parse.Word(parse.alphanums+'-') +
+            parse.Word(parse.alphanums+':')
+        ,adjacent=False, joinString=' ').setResultsName('date')
+        )
+
 iis =      parse.SkipTo("<br>").suppress() \
          + parse.OneOrMore("<br>").suppress() \
          + parse.Optional(parse.Combine(
@@ -252,12 +262,15 @@ other = parse.SkipTo(parse.CaselessLiteral("<a href="), include=True).suppress()
 
 
 scrapers = {'apache': parse.OneOrMore(parse.Group(apache)),
+            'nginx': parse.OneOrMore(parse.Group(nginx)),
             'other': parse.OneOrMore(parse.Group(other)),
             'iis': parse.OneOrMore(parse.Group(iis))}
 
 def _get_scraper(server):
     if not server or 'apache' in server.lower():
         return 'apache'
+    if 'nginx' in server.lower():
+        return 'nginx'
     if server == 'Microsoft-IIS/7.5':
         return 'iis'
     else:

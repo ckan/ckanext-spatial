@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import pytest
+import os
 
 geojson_examples = {
-    "point": '{"type":"Point","coordinates":[100.0,0.0]}',
+    "point": '{"type":"Point","coordinates":[100.0,2.0]}',
     "point_2": '{"type":"Point","coordinates":[20,10]}',
     "line": '{"type":"LineString","coordinates":[[100.0,0.0],[101.0,1.0]]}',
     "polygon": '{"type":"Polygon","coordinates":[[[100.0,0.0],[101.0,0.0],'
@@ -25,3 +25,10 @@ geojson_examples = {
 class SpatialTestBase(object):
     db_srid = 4326
     geojson_examples = geojson_examples
+
+    def read_file(self, path):
+
+        file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), path)
+
+        with open(file_path, "r") as f:
+            return f.read()

@@ -11,11 +11,12 @@ e.g.
 {% snippet "spatial/snippets/spatial_query.html", default_extent="{ \"type\": \"Polygon\", \"coordinates\": [[[74.89, 29.39],[74.89, 38.45], [60.50, 38.45], [60.50, 29.39], [74.89, 29.39]]]}" %}
 
 #}
+
 <section id="dataset-map" class="module module-narrow module-shallow">
     <h2 class="module-heading">
-        <i class="icon-medium icon-globe"></i>
+        <i class="fa fa-globe"></i>
         {{ _('Filter by location') }}
-        <a href="{{ h.remove_url_param(['ext_bbox','ext_prev_extent', 'ext_location']) }}" class="action">{{ _('Clear') }}</a>
+        <a href="{{ h.remove_url_param(['ext_bbox']) }}" class="action">{{ _('Clear') }}</a>
     </h2>
     {% set map_config = h.get_common_map_config() %}
     <div class="dataset-map" data-module="spatial-query" data-default_extent="{{ default_extent }}" data-module-map_config="{{ h.dump_json(map_config) }}">

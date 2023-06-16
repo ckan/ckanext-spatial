@@ -1,24 +1,24 @@
 import pytest
-from ckan.lib.helpers import url_for
 
 from ckanext.spatial.tests.base import SpatialTestBase
 
-import ckan.tests.factories as factories
+from ckan.tests import factories
 
 import ckan.plugins.toolkit as tk
 
+
+@pytest.mark.usefixtures("with_plugins", "clean_db", "clean_index", "harvest_setup")
+@pytest.mark.ckan_config(
+    "ckan.plugins", "test_spatial_plugin spatial_metadata spatial_query")
 class TestSpatialWidgets(SpatialTestBase):
-    @pytest.mark.usefixtures('with_plugins', 'clean_postgis', 'clean_db', 'clean_index', 'harvest_setup', 'spatial_setup')
     def test_dataset_map(self, app):
         dataset = factories.Dataset(
-            extras=[
-                {"key": "spatial", "value": self.geojson_examples["point"]}
-            ],
+            extras=[{"key": "spatial", "value": self.geojson_examples["point"]}],
         )
         if tk.check_ckan_version(min_version="2.9"):
-            offset = url_for("dataset.read", id=dataset["id"])
+            offset = tk.url_for("dataset.read", id=dataset["id"])
         else:
-            offset = url_for(controller="package", action="read", id=dataset["id"])
+            offset = tk.url_for(controller="package", action="read", id=dataset["id"])
         res = app.get(offset)
 
         assert 'data-module="dataset-map"' in res
@@ -26,9 +26,9 @@ class TestSpatialWidgets(SpatialTestBase):
 
     def test_spatial_search_widget(self, app):
         if tk.check_ckan_version(min_version="2.9"):
-            offset = url_for("dataset.search")
+            offset = tk.url_for("dataset.search")
         else:
-            offset = url_for(controller="package", action="search")
+            offset = tk.url_for(controller="package", action="search")
         res = app.get(offset)
 
         assert 'data-module="spatial-query"' in res
