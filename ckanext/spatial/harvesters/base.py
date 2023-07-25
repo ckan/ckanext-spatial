@@ -23,7 +23,7 @@ from ckan import plugins as p
 from ckan import model
 from ckan.lib.helpers import json
 from ckan import logic
-from ckan.lib.navl.validators import not_empty
+from ckan.lib.navl.validators import not_empty, unicode_safe
 from ckan.lib.search.index import PackageSearchIndex
 from ckanext.harvest.harvesters.base import munge_tag
 
@@ -646,7 +646,7 @@ class SpatialHarvester(HarvesterBase):
 
         # The default package schema does not like Upper case tags
         tag_schema = logic.schema.default_tags_schema()
-        tag_schema['name'] = [not_empty, six.text_type]
+        tag_schema['name'] = [not_empty, unicode_safe]
 
         # Flag this object as the current one
         harvest_object.current = True
@@ -660,7 +660,7 @@ class SpatialHarvester(HarvesterBase):
             # We need to explicitly provide a package ID, otherwise ckanext-spatial
             # won't be be able to link the extent to the package.
             package_dict['id'] = six.text_type(uuid.uuid4())
-            package_schema['id'] = [six.text_type]
+            package_schema['id'] = [unicode_safe]
 
             # Save reference to the package on the object
             harvest_object.package_id = package_dict['id']
