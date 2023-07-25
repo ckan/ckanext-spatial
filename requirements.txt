@@ -4,7 +4,7 @@ argparse
 pyparsing>=2.1.10
 requests>=1.1.0
 six
-
+cython==0.29.36; python_version < '3.9'
 pyproj==2.6.1; python_version < '3.9'
 pyproj==3.4.1; python_version >= '3.9'
 
