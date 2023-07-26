@@ -96,7 +96,7 @@ jobs:
       if: ${{ matrix.ckan-version == '2.10' }}
       run: |
         pip install cython>3
-        pip install --no-use-pep517 pyproj==3.4.1
+        pip install pyproj==3.4.1
 
     - name: Patch to test pyproj
       if: ${{ matrix.ckan-version == '2.9' }}
