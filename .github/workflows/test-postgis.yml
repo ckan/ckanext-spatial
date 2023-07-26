@@ -21,7 +21,7 @@ jobs:
           - ckan-version: 2.9
             harvester-version: 'master'
           - ckan-version: 2.9-py2
-            harvester-version: '1.4.2'
+            harvester-version: 'v1.4.2'
       fail-fast: false
     
     name: CKAN ${{ matrix.ckan-version }}

@@ -31,7 +31,7 @@ jobs:
           - ckan-version: 2.9-py2
             solr-image: 2.9-py2-solr8-spatial
             requirements-file: 'requirements-py2.txt'
-            harvester-version: '1.4.2'
+            harvester-version: 'v1.4.2'
       fail-fast: false
     
     name: CKAN ${{ matrix.ckan-version }}, Solr ${{ matrix.solr-image }}
@@ -91,6 +91,12 @@ jobs:
         key: ${{ runner.os }}-spatial-ckan-${{ matrix.ckan-version }}-${{ hashFiles('*requirements*.txt') }}
         restore-keys: |
           ${{ runner.os }}-spatial-ckan-${{ matrix.ckan-version }}-${{ hashFiles('*requirements*.txt') }}
+
+    - name: Patch to test pyproj
+      if: ${{ matrix.ckan-version == '2.10' }}
+      run: |
+        pip install cython>3
+        pip install --no-use-pep517 pyproj==3.4.1
 
     - name: Patch to test pyproj
       if: ${{ matrix.ckan-version == '2.9' }}
