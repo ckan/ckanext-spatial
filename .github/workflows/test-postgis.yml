@@ -17,7 +17,11 @@ jobs:
     needs: lint
     strategy:
       matrix:
-        ckan-version: [2.9, 2.9-py2]
+        include:
+          - ckan-version: 2.9
+            harvester-version: 'master'
+          - ckan-version: 2.9-py2
+            harvester-version: 'v1.4.2'
       fail-fast: false
     
     name: CKAN ${{ matrix.ckan-version }}
@@ -53,9 +57,10 @@ jobs:
         psql --host=postgres --username=postgres --command="CREATE USER datastore_write WITH PASSWORD 'pass' NOSUPERUSER NOCREATEDB NOCREATEROLE;"
         psql --host=postgres --username=postgres --command="CREATE USER datastore_read WITH PASSWORD 'pass' NOSUPERUSER NOCREATEDB NOCREATEROLE;"
         createdb --encoding=utf-8 --host=postgres --username=postgres --owner=datastore_write datastore_test
+
     - name: Install harvester
       run: |
-        git clone https://github.com/ckan/ckanext-harvest
+        git clone --branch ${{ matrix.harvester-version }} https://github.com/ckan/ckanext-harvest
         cd ckanext-harvest
         pip install -r pip-requirements.txt
         pip install -r dev-requirements.txt
@@ -72,6 +77,19 @@ jobs:
           gcc \
           libxml2-dev \
           libxslt-dev
+
+    - name: Patch to test pyproj
+      if: ${{ matrix.ckan-version == '2.9-py2' || matrix.ckan-version == '2.8' || matrix.ckan-version == '2.7' }}
+      run: |
+        pip install cython==0.29.36
+        pip install --no-use-pep517 pyproj==2.2.2
+
+    - name: Patch to test pyproj
+      if: ${{ matrix.ckan-version == '2.9' }}
+      run: |
+        pip install cython==0.29.36
+        pip install --no-use-pep517 pyproj==2.6.1
+
     - name: Install dependencies (python2)
       if: ${{ matrix.ckan-version == '2.9-py2' || matrix.ckan-version == '2.8' || matrix.ckan-version == '2.7' }}
       run: |
@@ -86,6 +104,7 @@ jobs:
           python3-dev
         pip install -r requirements.txt
         pip install -r requirements-postgis.txt
+
     - name: Install requirements
       run: |
         pip install -e .

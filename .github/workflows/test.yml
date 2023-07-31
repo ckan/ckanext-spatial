@@ -23,12 +23,15 @@ jobs:
           - ckan-version: "2.10"
             solr-image: "2.10-spatial"
             requirements-file: 'requirements.txt'
+            harvester-version: 'master'
           - ckan-version: 2.9
             solr-image: 2.9-solr8-spatial
             requirements-file: 'requirements.txt'
+            harvester-version: 'master'
           - ckan-version: 2.9-py2
             solr-image: 2.9-py2-solr8-spatial
             requirements-file: 'requirements-py2.txt'
+            harvester-version: 'v1.4.2'
       fail-fast: false
     
     name: CKAN ${{ matrix.ckan-version }}, Solr ${{ matrix.solr-image }}
@@ -89,6 +92,18 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-spatial-ckan-${{ matrix.ckan-version }}-${{ hashFiles('*requirements*.txt') }}
 
+    - name: Patch to test pyproj
+      if: ${{ matrix.ckan-version == '2.9' }}
+      run: |
+        pip install cython==0.29.36
+        pip install --no-use-pep517 pyproj==2.6.1
+
+    - name: Patch to test pyproj
+      if: ${{ matrix.ckan-version == '2.9-py2' }}
+      run: |
+        pip install cython==0.28.4
+        pip install --no-use-pep517 pyproj==2.2.2
+
     - name: Install dependencies from ${{ matrix.requirements-file }}
       if: steps.cache.outputs.cache-hit != 'true'
       run: |
@@ -98,7 +113,7 @@ jobs:
       if: steps.cache.outputs.cache-hit != 'true'
       run: |
         echo "Installing harvester"
-        git clone --depth 1 https://github.com/ckan/ckanext-harvest
+        git clone --depth 1 --branch ${{ matrix.harvester-version }} https://github.com/ckan/ckanext-harvest
         cd ckanext-harvest
         echo "upgrade pip"
         pip install --upgrade pip
