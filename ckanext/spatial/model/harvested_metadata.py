@@ -833,7 +833,7 @@ class ISOCitation(ISOElement):
             search_paths=[
                 # 19115-3
                 "cit:date/cit:CI_Date[cit:dateType/cit:CI_DateTypeCode/@codeListValue != 'creation']",
-                "ancestor::mdb:MD_Metadata/mdb:dateInfo/cit:CI_Date"
+                "ancestor::mdb:MD_Metadata/mdb:dateInfo/cit:CI_Date",
             ],
             multiplicity="1..*",
         ),
@@ -991,7 +991,7 @@ class ISODocument(MappedXmlDocument):
                 "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date",
                 "gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date",
                 # 19115-3
-                "mdb:identificationInfo/mri:MD_DataIdentification/mri:citation/cit:CI_Citation/cit:date/cit:CI_Date"
+                "mdb:identificationInfo/mri:MD_DataIdentification/mri:citation/cit:CI_Citation/cit:date/cit:CI_Date",
             ],
             multiplicity="1..*",
         ),
@@ -1012,7 +1012,7 @@ class ISODocument(MappedXmlDocument):
                 # ISO 19139
                 "gmd:fileIdentifier/gco:CharacterString/text()",
                 # 19115-3
-                "mdb:metadataIdentifier/mcc:MD_Identifier"
+                "mdb:metadataIdentifier/mcc:MD_Identifier",
             ],
             multiplicity="0..1",
         ),
