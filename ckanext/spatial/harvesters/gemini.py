@@ -588,6 +588,8 @@ class GeminiCswHarvester(GeminiHarvester, SingletonPlugin):
         # Get source URL
         url = harvest_job.source.url
 
+        self._set_source_config(harvest_job.source.config)
+
         try:
             self._setup_csw_client(url)
         except Exception as e:
