@@ -1278,10 +1278,23 @@ class ISODocument(MappedXmlDocument):
         ISOElement(
             name="dataset-language",
             search_paths=[
+                # ISO19139
                 "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:language/gmd:LanguageCode/@codeListValue",
                 "gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:language/gmd:LanguageCode/@codeListValue",
                 "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:language/gmd:LanguageCode/text()",
                 "gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:language/gmd:LanguageCode/text()",
+                # ISO19115-3
+                "mdb:identificationInfo/*[contains(local-name(), 'Identification')]/mri:defaultLocale/lan:PT_Locale/lan:language/lan:LanguageCode/@codeListValue"
+                "mdb:identificationInfo/*[contains(local-name(), 'Identification')]/mri:defaultLocale/lan:PT_Locale/lan:language/lan:LanguageCode/text()"
+            ],
+            multiplicity="*",
+        ),
+        ISOElement(
+            name="dataset-language-other",
+            search_paths=[
+                # ISO19115-3
+                "mdb:identificationInfo/*[contains(local-name(), 'Identification')]/mri:otherLocale/lan:PT_Locale/lan:language/lan:LanguageCode/@codeListValue"
+                "mdb:identificationInfo/*[contains(local-name(), 'Identification')]/mri:otherLocale/lan:PT_Locale/lan:language/lan:LanguageCode/text()"
             ],
             multiplicity="*",
         ),
