@@ -314,7 +314,7 @@ class ISOResourceLocator(ISOElement):
         ISOElement(
             name="distribution-format",
             search_paths=[
-                "ancestor::mrd:MD_DigitalTransferOptions/mrd:distributionFormat/mrd:MD_Format/mrd:formatSpecificationCitation/cit:CI_Citation/cit:title/gco:CharacterString/text()"
+                "ancestor::mrd:MD_DigitalTransferOptions/mrd:distributionFormat/mrd:MD_Format/mrd:formatSpecificationCitation/cit:CI_Citation/cit:title/gco:CharacterString/text()",
             ],
             multiplicity="*"
         ),
@@ -322,7 +322,7 @@ class ISOResourceLocator(ISOElement):
         ISOElement(
             name="distributor-format",
             search_paths=[
-                "ancestor::mrd:MD_Distributor/mrd:distributorFormat/mrd:MD_Format/mrd:formatSpecificationCitation/cit:CI_Citation/cit:title/gco:CharacterString/text()"
+                "ancestor::mrd:MD_Distributor/mrd:distributorFormat/mrd:MD_Format/mrd:formatSpecificationCitation/cit:CI_Citation/cit:title/gco:CharacterString/text()",
             ],
             multiplicity="*"
         ),
@@ -330,21 +330,21 @@ class ISOResourceLocator(ISOElement):
         ISOElement(
             name="offline",
             search_paths=[
-                "ancestor::mrd:MD_DigitalTransferOptions/mrd:offLine/mrd:MD_Medium/cit:CI_Citation/cit:title/gco:CharacterString/text()"
+                "ancestor::mrd:MD_DigitalTransferOptions/mrd:offLine/mrd:MD_Medium/cit:CI_Citation/cit:title/gco:CharacterString/text()",
             ],
             multiplicity="*"
         ),
         ISOElement(
             name="transfer-size",
             search_paths=[
-                "ancestor::mrd:MD_DigitalTransferOptions/mrd:transferSize/gco:Real/text()"
+                "ancestor::mrd:MD_DigitalTransferOptions/mrd:transferSize/gco:Real/text()",
             ],
             multiplicity="0..1"
         ),
         ISOElement(
             name="units-of-distribution",
             search_paths=[
-                "ancestor::mrd:MD_DigitalTransferOptions/mrd:unitsOfDistribution/gco:CharacterString/text()"
+                "ancestor::mrd:MD_DigitalTransferOptions/mrd:unitsOfDistribution/gco:CharacterString/text()",
             ],
             multiplicity="0..1"
         )
@@ -724,7 +724,7 @@ class ISOAggregationInfo(ISOElement):
             search_paths=[
                 "gmd:aggregateDatasetName/gmd:CI_Citation/gmd:title/gco:CharacterString/text()",
                 # ISO19115-3
-                "mri:name/cit:CI_Citation/cit:title/gco:CharacterString/text()"
+                "mri:name/cit:CI_Citation/cit:title/gco:CharacterString/text()",
             ],
             multiplicity="0..1",
         ),
@@ -733,7 +733,7 @@ class ISOAggregationInfo(ISOElement):
             search_paths=[
                 "gmd:aggregateDatasetIdentifier/gmd:MD_Identifier",
                 # ISO19115-3
-                "mri:name/cit:CI_Citation/cit:identifier/mcc:MD_Identifier"
+                "mri:name/cit:CI_Citation/cit:identifier/mcc:MD_Identifier",
             ],
             multiplicity="0..1",
         ),
@@ -744,7 +744,7 @@ class ISOAggregationInfo(ISOElement):
                 "gmd:associationType/gmd:DS_AssociationTypeCode/text()",
                 # ISO19115-3
                 "mri:associationType/mri:DS_AssociationTypeCode/@codeListValue",
-                "mri:associationType/mri:DS_AssociationTypeCode/text()"
+                "mri:associationType/mri:DS_AssociationTypeCode/text()",
             ],
             multiplicity="0..1",
         ),
@@ -824,7 +824,7 @@ class ISOCitation(ISOElement):
             name="author",
             search_paths=[
                 # 19115-3
-                "cit:citedResponsibleParty/cit:CI_Responsibility[not(cit:role/cit:CI_RoleCode/text() = 'publisher' or cit:role/cit:CI_RoleCode/@codeListValue ='publisher')]"
+                "cit:citedResponsibleParty/cit:CI_Responsibility[not(cit:role/cit:CI_RoleCode/text() = 'publisher' or cit:role/cit:CI_RoleCode/@codeListValue ='publisher')]",
             ],
             multiplicity="1..*",
         ),
@@ -849,14 +849,14 @@ class ISOCitation(ISOElement):
         ISOElement(
             name="edition",
             search_paths=[
-                "cit:edition/gco:CharacterString/text()"
+                "cit:edition/gco:CharacterString/text()",
             ],
             multiplicity="0..1",
         ),
         ISOElement(
             name="edition-date",
             search_paths=[
-                "cit:editionDate/gco:DateTime/text()"
+                "cit:editionDate/gco:DateTime/text()",
             ],
             multiplicity="0..1",
         ),
@@ -1240,7 +1240,7 @@ class ISODocument(MappedXmlDocument):
                 "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:aggregationInfo/gmd:MD_AggregateInformation",
                 "gmd:identificationInfo/gmd:SV_ServiceIdentification/gmd:aggregationInfo/gmd:MD_AggregateInformation",
                 # ISO19115-3
-                "mdb:identificationInfo/*[contains(local-name(), 'Identification')]/mri:associatedResource/mri:MD_AssociatedResource"
+                "mdb:identificationInfo/*[contains(local-name(), 'Identification')]/mri:associatedResource/mri:MD_AssociatedResource",
             ],
             multiplicity="*",
         ),
@@ -1284,8 +1284,8 @@ class ISODocument(MappedXmlDocument):
                 "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:language/gmd:LanguageCode/text()",
                 "gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:language/gmd:LanguageCode/text()",
                 # ISO19115-3
-                "mdb:identificationInfo/*[contains(local-name(), 'Identification')]/mri:defaultLocale/lan:PT_Locale/lan:language/lan:LanguageCode/@codeListValue"
-                "mdb:identificationInfo/*[contains(local-name(), 'Identification')]/mri:defaultLocale/lan:PT_Locale/lan:language/lan:LanguageCode/text()"
+                "mdb:identificationInfo/*[contains(local-name(), 'Identification')]/mri:defaultLocale/lan:PT_Locale/lan:language/lan:LanguageCode/@codeListValue",
+                "mdb:identificationInfo/*[contains(local-name(), 'Identification')]/mri:defaultLocale/lan:PT_Locale/lan:language/lan:LanguageCode/text()",
             ],
             multiplicity="*",
         ),
@@ -1293,8 +1293,8 @@ class ISODocument(MappedXmlDocument):
             name="dataset-language-other",
             search_paths=[
                 # ISO19115-3
-                "mdb:identificationInfo/*[contains(local-name(), 'Identification')]/mri:otherLocale/lan:PT_Locale/lan:language/lan:LanguageCode/@codeListValue"
-                "mdb:identificationInfo/*[contains(local-name(), 'Identification')]/mri:otherLocale/lan:PT_Locale/lan:language/lan:LanguageCode/text()"
+                "mdb:identificationInfo/*[contains(local-name(), 'Identification')]/mri:otherLocale/lan:PT_Locale/lan:language/lan:LanguageCode/@codeListValue",
+                "mdb:identificationInfo/*[contains(local-name(), 'Identification')]/mri:otherLocale/lan:PT_Locale/lan:language/lan:LanguageCode/text()",
             ],
             multiplicity="*",
         ),
@@ -1353,7 +1353,7 @@ class ISODocument(MappedXmlDocument):
                 "gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod",
                 "gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml32:TimePeriod",
                 # 19115-3
-                "mdb:identificationInfo/*[contains(local-name(), 'Identification')]/mri:extent/gex:EX_Extent/gex:temporalElement/gex:EX_TemporalExtent/gex:extent/gml:TimePeriod"
+                "mdb:identificationInfo/*[contains(local-name(), 'Identification')]/mri:extent/gex:EX_Extent/gex:temporalElement/gex:EX_TemporalExtent/gex:extent/gml:TimePeriod",
             ],
             multiplicity="*",
         ),
@@ -1415,7 +1415,7 @@ class ISODocument(MappedXmlDocument):
                 "gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource",
                 "gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributorTransferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource",
                 # 19115-3
-                "mdb:distributionInfo/mrd:MD_Distribution/mrd:transferOptions/mrd:MD_DigitalTransferOptions/mrd:onLine/cit:CI_OnlineResource | mdb:distributionInfo/mrd:MD_Distribution/mrd:distributor/mrd:MD_Distributor/mrd:distributorTransferOptions/mrd:MD_DigitalTransferOptions/mrd:onLine/cit:CI_OnlineResource"
+                "mdb:distributionInfo/mrd:MD_Distribution/mrd:transferOptions/mrd:MD_DigitalTransferOptions/mrd:onLine/cit:CI_OnlineResource | mdb:distributionInfo/mrd:MD_Distribution/mrd:distributor/mrd:MD_Distributor/mrd:distributorTransferOptions/mrd:MD_DigitalTransferOptions/mrd:onLine/cit:CI_OnlineResource",
             ],
             multiplicity="*",
         ),
@@ -1482,7 +1482,7 @@ class ISODocument(MappedXmlDocument):
             name="citation",
             search_paths=[
                 # 19115-3
-                "mdb:identificationInfo/*[contains(local-name(), 'Identification')]/mri:citation/cit:CI_Citation"
+                "mdb:identificationInfo/*[contains(local-name(), 'Identification')]/mri:citation/cit:CI_Citation",
             ],
             multiplicity="1..*",
         ),
