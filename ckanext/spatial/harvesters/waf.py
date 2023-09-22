@@ -271,7 +271,7 @@ def _get_scraper(server):
         return 'apache'
     if 'nginx' in server.lower():
         return 'nginx'
-    if server == 'Microsoft-IIS/7.5':
+    if 'Microsoft-IIS' in server:
         return 'iis'
     else:
         return 'other'
