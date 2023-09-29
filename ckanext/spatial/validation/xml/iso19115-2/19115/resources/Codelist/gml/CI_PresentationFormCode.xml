@@ -1,0 +1,130 @@
+<?xml-stylesheet type='text/xsl' href='./CodelistDictionary-v32.xsl'?><Dictionary xmlns="http://www.opengis.net/gml/3.2"    xmlns:gml="http://www.opengis.net/gml/3.2"    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="CI_PresentationFormCode" xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>mode in which the data is represented</description>
+  <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">CI_PresentationFormCode</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="_12375_18829">
+      <description>digital representation of a primarily textual item (can contain illustrations also)</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">documentDigital</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12375_18830">
+      <description>representation of a primarily textual item (can contain illustrations also) on paper, photographic material, or other media</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">documentHardcopy</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12375_18831">
+      <description>likeness of natural or man-made features, objects, and activities acquired through the sensing of visual or any other segment of the electromagnetic spectrum by sensors, such as thermal infrared, and high resolution radar and stored in digital format</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">imageDigital</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12375_18832">
+      <description>likeness of natural or man-made features, objects, and activities acquired through the sensing of visual or any other segment of the electromagnetic spectrum by sensors, such as thermal infrared, and high resolution radar and reproduced on paper, photographic material, or other media for use directly by the human user</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">imageHardcopy</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12375_18833">
+      <description>map represented in raster or vector form</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">mapDigital</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12375_18834">
+      <description>map printed on paper, photographic material, or other media for use directly by the human user</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">mapHardcopy</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12375_18835">
+      <description>multi-dimensional digital representation of a feature, process, etc.</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">modelDigital</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12375_18836">
+      <description>3-dimensional, physical model</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">modelHardcopy</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12375_18837">
+      <description>vertical cross-section in digital form</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">profileDigital</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12375_18838">
+      <description>vertical cross-section printed on paper, etc.</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">profileHardcopy</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12375_18839">
+      <description>digital representation of facts or figures systematically displayed, especially in columns</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">tableDigital</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12375_18840">
+      <description>representation of facts or figures systematically displayed, especially in columns, printed on paper, photographic material, or other media</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">tableHardcopy</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12375_18841">
+      <description>digital video recording</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">videoDigital</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12375_18842">
+      <description>video recording on film</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">videoHardcopy</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12375_18843">
+      <description>digital audio recording</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">audioDigital</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12375_18844">
+      <description>audio recording delivered by analog media, such as a magnetic tape</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">audioHardcopy</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12375_18845">
+      <description>information representation using simultaneously various digital modes for text, sound, image</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">multimediaDigital</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12375_18846">
+      <description>information representation using simultaneously various analog modes for text, sound, image</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">multimediaHardcopy</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12375_18847">
+      <description>a physical object. Eg. Rock or mineral sample, microscope slide</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">physicalObject</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12375_18848">
+      <description>information represented graphically by charts such as pie chart, bar chart, and other type of diagrams and recorded in digital format</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">diagramDigital</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12375_18849">
+      <description>information represented graphically by charts such as pie chart, bar chart, and other type of diagrams and printed on paper, phototographic material, or other media</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">diagramHardcopy</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

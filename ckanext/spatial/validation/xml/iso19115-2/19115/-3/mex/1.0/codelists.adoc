@@ -1,0 +1,78 @@
+﻿= Codelist Catalog
+:edition: 1.1
+:revdate: 2017-09-10
+
+== Codelist Catalog
+
+This report describes the ISO TC211 codelist catalogs, the codelists they contain,
+and the values and definitions of the codes.
+
+Please contact mailto:rehabermann@me.com[Ted Habermann] if you have questions or
+suggestions.
+
+=== Catalog
+
+Name:: Codelists from the Metadata with Schema Extensions (mex) Namespace
+Scope:: Codelists from the Metadata with Schema Extensions (mex) Namespace
+Field of application:: ISO TC211 Metadata Standards
+Version:: 1.1
+Date:: 2017-09-10
+Number of CodeLists:: 2
+Number of items:: 18
+
+=== Codelists
+
+
+=== MD_DatatypeCode
+
+Description:: datatype of element or entity
+CodeSpace:: http://standards.iso.org/iso/19115/-3/mex/1.0
+Number of items:: 15
+
+[%unnumbered]
+[options=header,cols=2]
+|===
+| Entry | Definition
+
+| class | descriptor of a set of objects that share the same attributes, operations,
+methods, relationships, and behaviour
+| codelist | flexible enumeration useful for expressing a long list of values, can be
+extended
+| enumeration | data type whose instances form a list of named literal values, not
+extendable
+| codelistElement | permissible value for a codelist or enumeration
+| abstractClass | class that cannot be directly instantiated
+| aggregateClass | class that is composed of classes it is connected to by an
+aggregate relationship
+| specifiedClass | subclass that may be substituted for its superclass
+| datatypeClass | class with few or no operations whose primary purpose is to hold
+the abstract state of another class for transmittal, storage, encoding or persistent
+storage
+| interfaceClass | named set of operations that characterize the behaviour of an
+element
+| unionClass | class describing a selection of one of the specified types
+| metaClass | class whose instances are classes
+| typeClass | class used for specification of a domain of instances (objects),
+together with the operations applicable to the objects. A type may have attributes
+and associations
+| characterString | textual information
+| integer | numerical field
+| association | semantic relationship between two classes that involves connections
+among their instances
+|===
+
+=== MD_ObligationCode
+
+Description:: obligation of the element or entity
+CodeSpace:: http://standards.iso.org/iso/19115/-3/mex/1.0
+Number of items:: 3
+
+[%unnumbered]
+[options=header,cols=2]
+|===
+| Entry | Definition
+
+| mandatory | element is always required
+| optional | element is not required
+| conditional | element is required when a specific condition is met
+|===

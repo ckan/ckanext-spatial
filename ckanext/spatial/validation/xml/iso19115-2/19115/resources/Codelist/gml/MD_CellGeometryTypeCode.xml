@@ -1,0 +1,31 @@
+<?xml-stylesheet type='text/xsl' href='./CodelistDictionary-v32.xsl'?>
+<Dictionary xmlns="http://www.opengis.net/gml/3.2"    xmlns:gml="http://www.opengis.net/gml/3.2" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="MD_CellGeometryTypeCode" 
+  xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>code indicating the geometry represented by the grid cell value</description>
+  <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">MD_CellGeometryTypeCode</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="MD_CellGeometryCode_point">
+      <description>each cell represents a point</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">point</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="MD_CellGeometryCode_area">
+      <description>each cell represents an area</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">area</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="MD_CellGeometryCode_voxel">
+      <description>each cell represents a volumetric measurement on a regular grid in three dimensional space</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">voxel</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="MD_CellGeometryCode_stratum">
+      <description>height range for a single point vertical profile</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/msr/1.0">stratum</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

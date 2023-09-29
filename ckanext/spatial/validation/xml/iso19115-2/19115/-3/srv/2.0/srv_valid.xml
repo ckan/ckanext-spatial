@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mdb:MD_Metadata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://standards.iso.org/iso/19115/-3/mds/1.0 ../../mds/1.0/mds.xsd"
+   xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/1.0"
+    xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+    xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
+   xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
+    xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/1.0"
+    xmlns:xlink="http://www.w3.org/1999/xlink">
+   <mdb:metadataIdentifier/>
+   <mdb:contact/>
+   <mdb:dateInfo/>
+   <mdb:identificationInfo>
+      <srv:SV_ServiceIdentification>
+         <mri:citation/>
+         <mri:abstract/>
+         <srv:serviceType>
+            <gco:ScopedName codeSpace="https://github.com/OSGeo/Cat-Interop">
+               OGC:WPS
+            </gco:ScopedName>
+         </srv:serviceType>
+         <srv:serviceTypeVersion>
+            <gco:CharacterString>1.0</gco:CharacterString>
+         </srv:serviceTypeVersion>
+         <!-- Valid for rule.srv.coupledresource -->
+         <srv:couplingType>
+            <srv:SV_CouplingType codeList="" codeListValue="loose"/>
+         </srv:couplingType>
+         <srv:coupledResource>
+            <srv:SV_CoupledResource>
+               <srv:resourceReference>
+                  <cit:CI_Citation>
+                     <cit:title>
+                        <gco:CharacterString>Reference</gco:CharacterString>
+                     </cit:title>
+                  </cit:CI_Citation>
+               </srv:resourceReference>
+            </srv:SV_CoupledResource>
+         </srv:coupledResource>
+         <!-- Valid for rule.srv.harresourcereforresource -->
+         <srv:coupledResource>
+            <srv:SV_CoupledResource>
+               <srv:resource xlink:href="MD02"/>
+            </srv:SV_CoupledResource>
+         </srv:coupledResource>
+         <!-- Valid for rule.srv.operateddataset -->
+         <srv:operatedDataset xlink:href="MD01"/>
+         <!-- Valid for rule rule.srv.chainoroperations -->
+         <srv:containsOperations>
+            <srv:SV_OperationMetadata>
+               <srv:operationName>
+                  <gco:CharacterString>operationName</gco:CharacterString>
+               </srv:operationName>
+               <srv:distributedComputingPlatform/>
+               <srv:connectPoint/>
+            </srv:SV_OperationMetadata>
+         </srv:containsOperations>
+         <srv:containsChain>
+            <srv:SV_OperationChainMetadata>
+               <srv:name>
+                  <gco:CharacterString>name</gco:CharacterString>
+               </srv:name>
+               <srv:operation/>
+            </srv:SV_OperationChainMetadata>
+         </srv:containsChain>
+      </srv:SV_ServiceIdentification>
+   </mdb:identificationInfo>
+   <mdb:identificationInfo>
+      <srv:SV_ServiceIdentification>
+         <mri:citation/>
+         <mri:abstract/>
+         <srv:serviceType/>
+         <!-- Valid for rule.srv.operateddataset -->
+         <srv:operatesOn xlink:href="MD01"/>
+      </srv:SV_ServiceIdentification>
+   </mdb:identificationInfo>
+</mdb:MD_Metadata>

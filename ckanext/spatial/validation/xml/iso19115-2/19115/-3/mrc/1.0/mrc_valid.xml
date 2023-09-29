@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mdb:MD_Metadata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+   xsi:schemaLocation="http://standards.iso.org/iso/19115/-3/mds/1.0 ../../mds/1.0/mds.xsd  
+   http://standards.iso.org/iso/19110/gfc/1.1 ../../../../19110/gfc/1.1/gfc.xsd" 
+   xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/1.0" 
+   xmlns:gfc="http://standards.iso.org/iso/19110/gfc/1.1" 
+   xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" 
+   xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/1.0" 
+   xmlns:cat="http://standards.iso.org/iso/19115/-3/cat/1.0" 
+   xmlns:mrc="http://standards.iso.org/iso/19115/-3/mrc/1.0" 
+   xmlns:gml="http://www.opengis.net/gml/3.2">
+  <!-- have to provide schema location for gfc to get concrete implementation of FeatureCatalog to include inline -->
+   <mdb:metadataIdentifier/>
+   <mdb:contact/>
+   <mdb:dateInfo/>
+   <mdb:spatialRepresentationInfo/>
+   <mdb:identificationInfo/>
+   <mdb:contentInfo>
+      <mrc:MD_FeatureCatalogueDescription>
+         <mrc:featureCatalogueCitation/>
+      </mrc:MD_FeatureCatalogueDescription>
+   </mdb:contentInfo>
+   <mdb:contentInfo>
+      <mrc:MD_FeatureCatalogue>
+         <mrc:featureCatalogue>
+            <gfc:FC_FeatureCatalogue>
+               <cat:name></cat:name>
+               <cat:scope></cat:scope>
+               <cat:versionNumber></cat:versionNumber>
+               <cat:versionDate></cat:versionDate>
+               <gfc:producer></gfc:producer>
+            </gfc:FC_FeatureCatalogue>
+         </mrc:featureCatalogue>
+      </mrc:MD_FeatureCatalogue>
+   </mdb:contentInfo>
+   <mdb:contentInfo>
+      <mrc:MD_CoverageDescription>
+         <mrc:attributeDescription/>
+         <mrc:attributeGroup>
+            <mrc:MD_AttributeGroup>
+               <mrc:contentType>
+                  <mrc:MD_CoverageContentTypeCode codeList="" codeListValue=""/>
+               </mrc:contentType>
+               
+               <!-- Valid for rule.mrc.sampledimension -->
+               <mrc:attribute>
+                  <mrc:MD_SampleDimension>
+                     <mrc:maxValue>
+                        <gco:Real>1.0</gco:Real>
+                     </mrc:maxValue>
+                     <mrc:minValue>
+                        <gco:Real>0.0</gco:Real>
+                     </mrc:minValue>
+                     <mrc:meanValue>
+                        <gco:Real>.9</gco:Real>
+                     </mrc:meanValue>
+                  </mrc:MD_SampleDimension>
+               </mrc:attribute>
+               
+               <!-- Valid for rule.mrc.bandunit -->
+               <mrc:attribute>
+                  <mrc:MD_Band>
+                     <mrc:boundMax>
+                        <gco:Real>1.0</gco:Real>
+                     </mrc:boundMax>
+                     <mrc:boundMin>
+                        <gco:Real>0</gco:Real>
+                     </mrc:boundMin>
+                     <mrc:boundUnits>
+                        <gml:ConventionalUnit gml:id="x3264">
+                           <gml:identifier codeSpace="unknown">furlongs</gml:identifier>
+                           <gml:conversionToPreferredUnit uom="cm">
+                              <gml:factor>33</gml:factor>
+                           </gml:conversionToPreferredUnit>
+                        </gml:ConventionalUnit>
+                     </mrc:boundUnits>
+                  </mrc:MD_Band>
+               </mrc:attribute>
+            </mrc:MD_AttributeGroup>
+         </mrc:attributeGroup>
+      </mrc:MD_CoverageDescription>
+   </mdb:contentInfo>
+</mdb:MD_Metadata>

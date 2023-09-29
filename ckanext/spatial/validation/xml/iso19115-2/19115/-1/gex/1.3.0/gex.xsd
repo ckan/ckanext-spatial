@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:gex="https://schemas.isotc211.org/19115/-1/gex/1.3"
+  xmlns:mcc="https://schemas.isotc211.org/19115/-1/mcc/1.3"
+  xmlns:rce="https://schemas.isotc211.org/19111/rce/1.0"
+  targetNamespace="https://schemas.isotc211.org/19115/-1/gex/1.3"
+  elementFormDefault="qualified"
+  version="1.3.0"
+  >
+  <annotation>
+    <documentation>Namespace for XML elements used to specify spatial and temporal
+      extents.</documentation>
+  </annotation>
+  <include schemaLocation="extent.xsd"/>
+  <import namespace="https://schemas.isotc211.org/19115/-1/mcc/1.3" schemaLocation="../../../../19115/-1/mcc/1.3.0/mcc.xsd"/>
+
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+</schema>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:cat="https://schemas.isotc211.org/19139/-/cat/1.2"
+  xmlns:gco="https://schemas.isotc211.org/19103/-/gco/1.2"
+  xmlns:lan="https://schemas.isotc211.org/19115/-1/lan/1.3" 
+  elementFormDefault="qualified"
+  targetNamespace="https://schemas.isotc211.org/19139/-/cat/1.2" 
+  version="1.2.0">
+  <annotation>
+    <documentation>Handcrafted</documentation>
+  </annotation>
+  <include schemaLocation="../../../../19139/-/cat/1.2.0/cat.xsd"/>
+  <import namespace="https://schemas.isotc211.org/19103/-/gco/1.2" schemaLocation="../../../../19103/-/gco/1.2.0/gco.xsd"/>
+  <import namespace="https://schemas.isotc211.org/19115/-1/lan/1.3" schemaLocation="../../../../19115/-1/lan/1.3.0/lan.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+<!-- ___________________________________________________________ -->
+    <element abstract="true" name="AbstractCT_Catalogue" substitutionGroup="gco:AbstractObject" type="cat:AbstractCT_Catalogue_Type" id="ISO19139.043"/>
+  <complexType abstract="true" name="AbstractCT_Catalogue_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="name" type="gco:CharacterString_PropertyType" id="ISO19139.044_ISO19103.CharacterString"/>
+          <element maxOccurs="unbounded" name="scope" type="gco:CharacterString_PropertyType" id="ISO19139.045_ISO19103.CharacterString"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="fieldOfApplication" type="gco:CharacterString_PropertyType" id="ISO19139.046_ISO19103.CharacterString"/>
+          <element name="versionNumber" type="gco:CharacterString_PropertyType" id="ISO19139.047_ISO19103.CharacterString"/>
+          <element name="versionDate" type="gco:Date_PropertyType" id="ISO19139.048_ISO19103.Date"/>
+          <element minOccurs="0" name="language" type="gco:CharacterString_PropertyType" id="ISO19139.049_ISO19103.CharacterString"/>
+          <element minOccurs="0" name="characterSet" type="lan:MD_CharacterSetCode_PropertyType" id="ISO19139.050_ISO19103.CharacterString"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="locale" type="lan:PT_Locale_PropertyType" id="ISO19139.051_ISO19115-1.447"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="subCatalogue" type="cat:AbstractCT_Catalogue_PropertyType" id="ISO19139.052_ISO19139.043"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="AbstractCT_Catalogue_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cat:AbstractCT_Catalogue"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- ___________________________________________________________ -->
+  <element abstract="true" name="AbstractCT_Item" substitutionGroup="gco:AbstractObject" type="cat:AbstractCT_Item_Type" id="ISO19139.067"/>
+  <complexType abstract="true" name="AbstractCT_Item_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="identifier" type="gco:GenericName_PropertyType" id="ISO19139.068_ISO19103.GenericName"/>
+          <element maxOccurs="unbounded" minOccurs="0" name="name" type="gco:GenericName_PropertyType" id="ISO19139.069_ISO19103.GenericName"/>
+          <element name="definition" type="gco:CharacterString_PropertyType" id="ISO19139.070_ISO19103.CharacterString"/>
+          <element minOccurs="0" name="description" type="gco:CharacterString_PropertyType" id="ISO19139.071_ISO19103.CharacterString"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <complexType name="AbstractCT_Item_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="cat:AbstractCT_Item"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- ___________________________________________________________ -->
+</schema>

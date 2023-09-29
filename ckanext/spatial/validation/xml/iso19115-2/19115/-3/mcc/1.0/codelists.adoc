@@ -1,0 +1,121 @@
+﻿= Codelists from the Metadata Common Classes (mcc) Namespace
+:edition: 1.1
+:revdate: 2017-09-10
+
+== Codelist Catalog
+
+This report describes the ISO TC211 codelist catalogs, the codelists they contain, and the values and definitions of the codes.
+
+Please contact mailto:rehabermann@me.com[Ted Habermann] if you have questions or suggestions.
+
+=== Catalog
+
+Name:: Codelists from the Metadata Common Classes (mcc) Namespace
+Scope:: Codelists from the Metadata Common Classes (mcc) Namespace
+Field of application:: ISO TC211 Metadata Standards
+Version:: 1.1
+Date:: 2017-09-10
+Number of CodeLists:: 3
+Number of items:: 50
+
+=== Codelists
+
+
+=== MD_ProgressCode
+
+Description:: status of the resource
+CodeSpace:: http://standards.iso.org/iso/19115/-3/mcc/1.0
+Number of items:: 18
+
+[%unnumbered]
+[options=header,cols=2]
+|===
+| Entry | Definition
+
+| completed | has been completed
+| historicalArchive | stored in an offline storage facility
+| obsolete | no longer relevant
+| onGoing | continually being updated
+| planned | fixed date has been established upon or by which the resource will be
+created or updated
+| required | needs to be generated or updated
+| underDevelopment | currently in the process of being created
+| final | progress concluded and no changes will be accepted
+| pending | committed to, but not yet addressed
+| retired | item is no longer recommended for use. It has not been superseded by
+another item
+| superseded | replaced by new
+| tentative | provisional changes likely before resource becomes final or complete
+| valid | acceptable under specific conditions
+| accepted | agreed to by sponsor
+| notAccepted | rejected by sponsor
+| withdrawn | removed from consideration
+| proposed | suggested that development needs to be undertaken
+| deprecated | resource superseded and will become obsolete, use only for historical
+purposes
+|===
+
+
+=== MD_ScopeCode
+
+Description:: class of information to which the referencing entity applies
+CodeSpace:: http://standards.iso.org/iso/19115/-3/mcc/1.0
+Number of items:: 26
+
+[%unnumbered]
+[options=header,cols=2]
+|===
+| Entry | Definition
+
+| attribute | information applies to the attribute value
+| attributeType | information applies to the characteristic of a feature
+| collectionHardware | information applies to the collection hardware class
+| collectionSession | information applies to the collection session
+| dataset | information applies to the dataset
+| series | information applies to the series
+| nonGeographicDataset | information applies to non-geographic data
+| dimensionGroup | information applies to a dimension group
+| feature | information applies to a feature
+| featureType | information applies to a feature type
+| propertyType | information applies to a property type
+| fieldSession | information applies to a field session
+| software | information applies to a computer program or routine
+| service | information applies to a capability which a service provider entity makes
+available to a service user entity through a set of interfaces that define a
+behaviour, such as a use case
+| model | information applies to a copy or imitation of an existing or hypothetical
+object
+| tile | information applies to a tile, a spatial subset of geographic data
+| metadata | information applies to metadata
+| initiative | information applies to an initiative
+| sample | information applies to a sample
+| document | information applies to a document
+| repository | information applies to a repository
+| aggregate | information applies to an aggregate resource
+| product | metadata describing an ISO 19131 data product specification
+| collection | information applies to an unstructured set
+| coverage | information applies to a coverage
+| application | information resource hosted on a specific set of hardware and
+accessible over a network
+|===
+
+
+=== MD_SpatialRepresentationTypeCode
+
+Description:: method used to represent geographic information in the resource
+CodeSpace:: http://standards.iso.org/iso/19115/-3/mcc/1.0
+Number of items:: 6
+
+[%unnumbered]
+[options=header,cols=2]
+|===
+| Entry | Definition
+
+| vector | vector data are used to represent geographic data
+| grid | grid data are used to represent geographic data
+| textTable | textual or tabular data are used to represent geographic data
+| tin | triangulated irregular network
+| stereoModel | three-dimensional view formed by the intersecting homologous rays of
+an overlapping pair of images
+| video | scene from a video recording
+|===

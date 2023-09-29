@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema
+  xmlns="http://www.w3.org/2001/XMLSchema"
+  xmlns:dqc="https://schemas.isotc211.org/19157/-/dqc/1.2"
+  xmlns:gco="https://schemas.isotc211.org/19103/-/gco/1.2"
+  xmlns:lan="https://schemas.isotc211.org/19115/-1/lan/1.3"
+  xmlns:mcc="https://schemas.isotc211.org/19115/-1/mcc/1.3"
+  xmlns:mdb="https://schemas.isotc211.org/19115/-1/mdb/1.3" 
+  xmlns:mda="https://schemas.isotc211.org/19115/-1/mda/1.3" 
+  xmlns:msr="https://schemas.isotc211.org/19115/-1/msr/1.3" 
+  elementFormDefault="qualified"
+  targetNamespace="https://schemas.isotc211.org/19115/-1/mdb/1.3" 
+  version="1.3.0">
+  <include schemaLocation="mdb.xsd"/>
+  <import namespace="https://schemas.isotc211.org/19103/-/gco/1.2" schemaLocation="../../../../19103/-/gco/1.2.0/gco.xsd"/>
+  <import namespace="https://schemas.isotc211.org/19157/-/dqc/1.2" schemaLocation="../../../../19157/-/dqc/1.2.0/dqc.xsd"/>
+  <import namespace="https://schemas.isotc211.org/19115/-1/lan/1.3" schemaLocation="../../../../19115/-1/lan/1.3.0/lan.xsd"/>
+  <import namespace="https://schemas.isotc211.org/19115/-1/mcc/1.3" schemaLocation="../../../../19115/-1/mcc/1.3.0/mcc.xsd"/>
+  <import namespace="https://schemas.isotc211.org/19115/-1/mda/1.3" schemaLocation="../../../../19115/-1/mda/1.3.0/mda.xsd"/>
+  <import namespace="https://schemas.isotc211.org/19115/-1/msr/1.3" schemaLocation="../../../../19115/-1/msr/1.3.0/msr.xsd"/>
+  <!--XML Schema document created by ShapeChange - http://shapechange.net/-->
+  <!-- =========================================================================== -->
+  <element name="MD_Metadata" substitutionGroup="mcc:Abstract_Metadata" type="mdb:MD_Metadata_Type" id="ISO19115-1.015">
+    <annotation>
+      <documentation>root entity which defines metadata about a resource or
+        resources</documentation>
+    </annotation>
+  </element>
+  <!-- ........................................................................ -->
+  <complexType name="MD_Metadata_Type">
+    <complexContent>
+      <extension base="mcc:Abstract_Metadata_Type">
+        <sequence>
+          <!-- Order Change to align with UML implementation model sequenceNumber-->
+          <element name="metadataIdentifier" minOccurs="0" type="mcc:MD_Identifier_PropertyType" id="ISO19115-1.016_ISO19115-1.431"/>
+          <element name="defaultLocale" minOccurs="0" type="lan:PT_Locale_PropertyType" id="ISO19115-1.017_ISO19115-1.447">
+            <annotation>
+              <documentation>Provides information about an alternatively used localized character
+                string for a linguistic extension</documentation>
+            </annotation>
+          </element>
+          <element name="parentMetadata" minOccurs="0" type="mcc:Abstract_Citation_PropertyType" id="ISO19115-1.018_ISO19115-1.361">
+            <annotation>
+              <documentation>Identifier and onlineResource for a parent metadata
+                record</documentation>
+            </annotation>
+          </element>
+ <!-- Moved to 38 -->
+          <!-- <element name="metadataScope" maxOccurs="unbounded" minOccurs="0" type="mdb:MD_MetadataScope_PropertyType" id="ISO19115-1.038_ISO19115-1.039"/> -->
+          <element name="contact" maxOccurs="unbounded" type="mcc:Abstract_Responsibility_PropertyType" id="ISO19115-1.019_ISO19115-1.376">
+            <annotation>
+              <documentation>party responsible for the metadata information</documentation>
+            </annotation>
+          </element>
+          <element name="dateInfo" maxOccurs="unbounded" type="mcc:Abstract_TypedDate_PropertyType" id="ISO19115-1.020_ISO19115-1.402">
+            <annotation>
+              <documentation>Date(s) other than creation dateEG: expiry date</documentation>
+            </annotation>
+          </element>
+          <element name="metadataStandard" maxOccurs="unbounded" minOccurs="0" type="mcc:Abstract_Citation_PropertyType" id="ISO19115-1.021_ISO19115-1.361">
+            <annotation>
+              <documentation>Citation for the standards to which the metadata
+                conforms</documentation>
+            </annotation>
+          </element>
+          <element name="metadataProfile" maxOccurs="unbounded" minOccurs="0" type="mcc:Abstract_Citation_PropertyType" id="ISO19115-1.022_ISO19115-1.361"/>
+          <element name="alternativeMetadataReference" maxOccurs="unbounded" minOccurs="0" type="mcc:Abstract_Citation_PropertyType" id="ISO19115-1.023_ISO19115-1.361">
+            <annotation>
+              <documentation>unique Identifier and onlineResource for alternative
+                metadata</documentation>
+            </annotation>
+          </element>
+          <element name="otherLocale" maxOccurs="unbounded" minOccurs="0" type="lan:PT_Locale_PropertyType" id="ISO19115-1.024_ISO19115-1.447"/>
+          <element name="metadataLinkage" maxOccurs="unbounded" minOccurs="0" type="mcc:Abstract_OnlineResource_PropertyType" id="ISO19115-1.025_ISO19115-1.405">
+            <annotation>
+              <documentation>online location where the metadata is available</documentation>
+            </annotation>
+          </element>
+          <element name="spatialRepresentationInfo" maxOccurs="unbounded" minOccurs="0"  type="mcc:Abstract_SpatialRepresentation_PropertyType" id="ISO19115-1.026_ISO19115-1.147"/>
+          <element name="referenceSystemInfo" maxOccurs="unbounded" minOccurs="0" type="mcc:Abstract_ReferenceSystem_PropertyType" id="ISO19115-1.027_ISO19115-1.179"/>
+          <element name="metadataExtensionInfo" maxOccurs="unbounded" minOccurs="0" type="mcc:Abstract_MetadataExtension_PropertyType" id="ISO19115-1.028_ISO19115-1.275"/>
+          <element name="identificationInfo" maxOccurs="unbounded" type="mcc:Abstract_ResourceDescription_PropertyType" id="ISO19115-1.029_ISO19115-1.042"/>
+          <element name="contentInfo" maxOccurs="unbounded" minOccurs="0" type="mcc:Abstract_ContentInformation_PropertyType" id="ISO19115-1.030_ISO19115-1.182"/>
+          <element name="distributionInfo" maxOccurs="unbounded" minOccurs="0" type="mcc:Abstract_Distribution_PropertyType" id="ISO19115-1.031_ISO19115-1.237"/>
+          <element name="dataQualityInfo" maxOccurs="unbounded" minOccurs="0" type="dqc:Abstract_DataQuality_PropertyType" id="ISO19115-1.032_ISO19157.001"/>
+          <!-- Moved to 37 -->
+          <!-- <element name="resourceLineage" maxOccurs="unbounded" minOccurs="0" type="mcc:Abstract_LineageInformation_PropertyType" id="ISO19115-1.037_ISO19115-1.118"/> -->
+          <element name="portrayalCatalogueInfo" maxOccurs="unbounded" minOccurs="0" type="mcc:Abstract_PortrayalCatalogueInformation_PropertyType" id="ISO19115-1.033_ISO19115-1.235"/>
+          <element name="metadataConstraints" maxOccurs="unbounded" minOccurs="0" type="mcc:Abstract_Constraints_PropertyType" id="ISO19115-1.034_ISO19115-1.098"/>
+          <element name="applicationSchemaInfo" maxOccurs="unbounded" minOccurs="0" type="mcc:Abstract_ApplicationSchemaInformation_PropertyType" id="ISO19115-1.035_ISO19115-1.292"/>
+          <element name="metadataMaintenance" minOccurs="0" type="mcc:Abstract_MaintenanceInformation_PropertyType" id="ISO19115-1.036_ISO19115-1.140"/>
+          <!-- Moved to align with ISO 19115-1:2014 data dictionary-->
+          <element name="resourceLineage" maxOccurs="unbounded" minOccurs="0" type="mcc:Abstract_LineageInformation_PropertyType" id="ISO19115-1.037_ISO19115-1.118"/>
+          <!-- Moved to align with ISO 19115-1:2014 data dictionary-->
+          <element name="metadataScope" maxOccurs="unbounded" minOccurs="0" type="mdb:MD_MetadataScope_PropertyType" id="ISO19115-1.038_ISO19115-1.039"/>
+          <!-- Inconsistency between ISO 19115-1 Conceptual model/UML diagram Figure 1 and ISO 19115-3 Implementation model for ISO 19115-1 and ISO 19115-2.
+          This inconsistency remove the concept of MI_Metadata -->
+          <element maxOccurs="unbounded" minOccurs="0" name="describes" type="mdb:MD_Metadata_PropertyType" id="ISO19115-1.038.x_ISO19115-1.001"/>
+          <!-- Inconsistency between ISO 19115-1 Conceptual model and ISO 19115-3 Implementation model for ISO 19115-1 and ISO 19115-2.
+          This inconsistency remove the concept of MI_Metadata -->
+          <element maxOccurs="unbounded" minOccurs="0" name="acquisitionInformation" type="mcc:Abstract_AcquisitionInformation_PropertyType" id="ISO19115-2.031_ISO19115-2.002"/>
+         </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <!-- ........................................................................ -->
+  <complexType name="MD_Metadata_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdb:MD_Metadata"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- =========================================================================== -->
+  <element name="MD_MetadataScope" substitutionGroup="gco:AbstractObject" type="mdb:MD_MetadataScope_Type" id="ISO19115-1.039"/>
+  <!-- ........................................................................ -->
+  <complexType name="MD_MetadataScope_Type">
+    <complexContent>
+      <extension base="gco:AbstractObject_Type">
+        <sequence>
+          <element name="resourceScope" type="mcc:MD_ScopeCode_PropertyType" id="ISO19115-1.040_ISO19115-1.B.3.28"/>
+          <element minOccurs="0" name="name" type="gco:CharacterString_PropertyType" id="ISO19115-1.041_ISO19103"/>
+        </sequence>
+      </extension>
+    </complexContent>
+  </complexType>
+  <!-- ........................................................................ -->
+  <complexType name="MD_MetadataScope_PropertyType">
+    <sequence minOccurs="0">
+      <element ref="mdb:MD_MetadataScope"/>
+    </sequence>
+    <attributeGroup ref="gco:ObjectReference"/>
+    <attribute ref="gco:nilReason"/>
+  </complexType>
+  <!-- =========================================================================== -->
+</schema>

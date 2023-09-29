@@ -1,0 +1,53 @@
+﻿= Codelist Catalog
+:edition: 1.1
+:revdate: 2017-09-10
+
+== Codelist Catalog
+
+This report describes the ISO TC211 codelist catalogs, the codelists they contain,
+and the values and definitions of the codes.
+
+Please contact mailto:rehabermann@me.com[Ted Habermann] if you have questions or
+suggestions.
+
+=== Catalog
+
+Name:: Codelists from the Metadata for Maintenance Information (mex) Namespace
+Scope:: Codelists from the Metadata for Maintenance Information (mex) Namespace
+Field of application:: ISO TC211 Metadata Standards
+Version:: 1.1
+Date:: 2017-09-10
+Number of CodeLists:: 1
+Number of items:: 15
+
+=== Codelists
+
+
+=== MD_MaintenanceFrequencyCode
+
+Description:: frequency with which modifications and deletions are made to the data
+after it is first produced
+CodeSpace:: http://standards.iso.org/iso/19115/-3/mmi/1.0
+Number of items:: 15
+
+[%unnumbered]
+[options=header,cols=2]
+|===
+| Entry | Definition
+
+| continual | resource is repeatedly and frequently updated
+| daily | resource is updated each day
+| weekly | resource is updated on a weekly basis
+| fortnightly | resource is updated every two weeks
+| monthly | resource is updated each month
+| quarterly | resource is updated every three months
+| biannually | resource is updated twice each year
+| annually | resource is updated every year
+| asNeeded | resource is updated as deemed necessary
+| irregular | resource is updated in intervals that are uneven in duration
+| notPlanned | there are no plans to update the data
+| unknown | frequency of maintenance for the data is not known
+| periodic | resource is updated at regular intervals
+| semimonthly | resource updated twice a monthly
+| biennially | resource is updated every 2 years
+|===

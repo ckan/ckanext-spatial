@@ -1,0 +1,124 @@
+<?xml-stylesheet type='text/xsl' href='./CodelistDictionary-v32.xsl'?><Dictionary xmlns="http://www.opengis.net/gml/3.2"    xmlns:gml="http://www.opengis.net/gml/3.2"    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="CI_RoleCode" xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>function performed by the responsible party</description>
+  <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">CI_RoleCode</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="_12383_18904">
+      <description>party that supplies the resource</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">resourceProvider</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12383_18905">
+      <description>party that accepts accountability and responsibility for the resource and ensures appropriate care and maintenance of the resource</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">custodian</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12383_18906">
+      <description>party that owns the resource</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">owner</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12383_18907">
+      <description>party who uses the resource</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">user</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12383_18908">
+      <description>party who distributes the resource</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">distributor</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12383_18909">
+      <description>party who created the resource</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">originator</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12383_18910">
+      <description>party who can be contacted for acquiring knowledge about or acquisition of the resource</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">pointOfContact</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12383_18911">
+      <description>key party responsible for gathering information and conducting research</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">principalInvestigator</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12383_18912">
+      <description>party who has processed the data in a manner such that the resource has been modified</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">processor</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12383_18913">
+      <description>party who published the resource</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">publisher</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12383_18914">
+      <description>party who authored the resource</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">author</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12383_18915">
+      <description>party who speaks for the resource</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">sponsor</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12383_18916">
+      <description>party who jointly authors the resource</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">coAuthor</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12383_18917">
+      <description>party who assists with the generation of the resource other than the principal investigator</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">collaborator</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12383_18918">
+      <description>party who reviewed or modified the resource to improve the content</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">editor</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12383_18919">
+      <description>a class of entity that mediates access to the resource and for whom the resource is intended or useful</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">mediator</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12383_18920">
+      <description>party owning or managing rights over the resource</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">rightsHolder</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12383_18921">
+      <description>party contributing to the resource</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">contributor</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12383_18922">
+      <description>party providing monetary support for the resource</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">funder</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12383_18923">
+      <description>party who has an interest in the resource or the use of the resource</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/cit/1.0">stakeholder</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

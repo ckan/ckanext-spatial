@@ -1,0 +1,842 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  
+  This file collects information about namespaces used in ISO TC211 Metadata Standards for presentation in
+  the namespaceSummary file (https://schemas.isotc211.org/19115/resources/namespaceSummary.html) and in the
+  namespace summary files that exist in each directory (e.g. https://schemas.isotc211.org/19115/-3/mrs/1.0/index.html).
+  
+  It follows a custom design created specifically for this task. No schema currently exists.
+  
+  There are several stylesheets that write those files: makeNamespaceTable.xsl creates the summary table and
+  writeHTMLFiles.xsl write the index files. See those stylesheets for information about parameters.
+  
+  Author: Ted Habermann, ted.habermann@gmail.com, April 2015
+  
+  Updated 20180228 for schema updates related to 19115-2 Revision, 19115-1 and 19157 Ammendments
+  Version 2 of cit, mac, md1, md2, mda, mdb, mds, mdt, mrc, mrl, msr added
+  
+  Updated 20190103 for schema migration to schemas.isotc211.org
+  
+-->
+<ISOSchema>
+  <namespace>
+    <title>CATalogue</title>
+    <requirementRoot>catalogue</requirementRoot>
+    <scope>Elements for codelist catalogues, and example catalogues.</scope>
+    <UMLPackage>Catalog, Code List Item, uom Item, CRS Item</UMLPackage>
+    <prefix>cat</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-1</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 1: Fundamentals</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <paragraphNumber>7.4.4</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Citation and responsible party information</title>
+    <requirementRoot>citation-metadata</requirementRoot>
+    <scope>Utility elements for citation, identification, and web linkage of resources.</scope>
+    <UMLPackage>&lt;&lt;Leaf&gt;&gt; Citation</UMLPackage>
+    <prefix>cit</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-1</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 1: Fundamentals</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+    <paragraphNumber>6.6.2</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Citation and responsible party information</title>
+    <requirementRoot>citation-metadata</requirementRoot>
+    <scope>Utility elements for citation, identification, and web linkage of resources.</scope>
+    <UMLPackage>&lt;&lt;Leaf&gt;&gt; Citation</UMLPackage>
+    <prefix>cit</prefix>
+    <version>2.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-1</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 1: Fundamentals AMENDMENT 1</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+    <paragraphNumber>6.6.2</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Data Quality Common Classes</title>
+    <requirementRoot>data-quality-common</requirementRoot>
+    <scope>abstract classes shared by multiple namespaces and is required in order to enable modularization of the XML implementation.</scope>
+    <UMLPackage>Data Quality</UMLPackage>
+    <prefix>dqc</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19157</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Data Quality</conceptualStandardTitle>
+    <schemaStandardNumber>19157-2</schemaStandardNumber>
+    <schemaStandardTitle>Geographic Metadata — Part 2: XML schema implementation</schemaStandardTitle>
+    <paragraphNumber>6.4</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Data Quality Measures</title>
+    <requirementRoot>quality-measures</requirementRoot>
+    <scope>Elements for describing data quality measures.</scope>
+    <UMLPackage>Data Quality</UMLPackage>
+    <prefix>dqm</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19157</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Data Quality</conceptualStandardTitle>
+    <schemaStandardNumber>19157-2</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Data Quality — Part 2: XML schema implementation</schemaStandardTitle>
+    <paragraphNumber>6.5</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Feature Catalog Common</title>
+    <requirementRoot>feature-catalog-common</requirementRoot>
+    <scope>abstract classes shared by multiple namespaces and is required in order to enable modularization of the XML implementation.</scope>
+    <UMLPackage/>
+    <prefix>fcc</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19110</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic information -- Methodology for feature cataloguing</conceptualStandardTitle>
+    <schemaStandardNumber>19110</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+  </namespace>
+  <namespace>
+    <title>Geographic COmmon</title>
+    <requirementRoot>geographic-common</requirementRoot>
+    <scope>Elements for describing basic types from ISO/TS 19103 and conceptual elements from ISO 19118 required in XML implementations of ISO metadata standards.</scope>
+    <UMLPackage>None</UMLPackage>
+    <prefix>gco</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-1</conceptualStandardNumber>
+    <conceptualStandardTitle>ISO/TS 19139 Geographic information - Metadata - XML schema implementation</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+    <paragraphNumber/>
+  </namespace>
+  <namespace>
+    <title>Geospatial Common eXtension</title>
+    <requirementRoot>extended-types</requirementRoot>
+    <scope>Elements for xml implementation, from ISO 19139 updated for compatibility with 19115-3.</scope>
+    <UMLPackage>&lt;&lt;Leaf&gt;&gt; Extended Types</UMLPackage>
+    <prefix>gcx</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-1</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 1: Fundamentals</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+    <paragraphNumber>7.2</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Geospatial EXtent</title>
+    <requirementRoot>geospatial-extent</requirementRoot>
+    <scope>Elements for specifying geospatial properties of a resource, including extent and spatial reference systems.</scope>
+    <UMLPackage>&lt;&lt;Leaf&gt;&gt; Extent</UMLPackage>
+    <prefix>gex</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-1</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 1: Fundamentals</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+    <paragraphNumber>6.6.1</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>General Feature Catalog</title>
+    <requirementRoot>feature-catalog</requirementRoot>
+    <scope>ISO 19110:2005 defines the methodology for cataloguing feature types and specifies how the classification of feature types is organized into a feature catalogue and presented to the users of a set of geographic data. ISO 19110:2005 is applicable to creating catalogues of feature types in previously uncatalogued domains and to revising existing feature catalogues to comply with standard practice. ISO 19110:2005 applies to the cataloguing of feature types that are represented in digital
+      form. Its principles can be extended to the cataloguing of other forms of geographic data.</scope>
+    <UMLPackage/>
+    <prefix>gfc</prefix>
+    <version>1.1</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19110</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic information -- Methodology for feature cataloguing</conceptualStandardTitle>
+    <schemaStandardNumber>19110</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+  </namespace>
+  <namespace>
+    <title>Geography Markup Language</title>
+    <requirementRoot>geography-markup</requirementRoot>
+    <scope>Elements for describing geographic features required in XML implementations of ISO metadata standards.</scope>
+    <UMLPackage>None</UMLPackage>
+    <prefix>gml</prefix>
+    <version>3.2</version>
+    <location>http://www.opengis.net/gml/3.2</location>
+    <encodingRules>ISO/TS 19136</encodingRules>
+    <conceptualStandardNumber>19136</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic information -- Geography Markup Language (GML)</conceptualStandardTitle>
+    <schemaStandardNumber>19118</schemaStandardNumber>
+    <schemaStandardTitle>ISO 19118:2011 Geographic information -- Encoding</schemaStandardTitle>
+  </namespace>
+  <namespace>
+    <title>Geographic Markup Wrappers</title>
+    <requirementRoot>geographic-wrappers</requirementRoot>
+    <scope>Wrappers for gml dependencies.</scope>
+    <UMLPackage>None</UMLPackage>
+    <prefix>gmw</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-1</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 1: Fundamentals</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+    <paragraphNumber/>
+  </namespace>
+  <namespace>
+    <title>Geographic Spatial Referencing</title>
+    <requirementRoot>geographic-spatial-referencing</requirementRoot>
+    <scope>Elements for describing basic types from ISO/TS 19111 required in XML implementations of ISO metadata standards.</scope>
+    <UMLPackage>None</UMLPackage>
+    <prefix>gsr</prefix>
+    <version>1.0</version>
+    <location>http://www.isotc211.org/2005/gsr</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 9 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19139</conceptualStandardNumber>
+    <conceptualStandardTitle>ISO/TS 19139 Geographic information - Metadata - XML schema implementation</conceptualStandardTitle>
+    <schemaStandardNumber>19139-2005</schemaStandardNumber>
+    <schemaStandardTitle>ISO/TS 19139 Geographic information - Metadata - XML schema implementation</schemaStandardTitle>
+    <paragraphNumber>9.6</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Geographic Spatial Schema</title>
+    <requirementRoot>geographic-spatial</requirementRoot>
+    <scope>Elements for describing basic types from ISO/TS 19107 required in XML implementations of ISO metadata standards.</scope>
+    <UMLPackage>None</UMLPackage>
+    <prefix>gss</prefix>
+    <version>1.0</version>
+    <location>http://www.isotc211.org/2005/gss</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19139</conceptualStandardNumber>
+    <conceptualStandardTitle>ISO/TS 19139 Geographic information - Metadata - XML schema implementation</conceptualStandardTitle>
+    <schemaStandardNumber>19139-2005</schemaStandardNumber>
+    <schemaStandardTitle>ISO/TS 19139 Geographic information - Metadata - XML schema implementation</schemaStandardTitle>
+    <paragraphNumber>9.4</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Geographic Temporal Schema</title>
+    <requirementRoot>geographic-temporal</requirementRoot>
+    <scope>Elements for describing basic types from ISO/TS 19108 required in XML implementations of ISO metadata standards.</scope>
+    <UMLPackage>None</UMLPackage>
+    <prefix>gts</prefix>
+    <version>1.0</version>
+    <location>http://www.isotc211.org/2005/gts</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 9 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19139</conceptualStandardNumber>
+    <conceptualStandardTitle>ISO/TS 19139 Geographic information - Metadata - XML schema implementation</conceptualStandardTitle>
+    <schemaStandardNumber>19139-2005</schemaStandardNumber>
+    <schemaStandardTitle>ISO/TS 19139 Geographic information - Metadata - XML schema implementation</schemaStandardTitle>
+    <paragraphNumber>9.5</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Language localization</title>
+    <requirementRoot>language-localization</requirementRoot>
+    <scope>Elements for cultural and linguistic adapatiblity.</scope>
+    <UMLPackage>&lt;&lt;Leaf&gt;&gt; Language</UMLPackage>
+    <prefix>lan</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-1</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 1: Fundamentals</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <paragraphNumber>7.3</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Metadata for Acquisition</title>
+    <scope>Information related to acquisition platforms, instruments, operations and other details.</scope>
+    <UMLPackage>Acquisition Details</UMLPackage>
+    <prefix>mac</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-2</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 2: Extensions for imagery and gridded data</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <paragraphNumber>A.2.5</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Metadata for Acquisition</title>
+    <scope>Information related to acquisition platforms, instruments, operations and other details.</scope>
+    <UMLPackage>Acquisition Details</UMLPackage>
+    <prefix>mac</prefix>
+    <version>2.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-2</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 2: Extensions for acquisition and processing</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <paragraphNumber>6.3.2</paragraphNumber>
+  </namespace>
+  <!--<namespace>
+    <title>Metadata for Acquisition and Imagery</title>
+    <scope>Metadata Entity holding extended information related to acquisition and imagery.</scope>
+    <UMLPackage>Metadata Entity</UMLPackage>
+    <prefix>mai</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-2</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 2: Extensions for imagery and gridded data</conceptualStandardTitle>
+    <schemaStandardNumber>19115-4</schemaStandardNumber>
+    <paragraphNumber>A.2.1</paragraphNumber>
+  </namespace>-->
+  <namespace>
+    <title>Metadata for Application Schema</title>
+    <requirementRoot>application-schema</requirementRoot>
+    <scope>Elements for referencing Application Schema.</scope>
+    <UMLPackage>&lt;&lt;Leaf&gt;&gt; Application Schema</UMLPackage>
+    <prefix>mas</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-1</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 1: Fundamentals</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+    <paragraphNumber>6.5.13</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Metadata Common Classes</title>
+    <requirementRoot>common-classes</requirementRoot>
+    <scope>abstract classes shared by multiple namespaces and is required in order to enable modularization of the XML implementation.</scope>
+    <UMLPackage>&lt;&lt;Leaf&gt;&gt;</UMLPackage>
+    <prefix>mcc</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-1</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 1: Fundamentals</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+    <paragraphNumber>6.6.4</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Metadata for Constraints</title>
+    <requirementRoot>constraints</requirementRoot>
+    <scope>Elements for describing resource and metadata constraints.</scope>
+    <UMLPackage>&lt;&lt;Leaf&gt;&gt; Constraints</UMLPackage>
+    <prefix>mco</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-1</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 1: Fundamentals</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+    <paragraphNumber>6.5.4</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Metadata for Data and Services with Geospatial Common Extensions</title>
+    <requirementRoot>metadata-extended-types-instance</requirementRoot>
+    <scope>This namespace contains all classes needed for a complete metadata record for any resource and enables the use of FileName, MimeType, and Anchor elements (gex).</scope>
+    <UMLPackage>Implementation Model Only</UMLPackage>
+    <prefix>md1</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-1</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 1: Fundamentals</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+    <paragraphNumber>A.2.3.4</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Metadata for Data and Services with Geospatial Common Extensions</title>
+    <requirementRoot>metadata-extended-types-instance</requirementRoot>
+    <scope>This namespace contains all classes needed for a complete metadata record for any resource and enables the use of FileName, MimeType, and Anchor elements (gex).</scope>
+    <UMLPackage>Implementation Model Only</UMLPackage>
+    <prefix>md1</prefix>
+    <version>2.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-1</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 1: Fundamentals</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+    <paragraphNumber>A.2.3.4</paragraphNumber>
+  </namespace>  
+  <namespace>
+    <title>Metadata with Extended Schema</title>
+    <requirementRoot>extended-metadata-instance</requirementRoot>
+    <scope>This namespace contains all classes needed for a complete metadata record for any resource and enables the description of schema extensions (MD_MetadataExtensionInformation) elements (mex).</scope>
+    <UMLPackage>Implementation Model Only</UMLPackage>
+    <prefix>md2</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-1</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 1: Fundamentals</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+    <paragraphNumber>A.2.3.5</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Metadata with Extended Schema</title>
+    <requirementRoot>extended-metadata-instance</requirementRoot>
+    <scope>This namespace contains all classes needed for a complete metadata record for any resource and enables the description of schema extensions (MD_MetadataExtensionInformation) elements (mex).</scope>
+    <UMLPackage>Implementation Model Only</UMLPackage>
+    <prefix>md2</prefix>
+    <version>2.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-1</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 1: Fundamentals</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+    <paragraphNumber>A.2.3.5</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>MetaData Application</title>
+    <requirementRoot>metadata-application</requirementRoot>
+    <scope>Elements to represent resources that may be aggregated and described by metadata records (DS_*)</scope>
+    <UMLPackage>&lt;&lt;Leaf&gt;&gt; Metadata Application</UMLPackage>
+    <prefix>mda</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-1</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 1: Fundamentals</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+    <paragraphNumber>6.2</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>MetaData Application</title>
+    <requirementRoot>metadata-application</requirementRoot>
+    <scope>Elements to represent resources that may be aggregated and described by metadata records (DS_*)</scope>
+    <UMLPackage>&lt;&lt;Leaf&gt;&gt; Metadata Application</UMLPackage>
+    <prefix>mda</prefix>
+    <version>2.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-1</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 1: Fundamentals</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+    <paragraphNumber>6.2</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Metadata Base</title>
+    <requirementRoot>metadata-base</requirementRoot>
+    <scope>Mandatory elements for describing resources that are not services. This namespace is used for metadata records that include only mandatory elements.</scope>
+    <UMLPackage/>
+    <prefix>mdb</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-1</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 1: Fundamentals</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+    <paragraphNumber>6.5.2</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Metadata Base</title>
+    <requirementRoot>metadata-base</requirementRoot>
+    <scope>Mandatory elements for describing resources that are not services. This namespace is used for metadata records that include only mandatory elements.</scope>
+    <UMLPackage/>
+    <prefix>mdb</prefix>
+    <version>2.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-1</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 1: Fundamentals</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+    <paragraphNumber>6.5.2</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Metadata for Data Quality</title>
+    <requirementRoot>data-quality</requirementRoot>
+    <scope>Elements for describing the quality of resources.</scope>
+    <UMLPackage>Data Quality</UMLPackage>
+    <prefix>mdq</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19157</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Data Quality</conceptualStandardTitle>
+    <schemaStandardNumber>19157-2</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Data Quality — Part 2: XML schema implementation</schemaStandardTitle>
+    <paragraphNumber>6.4</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Metadata for Data and Services</title>
+    <requirementRoot>metadata-data-or-services</requirementRoot>
+    <scope>This namespace contains all classes needed for a complete metadata record for any resource. It is used for metadata records that do not include geospatial common extensions (gex), extenbsions to the schema (mex), data series (DS_*) elements (mda) or metadata for data transfer (mdt).</scope>
+    <UMLPackage>&lt;&lt;Leaf&gt;&gt;</UMLPackage>
+    <prefix>mds</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-1</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 1: Fundamentals</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+    <paragraphNumber>6.5.2</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Metadata for Data and Services</title>
+    <requirementRoot>metadata-data-or-services</requirementRoot>
+    <scope>This namespace contains all classes needed for a complete metadata record for any resource. It is used for metadata records that do not include geospatial common extensions (gex), extenbsions to the schema (mex), data series (DS_*) elements (mda) or metadata for data transfer (mdt).</scope>
+    <UMLPackage>&lt;&lt;Leaf&gt;&gt;</UMLPackage>
+    <prefix>mds</prefix>
+    <version>2.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-1</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 1: Fundamentals</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+    <paragraphNumber>6.5.2</paragraphNumber>
+  </namespace> 
+  <namespace>
+    <title>Metadata for Data Transfer</title>
+    <requirementRoot>data-transfer</requirementRoot>
+    <scope>This namespace contains all classes needed for a complete metadata record for any resource and enables the description of data transfer (MX_*) elements. This is the most inclusive of the ISO 19115-3 namespaces so it should be used in situations where all 19115-3 capabilities are required.</scope>
+    <UMLPackage>&lt;&lt;Leaf&gt;&gt; Metadata-based Data Transfers</UMLPackage>
+    <prefix>mdt</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-1</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 1: Fundamentals</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+    <paragraphNumber>7.4.2, 7.4.3</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Metadata for Data Transfer</title>
+    <requirementRoot>data-transfer</requirementRoot>
+    <scope>This namespace contains all classes needed for a complete metadata record for any resource and enables the description of data transfer (MX_*) elements. This is the most inclusive of the ISO 19115-3 namespaces so it should be used in situations where all 19115-3 capabilities are required.</scope>
+    <UMLPackage>&lt;&lt;Leaf&gt;&gt; Metadata-based Data Transfers</UMLPackage>
+    <prefix>mdt</prefix>
+    <version>2.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-1</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 1: Fundamentals</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+    <paragraphNumber>7.4.2, 7.4.3</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Metadata with Schema Extensions</title>
+    <requirementRoot>metadata-extension</requirementRoot>
+    <scope>Elements describing extensions to metadata standards.</scope>
+    <UMLPackage>&lt;&lt;Leaf&gt;&gt; Metadata Extension</UMLPackage>
+    <prefix>mex</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-1</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 1: Fundamentals</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+    <paragraphNumber>6.5.12</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Metadata for Imagery Content</title>
+    <scope>Information related to content of imagery and gridded data.</scope>
+    <UMLPackage>Content Information</UMLPackage>
+    <prefix>mic</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-2</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 2: Extensions for imagery and gridded data</conceptualStandardTitle>
+    <schemaStandardNumber>19115-4</schemaStandardNumber>
+    <paragraphNumber>A.2.4</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Metadata for Imagery Linege</title>
+    <scope>Information related to lineage and processing of imagery and gridded data.</scope>
+    <UMLPackage>Content Information</UMLPackage>
+    <prefix>mil</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-2</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 2: Extensions for imagery and gridded data</conceptualStandardTitle>
+    <schemaStandardNumber>19115-4</schemaStandardNumber>
+    <paragraphNumber>A.2.2.2</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Metadata for Imagery Spatial Representation</title>
+    <scope>Information related to spatial representations of imagery and gridded data.</scope>
+    <UMLPackage>SpatialRepresentation Information</UMLPackage>
+    <prefix>mis</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-2</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 2: Extensions for imagery and gridded data</conceptualStandardTitle>
+    <schemaStandardNumber>19115-4</schemaStandardNumber>
+    <paragraphNumber>A.2.3</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Metadata for Maintenance Information</title>
+    <requirementRoot>maintenance-information</requirementRoot>
+    <scope>Elements describing resource and metadata maintenance.</scope>
+    <UMLPackage>&lt;&lt;Leaf&gt;&gt; Maintenance</UMLPackage>
+    <prefix>mmi</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-1</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 1: Fundamentals</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+    <paragraphNumber>6.5.6</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Metadata for Portrayal Catalog</title>
+    <requirementRoot>portrayal-catalog</requirementRoot>
+    <scope>Elements for referencing portrayal catalogs.</scope>
+    <UMLPackage>&lt;&lt;Leaf&gt;&gt; Portrayal Catalog</UMLPackage>
+    <prefix>mpc</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-1</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 1: Fundamentals</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+    <paragraphNumber>6.5.10</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Metadata for Resource Content</title>
+    <requirementRoot>resource-content</requirementRoot>
+    <scope>Elements for describing resource structure and content.</scope>
+    <UMLPackage>&lt;&lt;Leaf&gt;&gt; Resource Content</UMLPackage>
+    <prefix>mrc</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-1</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 1: Fundamentals</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+    <paragraphNumber>6.5.9</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Metadata for Resource Content</title>
+    <requirementRoot>resource-content</requirementRoot>
+    <scope>Elements for describing resource structure and content.</scope>
+    <UMLPackage>&lt;&lt;Leaf&gt;&gt; Resource Content</UMLPackage>
+    <prefix>mrc</prefix>
+    <version>2.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-1</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 1: Fundamentals AMENDMENT 1</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+    <paragraphNumber>6.5.9</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Metadata for Resource Distribution</title>
+    <requirementRoot>resource-distribution</requirementRoot>
+    <scope>Elements specifying how a resource is accessed.</scope>
+    <UMLPackage>&lt;&lt;Leaf&gt;&gt; Distribution Information</UMLPackage>
+    <prefix>mrd</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-1</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 1: Fundamentals</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+    <paragraphNumber>6.5.11</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Metadata for Resource Identification</title>
+    <requirementRoot>resource-identification</requirementRoot>
+    <scope>Elements for identifying resources.</scope>
+    <UMLPackage>&lt;&lt;Leaf&gt;&gt; Identification Information</UMLPackage>
+    <prefix>mri</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-1</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 1: Fundamentals</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+    <paragraphNumber>6.5.3</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Metadata for Resource Lineage</title>
+    <requirementRoot>lineage</requirementRoot>
+    <scope>Elements for describing resource lineage.</scope>
+    <UMLPackage>&lt;&lt;Leaf&gt;&gt;</UMLPackage>
+    <prefix>mrl</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-1</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 1: Fundamentals</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+    <paragraphNumber>6.5.5</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Metadata for Resource Lineage</title>
+    <requirementRoot>lineage</requirementRoot>
+    <scope>Elements for describing resource lineage.</scope>
+    <UMLPackage>&lt;&lt;Leaf&gt;&gt;</UMLPackage>
+    <prefix>mrl</prefix>
+    <version>2.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-1</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 2: Extensions for acquisition and processing</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+    <paragraphNumber>6.3.3</paragraphNumber>
+  </namespace> 
+  <namespace>
+    <title>Metadata for Reference System</title>
+    <requirementRoot>reference-system</requirementRoot>
+    <scope>Elements for describing Reference Systems.</scope>
+    <UMLPackage>&lt;&lt;Leaf&gt;&gt; Reference System</UMLPackage>
+    <prefix>mrs</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-1</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 1: Fundamentals</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+    <paragraphNumber>6.5.8</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Metadata for Spatial Representation</title>
+    <requirementRoot>spatial-representation</requirementRoot>
+    <scope>Elements for describing spatial representations of resources.</scope>
+    <UMLPackage>&lt;&lt;Leaf&gt;&gt; Spatial Representation</UMLPackage>
+    <prefix>msr</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-1</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 1: Fundamentals</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+    <paragraphNumber>6.5.7</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Metadata for Spatial Representation</title>
+    <requirementRoot>spatial-representation</requirementRoot>
+    <scope>Elements for describing spatial representations of resources.</scope>
+    <UMLPackage>&lt;&lt;Leaf&gt;&gt; Spatial Representation</UMLPackage>
+    <prefix>msr</prefix>
+    <version>2.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-1</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 1: Fundamentals AMENDMENT 1</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+    <paragraphNumber>6.5.7</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>Procedures for Registration</title>
+    <requirementRoot>registration-common</requirementRoot>
+    <scope>abstract classes shared by multiple namespaces and is required in order to enable modularization of the XML implementation.</scope>
+    <UMLPackage/>
+    <prefix>pre</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19135</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic information -- Procedures for item registration</conceptualStandardTitle>
+    <schemaStandardNumber>19135-2</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+  </namespace>
+  <namespace>
+    <title>Referencing By Coordinates</title>
+    <requirementRoot>reference-coordinate</requirementRoot>
+    <scope>ISO 19111:2007 defines the conceptual schema for the description of spatial referencing by coordinates, optionally extended to spatio-temporal referencing. It describes the minimum data required to define one-, two- and three-dimensional spatial coordinate reference systems with an extension to merged spatial-temporal reference systems. It allows additional descriptive information to be provided. It also describes the information required to change coordinates from one coordinate
+      reference system to another.</scope>
+    <UMLPackage/>
+    <prefix>rbc</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19111</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic information -- Spatial referencing by coordinates</conceptualStandardTitle>
+    <schemaStandardNumber>19111</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+  </namespace>
+  <namespace>
+    <title>Referencing By Coordinates Common</title>
+    <requirementRoot>coordinate-system-common</requirementRoot>
+    <scope>abstract classes shared by multiple namespaces and is required in order to enable modularization of the XML implementation.</scope>
+    <UMLPackage/>
+    <prefix>rce</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19111</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic information -- Spatial referencing by coordinates</conceptualStandardTitle>
+    <schemaStandardNumber>19111</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+  </namespace>
+  <namespace>
+    <title>Registration Common</title>
+    <requirementRoot>registration-common</requirementRoot>
+    <scope>abstract classes shared by multiple namespaces and is required in order to enable modularization of the XML implementation.</scope>
+    <UMLPackage/>
+    <prefix>reg</prefix>
+    <version>1.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19135</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic information -- Procedures for item registration</conceptualStandardTitle>
+    <schemaStandardNumber>19135-2</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+  </namespace>
+  <namespace>
+    <title>Metadata for Services</title>
+    <requirementRoot>services</requirementRoot>
+    <scope>Elements for describing services.</scope>
+    <UMLPackage>&lt;&lt;Leaf&gt;&gt; Services</UMLPackage>
+    <prefix>srv</prefix>
+    <version>2.0</version>
+    <location>https://schemas.isotc211.org</location>
+    <encodingRules>ISO/TS 19139:2007, Clause 8 and implementation approach from ISO/TS19115-3, Clause 8</encodingRules>
+    <conceptualStandardNumber>19115-1</conceptualStandardNumber>
+    <conceptualStandardTitle>Geographic Information - Metadata - Part 1: Fundamentals</conceptualStandardTitle>
+    <schemaStandardNumber>19115-3</schemaStandardNumber>
+    <schemaStandardTitle>Geographic information — Metadata — XML schema implementation for fundamental concepts</schemaStandardTitle>
+    <paragraphNumber>6.5.14</paragraphNumber>
+  </namespace>
+  <namespace>
+    <title>XML Linking Language (XLink) Version 1.0. W3C Recommendation</title>
+    <requirementRoot>xlink</requirementRoot>
+    <scope>Elements for describing World Wide WEb links required in XML implementations of ISO metadata standards.</scope>
+    <UMLPackage>None</UMLPackage>
+    <prefix>xlink</prefix>
+    <version>1.0</version>
+    <location>http://www.w3.org/1999/xlink</location>
+    <encodingRules/>
+    <conceptualStandardNumber>19139</conceptualStandardNumber>
+    <conceptualStandardTitle>ISO/TS 19139 Geographic information - Metadata - XML schema implementation</conceptualStandardTitle>
+    <schemaStandardNumber>19139-2005</schemaStandardNumber>
+    <schemaStandardTitle/>
+  </namespace>
+</ISOSchema>

@@ -1,0 +1,27 @@
+<?xml-stylesheet type='text/xsl' href='./CodelistDictionary-v32.xsl'?><Dictionary xmlns="http://www.opengis.net/gml/3.2"    xmlns:gml="http://www.opengis.net/gml/3.2"    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="MI_SequenceCode" xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>Description: temporal relation of activation&#13;
+shortName: SeqCode&#13;
+</description>
+  <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mac/1.0">MI_SequenceCode</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="_12410_18969">
+      <description>Description: Beginning of a collection&#13;
+Code: 001</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mac/1.0">start</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12410_18970">
+      <description>Description: End of a collection&#13;
+Code: 002</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mac/1.0">end</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12410_18971">
+      <description>Description: Collection without a significant duration&#13;
+Code: 003</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mac/1.0">instantaneous</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

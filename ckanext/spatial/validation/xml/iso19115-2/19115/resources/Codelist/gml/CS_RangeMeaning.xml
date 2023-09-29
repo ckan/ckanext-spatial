@@ -1,0 +1,17 @@
+<?xml-stylesheet type='text/xsl' href='./CodelistDictionary-v32.xsl'?><Dictionary xmlns="http://www.opengis.net/gml/3.2"    xmlns:gml="http://www.opengis.net/gml/3.2"    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="CS_RangeMeaning" xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>Meaning of the axis value range specified through minimumValue and maximumValue.&#13;
+</description>
+  <identifier codeSpace="http://www.isotc211.org/2014/rbc/1.0">CS_RangeMeaning</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="_9492_12496">
+      <description>Any value between and including minimumValue and maximumValue is valid.</description>
+      <identifier codeSpace="http://www.isotc211.org/2014/rbc/1.0">exact</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_9492_12497">
+      <description>The axis is continuous with values wrapping around at the minimumValue and maximumValue. Values with the same meaning repeat modulo the difference between maximumValue and minimumValue.</description>
+      <identifier codeSpace="http://www.isotc211.org/2014/rbc/1.0">wraparound</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

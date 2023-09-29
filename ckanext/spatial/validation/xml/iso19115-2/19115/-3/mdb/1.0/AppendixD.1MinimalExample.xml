@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Minimal gmd based instance document -->
+<mdb:MD_Metadata xmlns="http://standards.iso.org/iso/19115/-3/mdb/1.0" 
+    xmlns:dqc="http://standards.iso.org/iso/19157/-2/dqc/1.0" 
+    xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" 
+    xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0" 
+    xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" 
+    xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/1.0"
+    xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/1.0"
+    xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
+    xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://standards.iso.org/iso/19115/-3/mdb/1.0 mdb.xsd">
+    <mdb:contact>
+        <cit:CI_Responsibility>
+            <cit:role>
+                <cit:CI_RoleCode codeList="https://schemas.isotc211.org/19115/resources/Codelist/cat/codeList.xml#CI_RoleCode" codeListValue="custodian">custodian</cit:CI_RoleCode>
+            </cit:role>
+            <cit:party>
+                <cit:CI_Organisation>
+<!-- name or logo is mandatory by schematron-enforced constraint -->
+                    <cit:name>  
+                        <gco:CharacterString>Department of Primary Industries and Resources SA</gco:CharacterString>
+                    </cit:name>
+                </cit:CI_Organisation>
+            </cit:party>
+        </cit:CI_Responsibility>
+    </mdb:contact>
+    <mdb:dateInfo>
+        <cit:CI_Date>
+            <cit:date>
+                <gco:DateTime>2004-03-12T12:00:00</gco:DateTime>
+            </cit:date>
+            <cit:dateType>
+                <cit:CI_DateTypeCode codeList="https://schemas.isotc211.org/19115/resources/Codelist/cat/codeList.xml#creation" codeListValue="Creation"/>
+            </cit:dateType>
+        </cit:CI_Date>
+    </mdb:dateInfo>
+    <mdb:identificationInfo>
+        <mri:MD_DataIdentification>
+            <mri:citation>
+                <cit:CI_Citation>
+                    <cit:title>
+                        <gco:CharacterString>Exploration Licences for Minerals</gco:CharacterString>
+                    </cit:title>
+                    
+<!-- mandatory (dataType= creation) by constraint enforced by schematron rule -->
+                    <cit:date> 
+                        <cit:CI_Date>
+                            <cit:date>
+                                <gco:DateTime>1993-01-01T12:00:00</gco:DateTime>
+                            </cit:date>
+                            <cit:dateType>
+                                <cit:CI_DateTypeCode codeList="https://schemas.isotc211.org/19115/resources/Codelist/cat/codeList.xml#CI_DateTypeCode" codeListValue="publication">publication</cit:CI_DateTypeCode>
+                            </cit:dateType>
+                        </cit:CI_Date>
+                    </cit:date>    
+              </cit:CI_Citation>
+            </mri:citation>
+            <mri:abstract>
+                <gco:CharacterString>Location of all current mineral Exploration Licences issued under the Mining Act, 1971. Exploration Licences provide exclusive tenure rights to explore for mineral resources for up to a maximum of 5 years. Comment issought on applications for Exploration Licences from numerous sources before granting. Exploration programs are subject to strict environmental and heritage conditions. Exploitation of identified resources must be made under separate mineral production leases.</gco:CharacterString>
+            </mri:abstract>
+            
+ <!-- mandatory since MD_MetadataScope is not specified, and defaults to 'dataset' enforced by schematron rule -->
+            <mri:topicCategory>  
+                <mri:MD_TopicCategoryCode>boundaries</mri:MD_TopicCategoryCode>
+            </mri:topicCategory>
+            
+<!-- a bounding box is required because the mdb:MD_MetadataScope is not specified; enforced by schematron rule-->
+            <mri:extent>
+                <gex:EX_Extent>
+                    <gex:description>
+                        <gco:CharacterString>location description</gco:CharacterString>
+                    </gex:description>
+                    <gex:geographicElement>
+                        <gex:EX_GeographicBoundingBox>
+                            <gex:extentTypeCode>
+                                <gco:Boolean>false</gco:Boolean>
+                            </gex:extentTypeCode>
+                            <gex:westBoundLongitude>
+                                <gco:Decimal>129.0</gco:Decimal>
+                            </gex:westBoundLongitude>
+                            <gex:eastBoundLongitude>
+                                <gco:Decimal>141.0</gco:Decimal>
+                            </gex:eastBoundLongitude>
+                            <gex:southBoundLatitude>
+                                <gco:Decimal>-38.5</gco:Decimal>
+                            </gex:southBoundLatitude>
+                            <gex:northBoundLatitude>
+                                <gco:Decimal>-26.0</gco:Decimal>
+                            </gex:northBoundLatitude>
+                        </gex:EX_GeographicBoundingBox>
+                    </gex:geographicElement>
+                </gex:EX_Extent>
+            </mri:extent>
+<!-- mandatory if resource contains textual content (has to be enforced by inspection) -->
+            <mri:defaultLocale>
+                <lan:PT_Locale>
+                    <lan:language>
+                        <lan:LanguageCode codeList="https://schemas.isotc211.org/19115/resources/Codelist/lan/LanguageCode.xml" codeListValue="eng">English</lan:LanguageCode>
+                    </lan:language>
+                    <lan:characterEncoding>
+                        <lan:MD_CharacterSetCode codeList="https://schemas.isotc211.org/19115/resources/Codelist/lan/CharacterSetCode.xml" codeListValue="utf8">UTF-8</lan:MD_CharacterSetCode>
+                    </lan:characterEncoding>
+                </lan:PT_Locale>
+            </mri:defaultLocale>
+        </mri:MD_DataIdentification>
+    </mdb:identificationInfo>
+</mdb:MD_Metadata>

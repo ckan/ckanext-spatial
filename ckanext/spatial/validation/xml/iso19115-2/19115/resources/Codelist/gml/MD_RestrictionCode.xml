@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='./CodelistDictionary-v32.xsl'?><Dictionary xmlns="http://www.opengis.net/gml/3.2"    xmlns:gml="http://www.opengis.net/gml/3.2"    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="MD_RestrictionCode" xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>limitation(s) placed upon the access or use of the data</description>
+  <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mco/1.0">MD_RestrictionCode</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="_12440_19049">
+      <description>exclusive right to the publication, production, or sale of the rights to a literary, dramatic, musical, or artistic work, or to the use of a commercial print or label, granted by law for a specified period of time to an author, composer, artist, distributor</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mco/1.0">copyright</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12440_19050">
+      <description>government has granted exclusive right to make, sell, use or license an invention or discovery</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mco/1.0">patent</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12440_19051">
+      <description>produced or sold information awaiting a patent</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mco/1.0">patentPending</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12440_19052">
+      <description>a name, symbol, or other device identifying a product, officially registered and legally restricted to the use of the owner or manufacturer</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mco/1.0">trademark</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12440_19053">
+      <description>formal permission to do something</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mco/1.0">licence</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12440_19054">
+      <description>rights to financial benefit from and control of distribution of non-tangible property that is a result of creativity</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mco/1.0">intellectualPropertyRights</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12440_19055">
+      <description>withheld from general circulation or disclosure</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mco/1.0">restricted</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12440_19056">
+      <description>limitation not listed</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mco/1.0">otherRestrictions</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12440_19057">
+      <description>no constraints exist</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mco/1.0">unrestricted</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12440_19058">
+      <description>formal permission not required to use the resource</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mco/1.0">licenceUnrestricted</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12440_19059">
+      <description>formal permission required for a person or an entity to use the resource and that may differ from the person that orders or purchases it</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mco/1.0">licenceEndUser</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12440_19060">
+      <description>formal permission required for a person or an entity to commercialize or distribute the resource</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mco/1.0">licenceDistributor</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12440_19061">
+      <description>protects rights of individual or organisations from observation, intrusion, or attention of other s</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mco/1.0">private</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12440_19062">
+      <description>prescribed by law</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mco/1.0">statutory</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12440_19063">
+      <description>not available to the public contains information that could be prejudicial to a commercial, industrial, or national interest</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mco/1.0">confidential</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12440_19064">
+      <description>although unclassified, requires strict controls over its distribution.</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mco/1.0">sensitiveButUnclassified</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12440_19065">
+      <description>with trust</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mco/1.0">in-confidence</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

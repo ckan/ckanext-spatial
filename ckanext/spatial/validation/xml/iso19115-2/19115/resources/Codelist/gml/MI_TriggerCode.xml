@@ -1,0 +1,27 @@
+<?xml-stylesheet type='text/xsl' href='./CodelistDictionary-v32.xsl'?><Dictionary xmlns="http://www.opengis.net/gml/3.2"    xmlns:gml="http://www.opengis.net/gml/3.2"    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="MI_TriggerCode" xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>Description: mechanism of activation&#13;
+shortName: TriggerCode&#13;
+</description>
+  <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mac/1.0">MI_TriggerCode</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="_12420_19004">
+      <description>Description: Event due to external stimuli&#13;
+Code: 001</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mac/1.0">automatic</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12420_19005">
+      <description>Description: Event manually instigated&#13;
+Code: 002</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mac/1.0">manual</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12420_19006">
+      <description>Description: Event instigated by planned stimuli&#13;
+Code: 003</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mac/1.0">preProgrammed</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

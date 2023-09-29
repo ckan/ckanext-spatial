@@ -1,0 +1,81 @@
+﻿= Metadata Common Classes (MCC)
+:edition: 1.0
+:revdate: 2019-01-04
+
+== Metadata Common Classes (MCC) Version: 1.0
+
+image::mcc.png[]
+
+=== Description
+
+MCC 1.0 is an XML Schema implementation derived from ISO 19115-1, Geographic
+Information - Metadata - Part 1: Fundamentals, Clause 6.6.4. It includes abstract
+classes shared by multiple namespaces and is required in order to enable
+modularization of the XML implementation. The XML schema was encoded using the rules
+described in ISO/TS 19139:2007, Clause 8 and implementation approach from
+ISO/TS19115-3, Clause 8.
+
+=== Sample XML files for mcc 1.0
+
+=== CodeLists for mcc 1.0
+
+* link:codelists.html[codelists.html]
+* link:codelists.xml[codelists.xml]
+
+
+=== XML Namespace for mcc 1.0
+
+The namespace URI for mcc 1.0 is `http://standards.iso.org/iso/19115/-3/mcc/1.0`.
+
+=== XML Schema for mcc 1.0
+
+link:mcc.xsd[mcc.xsd] is the XML Schema document to be referenced by XML documents
+containing XML elements in the mcc 1.0 namespace or by XML Schema documents importing
+the mcc 1.0 namespace. This XML schema includes (indirectly) all the implemented
+concepts of the mcc namespace, but it does not contain the declaration of any types.
+
+NOTE: The XML Schema for mcc 1.0 are available link:mcc.zip[here]. A zip archive
+including all the XML Schema Implementations defined in ISO/TS 19115-3 and related
+standards is also
+https://schemas.isotc211.org/19115/19115AllNamespaces.zip[available].
+
+=== Related XML Schema for mcc 1.0
+
+link:AbstractCommonClasses.xsd[AbstractCommonClasses.xsd] implements the UML
+conceptual schema defined in ISO 19115-1, Geographic Information - Metadata - Part 1:
+Fundamentals, Clause 6.6.4. It was created using the encoding rules defined in ISO
+19118, ISO 19139, and the implementation approach described in ISO 19115-3 and
+contains the following classes (codeLists are bold): Abstract_AcquisitionInformation,
+Abstract_ApplicationSchemaInformation, Abstract_Citation, Abstract_Constraints, Abstract_ContentInformation, Abstract_Distribution, Abstract_Extent, Abstract_Format,
+Abstract_LineageInformation, Abstract_MaintenanceInformation, Abstract_Metadata,
+Abstract_MetadataExtension, Abstract_OnlineResource, Abstract_Platform,
+Abstract_PortrayalCatalogueInformation, Abstract_ReferenceSystem,
+Abstract_ResourceDescription, Abstract_Responsibility,
+Abstract_SpatialRepresentation, Abstract_SpatialResolution,
+Abstract_StandardOrderProcess, Abstract_TypedDate, and Abstract_Parameter
+
+link:commonClasses.xsd[commonClasses.xsd] implements the UML conceptual schema
+defined in ISO 19115-1, Geographic Information - Metadata - Part 1: Fundamentals,
+Clause 6.6.4. It was created using the encoding rules defined in ISO 19118, ISO
+19139, and the implementation approach described in ISO 19115-3 and contains the
+following classes (codeLists are bold): MD_BrowseGraphic, MD_Identifier,
+*MD_ProgressCode*, MD_Scope, *MD_ScopeCode*, MD_ScopeDescription,
+*MD_SpatialRepresentationTypeCode*, and URI
+
+=== Related XML Namespaces for mcc 1.0
+
+The mcc 1.0 namespace imports these other namespaces:
+
+[%unnumbered]
+[options=header,cols=4]
+|===
+| Name | Standard Prefix | Namespace Location | Schema Location
+
+| Geographic COmmon | gco |
+`https://schemas.isotc211.org/19115/-3/gco/1.0` | https://schemas.isotc211.org/19115/-3/gco/1.0/gco.xsd[gco.xsd]
+|===
+
+=== Working Versions
+
+When revisions to these schema become necessary, they will be managed in the
+https://github.com/ISO-TC211/XML[ISO TC211 Git Repository].

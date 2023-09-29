@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='./CodelistDictionary-v32.xsl'?>
+<Dictionary xmlns="http://www.opengis.net/gml/3.2"    xmlns:gml="http://www.opengis.net/gml/3.2"    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="SV_ParameterDirection" xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>distributed computing platforms on which the operation has been implemented</description>
+  <identifier codeSpace="https://schemas.isotc211.org/19115/-3/srv/2.0">DCPList</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="DCPList_XML">
+      <description>XML</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/srv/2.0">XML</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="DCPList_CORBA">
+      <description>Common Object Request Broker Architecture</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/srv/2.0">CORBA</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="DCPList_JAVA">
+      <description>Object-oriented programming language</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/srv/2.0">JAVA</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="DCPList_COM">
+      <description>Component Object Model</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/srv/2.0">COM</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="DCPList_SQL">
+      <description>Structured Query Language</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/srv/2.0">SQL</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="DCPList_SOAP">
+      <description>Simple Object Access Protocol</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/srv/2.0">SOAP</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="DCPList_Z3950">
+      <description>ISO 23950</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/srv/2.0">Z3950</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="DCPList_HTTP">
+      <description>HyperText Transfer Protocol</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/srv/2.0">HTTP</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="DCPList_FTP">
+      <description>File Transfer Protocol</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/srv/2.0">FTP</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="DCPList_WebServices">
+      <description>Web Service</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/srv/2.0">WebServices</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

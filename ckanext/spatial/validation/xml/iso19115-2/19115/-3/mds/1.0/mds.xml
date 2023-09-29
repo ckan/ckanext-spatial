@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mdb:MD_Metadata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://standards.iso.org/iso/19115/-3/mds/1.0 mds.xsd"
+   xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/1.0"
+   xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
+   xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
+   xmlns:mac="http://standards.iso.org/iso/19115/-3/mac/1.0"
+   xmlns:mas="http://standards.iso.org/iso/19115/-3/mas/1.0"
+   xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/1.0"
+   xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
+   xmlns:mco="http://standards.iso.org/iso/19115/-3/mco/1.0"
+   xmlns:mdq="http://standards.iso.org/iso/19157/-2/mdq/1.0"
+   xmlns:mmi="http://standards.iso.org/iso/19115/-3/mmi/1.0"
+   xmlns:mpc="http://standards.iso.org/iso/19115/-3/mpc/1.0"
+   xmlns:mrc="http://standards.iso.org/iso/19115/-3/mrc/1.0"
+   xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
+   xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
+   xmlns:mrl="http://standards.iso.org/iso/19115/-3/mrl/1.0"
+   xmlns:mrs="http://standards.iso.org/iso/19115/-3/mrs/1.0"
+   xmlns:msr="http://standards.iso.org/iso/19115/-3/msr/1.0">
+   <!-- 
+   This is a sample metadata record for the complete metadata conformance class.
+   It contains required elements from the mdb, mcc (cit, gco), lan, mri,
+   mas, mco, mrl, gex, mrc, mrd, mpc, msr and srv namespaces.
+   
+   This sample includes optional elements of MD_Metadata that are included in
+   the mds namespace and required elements within them. More detailed examples
+   are available in the namespace directories.
+   -->
+   <mdb:metadataIdentifier>
+      <mcc:MD_Identifier>
+         <mcc:code/>
+      </mcc:MD_Identifier>
+   </mdb:metadataIdentifier>
+   <mdb:defaultLocale>
+      <lan:PT_Locale>
+         <lan:language/>
+         <lan:characterEncoding/>
+      </lan:PT_Locale>
+   </mdb:defaultLocale>
+   <mdb:parentMetadata>
+      <cit:CI_Citation>
+         <cit:title/>
+      </cit:CI_Citation>
+   </mdb:parentMetadata>
+   <mdb:metadataScope>
+      <mdb:MD_MetadataScope>
+         <mdb:resourceScope/>
+      </mdb:MD_MetadataScope>
+   </mdb:metadataScope>
+   <mdb:contact>
+      <cit:CI_Responsibility>
+         <cit:role>
+            <cit:CI_RoleCode codeList="codeListLocation#CI_RoleCode" codeListValue="pointOfContact">pointOfContact</cit:CI_RoleCode>
+         </cit:role>
+         <cit:party>
+            <cit:CI_Organisation>
+               <cit:name>
+                  <gco:CharacterString>Organisation Name</gco:CharacterString>
+               </cit:name>
+            </cit:CI_Organisation>
+         </cit:party>
+      </cit:CI_Responsibility>
+   </mdb:contact>
+   <mdb:dateInfo>
+      <cit:CI_Date>
+         <cit:date>
+            <gco:DateTime>2014-04-03T16:00:00</gco:DateTime>
+         </cit:date>
+         <cit:dateType>
+            <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="creation">creation</cit:CI_DateTypeCode>
+         </cit:dateType>
+      </cit:CI_Date>
+   </mdb:dateInfo>
+   <mdb:metadataStandard>
+      <cit:CI_Citation>
+         <cit:title/>
+      </cit:CI_Citation>
+   </mdb:metadataStandard>
+   <mdb:metadataProfile>
+      <cit:CI_Citation>
+         <cit:title/>
+      </cit:CI_Citation>
+   </mdb:metadataProfile>
+   <mdb:alternativeMetadataReference>
+      <cit:CI_Citation>
+         <cit:title/>
+      </cit:CI_Citation>
+   </mdb:alternativeMetadataReference>
+   <mdb:otherLocale>
+      <lan:PT_Locale>
+         <lan:language/>
+         <lan:characterEncoding/>
+      </lan:PT_Locale>
+   </mdb:otherLocale>
+   <mdb:metadataLinkage>
+      <cit:CI_OnlineResource>
+         <cit:linkage/>
+      </cit:CI_OnlineResource>
+   </mdb:metadataLinkage>
+   <mdb:spatialRepresentationInfo>
+      <msr:MD_GridSpatialRepresentation>
+         <msr:numberOfDimensions/>
+         <msr:cellGeometry/>
+         <msr:transformationParameterAvailability/>
+      </msr:MD_GridSpatialRepresentation>
+   </mdb:spatialRepresentationInfo>
+   <mdb:referenceSystemInfo>
+      <mrs:MD_ReferenceSystem/>
+   </mdb:referenceSystemInfo>
+   <mdb:identificationInfo>
+      <mri:MD_DataIdentification>
+         <mri:citation>
+            <cit:CI_Citation>
+               <cit:title>
+                  <gco:CharacterString>Sample Metadata for Minimal Conformance Class</gco:CharacterString>
+               </cit:title>
+            </cit:CI_Citation>
+         </mri:citation>
+         <mri:abstract>
+            <gco:CharacterString>This sample record has all required elements for minimal ISO 19115:2013 metadata</gco:CharacterString>
+         </mri:abstract>
+      </mri:MD_DataIdentification>
+   </mdb:identificationInfo>
+   <mdb:contentInfo>
+      <mrc:MD_CoverageDescription>
+         <mrc:attributeDescription>
+            <gco:RecordType/>
+         </mrc:attributeDescription>
+      </mrc:MD_CoverageDescription>
+   </mdb:contentInfo>
+   <mdb:distributionInfo>
+      <mrd:MD_Distribution/>
+   </mdb:distributionInfo>
+   <mdb:dataQualityInfo>
+      <mdq:DQ_DataQuality>
+         <mdq:scope/>
+         <mdq:report/>
+      </mdq:DQ_DataQuality>
+   </mdb:dataQualityInfo>
+   <mdb:resourceLineage>
+      <mrl:LI_Lineage/>
+   </mdb:resourceLineage>
+   <mdb:portrayalCatalogueInfo>
+      <mpc:MD_PortrayalCatalogueReference>
+         <mpc:portrayalCatalogueCitation/>
+      </mpc:MD_PortrayalCatalogueReference>
+   </mdb:portrayalCatalogueInfo>
+   <mdb:metadataConstraints>
+      <mco:MD_Constraints/>
+   </mdb:metadataConstraints>
+   <mdb:applicationSchemaInfo>
+      <mas:MD_ApplicationSchemaInformation>
+         <mas:name/>
+         <mas:schemaLanguage/>
+         <mas:constraintLanguage/>
+      </mas:MD_ApplicationSchemaInformation>
+   </mdb:applicationSchemaInfo>
+   <mdb:metadataMaintenance>
+      <mmi:MD_MaintenanceInformation/>
+   </mdb:metadataMaintenance>
+   <mdb:acquisitionInformation>
+      <mac:MI_AcquisitionInformation/>
+   </mdb:acquisitionInformation>
+</mdb:MD_Metadata>

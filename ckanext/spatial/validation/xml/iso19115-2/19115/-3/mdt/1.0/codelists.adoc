@@ -1,0 +1,44 @@
+﻿= Codelist Catalog
+:edition: 1.0
+:revdate: 2015-04-17
+
+== ISO 19115-3 Codelist Report
+
+=== Codelists from the Metadata for Data Transfer (mdt) Namespace
+
+[%unnumbered]
+[options=header,cols=2]
+|===
+| *Scope* | Codelists from the Metadata for Data Transfer (mdt) Namespace
+
+| *Field of Application* | ISO TC211 Metadata Standards
+| *Version (Date)* | 1.0 ()
+|===
+
+=== MX_ScopeCode ( MX_ScopeCode )
+
+Description:: class of information to which the referencing entity applies
+
+[%unnumbered]
+[options=header,cols=2]
+|===
+| Entry | Definition
+
+| MX_ScopeCode_initiative | The referencing entity applies to a transfer aggregate
+which was originally identified as an initiative (DS_Initiative)
+| MX_ScopeCode_stereoMate | The referencing entity applies to a transfer aggregate
+which was originally identified as a stereo mate (DS_StereoMate)
+| MX_ScopeCode_sensor | The referencing entity applies to a transfer aggregate which
+was originally identified as a sensor (DS_Sensor)
+| MX_ScopeCode_platformSeries | The referencing entity applies to a transfer
+aggregate which was originally identified as a platform series (DS_PlatformSeries)
+| MX_ScopeCode_sensorSeries | The referencing entity applies to a transfer aggregate
+which was originally identified as a sensor series (DS_SensorSeries)
+| MX_ScopeCode_productionSeries | The referencing entity applies to a transfer
+aggregate which was originally identified as a sensor series (DS_SensorSeries)
+| MX_ScopeCode_transferAggregate | The referencing entity applies to a transfer
+aggregate which has no existence outside of the transfer context
+| MX_ScopeCode_otherAggregate | The referencing entity applies to a transfer
+aggregate which has an existence outside of the transfer context, but which does not
+pertains to a specific aggregate type.
+|===

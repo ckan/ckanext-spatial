@@ -1,0 +1,72 @@
+﻿= Citation and responsible party information (CIT)
+:edition: 2.0
+:revdate: 2019-01-04
+
+== Citation and responsible party information (CIT) Version: 2.0
+
+image::cit.png[]
+
+=== Description
+
+CIT 2.0 is an XML Schema implementation derived from ISO 19115-1, Geographic
+Information - Metadata - Part 1: Fundamentals AMENDMENT 1, Clause 6.6.2. It includes
+utility elements for citation, identification, and web linkage of resources. The XML
+schema was encoded using the rules described in ISO/TS 19139:2007, Clause 8 and
+implementation approach from ISO/TS19115-3, Clause 8.
+
+=== Sample XML files for cit 2.0
+
+link:cit_revised.xml[cit_revised.xml]
+
+=== CodeLists for cit 2.0
+
+* link:codelists.html[codelists.html]
+* link:codelists.xml[codelists.xml]
+
+
+=== XML Namespace for cit 2.0
+
+The namespace URI for cit 2.0 is `http://standards.iso.org/iso/19115/-3/cit/2.0`.
+
+=== XML Schema for cit 2.0
+
+link:cit.xsd[cit.xsd] is the XML Schema document to be referenced by XML documents
+containing XML elements in the cit 2.0 namespace or by XML Schema documents importing
+the cit 2.0 namespace. This XML schema includes (indirectly) all the implemented
+concepts of the cit namespace, but it does not contain the declaration of any types.
+
+NOTE: The XML Schema for cit 2.0 are available link:cit.zip[here]. A zip archive
+including all the XML Schema Implementations defined in ISO/TS 19115-3 and related
+standards is also
+https://schemas.isotc211.org/19115/19115AllNamespaces.zip[available].
+
+=== Related XML Schema for cit 2.0
+
+link:citation.xsd[citation.xsd] implements the UML conceptual schema defined in ISO
+19115-1, Geographic Information - Metadata - Part 1: Fundamentals AMENDMENT 1, Clause
+6.6.2. It was created using the encoding rules defined in ISO 19118, ISO 19139, and
+the implementation approach described in ISO 19115-3 and contains the following
+classes (codeLists are bold): CI_Address, CI_Citation, CI_Contact, CI_Date,
+*CI_DateTypeCode*, CI_Individual, *CI_OnLineFunctionCode*, CI_OnlineResource,
+CI_Organisation, AbstractCI_Party, *CI_PresentationFormCode*, CI_Responsibility,
+*CI_RoleCode*, CI_Series, CI_Telephone, and *CI_TelephoneTypeCode*
+
+=== Related XML Namespaces for cit 2.0
+
+The cit 2.0 namespace imports these other namespaces:
+
+[%unnumbered]
+[options=header,cols=4]
+|===
+| Name | Standard Prefix | Namespace Location | Schema Location
+
+| Geographic COmmon | gco |
+`https://schemas.isotc211.org/19115/-3/gco/1.0` | https://schemas.isotc211.org/19115/-3/gco/1.0/gco.xsd[gco.xsd]
+| Metadata Common Classes | mcc |
+`https://schemas.isotc211.org/19115/-3/mcc/1.0` | https://schemas.isotc211.org/19115/-3/mcc/1.0/mcc.xsd[mcc.xsd]
+|===
+
+=== Working Versions
+
+When revisions to these schema become necessary, they will be managed in the
+https://github.com/ISO-TC211/XML[ISO TC211 Git Repository].

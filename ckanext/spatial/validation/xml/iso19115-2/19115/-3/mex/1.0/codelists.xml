@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cat:CT_CodelistCatalogue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://standards.iso.org/iso/19115/-3/cat/1.0 ../../../-3/cat/1.0/cat.xsd"
+ xmlns:cat="http://standards.iso.org/iso/19115/-3/cat/1.0"
+ xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"    xmlns:xlink="http://www.w3.org/1999/xlink"
+ xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"    xmlns:gml="http://www.opengis.net/gml/3.2">
+   <!--=====Catalogue description=====-->
+   <cat:name>
+      <gco:CharacterString>Codelists from the Metadata with Schema Extensions (mex) Namespace</gco:CharacterString>
+   </cat:name>
+   <cat:scope>
+      <gco:CharacterString>Codelists from the Metadata with Schema Extensions (mex) Namespace</gco:CharacterString>
+   </cat:scope>
+   <cat:fieldOfApplication>
+      <gco:CharacterString>ISO TC211 Metadata Standards</gco:CharacterString>
+   </cat:fieldOfApplication>
+   <cat:versionNumber>
+      <gco:CharacterString>1.1</gco:CharacterString>
+   </cat:versionNumber>
+   <cat:versionDate>
+      <gco:Date>2017-09-10</gco:Date>
+   </cat:versionDate>
+   <cat:locale>
+      <lan:PT_Locale>
+         <lan:language>
+            <lan:LanguageCode codeList="https://schemas.isotc211.org/19115/-3/lan/1.0/codelists.xml#LanguageCode" codeListValue="eng">eng</lan:LanguageCode>
+         </lan:language>
+         <lan:characterEncoding>
+            <lan:MD_CharacterSetCode codeList="https://schemas.isotc211.org/19115/-3/lan/1.0/codelists.xml#MD_CharacterSetCode" codeListValue="UTF-8">UTF-8</lan:MD_CharacterSetCode>
+         </lan:characterEncoding>
+      </lan:PT_Locale>
+   </cat:locale>
+   <!--============================= Codelists =======================================-->
+   <cat:codelistItem>
+      <cat:CT_Codelist id="MD_DatatypeCode">
+         <cat:identifier>
+            <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">MD_DatatypeCode</gco:ScopedName>
+         </cat:identifier>
+         <cat:name>
+            <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">MD_DatatypeCode</gco:ScopedName>
+         </cat:name>
+         <cat:definition>
+            <gco:CharacterString>datatype of element or entity</gco:CharacterString>
+         </cat:definition>
+         <cat:description>
+            <gco:CharacterString>datatype of element or entity</gco:CharacterString>
+         </cat:description>
+         <cat:codeEntry>
+            <cat:CT_CodelistValue id="MD_DatatypeCode_class">
+               <cat:identifier>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">class</gco:ScopedName>
+               </cat:identifier>
+               <cat:name>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">class</gco:ScopedName>
+               </cat:name>
+               <cat:definition>
+                  <gco:CharacterString>descriptor of a set of objects that share the same attributes, operations, methods, relationships, and behaviour</gco:CharacterString>
+               </cat:definition>
+               <cat:description>
+                  <gco:CharacterString>descriptor of a set of objects that share the same attributes, operations, methods, relationships, and behaviour</gco:CharacterString>
+               </cat:description>
+            </cat:CT_CodelistValue>
+         </cat:codeEntry>
+         <cat:codeEntry>
+            <cat:CT_CodelistValue id="MD_DatatypeCode_codelist">
+               <cat:identifier>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">codelist</gco:ScopedName>
+               </cat:identifier>
+               <cat:name>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">codelist</gco:ScopedName>
+               </cat:name>
+               <cat:definition>
+                  <gco:CharacterString>flexible enumeration useful for expressing a long list of values, can be extended</gco:CharacterString>
+               </cat:definition>
+               <cat:description>
+                  <gco:CharacterString>flexible enumeration useful for expressing a long list of values, can be extended</gco:CharacterString>
+               </cat:description>
+            </cat:CT_CodelistValue>
+         </cat:codeEntry>
+         <cat:codeEntry>
+            <cat:CT_CodelistValue id="MD_DatatypeCode_enumeration">
+               <cat:identifier>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">enumeration</gco:ScopedName>
+               </cat:identifier>
+               <cat:name>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">enumeration</gco:ScopedName>
+               </cat:name>
+               <cat:definition>
+                  <gco:CharacterString>data type whose instances form a list of named literal values, not extendable</gco:CharacterString>
+               </cat:definition>
+               <cat:description>
+                  <gco:CharacterString>data type whose instances form a list of named literal values, not extendable</gco:CharacterString>
+               </cat:description>
+            </cat:CT_CodelistValue>
+         </cat:codeEntry>
+         <cat:codeEntry>
+            <cat:CT_CodelistValue id="MD_DatatypeCode_codelistElement">
+               <cat:identifier>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">codelistElement</gco:ScopedName>
+               </cat:identifier>
+               <cat:name>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">codelistElement</gco:ScopedName>
+               </cat:name>
+               <cat:definition>
+                  <gco:CharacterString>permissible value for a codelist or enumeration </gco:CharacterString>
+               </cat:definition>
+               <cat:description>
+                  <gco:CharacterString>permissible value for a codelist or enumeration </gco:CharacterString>
+               </cat:description>
+            </cat:CT_CodelistValue>
+         </cat:codeEntry>
+         <cat:codeEntry>
+            <cat:CT_CodelistValue id="MD_DatatypeCode_abstractClass">
+               <cat:identifier>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">abstractClass</gco:ScopedName>
+               </cat:identifier>
+               <cat:name>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">abstractClass</gco:ScopedName>
+               </cat:name>
+               <cat:definition>
+                  <gco:CharacterString>class that cannot be directly instantiated</gco:CharacterString>
+               </cat:definition>
+               <cat:description>
+                  <gco:CharacterString>class that cannot be directly instantiated</gco:CharacterString>
+               </cat:description>
+            </cat:CT_CodelistValue>
+         </cat:codeEntry>
+         <cat:codeEntry>
+            <cat:CT_CodelistValue id="MD_DatatypeCode_aggregateClass">
+               <cat:identifier>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">aggregateClass</gco:ScopedName>
+               </cat:identifier>
+               <cat:name>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">aggregateClass</gco:ScopedName>
+               </cat:name>
+               <cat:definition>
+                  <gco:CharacterString>class that is composed of classes it is connected to by an aggregate relationship</gco:CharacterString>
+               </cat:definition>
+               <cat:description>
+                  <gco:CharacterString>class that is composed of classes it is connected to by an aggregate relationship</gco:CharacterString>
+               </cat:description>
+            </cat:CT_CodelistValue>
+         </cat:codeEntry>
+         <cat:codeEntry>
+            <cat:CT_CodelistValue id="MD_DatatypeCode_specifiedClass">
+               <cat:identifier>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">specifiedClass</gco:ScopedName>
+               </cat:identifier>
+               <cat:name>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">specifiedClass</gco:ScopedName>
+               </cat:name>
+               <cat:definition>
+                  <gco:CharacterString>subclass that may be substituted for its superclass</gco:CharacterString>
+               </cat:definition>
+               <cat:description>
+                  <gco:CharacterString>subclass that may be substituted for its superclass</gco:CharacterString>
+               </cat:description>
+            </cat:CT_CodelistValue>
+         </cat:codeEntry>
+         <cat:codeEntry>
+            <cat:CT_CodelistValue id="MD_DatatypeCode_datatypeClass">
+               <cat:identifier>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">datatypeClass</gco:ScopedName>
+               </cat:identifier>
+               <cat:name>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">datatypeClass</gco:ScopedName>
+               </cat:name>
+               <cat:definition>
+                  <gco:CharacterString>class with few or no operations whose primary purpose is to hold the abstract state of another class for transmittal, storage, encoding or persistent storage</gco:CharacterString>
+               </cat:definition>
+               <cat:description>
+                  <gco:CharacterString>class with few or no operations whose primary purpose is to hold the abstract state of another class for transmittal, storage, encoding or persistent storage</gco:CharacterString>
+               </cat:description>
+            </cat:CT_CodelistValue>
+         </cat:codeEntry>
+         <cat:codeEntry>
+            <cat:CT_CodelistValue id="MD_DatatypeCode_interfaceClass">
+               <cat:identifier>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">interfaceClass</gco:ScopedName>
+               </cat:identifier>
+               <cat:name>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">interfaceClass</gco:ScopedName>
+               </cat:name>
+               <cat:definition>
+                  <gco:CharacterString>named set of operations that characterize the behaviour of an element</gco:CharacterString>
+               </cat:definition>
+               <cat:description>
+                  <gco:CharacterString>named set of operations that characterize the behaviour of an element</gco:CharacterString>
+               </cat:description>
+            </cat:CT_CodelistValue>
+         </cat:codeEntry>
+         <cat:codeEntry>
+            <cat:CT_CodelistValue id="MD_DatatypeCode_unionClass">
+               <cat:identifier>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">unionClass</gco:ScopedName>
+               </cat:identifier>
+               <cat:name>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">unionClass</gco:ScopedName>
+               </cat:name>
+               <cat:definition>
+                  <gco:CharacterString>class describing a selection of one of the specified types</gco:CharacterString>
+               </cat:definition>
+               <cat:description>
+                  <gco:CharacterString>class describing a selection of one of the specified types</gco:CharacterString>
+               </cat:description>
+            </cat:CT_CodelistValue>
+         </cat:codeEntry>
+         <cat:codeEntry>
+            <cat:CT_CodelistValue id="MD_DatatypeCode_metaClass">
+               <cat:identifier>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">metaClass</gco:ScopedName>
+               </cat:identifier>
+               <cat:name>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">metaClass</gco:ScopedName>
+               </cat:name>
+               <cat:definition>
+                  <gco:CharacterString>class whose instances are classes</gco:CharacterString>
+               </cat:definition>
+               <cat:description>
+                  <gco:CharacterString>class whose instances are classes</gco:CharacterString>
+               </cat:description>
+            </cat:CT_CodelistValue>
+         </cat:codeEntry>
+         <cat:codeEntry>
+            <cat:CT_CodelistValue id="MD_DatatypeCode_typeClass">
+               <cat:identifier>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">typeClass</gco:ScopedName>
+               </cat:identifier>
+               <cat:name>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">typeClass</gco:ScopedName>
+               </cat:name>
+               <cat:definition>
+                  <gco:CharacterString>class used for specification of a domain of instances (objects), together with the operations applicable to the objects. A type may have attributes and associations</gco:CharacterString>
+               </cat:definition>
+               <cat:description>
+                  <gco:CharacterString>class used for specification of a domain of instances (objects), together with the operations applicable to the objects. A type may have attributes and associations</gco:CharacterString>
+               </cat:description>
+            </cat:CT_CodelistValue>
+         </cat:codeEntry>
+         <cat:codeEntry>
+            <cat:CT_CodelistValue id="MD_DatatypeCode_characterString">
+               <cat:identifier>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">characterString</gco:ScopedName>
+               </cat:identifier>
+               <cat:name>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">characterString</gco:ScopedName>
+               </cat:name>
+               <cat:definition>
+                  <gco:CharacterString>textual information</gco:CharacterString>
+               </cat:definition>
+               <cat:description>
+                  <gco:CharacterString>textual information</gco:CharacterString>
+               </cat:description>
+            </cat:CT_CodelistValue>
+         </cat:codeEntry>
+         <cat:codeEntry>
+            <cat:CT_CodelistValue id="MD_DatatypeCode_integer">
+               <cat:identifier>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">integer</gco:ScopedName>
+               </cat:identifier>
+               <cat:name>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">integer</gco:ScopedName>
+               </cat:name>
+               <cat:definition>
+                  <gco:CharacterString>numerical field</gco:CharacterString>
+               </cat:definition>
+               <cat:description>
+                  <gco:CharacterString>numerical field</gco:CharacterString>
+               </cat:description>
+            </cat:CT_CodelistValue>
+         </cat:codeEntry>
+         <cat:codeEntry>
+            <cat:CT_CodelistValue id="MD_DatatypeCode_association">
+               <cat:identifier>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">association</gco:ScopedName>
+               </cat:identifier>
+               <cat:name>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">association</gco:ScopedName>
+               </cat:name>
+               <cat:definition>
+                  <gco:CharacterString>semantic relationship between two classes that involves connections among their instances</gco:CharacterString>
+               </cat:definition>
+               <cat:description>
+                  <gco:CharacterString>semantic relationship between two classes that involves connections among their instances</gco:CharacterString>
+               </cat:description>
+            </cat:CT_CodelistValue>
+         </cat:codeEntry>
+      </cat:CT_Codelist>
+   </cat:codelistItem>
+   <cat:codelistItem>
+      <cat:CT_Codelist id="MD_ObligationCode">
+         <cat:identifier>
+            <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">MD_ObligationCode</gco:ScopedName>
+         </cat:identifier>
+         <cat:name>
+            <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">MD_ObligationCode</gco:ScopedName>
+         </cat:name>
+         <cat:definition>
+            <gco:CharacterString>obligation of the element or entity</gco:CharacterString>
+         </cat:definition>
+         <cat:description>
+            <gco:CharacterString>obligation of the element or entity</gco:CharacterString>
+         </cat:description>
+         <cat:codeEntry>
+            <cat:CT_CodelistValue id="MD_ObligationCode_mandatory">
+               <cat:identifier>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">mandatory</gco:ScopedName>
+               </cat:identifier>
+               <cat:name>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">mandatory</gco:ScopedName>
+               </cat:name>
+               <cat:definition>
+                  <gco:CharacterString>element is always required</gco:CharacterString>
+               </cat:definition>
+               <cat:description>
+                  <gco:CharacterString>element is always required</gco:CharacterString>
+               </cat:description>
+            </cat:CT_CodelistValue>
+         </cat:codeEntry>
+         <cat:codeEntry>
+            <cat:CT_CodelistValue id="MD_ObligationCode_optional">
+               <cat:identifier>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">optional</gco:ScopedName>
+               </cat:identifier>
+               <cat:name>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">optional</gco:ScopedName>
+               </cat:name>
+               <cat:definition>
+                  <gco:CharacterString>element is not required</gco:CharacterString>
+               </cat:definition>
+               <cat:description>
+                  <gco:CharacterString>element is not required</gco:CharacterString>
+               </cat:description>
+            </cat:CT_CodelistValue>
+         </cat:codeEntry>
+         <cat:codeEntry>
+            <cat:CT_CodelistValue id="MD_ObligationCode_conditional">
+               <cat:identifier>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">conditional</gco:ScopedName>
+               </cat:identifier>
+               <cat:name>
+                  <gco:ScopedName codeSpace="https://schemas.isotc211.org/19115/-3/mex/1.0">conditional</gco:ScopedName>
+               </cat:name>
+               <cat:definition>
+                  <gco:CharacterString>element is required when a specific condition is met</gco:CharacterString>
+               </cat:definition>
+               <cat:description>
+                  <gco:CharacterString>element is required when a specific condition is met</gco:CharacterString>
+               </cat:description>
+            </cat:CT_CodelistValue>
+         </cat:codeEntry>
+      </cat:CT_Codelist>
+   </cat:codelistItem>
+</cat:CT_CodelistCatalogue>

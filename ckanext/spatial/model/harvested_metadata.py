@@ -234,7 +234,12 @@ class ISOLocalised(ISOElement):
                         "lan:LocalisedCharacterString/@locale",
                     ],
                     multiplicity="0..1",
-                )
+                ),
+                ISOElement(
+                    name="translation_method",
+                    search_paths=["@xlink:title"],
+                    multiplicity="0..1",
+                ),
             ]
         )
     ]
@@ -309,7 +314,7 @@ class ISOResourceLocator(ISOElement):
         ISOElement(
             name="distribution-format",
             search_paths=[
-                "ancestor::mrd:MD_DigitalTransferOptions/mrd:distributionFormat/mrd:MD_Format/mrd:formatSpecificationCitation/cit:CI_Citation/cit:title/gco:CharacterString/text()"
+                "ancestor::mrd:MD_DigitalTransferOptions/mrd:distributionFormat/mrd:MD_Format/mrd:formatSpecificationCitation/cit:CI_Citation/cit:title/gco:CharacterString/text()",
             ],
             multiplicity="*"
         ),
@@ -317,7 +322,7 @@ class ISOResourceLocator(ISOElement):
         ISOElement(
             name="distributor-format",
             search_paths=[
-                "ancestor::mrd:MD_Distributor/mrd:distributorFormat/mrd:MD_Format/mrd:formatSpecificationCitation/cit:CI_Citation/cit:title/gco:CharacterString/text()"
+                "ancestor::mrd:MD_Distributor/mrd:distributorFormat/mrd:MD_Format/mrd:formatSpecificationCitation/cit:CI_Citation/cit:title/gco:CharacterString/text()",
             ],
             multiplicity="*"
         ),
@@ -325,21 +330,21 @@ class ISOResourceLocator(ISOElement):
         ISOElement(
             name="offline",
             search_paths=[
-                "ancestor::mrd:MD_DigitalTransferOptions/mrd:offLine/mrd:MD_Medium/cit:CI_Citation/cit:title/gco:CharacterString/text()"
+                "ancestor::mrd:MD_DigitalTransferOptions/mrd:offLine/mrd:MD_Medium/cit:CI_Citation/cit:title/gco:CharacterString/text()",
             ],
             multiplicity="*"
         ),
         ISOElement(
             name="transfer-size",
             search_paths=[
-                "ancestor::mrd:MD_DigitalTransferOptions/mrd:transferSize/gco:Real/text()"
+                "ancestor::mrd:MD_DigitalTransferOptions/mrd:transferSize/gco:Real/text()",
             ],
             multiplicity="0..1"
         ),
         ISOElement(
             name="units-of-distribution",
             search_paths=[
-                "ancestor::mrd:MD_DigitalTransferOptions/mrd:unitsOfDistribution/gco:CharacterString/text()"
+                "ancestor::mrd:MD_DigitalTransferOptions/mrd:unitsOfDistribution/gco:CharacterString/text()",
             ],
             multiplicity="0..1"
         )
@@ -719,7 +724,7 @@ class ISOAggregationInfo(ISOElement):
             search_paths=[
                 "gmd:aggregateDatasetName/gmd:CI_Citation/gmd:title/gco:CharacterString/text()",
                 # ISO19115-3
-                "mri:name/cit:CI_Citation/cit:title/gco:CharacterString/text()"
+                "mri:name/cit:CI_Citation/cit:title/gco:CharacterString/text()",
             ],
             multiplicity="0..1",
         ),
@@ -728,7 +733,7 @@ class ISOAggregationInfo(ISOElement):
             search_paths=[
                 "gmd:aggregateDatasetIdentifier/gmd:MD_Identifier",
                 # ISO19115-3
-                "mri:name/cit:CI_Citation/cit:identifier/mcc:MD_Identifier"
+                "mri:name/cit:CI_Citation/cit:identifier/mcc:MD_Identifier",
             ],
             multiplicity="0..1",
         ),
@@ -739,7 +744,7 @@ class ISOAggregationInfo(ISOElement):
                 "gmd:associationType/gmd:DS_AssociationTypeCode/text()",
                 # ISO19115-3
                 "mri:associationType/mri:DS_AssociationTypeCode/@codeListValue",
-                "mri:associationType/mri:DS_AssociationTypeCode/text()"
+                "mri:associationType/mri:DS_AssociationTypeCode/text()",
             ],
             multiplicity="0..1",
         ),
@@ -819,7 +824,7 @@ class ISOCitation(ISOElement):
             name="author",
             search_paths=[
                 # 19115-3
-                "cit:citedResponsibleParty/cit:CI_Responsibility[not(cit:role/cit:CI_RoleCode/text() = 'publisher' or cit:role/cit:CI_RoleCode/@codeListValue ='publisher')]"
+                "cit:citedResponsibleParty/cit:CI_Responsibility[not(cit:role/cit:CI_RoleCode/text() = 'publisher' or cit:role/cit:CI_RoleCode/@codeListValue ='publisher')]",
             ],
             multiplicity="1..*",
         ),
@@ -828,7 +833,7 @@ class ISOCitation(ISOElement):
             search_paths=[
                 # 19115-3
                 "cit:date/cit:CI_Date[cit:dateType/cit:CI_DateTypeCode/@codeListValue != 'creation']",
-                "ancestor::mdb:MD_Metadata/mdb:dateInfo/cit:CI_Date"
+                "ancestor::mdb:MD_Metadata/mdb:dateInfo/cit:CI_Date",
             ],
             multiplicity="1..*",
         ),
@@ -844,14 +849,14 @@ class ISOCitation(ISOElement):
         ISOElement(
             name="edition",
             search_paths=[
-                "cit:edition/gco:CharacterString/text()"
+                "cit:edition/gco:CharacterString/text()",
             ],
             multiplicity="0..1",
         ),
         ISOElement(
             name="edition-date",
             search_paths=[
-                "cit:editionDate/gco:DateTime/text()"
+                "cit:editionDate/gco:DateTime/text()",
             ],
             multiplicity="0..1",
         ),
@@ -986,7 +991,7 @@ class ISODocument(MappedXmlDocument):
                 "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date",
                 "gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:citation/gmd:CI_Citation/gmd:date/gmd:CI_Date",
                 # 19115-3
-                "mdb:identificationInfo/mri:MD_DataIdentification/mri:citation/cit:CI_Citation/cit:date/cit:CI_Date"
+                "mdb:identificationInfo/mri:MD_DataIdentification/mri:citation/cit:CI_Citation/cit:date/cit:CI_Date",
             ],
             multiplicity="1..*",
         ),
@@ -1007,7 +1012,7 @@ class ISODocument(MappedXmlDocument):
                 # ISO 19139
                 "gmd:fileIdentifier/gco:CharacterString/text()",
                 # 19115-3
-                "mdb:metadataIdentifier/mcc:MD_Identifier"
+                "mdb:metadataIdentifier/mcc:MD_Identifier",
             ],
             multiplicity="0..1",
         ),
@@ -1235,7 +1240,7 @@ class ISODocument(MappedXmlDocument):
                 "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:aggregationInfo/gmd:MD_AggregateInformation",
                 "gmd:identificationInfo/gmd:SV_ServiceIdentification/gmd:aggregationInfo/gmd:MD_AggregateInformation",
                 # ISO19115-3
-                "mdb:identificationInfo/*[contains(local-name(), 'Identification')]/mri:associatedResource/mri:MD_AssociatedResource"
+                "mdb:identificationInfo/*[contains(local-name(), 'Identification')]/mri:associatedResource/mri:MD_AssociatedResource",
             ],
             multiplicity="*",
         ),
@@ -1273,10 +1278,23 @@ class ISODocument(MappedXmlDocument):
         ISOElement(
             name="dataset-language",
             search_paths=[
+                # ISO19139
                 "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:language/gmd:LanguageCode/@codeListValue",
                 "gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:language/gmd:LanguageCode/@codeListValue",
                 "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:language/gmd:LanguageCode/text()",
                 "gmd:identificationInfo/srv:SV_ServiceIdentification/gmd:language/gmd:LanguageCode/text()",
+                # ISO19115-3
+                "mdb:identificationInfo/*[contains(local-name(), 'Identification')]/mri:defaultLocale/lan:PT_Locale/lan:language/lan:LanguageCode/@codeListValue",
+                "mdb:identificationInfo/*[contains(local-name(), 'Identification')]/mri:defaultLocale/lan:PT_Locale/lan:language/lan:LanguageCode/text()",
+            ],
+            multiplicity="*",
+        ),
+        ISOElement(
+            name="dataset-language-other",
+            search_paths=[
+                # ISO19115-3
+                "mdb:identificationInfo/*[contains(local-name(), 'Identification')]/mri:otherLocale/lan:PT_Locale/lan:language/lan:LanguageCode/@codeListValue",
+                "mdb:identificationInfo/*[contains(local-name(), 'Identification')]/mri:otherLocale/lan:PT_Locale/lan:language/lan:LanguageCode/text()",
             ],
             multiplicity="*",
         ),
@@ -1335,7 +1353,7 @@ class ISODocument(MappedXmlDocument):
                 "gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod",
                 "gmd:identificationInfo/srv:SV_ServiceIdentification/srv:extent/gmd:EX_Extent/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml32:TimePeriod",
                 # 19115-3
-                "mdb:identificationInfo/*[contains(local-name(), 'Identification')]/mri:extent/gex:EX_Extent/gex:temporalElement/gex:EX_TemporalExtent/gex:extent/gml:TimePeriod"
+                "mdb:identificationInfo/*[contains(local-name(), 'Identification')]/mri:extent/gex:EX_Extent/gex:temporalElement/gex:EX_TemporalExtent/gex:extent/gml:TimePeriod",
             ],
             multiplicity="*",
         ),
@@ -1397,7 +1415,7 @@ class ISODocument(MappedXmlDocument):
                 "gmd:distributionInfo/gmd:MD_Distribution/gmd:transferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource",
                 "gmd:distributionInfo/gmd:MD_Distribution/gmd:distributor/gmd:MD_Distributor/gmd:distributorTransferOptions/gmd:MD_DigitalTransferOptions/gmd:onLine/gmd:CI_OnlineResource",
                 # 19115-3
-                "mdb:distributionInfo/mrd:MD_Distribution/mrd:transferOptions/mrd:MD_DigitalTransferOptions/mrd:onLine/cit:CI_OnlineResource | mdb:distributionInfo/mrd:MD_Distribution/mrd:distributor/mrd:MD_Distributor/mrd:distributorTransferOptions/mrd:MD_DigitalTransferOptions/mrd:onLine/cit:CI_OnlineResource"
+                "mdb:distributionInfo/mrd:MD_Distribution/mrd:transferOptions/mrd:MD_DigitalTransferOptions/mrd:onLine/cit:CI_OnlineResource | mdb:distributionInfo/mrd:MD_Distribution/mrd:distributor/mrd:MD_Distributor/mrd:distributorTransferOptions/mrd:MD_DigitalTransferOptions/mrd:onLine/cit:CI_OnlineResource",
             ],
             multiplicity="*",
         ),
@@ -1464,7 +1482,7 @@ class ISODocument(MappedXmlDocument):
             name="citation",
             search_paths=[
                 # 19115-3
-                "mdb:identificationInfo/*[contains(local-name(), 'Identification')]/mri:citation/cit:CI_Citation"
+                "mdb:identificationInfo/*[contains(local-name(), 'Identification')]/mri:citation/cit:CI_Citation",
             ],
             multiplicity="1..*",
         ),
@@ -1660,7 +1678,7 @@ class ISODocument(MappedXmlDocument):
         self.infer_contact_email(values)
         self.infer_spatial(values)
         self.infer_metadata_language(values)
-        self.infert_keywords(values)
+        self.infer_keywords(values)
         self.infer_multilinguale(values)
         self.infer_multilinguale_resource(values)
         self.infer_guid(values)
@@ -1936,7 +1954,7 @@ class ISODocument(MappedXmlDocument):
 
         return out
 
-    def infert_keywords(self, values):
+    def infer_keywords(self, values):
         keywords = values['keywords']
 
         defaultLangKey = self.cleanLangKey(
@@ -1948,17 +1966,19 @@ class ISODocument(MappedXmlDocument):
                 ktype = klist.get('type')
                 for item in klist.get('keywords', []):
                     LangDict = self.local_to_dict(item, defaultLangKey)
-                    value.append({
-                        'keyword': json.dumps(LangDict),
-                        'type': ktype
-                    })
+                    if LangDict != {}:
+                        value.append({
+                            'keyword': json.dumps(LangDict),
+                            'type': ktype
+                        })
         else:
             for item in keywords:
                 LangDict = self.local_to_dict(item, defaultLangKey)
-                value.append({
-                    'keyword': json.dumps(LangDict),
-                    'type': item.get('type')
-                })
+                if LangDict != {}:
+                    value.append({
+                        'keyword': json.dumps(LangDict),
+                        'type': item.get('type')
+                    })
         values['keywords'] = value
 
     def infer_multilinguale(self, values, defaultLangKey=''):
@@ -1966,6 +1986,7 @@ class ISODocument(MappedXmlDocument):
             defaultLangKey = self.cleanLangKey(
                 values.get('metadata-language', 'en'))
 
+        toAdd = {}
         for key in values:
             value = values[key]
 
@@ -1979,6 +2000,13 @@ class ISODocument(MappedXmlDocument):
             ):
                 LangDict = self.local_to_dict(values[key], defaultLangKey)
                 values[key] = json.dumps(LangDict)
+
+                local = value.get('local')
+                if isinstance(local, dict):
+                    langKey = self.cleanLangKey(local.get('language_code'))
+                    transMethod = local.get('translation_method')
+                    toAdd[key + '_translation_method'] = json.dumps({**{defaultLangKey: ""}, **{langKey: transMethod}})
+        values.update(toAdd)
 
     def infer_multilinguale_resource(self, values):
         defaultLangKey = self.cleanLangKey(

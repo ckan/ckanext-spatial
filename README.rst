@@ -75,6 +75,11 @@ CIOOS-SIOOC Changes
   [08cc41b](https://github.com/cioos-siooc/ckanext-spatial/commit/08cc41b414c513c2f5ff53dfa556cd8829ad4f31),
   [b404f2e](https://github.com/cioos-siooc/ckanext-spatial/commit/b404f2e822109126609529d7c5d9aad32f69295a),
   [8ac08f9](https://github.com/cioos-siooc/ckanext-spatial/commit/8ac08f95ce79f3b51fc01a5d51a902d32415aaca)
+* add 'parser' harvester config option to control which iso model is used. Valid values are 'iso19139' and 'iso19115'.
+  parser defaults to using the iso19115 model if not set
+* split the harvest_metadata.py file into a defailt iso19115 version and a iso19139 version to
+  make it easier to manage harvesting using these two standards
+* add a DataStreams specific waf harvester that scrapes a sitemap to find its datasets
 
 
 Community

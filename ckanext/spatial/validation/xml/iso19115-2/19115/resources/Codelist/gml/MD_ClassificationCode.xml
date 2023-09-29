@@ -1,0 +1,60 @@
+<?xml-stylesheet type='text/xsl' href='./CodelistDictionary-v32.xsl'?><Dictionary xmlns="http://www.opengis.net/gml/3.2"    xmlns:gml="http://www.opengis.net/gml/3.2"    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="MD_ClassificationCode" xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>name of the handling restrictions on the resource</description>
+  <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mco/1.0">MD_ClassificationCode</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="_12439_19040">
+      <description>available for general disclosure</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mco/1.0">unclassified</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12439_19041">
+      <description>not for general disclosure</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mco/1.0">restricted</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12439_19042">
+      <description>available for someone who can be entrusted with information</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mco/1.0">confidential</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12439_19043">
+      <description>kept or meant to be kept private, unknown, or hidden from all but a select group of people</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mco/1.0">secret</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12439_19044">
+      <description>of the highest secrecy</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mco/1.0">topSecret</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12439_19045">
+      <description>although unclassified, requires strict controls over its distribution</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mco/1.0">sensitiveButUnclassified</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12439_19046">
+      <description>unclassified information that may be exempt from mandatory release to the public</description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mco/1.0">forOfficialUseOnly</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12439_19047">
+      <description>
+      </description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mco/1.0">protected</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_12439_19048">
+      <description>
+      </description>
+      <identifier codeSpace="https://schemas.isotc211.org/19115/-3/mco/1.0">limitedDistribution</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

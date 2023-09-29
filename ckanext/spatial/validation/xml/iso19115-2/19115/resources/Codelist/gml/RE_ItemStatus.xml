@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='./CodelistDictionary-v32.xsl'?><Dictionary xmlns="http://www.opengis.net/gml/3.2"    xmlns:gml="http://www.opengis.net/gml/3.2"    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" gml:id="RE_ItemStatus" xsi:schemaLocation="http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd">
+  <description>&lt;UsedBy&gt;&#13;
+&lt;NameSpace&gt;ISO 19135 Procedures for registration&lt;/NameSpace&gt;&#13;
+&lt;Class&gt;RE_RegisterItem&lt;/Class&gt;&#13;
+&lt;Attribute&gt;status&lt;/Attribute&gt;&#13;
+&lt;Type&gt;RE_ItemStatus&lt;/Type&gt;&#13;
+&lt;UsedBy&gt;</description>
+  <identifier codeSpace="https://schemas.isotc211.org/19135/-2/reg/1.0">RE_ItemStatus</identifier>
+  <dictionaryEntry>
+    <Definition gml:id="_9352_12354">
+      <description>
+      </description>
+      <identifier codeSpace="https://schemas.isotc211.org/19135/-2/reg/1.0">notValid</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_9352_12355">
+      <description>
+      </description>
+      <identifier codeSpace="https://schemas.isotc211.org/19135/-2/reg/1.0">valid</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_9352_12356">
+      <description>
+      </description>
+      <identifier codeSpace="https://schemas.isotc211.org/19135/-2/reg/1.0">superseded</identifier>
+    </Definition>
+  </dictionaryEntry>
+  <dictionaryEntry>
+    <Definition gml:id="_9352_12357">
+      <description>
+      </description>
+      <identifier codeSpace="https://schemas.isotc211.org/19135/-2/reg/1.0">retired</identifier>
+    </Definition>
+  </dictionaryEntry>
+</Dictionary>

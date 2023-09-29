@@ -1,0 +1,89 @@
+﻿= Codelists from the Metadata for Constraints (mco) Namespace
+:edition: 1.1
+:revdate: 2017-09-10
+
+== Codelist Catalog
+
+This report describes the ISO TC211 codelist catalogs, the codelists they contain,
+and the values and definitions of the codes.
+
+Please contact mailto:rehabermann@me.com[Ted Habermann] if you have questions or
+suggestions.
+
+=== Catalog
+
+Name:: Codelists from the Metadata for Constraints (mco) Namespace
+Scope:: Codelists related to Metadata for Constraints (mco) Namespace
+Field of application:: ISO TC211 Metadata Standards
+Version:: 1.1
+Date:: 2017-09-10
+Number of CodeLists:: 2
+Number of items:: 26
+
+=== Codelists
+
+
+=== MD_ClassificationCode
+
+Description:: name of the handling restrictions on the resource
+CodeSpace:: http://standards.iso.org/iso/19115/-3/mco/1.0
+Number of items:: 9
+
+[%unnumbered]
+[options=header,cols=2]
+|===
+| Entry | Definition
+
+| unclassified | available for general disclosure
+| restricted | not for general disclosure
+| confidential | available for someone who can be entrusted with information
+| secret | kept or meant to be kept private, unknown, or hidden from all but a select
+group of people
+| topSecret | of the highest secrecy
+| SBU | although unclassified, requires strict controls over its distribution
+| forOfficialUseOnly | unclassified information that is to be used only for official
+purposes determined by the designating body
+| protected | compromise of the information could cause damage
+| limitedDistribution | desimination limited by designating body
+|===
+
+
+=== MD_RestrictionCode
+
+Description:: limitation(s) placed upon the access or use of the data
+CodeSpace:: http://standards.iso.org/iso/19115/-3/mco/1.0
+Number of items:: 17
+
+[%unnumbered]
+[options=header,cols=2]
+|===
+| Entry | Definition
+
+| copyright | exclusive right to the publication, production, or sale of the rights
+to a literary, dramatic, musical, or artistic work, or to the use of a commercial
+print or label, granted by law for a specified period of time to an author, composer,
+artist, distributor
+| patent | government has granted exclusive right to make, sell, use or license an
+invention or discovery
+| patentPending | produced or sold information awaiting a patent
+| trademark | a name, symbol, or other device identifying a product, officially
+registered and legally restricted to the use of the owner or manufacturer
+| licence | formal permission to do something
+| intellectualPropertyRights | rights to financial benefit from and control of
+distribution of non-tangible property that is a result of creativity
+| restricted | withheld from general circulation or disclosure
+| otherRestrictions | limitation not listed
+| unrestricted | no constraints exist
+| licenceUnrestricted | formal permission not required to use the resource
+| licenceEndUser | formal permission required for a person or an entity to use the
+resource and that may differ from the person that orders or purchases it
+| licenceDistributor | formal permission required for a person or an entity to
+commercialize or distribute the resource
+| private | protects rights of individual or organisations from observation,
+intrusion, or attention of others
+| statutory | prescribed by law
+| confidential | not available to the public contains information that could be
+prejudicial to a commercial, industrial, or national interest
+| SBU | although unclassified, requires strict controls over its distribution.
+| in-confidence | with trust
+|===

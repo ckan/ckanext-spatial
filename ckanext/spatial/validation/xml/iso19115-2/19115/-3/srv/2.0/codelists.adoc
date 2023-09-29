@@ -1,0 +1,61 @@
+﻿= Codelist Catalog
+:edition: 0.1
+:revdate: 2017-09-10
+
+== Codelist Catalog
+
+This report describes the ISO TC211 codelist catalogs, the codelists they contain,
+and the values and definitions of the codes.
+
+Please contact mailto:rehabermann@me.com[Ted Habermann] if you have questions or
+suggestions.
+
+=== Catalog
+
+Name:: Codelists from the Metadata for Services (srv) Namespace
+Scope:: Codelists from the Metadata for Services (srv) Namespace
+Field of application:: ISO TC211 Metadata Standards
+Version:: 0.1
+Date:: 2017-09-10
+Number of CodeLists:: 2
+Number of items:: 6
+
+=== Codelists
+
+
+=== SV_CouplingType
+
+Description:: type of coupling between service and associated data (if exists)
+CodeSpace:: http://standards.iso.org/iso/19115/-3/srv/2.0
+Number of items:: 3
+
+[%unnumbered]
+[options=header,cols=2]
+|===
+| Entry | Definition
+
+| loose | service instance is loosely coupled with a data instance, i.e. no
+MD_DataIdentification class has to be described
+| mixed | service instance is mixed coupled with a data instance, i.e.
+MD_DataIdentification describes the associated data instance and additionally the
+service instance might work with other external data instances
+| tight | service instance is tightly coupled with a data instance, i.e.
+MD_DataIdentification class MUST be described
+|===
+
+
+=== SV_ParameterDirection
+
+Description:: class of information to which the referencing entity applies
+CodeSpace:: http://standards.iso.org/iso/19115/-3/srv/2.0
+Number of items:: 3
+
+[%unnumbered]
+[options=header,cols=2]
+|===
+| Entry | Definition
+
+| in | the parameter is an input parameter to the service instance
+| out | the parameter is an output parameter to the service instance
+| in/out | the parameter is both an input and output parameter to the service instance
+|===
