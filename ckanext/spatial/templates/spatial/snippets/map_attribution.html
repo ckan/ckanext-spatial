@@ -3,10 +3,13 @@
 {% elif map_config.type == 'wms' %}
   <div>{{ map_config['wms.attribution']|safe }}</div>
 {% else %}
-  <div>{{ _('Map data') }} &copy; <a href="http://openstreetmap.org/copyright">OpenStreetMap</a> {{ _('contributors') }}</div>
   {% if map_config.type == 'mapbox' %}
     <div>{{ _('Tiles by') }} <a href="http://www.mapbox.com/about/maps/">MapBox</a></div>
   {% else %}
-    <div>{{ _('Tiles by') }} <a href="http://stamen.com">Stamen Design</a> (<a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>)</div>
+    <div>{{ _('Tiles by') }} &copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a>
+      &copy; <a href="https://stamen.com/" target="_blank">Stamen Design</a>
+      &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a>
+      &copy; <a href="https://www.openstreetmap.org/about/" target="_blank">OpenStreetMap contributors</a>
+    </div>
   {% endif %}
 {% endif %}
