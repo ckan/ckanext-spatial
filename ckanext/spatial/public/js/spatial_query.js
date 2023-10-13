@@ -230,12 +230,13 @@ this.ckan.module('spatial-query', function ($, _) {
         });
       }
 
-      if (module._getParameterByName("ext_layers").includes("dataset_extents")) {
+      ext_layers = module._getParameterByName("ext_layers")
+      if (ext_layers && ext_layers.includes("dataset_extents")) {
         map.fitBounds(module.options.default_extent);
         map.addLayer(module.options.dataset_extents);
       }
 
-      if (module._getParameterByName("ext_layers").includes("ra_extents") && ra_features) {
+      if (ext_layers && ext_layers.includes("ra_extents") && ra_features) {
         map.addLayer(module.options.ra_extents);
       }
 
