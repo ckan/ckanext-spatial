@@ -1,7 +1,7 @@
-.module-narrow #dataset-map-container {
+.module-narrow #dataset-map-container, .module-narrow #dataset-map-form-container {
   height: 200px;
 }
-.module-content #dataset-map-container {
+.module-content #dataset-map-container, .module-content #dataset-map-form-container {
   height: 250px;
 }
 #dataset-map-attribution {
@@ -37,13 +37,19 @@
 #dataset-map-edit-buttons {
   display: none;
 }
-.leaflet-draw-toolbar a.leaflet-draw-draw-rectangle {
+
+#dataset-map-container .leaflet-draw-toolbar a.leaflet-draw-draw-rectangle {
   background-image: url("../img/pencil.png");
   background-repeat: no-repeat;
   background-position: 50% 50%;
   background-size: 12px 12px;
   border-radius: 4px;
 }
+
+#dataset-map-form-container .leaflet-draw-toolbar a.leaflet-draw-draw-rectangle {
+background-position: -60px -1px;
+}
+
 .leaflet-draw-toolbar-top ~ .leaflet-draw-actions li{
   display: none;
 }
