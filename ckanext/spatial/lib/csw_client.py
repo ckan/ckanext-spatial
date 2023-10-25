@@ -70,13 +70,39 @@ class CswService(OwsService):
     def __init__(self, endpoint=None):
         super(CswService, self).__init__(endpoint)
         self.sortby = SortBy([SortProperty('dc:identifier')])
+        # check capabilities
+        _cap = self.getcapabilities(endpoint)['response']
+        self.capabilities = etree.ElementTree(etree.fromstring(_cap))
+        self.output_schemas = {
+            'GetRecords': self._get_output_schemas('GetRecords'),
+            'GetRecordById': self._get_output_schemas('GetRecordById'),
+        }
+
+    def _get_output_schemas(self, operation):
+        _cap_ns = self.capabilities.getroot().nsmap
+        _ows_ns = _cap_ns.get('ows')
+        if not _ows_ns:
+            raise CswError('Bad getcapabilities response: OWS namespace not found ' + str(_cap_ns))
+        _op = self.capabilities.find("//{{{}}}Operation[@name='{}']".format(_ows_ns, operation))
+        _schemas = _op.find("{{{}}}Parameter[@name='outputSchema']".format(_ows_ns))
+        _values = map(lambda v: v.text, _schemas.findall("{{{}}}Value".format(_ows_ns)))
+        output_schemas = {}
+        for key, value in _schemas.nsmap.items():
+            if value in _values:
+                output_schemas.update({key : value})
+        return output_schemas
 
     def getrecords(self, qtype=None, keywords=[],
                    typenames="csw:Record", esn="brief",
                    skip=0, count=10, outputschema="gmd", **kw):
-        from owslib.csw import namespaces
+
         constraints = []
         csw = self._ows(**kw)
+
+        # check target csw server capabilities for requested output schema
+        output_schemas = self.output_schemas['GetRecords']
+        if not output_schemas.get(outputschema):
+            raise CswError('Output schema \'{}\' not supported by target server: '.format(output_schemas))
 
         if qtype is not None:
            constraints.append(PropertyIsEqualTo("dc:type", qtype))
@@ -87,7 +113,7 @@ class CswService(OwsService):
             "esn": esn,
             "startposition": skip,
             "maxrecords": count,
-            "outputschema": namespaces[outputschema],
+            "outputschema": output_schemas[outputschema],
             "sortby": self.sortby
             }
         log.info('Making CSW request: getrecords2 %r', kwa)
@@ -102,9 +128,14 @@ class CswService(OwsService):
     def getidentifiers(self, qtype=None, typenames="csw:Record", esn="brief",
                        keywords=[], limit=None, page=10, outputschema="gmd",
                        startposition=0, cql=None, **kw):
-        from owslib.csw import namespaces
+
         constraints = []
         csw = self._ows(**kw)
+
+        # check target csw server capabilities for requested output schema
+        output_schemas = self.output_schemas['GetRecords']
+        if not output_schemas.get(outputschema):
+            raise CswError('Output schema \'{}\' not supported by target server: '.format(output_schemas))
 
         if qtype is not None:
            constraints.append(PropertyIsEqualTo("dc:type", qtype))
@@ -115,7 +146,7 @@ class CswService(OwsService):
             "esn": esn,
             "startposition": startposition,
             "maxrecords": page,
-            "outputschema": namespaces[outputschema],
+            "outputschema": output_schemas[outputschema],
             "cql": cql,
             "sortby": self.sortby
             }
@@ -129,7 +160,6 @@ class CswService(OwsService):
                 err = 'Error getting identifiers: %r' % \
                       csw.exceptionreport.exceptions
                 #log.error(err)
-                raise CswError(err)
 
             if matches == 0:
                 matches = csw.results['matches']
@@ -154,11 +184,17 @@ class CswService(OwsService):
             kwa["startposition"] = startposition
 
     def getrecordbyid(self, ids=[], esn="full", outputschema="gmd", **kw):
-        from owslib.csw import namespaces
+        
         csw = self._ows(**kw)
+
+        # fetch target csw server capabilities for requested output schema
+        output_schemas=output_schemas = self.output_schemas['GetRecordById']
+        if not output_schemas.get(outputschema):
+            raise CswError('Output schema \'{}\' not supported by target server: '.format(output_schemas))
+
         kwa = {
             "esn": esn,
-            "outputschema": namespaces[outputschema],
+            "outputschema": output_schemas[outputschema],
             }
         # Ordinary Python version's don't support the metadata argument
         log.info('Making CSW request: getrecordbyid %r %r', ids, kwa)
@@ -168,14 +204,17 @@ class CswService(OwsService):
                   csw.exceptionreport.exceptions
             #log.error(err)
             raise CswError(err)
-        if not csw.records:
+        elif csw.records:
+            record = self._xmd(list(csw.records.values())[0])
+        elif csw.response:
+            record = self._xmd(etree.fromstring(csw.response))
+        else:
             return
-        record = self._xmd(list(csw.records.values())[0])
 
         ## strip off the enclosing results container, we only want the metadata
-        #md = csw._exml.find("/gmd:MD_Metadata")#, namespaces=namespaces)
-        # Ordinary Python version's don't support the metadata argument
-        md = csw._exml.find("/{http://www.isotc211.org/2005/gmd}MD_Metadata")
+        # '/{schema}*' expression should be safe enough and is able to match the
+        #  desired schema followed by both MD_Metadata or MI_Metadata (iso19115[-2])
+        md = csw._exml.find("/{{{schema}}}*".format(schema=output_schemas[outputschema]))
         mdtree = etree.ElementTree(md)
         try:
             record["xml"] = etree.tostring(mdtree, pretty_print=True, encoding=str)
