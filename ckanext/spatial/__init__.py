@@ -1,3 +1,5 @@
+__version__ = "2.0.0"
+
 # this is a namespace package
 try:
     import pkg_resources
