@@ -1,5 +1,3 @@
-__version__ = "2.1.0"
-
 # this is a namespace package
 try:
     import pkg_resources
@@ -7,3 +5,5 @@ try:
 except ImportError:
     import pkgutil
     __path__ = pkgutil.extend_path(__path__, __name__)
+
+__version__ = "2.1.0"
