@@ -9,7 +9,7 @@ Check the Troubleshooting_ section if you get errors at any stage.
           installation, so you can skip all the following steps if you just want the previews.
 
 .. note:: Starting from ckanext-spatial 2.0.0 **PostGIS is no longer required** to use the extension,
-          and its use has been deprected. If for some reason you still need to use the old PostGIS backend
+          and its use has been deprecated. If for some reason you still need to use the old PostGIS backend
           see :ref:`legacy_postgis`.
 
 All commands assume an existing CKAN database named ``ckan_default``.
@@ -62,9 +62,9 @@ Legacy PostGIS support
 ----------------------
 
 Starting from ckanext-spatial 2.0.0 PostGIS is **no longer required** to use the extension,
-and its use has been deprected. If for some reason you are using the deprecated ``postgis``
+and its use has been deprecated. If for some reason you are using the deprecated ``postgis``
 search backend or you still need to store the dataset extents in the PostGIS
-enabled ``package_extent`` table you can use the following steps, but note that this support
+enabled ``package_extent`` table, you can use the following steps, but note that this support
 will removed in the future so update your workflows accordingly.
 
 #. Add the ``ckan.spatial.use_postgis=true`` config option to your ini file.
@@ -78,8 +78,8 @@ On CKAN 2.8 and below use::
 
     (pyenv) $ paster --plugin=ckanext-spatial spatial initdb [srid] --config=mysite.ini
 
-You can define the SRID of the geometry column. Default is 4326. If you are not
-familiar with projections, we recommend to use the default value.
+You can define the SRID of the geometry column. The default is 4326, and if you are not
+familiar with projections, we recommend using the default value.
 
 When enabling the spatial metadata, you can define the projection in which
 extents are stored in the database with the following option. Use the EPSG code

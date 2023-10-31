@@ -1,4 +1,5 @@
 ckantoolkit
+cython==0.29.36
 Shapely>=1.2.13,<2.0.0  
 pyproj==2.2.2
 OWSLib==0.18.0
