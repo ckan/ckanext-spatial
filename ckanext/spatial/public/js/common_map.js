@@ -53,7 +53,7 @@
 
       } else if (mapConfig.type == 'custom') {
           // Custom XYZ layer
-          baseLayerUrl = mapConfig['custom.url'];
+          baseLayerUrl = mapConfig['custom_url'] || mapConfig['custom.url'];
           if (mapConfig.subdomains) leafletBaseLayerOptions.subdomains = mapConfig.subdomains;
           if (mapConfig.tms) leafletBaseLayerOptions.tms = mapConfig.tms;
           leafletBaseLayerOptions.attribution = mapConfig.attribution;
