@@ -172,6 +172,9 @@ details about the available options (again, you don't need to modify Solr if you
 
     "{{!field f=spatial_geom}}Intersects(ENVELOPE({minx}, {maxx}, {maxy}, {miny}))"
 
+.. note:: The old ``postgis`` search backend is no longer supported. You should migrate to one of the other backends instead.
+
+
 
 Spatial Search Widget
 ---------------------
