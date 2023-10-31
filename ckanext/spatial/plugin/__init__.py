@@ -78,9 +78,6 @@ class SpatialMetadata(p.SingletonPlugin):
     def after_dataset_update(self, context, data_dict):
         self.check_spatial_extra(data_dict, update=True)
 
-    def after_delete(self, context, data_dict):
-        return self.after_dataset_delete(context, data_dict)
-
     def check_spatial_extra(self, dataset_dict, update=False):
         '''
         For a given dataset, looks at the spatial extent (as given in the
@@ -164,9 +161,6 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
 
     def before_search(self, search_params):
         return self.before_dataset_search(search_params)
-
-    def after_search(self, search_results, search_params):
-        return self.after_dataset_search(search_results, search_params)
 
     def before_dataset_index(self, pkg_dict):
 
