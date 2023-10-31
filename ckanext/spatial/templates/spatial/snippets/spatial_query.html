@@ -22,9 +22,6 @@ e.g.
     <div class="dataset-map" data-module="spatial-query" data-default_extent="{{ default_extent }}" data-module-map_config="{{ h.dump_json(map_config) }}">
         <div id="dataset-map-container"></div>
     </div>
-    <div id="dataset-map-attribution">
-        {% snippet "spatial/snippets/map_attribution.html", map_config=map_config %}
-    </div>
 </section>
 
 {% set type = 'asset' if h.ckan_version().split('.')[1] | int >= 9 else 'resource' %}
