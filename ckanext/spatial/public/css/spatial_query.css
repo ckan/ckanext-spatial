@@ -5,10 +5,6 @@
 .module-content #dataset-map-container {
   height: 250px;
 }
-#dataset-map-attribution {
-  font-size: 11px;
-  line-height: 1.5;
-}
 .module-heading .action {
   float: right;
   color: #888888;
