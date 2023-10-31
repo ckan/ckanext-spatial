@@ -1,15 +1,11 @@
 # encoding: utf-8
 import click
-import logging
 
 import ckanext.spatial.util as util
 
 
-log = logging.getLogger(__name__)
-
 def get_commands():
     return [
-        spatial,
         spatial_validation
     ]
 
@@ -45,29 +41,3 @@ def report_csv(filepath):
 def validate_file(filepath):
     """Performs validation on the given metadata file."""
     return util.validate_file(filepath)
-
-
-@click.group(short_help=u"Performs spatially related operations.")
-def spatial():
-    pass
-
-
-@spatial.command()
-@click.argument('srid', required=False)
-def initdb(srid):
-    """
-    Creates the necessary tables. You must have PostGIS installed
-    and configured in the database.
-    You can provide the SRID of the geometry column. Default is 4326.
-    """
-    return util.initdb(srid)
-
-
-@spatial.command('extents')
-def update_extents():
-    """
-    Creates or updates the extent geometry column for datasets with
-    an extent defined in the 'spatial' extra.
-    """
-
-    return util.update_extents()

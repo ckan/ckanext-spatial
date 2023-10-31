@@ -2,7 +2,6 @@ import os
 import mimetypes
 from logging import getLogger
 
-import six
 import geojson
 
 import shapely.geometry
@@ -40,33 +39,15 @@ ALLOWED_SEARCH_BACKENDS = [
     "solr",         # Deprecated, please update to "solr-bbox"
     "solr-bbox",
     "solr-spatial-field",
-    "postgis",      # Deprecated: will be removed in the next version
 ]
 
 
 class SpatialMetadata(p.SingletonPlugin):
 
     p.implements(p.IPackageController, inherit=True)
-    p.implements(p.IConfigurable, inherit=True)
     p.implements(p.IConfigurer, inherit=True)
     p.implements(p.ITemplateHelpers, inherit=True)
 
-    use_postgis = False
-
-    # IConfigurable
-
-    def configure(self, config):
-
-        # PostGIS is no longer required, support for it will be dropped in the future
-        self.use_postgis = tk.asbool(config.get("ckan.spatial.use_postgis", False))
-
-        if self.use_postgis:
-
-            from ckanext.spatial.postgis.model import setup as setup_model
-
-            if not tk.asbool(config.get("ckan.spatial.testing", False)):
-                log.debug("Setting up the spatial model")
-                setup_model()
 
     # IConfigure
 
@@ -97,15 +78,6 @@ class SpatialMetadata(p.SingletonPlugin):
     def after_dataset_update(self, context, data_dict):
         self.check_spatial_extra(data_dict, update=True)
 
-    def after_delete(self, context, data_dict):
-        return self.after_dataset_delete(context, data_dict)
-
-    def after_dataset_delete(self, context, data_dict):
-
-        if self.use_postgis:
-            from ckanext.spatial.postgis.model import save_package_extent
-            save_package_extent(data_dict["id"], None)
-
     def check_spatial_extra(self, dataset_dict, update=False):
         '''
         For a given dataset, looks at the spatial extent (as given in the
@@ -114,34 +86,24 @@ class SpatialMetadata(p.SingletonPlugin):
 
         dataset_id = dataset_dict["id"]
         geometry = dataset_dict.get("spatial")
-        delete = False
 
         if not geometry:
             # Check extras
             for extra in dataset_dict.get("extras", []):
                 if extra["key"] == "spatial":
-                    if extra.get("deleted"):
-                        delete = True
-                    else:
-                        geometry = extra["value"]
+                    geometry = extra["value"]
 
-        if ((geometry is None or geometry == "" or delete)
-                and update
-                and self.use_postgis):
-            from ckanext.spatial.postgis.model import save_package_extent
-            save_package_extent(dataset_id, None)
-            return
-        elif not geometry:
+        if not geometry:
             return
 
         # Check valid JSON
         try:
             log.debug("Received geometry: {}".format(geometry))
 
-            geometry = geojson.loads(six.text_type(geometry))
+            geometry = geojson.loads(str(geometry))
         except ValueError as e:
             error_dict = {
-                "spatial": ["Error decoding JSON object: {}".format(six.text_type(e))]}
+                "spatial": ["Error decoding JSON object: {}".format(str(e))]}
             raise tk.ValidationError(error_dict)
 
         if not hasattr(geometry, "is_valid") or not geometry.is_valid:
@@ -150,16 +112,6 @@ class SpatialMetadata(p.SingletonPlugin):
                 msg = msg + ": {}".format(geometry.errors())
             error_dict = {"spatial": [msg]}
             raise tk.ValidationError(error_dict)
-
-        if self.use_postgis:
-            from ckanext.spatial.postgis.model import save_package_extent
-            try:
-                save_package_extent(dataset_id, geometry)
-            except Exception as e:
-                if bool(os.getenv('DEBUG')):
-                    raise
-                error_dict = {"spatial": ["Error: {}".format(six.text_type(e))]}
-                raise tk.ValidationError(error_dict)
 
     # ITemplateHelpers
 
@@ -194,12 +146,6 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
             )
             search_backend = "solr-bbox"
 
-        elif search_backend == "postgis":
-            log.warning(
-                "The `postgis` spatial search backend is deprecated "
-                "and will be removed in future versions"
-            )
-
         return search_backend
 
     # IConfigure
@@ -215,9 +161,6 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
 
     def before_search(self, search_params):
         return self.before_dataset_search(search_params)
-
-    def after_search(self, search_results, search_params):
-        return self.after_dataset_search(search_results, search_params)
 
     def before_dataset_index(self, pkg_dict):
 
@@ -258,28 +201,6 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
                 bbox, search_params)
 
         return search_params
-
-    def after_dataset_search(self, search_results, search_params):
-        """
-        Note: The PostGIS search functionality will be removed in future versions
-        """
-        from ckan.lib.search import PackageSearchQuery
-
-        search_backend = self._get_search_backend()
-        if search_backend == "postgis":
-            # Note: This will be deprecated at some point in favour of the
-            # Solr 4 spatial sorting capabilities
-            if search_params.get('extras', {}).get('ext_spatial') and \
-               tk.asbool(config.get('ckanext.spatial.use_postgis_sorting', 'False')):
-                # Apply the spatial sort
-                querier = PackageSearchQuery()
-                pkgs = []
-                for package_id, spatial_ranking in search_params['extras']['ext_spatial']:
-                    # get package from SOLR
-                    pkg = querier.get_index(package_id)['data_dict']
-                    pkgs.append(json.loads(pkg))
-                search_results['results'] = pkgs
-        return search_results
 
 
 class HarvestMetadataApi(HarvestMetadataApiMixin, p.SingletonPlugin):

@@ -4,7 +4,7 @@ import datetime
 import io
 import os
 import argparse
-from six.moves.configparser import SafeConfigParser
+from configparser import SafeConfigParser
 
 import requests
 from lxml import etree

@@ -172,8 +172,7 @@ details about the available options (again, you don't need to modify Solr if you
 
     "{{!field f=spatial_geom}}Intersects(ENVELOPE({minx}, {maxx}, {maxy}, {miny}))"
 
-.. note:: The old ``postgis`` search backend is deprecated and will be removed in future versions of the extension.
-    You should migrate to one of the other backends instead but if you need to keep using it for a while see :ref:`legacy_postgis`.
+.. note:: The old ``postgis`` search backend is no longer supported. You should migrate to one of the other backends instead.
 
 
 

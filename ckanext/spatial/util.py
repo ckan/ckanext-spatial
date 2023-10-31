@@ -3,8 +3,7 @@
 from __future__ import print_function
 import os
 import sys
-
-import six
+from io import StringIO
 
 from pkg_resources import resource_stream
 import logging
@@ -32,7 +31,7 @@ log = logging.getLogger(__name__)
 def report(pkg=None):
 
     if pkg:
-        package_ref = six.text_type(pkg)
+        package_ref = str(pkg)
         pkg = model.Package.get(package_ref)
         if not pkg:
             print('Package ref "%s" not recognised' % package_ref)
@@ -94,56 +93,6 @@ def report_csv(csv_filepath):
         f.write(report.get_csv())
 
 
-def initdb(srid=None):
-    if srid:
-        srid = six.text_type(srid)
-
-    from ckanext.spatial.postgis.model import setup as db_setup
-
-    db_setup(srid)
-
-    print('DB tables created')
-
-
-def update_extents():
-    from ckanext.spatial.postgis.model import save_package_extent
-
-    packages = [
-        extra.package for extra in
-        model.Session.query(PackageExtra).filter(PackageExtra.key == 'spatial').all()
-    ]
-
-    errors = []
-    count = 0
-    for package in packages:
-        geometry = None
-        try:
-            value = package.extras['spatial']
-            log.debug('Received: %r' % value)
-            geometry = json.loads(value)
-
-            count += 1
-        except ValueError as e:
-            errors.append(u'Package %s - Error decoding JSON object: %s' %
-                          (package.id, six.text_type(e)))
-        except TypeError as e:
-            errors.append(u'Package %s - Error decoding JSON object: %s' %
-                          (package.id, six.text_type(e)))
-
-        save_package_extent(package.id, geometry)
-
-    model.Session.commit()
-
-    if errors:
-        msg = 'Errors were found:\n%s' % '\n'.join(errors)
-        print(msg)
-
-    msg = "Done. Extents generated for %i out of %i packages" % (count,
-                                                                 len(packages))
-
-    print(msg)
-
-
 def get_xslt(original=False):
     if original:
         config_option = \
@@ -203,7 +152,7 @@ def transform_to_html(content, xslt_package=None, xslt_path=None):
         style_xml = etree.parse(style)
         transformer = etree.XSLT(style_xml)
 
-    xml = etree.parse(six.StringIO(content and six.text_type(content)))
+    xml = etree.parse(StringIO(content and str(content)))
     html = transformer(xml)
 
     result = etree.tostring(html, pretty_print=True)

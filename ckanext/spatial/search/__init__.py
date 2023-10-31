@@ -213,79 +213,7 @@ you need to split the geometry in order to fit the parts. Not indexing"""
         return search_params
 
 
-class PostgisSearchBackend(SpatialSearchBackend):
-    """
-    Note: The PostGIS search functionality will be removed in future versions
-    """
-
-    def index_dataset(self, dataset_dict):
-        return dataset_dict
-
-    def search_params(self, bbox, search_params):
-        from ckanext.spatial.postgis.model import bbox_query, bbox_query_ordered
-        from ckan.lib.search import SearchError
-
-        # Adjust easting values
-        while bbox["minx"] < -180:
-            bbox["minx"] += 360
-            bbox["maxx"] += 360
-        while bbox["minx"] > 180:
-            bbox["minx"] -= 360
-            bbox["maxx"] -= 360
-
-        # Note: This will be deprecated at some point in favour of the
-        # Solr 4 spatial sorting capabilities
-        if search_params.get("sort") == "spatial desc" and asbool(
-            config.get("ckanext.spatial.use_postgis_sorting", "False")
-        ):
-            if search_params["q"] or search_params["fq"]:
-                raise SearchError(
-                    "Spatial ranking cannot be mixed with other search parameters"
-                )
-                # ...because it is too inefficient to use SOLR to filter
-                # results and return the entire set to this class and
-                # after_search do the sorting and paging.
-            extents = bbox_query_ordered(bbox)
-            are_no_results = not extents
-            search_params["extras"]["ext_rows"] = search_params["rows"]
-            search_params["extras"]["ext_start"] = search_params["start"]
-            # this SOLR query needs to return no actual results since
-            # they are in the wrong order anyway. We just need this SOLR
-            # query to get the count and facet counts.
-            rows = 0
-            search_params["sort"] = None  # SOLR should not sort.
-            # Store the rankings of the results for this page, so for
-            # after_search to construct the correctly sorted results
-            rows = search_params["extras"]["ext_rows"] = search_params["rows"]
-            start = search_params["extras"]["ext_start"] = search_params["start"]
-            search_params["extras"]["ext_spatial"] = [
-                (extent.package_id, extent.spatial_ranking)
-                for extent in extents[start : start + rows]
-            ]
-        else:
-            extents = bbox_query(bbox)
-            are_no_results = extents.count() == 0
-
-        if are_no_results:
-            # We don't need to perform the search
-            search_params["abort_search"] = True
-        else:
-            # We'll perform the existing search but also filtering by the ids
-            # of datasets within the bbox
-            bbox_query_ids = [extent.package_id for extent in extents]
-
-            q = search_params.get("q", "").strip() or '""'
-            # Note: `"" AND` query doesn't work in github ci
-            new_q = "%s AND " % q if q and q != '""' else ""
-            new_q += "(%s)" % " OR ".join(["id:%s" % id for id in bbox_query_ids])
-
-            search_params["q"] = new_q
-
-        return search_params
-
-
 search_backends = {
     "solr-bbox": SolrBBoxSearchBackend,
     "solr-spatial-field": SolrSpatialFieldSearchBackend,
-    "postgis": PostgisSearchBackend,
 }

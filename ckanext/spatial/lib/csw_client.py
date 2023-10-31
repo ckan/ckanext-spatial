@@ -2,7 +2,6 @@
 Some very thin wrapper classes around those in OWSLib
 for convenience.
 """
-import six
 import logging
 
 from owslib.etree import etree
@@ -33,7 +32,7 @@ class OwsService(object):
                 pass
             elif callable(val):
                 pass
-            elif isinstance(val, six.string_types):
+            elif isinstance(val, str):
                 md[attr] = val
             elif isinstance(val, int):
                 md[attr] = val

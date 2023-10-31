@@ -21,17 +21,11 @@ jobs:
       matrix:
         include:
           - ckan-version: "2.10"
-            solr-image: "2.10-spatial"
-            requirements-file: 'requirements.txt'
+            solr-image: "2.10-solr9-spatial"
             harvester-version: 'master'
           - ckan-version: 2.9
-            solr-image: 2.9-solr8-spatial
-            requirements-file: 'requirements.txt'
+            solr-image: 2.9-solr9-spatial
             harvester-version: 'master'
-          - ckan-version: 2.9-py2
-            solr-image: 2.9-py2-solr8-spatial
-            requirements-file: 'requirements-py2.txt'
-            harvester-version: 'v1.4.2'
       fail-fast: false
     
     name: CKAN ${{ matrix.ckan-version }}, Solr ${{ matrix.solr-image }}
@@ -86,11 +80,10 @@ jobs:
       with:
         path: |
           ~/.cache/pip
-          .
           /usr/lib/python*/site-packages
-        key: ${{ runner.os }}-spatial-ckan-${{ matrix.ckan-version }}-${{ hashFiles('*requirements*.txt') }}
+        key: ${{ runner.os }}-spatial-ckan-${{ matrix.ckan-version }}-${{ hashFiles('requirements.txt') }}
         restore-keys: |
-          ${{ runner.os }}-spatial-ckan-${{ matrix.ckan-version }}-${{ hashFiles('*requirements*.txt') }}
+          ${{ runner.os }}-spatial-ckan-${{ matrix.ckan-version }}-${{ hashFiles('requirements.txt') }}
 
     - name: Patch to test pyproj
       if: ${{ matrix.ckan-version == '2.9' }}
@@ -98,16 +91,10 @@ jobs:
         pip install cython==0.29.36
         pip install --no-use-pep517 pyproj==2.6.1
 
-    - name: Patch to test pyproj
-      if: ${{ matrix.ckan-version == '2.9-py2' }}
-      run: |
-        pip install cython==0.28.4
-        pip install --no-use-pep517 pyproj==2.2.2
-
-    - name: Install dependencies from ${{ matrix.requirements-file }}
+    - name: Install dependencies from requirements.txt
       if: steps.cache.outputs.cache-hit != 'true'
       run: |
-        pip install -r ${{ matrix.requirements-file }}
+        pip install -r requirements.txt
 
     - name: Install harvester
       if: steps.cache.outputs.cache-hit != 'true'
