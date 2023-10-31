@@ -9,9 +9,8 @@ ckanext-spatial - Geo related plugins for CKAN
 This extension contains plugins that add geospatial capabilities to CKAN_,
 including:
 
-* A spatial field on the default CKAN dataset schema, that uses PostGIS_
-  as the backend and allows to perform spatial queries and to display the
-  dataset extent on the frontend.
+* Geospatial dataset search powered by Solr, providing a bounding box via
+  a UI map widget or the API.
 * Harvesters to import geospatial metadata into CKAN from other sources
   in ISO 19139 format and others.
 * Commands to support the CSW standard using pycsw_.
@@ -53,7 +52,7 @@ guidelines that apply to CKAN core, described in
 Copying and License
 -------------------
 
-This material is copyright (c) 2011-2021 Open Knowledge Foundation and contributors.
+This material is copyright (c) 2011-2023 Open Knowledge Foundation and contributors.
 
 It is open and licensed under the GNU Affero General Public License (AGPL) v3.0
 whose full text may be found at:
@@ -61,7 +60,6 @@ whose full text may be found at:
 http://www.fsf.org/licensing/licenses/agpl-3.0.html
 
 .. _CKAN: http://ckan.org
-.. _PostGIS: http://postgis.org
 .. _pycsw: http://pycsw.org
 .. _GeoJSON: http://geojson.org
 .. _ckanext-geoview: https://github.com/ckan/ckanext-geoview

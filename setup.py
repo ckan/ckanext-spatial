@@ -11,9 +11,8 @@ setup(
 This extension contains plugins that add geospatial capabilities to CKAN_,
 including:
 
-* A spatial field on the default CKAN dataset schema, that uses PostGIS_
-  as the backend and allows to perform spatial queries and to display the
-  dataset extent on the frontend.
+* Geospatial dataset search powered by Solr, providing a bounding box via
+  a UI map widget or the API.
 * Harvesters to import geospatial metadata into CKAN from other sources
   in ISO 19139 format and others.
 * Commands to support the CSW standard using pycsw_.
