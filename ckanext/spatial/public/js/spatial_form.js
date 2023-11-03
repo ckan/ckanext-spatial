@@ -85,7 +85,7 @@ this.ckan.module('spatial-form', function (jQuery, _) {
 
       this.ids = this.el.data('input_ids');
       this.extent = this.el.data('extent');
-      this.map_id = 'dataset-map-container';
+      this.map_id = 'dataset-map-form-container';
 
       jQuery.proxyAll(this, /_on/);
       this.el.ready(this._onReady);
@@ -95,130 +95,85 @@ this.ckan.module('spatial-form', function (jQuery, _) {
 
     _onReady: function(){
 
-        var map, backgroundLayer, oldExtent, drawnItems, ckanIcon;
-        var ckanIcon = L.Icon.extend({options: this.options.styles.point});
+      var map, backgroundLayer, oldExtent, drawnItems, ckanIcon;
+      var ckanIcon = L.Icon.extend({ options: this.options.styles.point });
 
-        var _self = this; // used in event handlers as this points to dom object in that case
+      var _self = this; // used in event handlers as this points to dom object in that case
 
-        /* Initialise basic map */
-        map = ckan.commonLeafletMap(
-            this.map_id,
-            this.options.map_config,
-            {attributionControl: false}
-        );
-        map.fitBounds(this.options.default_extent);
+      /* Initialise basic map */
+      map = ckan.commonLeafletMap(
+        this.map_id,
+        this.options.map_config,
+        { attributionControl: false }
+      );
+      map.fitBounds(this.options.default_extent);
 
-        /* Add an empty layer for newly drawn items */
-        var drawnItems = new L.FeatureGroup();
-        map.addLayer(drawnItems);
+      /* Add an empty layer for newly drawn items */
+      var drawnItems = new L.FeatureGroup();
+      map.addLayer(drawnItems);
 
 
-        /* Add GeoJSON layers for any GeoJSON resources of the dataset */
-        //var existingLayers = {};
-        var url = window.location.href.split('dataset/edit/');
-        $.ajax({
-         url: url[0] + 'api/3/action/package_show',
-         data: {id : url[1]},
-         dataType: 'jsonp',
-         success: function(data) {
-           //console.log('Got resources: ' + JSON.stringify(data.result.resources));
-           var r = data.result.resources;
-           for (i in r){
-            if (r[i].format == 'GeoJSON'){
-             //console.log('Found GeoJSON for ' + r[i].name + ' with id ' + r[i].id);
+      /* Add existing extent or new layer */
+      if (this.extent) {
+        L.geoJson(this.extent, {
+          style: this.options.styles.default_,
+          pointToLayer: function (feature, latLng) {
+            return new L.Marker(latLng, { icon: new ckanIcon })
+          }
+        }).eachLayer(function (layer) {
+          drawnItems.addLayer(layer);
+        });
 
-             /* Option 1: Load GeoJSON using leaflet.ajax */
-             //var geojsonLayer = L.geoJson.ajax(r[id].url);
-             //geojsonLayer.addTo(map);
-
-             /* Option 2: Load GeoJSON using JQuery */
-             $.getJSON(r[i].url, function(data) {
-                var gj = L.geoJson(data, {
-                    pointToLayer: function (feature, latLng) {
-                        return new L.Marker(latLng, {icon: new ckanIcon})
-                    },
-                    onEachFeature: function(feature, layer) {
-                      var body = '';
-                      var row = '<tr><th>{key}</th><td>{value}</td></tr>';
-                      var table = '<table class="table table-striped table-bordered table-condensed" style="width:300px;"><tbody>{body}</tbody></table>';
-                      jQuery.each(feature.properties, function(key, value){
-                        if (value != null && typeof value === 'object') {
-                          value = JSON.stringify(value);
-                        }
-                        body += L.Util.template(row, {key: key, value: value});
-                      });
-                      var popupContent = L.Util.template(table, {body: body});
-                        layer.bindPopup(popupContent);
-                    }
-                });
-                gj.addTo(map);
-                //existingLayers[r[i].name] = gj;
-             }); // end getJSON
-            } // end if
-           } // end for
-           //L.control.layers(existingLayers).addTo(map); // or similar
-         }
-         });
-
-        /* Add existing extent or new layer */
-        if (this.extent) {
-            /* update = show existing polygon */
-            oldExtent = L.geoJson(this.extent, {
-              style: this.options.styles.default_,
-              pointToLayer: function (feature, latLng) {
-                return new L.Marker(latLng, {icon: new ckanIcon})
-              }
-            });
-            oldExtent.addTo(map);
-            map.fitBounds(oldExtent.getBounds());
-        }
+        map.fitBounds(drawnItems.getBounds());
+      }
 
 
         /* Leaflet.draw: add drawing controls for drawnItems */
-        var drawControl = new L.Control.Draw({
-            draw: {
-                polyline: false,
-                circle: false,
-                marker: false,
-                rectangle: {repeatMode: false}
+      map.addControl(new L.Control.Draw({
+        position: "topright",
+        draw: {
+          polyline: false,
+          polygon: true,
+          circle: false,
+          marker: true,
+          circlemarker: false,
+          rectangle: true
 
-            },
-            edit: { featureGroup: drawnItems,
-            edit: false
-           }
-        });
-        map.addControl(drawControl);
+        },
+        edit: {
+          featureGroup: drawnItems
+        }
+
+      })
+      );
 
 
-        /* Aggregate all features in a FeatureGroup into one MultiPolygon,
-         * update inputid with that Multipolygon's geometry
-         */
+      /* populate form fields from gemoetry drawn on map */
         var featureGroupToInput = function(fg, input){
-            var gj = drawnItems.toGeoJSON().features;
-            console.log(gj)
-            var polyarray = [];
-            $.each(gj, function(index, value){
-              if(value.geometry.type == "FeatureCollection" && value.geometry.features[0].geometry.type == "MultiPolygon"){
-                polyarray = polyarray.concat(value.geometry.features[0].geometry.coordinates)
-              }else if (value.geometry.type == "Polygon") {
-                polyarray.push(value.geometry.coordinates);
-              }
-            });
-
-            if(polyarray){
-              mp = {"type": "MultiPolygon", "coordinates": polyarray};
-            }else{
-              mp = ''
+          var gj = drawnItems.toGeoJSON().features;
+          var geom = null;
+          $.each(gj, function (index, value) {
+            if (value.geometry.type == "FeatureCollection") {
+              geom = value.geometry.features[0].geometry
+            } else {
+              geom = value.geometry
             }
+          });
+
+          if (geom) {
+            mp = { "type": geom.type, "coordinates": geom.coordinates };
             $('#' + input).val(JSON.stringify(mp));
+          } else {
+            $('#' + input).val('');
+          }
 
-            var bounds = drawnItems.getBounds();
-            if(bounds._southWest && bounds._northEast){
-              $("#" + _self.ids['bbox-north']).val(bounds.getNorth());
-              $("#" + _self.ids['bbox-south']).val(bounds.getSouth());
-              $("#" + _self.ids['bbox-east']).val(bounds.getEast());
-              $("#" + _self.ids['bbox-west']).val(bounds.getWest());
-            }
+          var bounds = drawnItems.getBounds();
+          if (bounds._southWest && bounds._northEast) {
+            $("#" + _self.ids['bbox-north']).val(+bounds.getNorth().toFixed(7));
+            $("#" + _self.ids['bbox-south']).val(+bounds.getSouth().toFixed(7));
+            $("#" + _self.ids['bbox-east']).val(+bounds.getEast().toFixed(7));
+            $("#" + _self.ids['bbox-west']).val(+bounds.getWest().toFixed(7));
+          }
         };
 
         // Handle the update map action
@@ -226,14 +181,15 @@ this.ckan.module('spatial-form', function (jQuery, _) {
           drawnItems.clearLayers();
           var jsonStr = $('#' + _self.ids['spatial']).val();
           if(jsonStr){
-            var gj = L.geoJson(JSON.parse(jsonStr));
-            var bounds = gj.getBounds();
-            drawnItems.addLayer(gj);
+            L.geoJson(JSON.parse(jsonStr)).eachLayer(function (layer) {
+              drawnItems.addLayer(layer);
+            });
+            var bounds = drawnItems.getBounds();
             if(bounds._southWest && bounds._northEast){
-              $("#" + _self.ids['bbox-north']).val(bounds.getNorth());
-              $("#" + _self.ids['bbox-south']).val(bounds.getSouth());
-              $("#" + _self.ids['bbox-east']).val(bounds.getEast());
-              $("#" + _self.ids['bbox-west']).val(bounds.getWest());
+              $("#" + _self.ids['bbox-north']).val(+bounds.getNorth().toFixed(7));
+              $("#" + _self.ids['bbox-south']).val(+bounds.getSouth().toFixed(7));
+              $("#" + _self.ids['bbox-east']).val(+bounds.getEast().toFixed(7));
+              $("#" + _self.ids['bbox-west']).val(+bounds.getWest().toFixed(7));
             }
           }
         });
@@ -252,9 +208,7 @@ this.ckan.module('spatial-form', function (jQuery, _) {
         map.on('draw:created', function (e) {
             var type = e.layerType,
                 layer = e.layer;
-            drawnItems.addLayer(layer);
-            // To only add the latest drawn element to input #field-spatial:
-            //$("#field-spatial")[0].value = JSON.stringify(e.layer.toGeoJSON().geometry);
+          drawnItems.addLayer(layer);
             featureGroupToInput(drawnItems, _self.ids['spatial']);
         });
 

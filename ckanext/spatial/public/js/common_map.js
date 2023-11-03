@@ -77,12 +77,14 @@
           baseLayer = new L.TileLayer.WMS(baseLayerUrl, wmsOptions);
 
       } else {
-          // Default to Stamen base map
-          baseLayerUrl = 'https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}.png';
-          leafletBaseLayerOptions.subdomains = mapConfig.subdomains || 'abcd';
-          leafletBaseLayerOptions.attribution = mapConfig.attribution || 'Map tiles by <a href="http://stamen.com">Stamen Design</a> (<a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>). Data by <a href="http://openstreetmap.org">OpenStreetMap</a> (<a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>)';
+        // Default to Stamen base map
+        baseLayerUrl = 'https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.png?api_key=' + mapConfig['stadia.API_key'];
+        // baseLayerUrl = 'https://tiles.stadiamaps.com/styles/stamen_terrain.json?api_key=' + mapConfig['stadia.API_key'];
+        leafletBaseLayerOptions.subdomains = mapConfig.subdomains || 'abcd';
+        leafletBaseLayerOptions.attribution = mapConfig.attribution || '&copy; <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a> <a href="https://stamen.com/" target="_blank">&copy; Stamen Design</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/about" target="_blank">OpenStreetMap</a> contributors';
 
-          baseLayer = new L.TileLayer(baseLayerUrl, leafletBaseLayerOptions);
+        baseLayer = new L.TileLayer(baseLayerUrl, leafletBaseLayerOptions);
+        //baseLayer = new L.maplibreGL(baseLayerUrl, leafletBaseLayerOptions);
       }
 
       map.addLayer(baseLayer);

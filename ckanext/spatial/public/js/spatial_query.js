@@ -177,6 +177,7 @@ this.ckan.module('spatial-query', function ($, _) {
       map.addControl(removeAllControl);
 
       var features = this.el.data("dataset_extents");
+      var ra_features = this.el.data("ra_extents");
 
       var orangeIcon = new L.Icon({
         iconUrl:
@@ -211,10 +212,32 @@ this.ckan.module('spatial-query', function ($, _) {
         // }
       });
 
-      if (module._getParameterByName("ext_layers") == "dataset_extents") {
-        $("#ext_layers").val("dataset_extents");
+      if(ra_features){
+        module.options.ra_extents = new L.geoJSON(ra_features, {
+          style: {
+            color: "#3264a8",
+            weight: 2,
+            opacity: 0.8,
+            fillColor: "#33a02c",
+            fillOpacity: 0,
+            clickable: false,
+          },
+          onEachFeature: function (feature, layer) {
+              if(feature.properties && feature.properties.name){
+                layer.bindPopup(feature.properties.name);
+              }
+            }
+        });
+      }
+
+      ext_layers = module._getParameterByName("ext_layers")
+      if (ext_layers && ext_layers.includes("dataset_extents")) {
         map.fitBounds(module.options.default_extent);
         map.addLayer(module.options.dataset_extents);
+      }
+
+      if (ext_layers && ext_layers.includes("ra_extents") && ra_features) {
+        map.addLayer(module.options.ra_extents);
       }
 
       var layerControl = new L.control.layers(null, null, { collapsed: true })
@@ -225,16 +248,39 @@ this.ckan.module('spatial-query', function ($, _) {
         .setPosition("topleft")
         .addTo(map);   
 
+      if(ra_features){
+        layerControl.addOverlay(
+          module.options.ra_extents,
+          "<span>Regional Associations</span>"
+        )
+      }
+
       map.on("overlayadd", function (ev) {
         if (ev["name"].includes("Dataset Extents")) {
-          $("#ext_layers").val("dataset_extents");
+          $("#ext_layers").val(function(index, value) {
+           return [value, "dataset_extents"].filter(Boolean).join(",");
+          });
         }
+        if (ev["name"].includes("Regional Associations")) {
+          $("#ext_layers").val(function(index, value) {
+           return [value, "ra_extents"].filter(Boolean).join(",");
+          });
+        }
+        console.log($("#ext_layers").val());
       });
 
       map.on("overlayremove", function (ev) {
         if (ev["name"].includes("Dataset Extents")) {
-          $("#ext_layers").val("");
+          $("#ext_layers").val(function(index, value) {
+           return value.replace('dataset_extents', '').split(',').filter(Boolean).join(',');
+          });
         }
+        if (ev["name"].includes("Regional Associations")) {
+          $("#ext_layers").val(function(index, value) {
+           return value.replace('ra_extents', '').split(',').filter(Boolean).join(',');
+          });
+        }
+        console.log($("#ext_layers").val());
       });
 
       // map.on("enterFullscreen", function () {

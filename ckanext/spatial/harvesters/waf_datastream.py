@@ -89,6 +89,8 @@ class DatastreamSitemapHarvester(WAFHarvester, SingletonPlugin):
 
         # All DataStream datasets have a DOI so we use that to populate the citation
         iso_values["citation"] = '{"fr": "%s", "en": "%s"}' % (iso_values['unique-resource-identifier'], iso_values['unique-resource-identifier'])
+        package_dict['unique-resource-identifier-full'] = []
+        package_dict['unique-resource-identifier-full'].append({'code': iso_values['unique-resource-identifier']})
 
         # TODO: determin if we can set EOV to something useful
         if not package_dict.get("eov"):
@@ -227,13 +229,13 @@ class DatastreamSitemapHarvester(WAFHarvester, SingletonPlugin):
         # convert xml content to lxml etree
         sitemap_tree = etree.fromstring(str.encode(sitemape_content))
 
-        # using dataset urls, generate url to xml metadata files. aka add .iso19115.xml to end
+        # using dataset urls, generate url to xml metadata files. aka add /iso19115.xml to end
         url_to_modified_harvest = {} ## mapping of url to last_modified in harvest
         try:
             for url_node in sitemap_tree.findall(".//{http://www.sitemaps.org/schemas/sitemap/0.9}url"):
                 loc_node = url_node.find(".//{http://www.sitemaps.org/schemas/sitemap/0.9}loc")
                 last_modified_node = url_node.find(".//{http://www.sitemaps.org/schemas/sitemap/0.9}lastmod")
-                url = loc_node.text + '.iso19115.xml'
+                url = loc_node.text + '/iso19115.xml'
                 modified_date = last_modified_node.text
                 url_to_modified_harvest[url] = modified_date
         except Exception as e:
