@@ -252,6 +252,15 @@ iis =      parse.SkipTo("<br>").suppress() \
            parse.Word(parse.alphas)
          , adjacent=False, joinString=' ').setResultsName('date')
          ) \
+         + parse.Optional(parse.Combine(
+            parse.Word(parse.alphas+',') +
+            parse.Word(parse.alphas) +
+            parse.Word(parse.nums+',') +
+            parse.Word(parse.nums) +
+            parse.Word(parse.nums+':') +
+            parse.Word(parse.alphas)
+        , adjacent=False, joinString=' ').setResultsName('date')
+        ) \
          + parse.Word(parse.nums).suppress() \
          + parse.Literal('<A HREF=').suppress() \
          + parse.quotedString.setParseAction(parse.removeQuotes).setResultsName('url')
@@ -328,6 +337,8 @@ def _extract_waf(content, base_url, scraper, results = None, depth=0):
             except Exception as e:
                 raise
                 date = None
+        if not date:
+            log.debug('failed to get date for %s', url)
         results.append((urljoin(base_url, record.url), date))
 
     return results
