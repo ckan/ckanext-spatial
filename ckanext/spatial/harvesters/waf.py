@@ -244,15 +244,15 @@ nginx   = parse.SkipTo(parse.CaselessLiteral("<a href="), include=True).suppress
         ,adjacent=False, joinString=' ').setResultsName('date')
         )
 
-iis =      parse.SkipTo("<br>").suppress() \
-         + parse.OneOrMore("<br>").suppress() \
-         + parse.Optional(parse.Combine(
-           parse.Word(parse.alphanums+'/') +
-           parse.Word(parse.alphanums+':') +
-           parse.Word(parse.alphas)
-         , adjacent=False, joinString=' ').setResultsName('date')
-         ) \
-         + parse.Optional(parse.Combine(
+iis     = parse.SkipTo("<br>").suppress() \
+        + parse.OneOrMore("<br>").suppress() \
+        + parse.Optional(parse.Combine(
+            parse.Word(parse.alphanums+'/') +
+            parse.Word(parse.alphanums+':') +
+            parse.Word(parse.alphas)
+        , adjacent=False, joinString=' ').setResultsName('date')
+        ) \
+        + parse.Optional(parse.Combine(
             parse.Word(parse.alphas+',') +
             parse.Word(parse.alphas) +
             parse.Word(parse.nums+',') +
@@ -261,9 +261,9 @@ iis =      parse.SkipTo("<br>").suppress() \
             parse.Word(parse.alphas)
         , adjacent=False, joinString=' ').setResultsName('date')
         ) \
-         + parse.Word(parse.nums).suppress() \
-         + parse.Literal('<A HREF=').suppress() \
-         + parse.quotedString.setParseAction(parse.removeQuotes).setResultsName('url')
+        + parse.Word(parse.nums).suppress() \
+        + parse.Literal('<A HREF=').suppress() \
+        + parse.quotedString.setParseAction(parse.removeQuotes).setResultsName('url')
 
 other = parse.SkipTo(parse.CaselessLiteral("<a href="), include=True).suppress() \
         + parse.quotedString.setParseAction(parse.removeQuotes).setResultsName('url')
