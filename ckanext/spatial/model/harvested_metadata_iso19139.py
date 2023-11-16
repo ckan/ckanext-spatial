@@ -543,7 +543,7 @@ class ISOLocalised_iso19139(ISOElement_iso19139):
                 "gmd:PT_FreeText/gmd:textGroup",
                 "lan:PT_FreeText/lan:textGroup",
             ],
-            multiplicity="0..1",
+            multiplicity="*",
             elements=[
                 ISOElement_iso19139(
                     name="value",
@@ -1644,7 +1644,7 @@ class ISODocument_iso19139(MappedXmlDocument_iso19139):
             langKey = self.cleanLangKey(local.get('language_code'))
             # langKey = langKey.encode('utf-8')
 
-            LangValue = item.get('local').get('value')
+            LangValue = local.get('value')
             LangValue = LangValue.strip()
             # decode double escaped unicode chars
             LangValue = self.unescape_unicode(LangValue)
@@ -1652,6 +1652,18 @@ class ISODocument_iso19139(MappedXmlDocument_iso19139):
             if len(LangValue) > 1:
                 out.update({langKey: LangValue})
 
+        elif isinstance(local, list):
+            for localItem in local:
+                langKey = self.cleanLangKey(localItem.get('language_code'))
+                # langKey = langKey.encode('utf-8')
+
+                LangValue = localItem.get('value')
+                LangValue = LangValue.strip()
+                # decode double escaped unicode chars
+                LangValue = self.unescape_unicode(LangValue)
+
+                if len(LangValue) > 1:
+                    out.update({langKey: LangValue})
         return out
 
     def infer_keywords(self, values):
