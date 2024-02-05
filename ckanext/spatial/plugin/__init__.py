@@ -198,7 +198,9 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
 
         if (pkg_dict.get('extras_spatial', None) or pkg_dict.get('spatial', None)) and self.search_backend in ('solr', 'solr-spatial-field'):
             try:
-                geometry = json.loads(pkg_dict.get('spatial', pkg_dict['extras_spatial']))
+                geometry = pkg_dict.get('spatial') or pkg_dict.get('extras_spatial')
+                if isinstance(geometry, str):
+                    geometry = json.loads(geometry)
             except ValueError as e:
                 log.error('Geometry not valid GeoJSON, not indexing')
                 return pkg_dict
