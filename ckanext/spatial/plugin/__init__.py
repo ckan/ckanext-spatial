@@ -9,6 +9,7 @@ import ckantoolkit as tk
 from ckan import plugins as p
 
 from ckan.lib.helpers import json
+from ckanext.spatial import logic
 
 from ckanext.spatial.util import _get_package_extras
 if tk.check_ckan_version(min_version="2.9.0"):
@@ -175,8 +176,19 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
     p.implements(p.IRoutes, inherit=True)
     p.implements(p.IPackageController, inherit=True)
     p.implements(p.IConfigurable, inherit=True)
+    p.implements(p.IActions)
 
     search_backend = None
+
+    def get_actions(self):
+        """
+        Spatial Query
+        """
+        return {
+            'spatial_query_geo': logic.spatial_query_geo,
+            'spatial_query_geo_package_search': logic.spatial_query_geo_package_search,
+        }
+
 
     def update_config_schema(self, schema):
         schema.update({
@@ -284,7 +296,6 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
             search_params = self._params_for_postgis_search(poly, search_params)
 
         elif search_params.get('extras', None) and search_params['extras'].get('ext_bbox', None):
-
             bbox = validate_bbox(search_params['extras']['ext_bbox'])
             if not bbox:
                 raise SearchError('Wrong bounding box provided')
@@ -347,7 +358,8 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
                    add({area_search}, mul(sub({y22}, {y21}), sub({x22}, {x21})))
                 )'''.format(**variables).replace('\n', '').replace(' ', '')
 
-        search_params['fq_list'] = ['{!frange incl=false l=0 u=1}%s' % bf]
+        search_params["fq_list"] = search_params.get("fq_list", [])
+        search_params["fq_list"].append("{!frange incl=false l=0 u=1}%s" % bf)
 
         search_params['bf'] = bf
         search_params['defType'] = 'edismax'

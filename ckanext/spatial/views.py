@@ -1,15 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import logging
-import urllib
-
 from flask import Blueprint, make_response
-
 import ckan.lib.helpers as h
 import ckan.plugins.toolkit as tk
 from ckantoolkit import request
 from ckan.views.api import _finish_ok, _finish_bad_request
-
+from ckanext.spatial import logic
 from ckanext.spatial.lib import get_srid, validate_bbox, bbox_query, polygon_query, validate_polygon
 from ckanext.spatial import util
 
@@ -18,8 +15,7 @@ log = logging.getLogger(__name__)
 
 api = Blueprint("spatial_api", __name__)
 
-
-def spatial_query(register):
+def spatial_query_geo_view(register):
     error_400_msg = \
         'Please provide a suitable "bbox" parameter [minx,miny,maxx,maxy], ' \
         'or "poly" parameter [POLYGON((x1 y1,x2 y2, ....)) | MULTIPOLYGON(((x1 y1,x2 y2, ....)),((x1 y1,x2 y2, ....)))] | BOX(minx,miny,maxx,maxy)'
@@ -29,37 +25,39 @@ def spatial_query(register):
     else:
         request_data = request.args
 
-    srid = get_srid(str(request_data.get('crs'))) if 'crs' in \
-        request_data else None
+    try:
+        #ids = [extent.package_id for extent in extents]
+        output = logic.spatial_query_geo(None, request_data)
+    except (Exception) as e:
+        return _finish_bad_request(error_400_msg + '\n\n' + e.message)
 
-    bbox = poly = []
-    if 'bbox' in request_data:
-        bbox = validate_bbox(request.params['bbox'])
-    elif 'poly' in request_data:
-        poly_str = urllib.parse.unquote_plus(request_data['poly'])
-        if poly_str.startswith('BOX'):
-            bbox = validate_bbox(poly_str[4:-1])
-        else:
-            poly = validate_polygon(poly_str)
+    return _finish_ok(output)
+
+def spatial_query_geo_package_search_view(register):
+    error_400_msg = \
+        'Please provide a suitable "bbox" parameter [minx,miny,maxx,maxy], ' \
+        'or "poly" parameter [POLYGON((x1 y1,x2 y2, ....)) | MULTIPOLYGON(((x1 y1,x2 y2, ....)),((x1 y1,x2 y2, ....)))] | BOX(minx,miny,maxx,maxy)'
+
+    if request.method == 'POST':
+        request_data = request.get_json()
     else:
-        return _finish_bad_request(error_400_msg)
-
-    if not (bbox or poly):
-        return _finish_bad_request(error_400_msg)
-
-    extents = bbox_query(bbox, srid) if bbox \
-        else polygon_query(poly, srid)
+        request_data = request.args.to_dict()
 
     try:
-        ids = [extent.package_id for extent in extents]
-        output = dict(count=len(ids), results=ids)
+        # ids = [extent.package_id for extent in extents]
+        output = logic.spatial_query_geo_package_search(None, request_data)
+
     except (Exception) as e:
         return _finish_bad_request(error_400_msg + '\n\n' + e.message)
 
     return _finish_ok(output)
 
 
-api.add_url_rule('/api/2/search/<register>/geo', methods=[u'GET', u'POST'], view_func=spatial_query)
+api.add_url_rule('/api/2/search/<register>/geo', endpoint='geo',
+                 methods=[u'GET', u'POST'], view_func=spatial_query_geo_view)
+
+api.add_url_rule('/api/3/search/<register>/geo_package_search', endpoint='geo_package_search',
+                 methods=[u'GET', u'POST'], view_func=spatial_query_geo_package_search_view)
 
 harvest_metadata = Blueprint("spatial_harvest_metadata", __name__)
 

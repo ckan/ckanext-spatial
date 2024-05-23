@@ -27,7 +27,7 @@
                                     mapConfig,
                                     leafletMapOptions,
                                     leafletBaseLayerOptions) {
-
+                                      
       var isHttps = window.location.href.substring(0, 5).toLowerCase() === 'https';
       var mapConfig = mapConfig || {type: 'stamen'};
       var leafletMapOptions = leafletMapOptions || {};
@@ -78,8 +78,7 @@
 
       } else {
         // Default to Stamen base map
-        baseLayerUrl = 'https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.png?api_key=' + mapConfig['stadia.API_key'];
-        // baseLayerUrl = 'https://tiles.stadiamaps.com/styles/stamen_terrain.json?api_key=' + mapConfig['stadia.API_key'];
+        baseLayerUrl = 'https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.png?api_key=' + mapConfig['stadia.api_key'];
         leafletBaseLayerOptions.subdomains = mapConfig.subdomains || 'abcd';
         leafletBaseLayerOptions.attribution = mapConfig.attribution || '&copy; <a href="https://stadiamaps.com/" target="_blank">Stadia Maps</a> <a href="https://stamen.com/" target="_blank">&copy; Stamen Design</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/about" target="_blank">OpenStreetMap</a> contributors';
 
@@ -109,8 +108,8 @@
       }
 
       let urls = []
-      if (mapConfig.geoJsonLayerURLs) {
-        urls = JSON.parse(mapConfig.geoJsonLayerURLs);
+      if (mapConfig.geojsonlayerurls) {
+        urls = JSON.parse(mapConfig.geojsonlayerurls);
         var GJLayers = L.layerGroup().addTo(map)
         for(const [i, url] of urls.entries()){
           fetch(

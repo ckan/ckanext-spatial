@@ -26,6 +26,7 @@ spatial_query_js:
     - js/vendor/leaflet/leaflet.js
     - js/vendor/leaflet.draw/leaflet.draw.js
     - js/vendor/leaflet.fullscreen/Control.FullScreen.js
+    - js/vendor/leaflet.ajax/leaflet.ajax.min.js
     - js/common_map.js
     - js/spatial_query.js
 
@@ -48,6 +49,7 @@ spatial_form_js:
     - js/vendor/leaflet/leaflet.js
     - js/vendor/leaflet.draw/leaflet.draw.js
     - js/vendor/leaflet.fullscreen/Control.FullScreen.js
+    - js/vendor/leaflet.ajax/leaflet.ajax.min.js
     - js/common_map.js
     - js/spatial_form.js
 
