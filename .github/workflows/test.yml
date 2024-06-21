@@ -34,7 +34,7 @@ jobs:
     name: CKAN ${{ matrix.ckan-version }}, Solr ${{ matrix.solr-image }}
     runs-on: ubuntu-latest
     container:
-      image: openknowledge/ckan-dev:${{ matrix.ckan-version }}
+      image: ckan/ckan-dev:${{ matrix.ckan-version }}
     services:
       solr:
         image: ckan/ckan-solr:${{ matrix.solr-image }}
@@ -56,7 +56,7 @@ jobs:
       PGPASSWORD: postgres
     
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
   
     - name: Install dependencies (common)
       run: |
@@ -78,7 +78,7 @@ jobs:
         pip install -U pip --cache-dir ~/.cache/pip
         chown -R $(whoami) ~/.cache/pip
 
-    - uses: actions/cache@v3
+    - uses: actions/cache@v4
       id: cache
       with:
         path: |
