@@ -6,8 +6,8 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.8'
       - name: Install requirements
@@ -20,6 +20,9 @@ jobs:
     strategy:
       matrix:
         include:
+          - ckan-version: "master"
+            solr-image: "2.10-solr9-spatial"
+            harvester-version: 'master'
           - ckan-version: "2.10"
             solr-image: "2.10-solr9-spatial"
             harvester-version: 'master'
