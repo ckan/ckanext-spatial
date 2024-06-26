@@ -75,7 +75,6 @@ jobs:
       if: ${{ matrix.ckan-version == '2.9' }}
       run: |
         apk add --no-cache \
-          --force-broken-world \
           proj-util=9.4.0-r0 \
           proj-dev=9.4.0-r0
 
