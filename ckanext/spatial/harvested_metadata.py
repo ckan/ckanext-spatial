@@ -89,9 +89,9 @@ class MappedXmlElement(MappedXmlObject):
             for child in self.elements:
                 value[child.name] = child.read_value(element)
             return value
-        elif type(element) == etree._ElementStringResult:
+        elif hasattr(etree, "_ElementStringResult") and type(element) is etree._ElementStringResult:
             value = str(element)
-        elif type(element) == etree._ElementUnicodeResult:
+        elif type(element) is etree._ElementUnicodeResult:
             value = str(element)
         else:
             value = self.element_tostring(element)
