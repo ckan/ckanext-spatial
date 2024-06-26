@@ -1,7 +1,6 @@
 import os
 
 from lxml import etree
-from nose.tools import assert_equal, assert_in
 
 from ckanext.spatial import validation
 
@@ -27,17 +26,17 @@ class TestValidation(object):
         )
 
         assert len(errors) > 0
-        assert_in("Dataset schema (gmx.xsd)", errors)
-        assert_in(
-            "{http://www.isotc211.org/2005/gmd}nosuchelement': This element is not expected.",
-            errors,
+        assert "Dataset schema (gmx.xsd)" in errors
+        assert (
+            "{http://www.isotc211.org/2005/gmd}nosuchelement': This element is not expected." in
+            errors
         )
 
     def test_iso19139_pass(self):
         errors = self.get_validation_errors(
             validation.ISO19139Schema, "iso19139/dataset.xml"
         )
-        assert_equal(errors, "")
+        assert errors == ""
 
     # Gemini2.1 tests are basically the same as those in test_harvest.py but
     # a few little differences make it worth not removing them in
@@ -49,10 +48,10 @@ class TestValidation(object):
             "gemini2.1/validation/01_Dataset_Invalid_XSD_No_Such_Element.xml",
         )
         assert len(errors) > 0
-        assert_in("(gmx.xsd)", errors)
-        assert_in(
-            "'{http://www.isotc211.org/2005/gmd}nosuchelement': This element is not expected.",
-            errors,
+        assert "(gmx.xsd)" in errors
+        assert (
+            "'{http://www.isotc211.org/2005/gmd}nosuchelement': This element is not expected." in
+            errors
         )
 
     def test_02_dataset_fail_constraints_schematron(self):
@@ -61,9 +60,9 @@ class TestValidation(object):
             "gemini2.1/validation/02_Dataset_Invalid_19139_Missing_Data_Format.xml",
         )
         assert len(errors) > 0
-        assert_in(
-            "MD_Distribution / MD_Format: count(distributionFormat + distributorFormat) > 0",
-            errors,
+        assert (
+            "MD_Distribution / MD_Format: count(distributionFormat + distributorFormat) > 0" in
+            errors
         )
 
     def test_03_dataset_fail_gemini_schematron(self):
@@ -72,7 +71,7 @@ class TestValidation(object):
             "gemini2.1/validation/03_Dataset_Invalid_GEMINI_Missing_Keyword.xml",
         )
         assert len(errors) > 0
-        assert_in("Descriptive keywords are mandatory", errors)
+        assert "Descriptive keywords are mandatory" in errors
 
     def assert_passes_all_gemini2_1_validation(self, xml_filepath):
         errs = self.get_validation_errors(
@@ -99,10 +98,10 @@ class TestValidation(object):
             "gemini2.1/validation/05_Series_Invalid_XSD_No_Such_Element.xml",
         )
         assert len(errors) > 0
-        assert_in("(gmx.xsd)", errors)
-        assert_in(
-            "'{http://www.isotc211.org/2005/gmd}nosuchelement': This element is not expected.",
-            errors,
+        assert "(gmx.xsd)" in errors
+        assert (
+            "'{http://www.isotc211.org/2005/gmd}nosuchelement': This element is not expected." in
+            errors
         )
 
     def test_06_series_fail_constraints_schematron(self):
@@ -111,9 +110,9 @@ class TestValidation(object):
             "gemini2.1/validation/06_Series_Invalid_19139_Missing_Data_Format.xml",
         )
         assert len(errors) > 0
-        assert_in(
-            "MD_Distribution / MD_Format: count(distributionFormat + distributorFormat) > 0",
-            errors,
+        assert (
+            "MD_Distribution / MD_Format: count(distributionFormat + distributorFormat) > 0" in
+            errors
         )
 
     def test_07_series_fail_gemini_schematron(self):
@@ -122,7 +121,7 @@ class TestValidation(object):
             "gemini2.1/validation/07_Series_Invalid_GEMINI_Missing_Keyword.xml",
         )
         assert len(errors) > 0
-        assert_in("Descriptive keywords are mandatory", errors)
+        assert "Descriptive keywords are mandatory" in errors
 
     def test_08_series_valid(self):
         self.assert_passes_all_gemini2_1_validation(
@@ -135,10 +134,10 @@ class TestValidation(object):
             "gemini2.1/validation/09_Service_Invalid_No_Such_Element.xml",
         )
         assert len(errors) > 0
-        assert_in("(gmx.xsd & srv.xsd)", errors)
-        assert_in(
-            "'{http://www.isotc211.org/2005/gmd}nosuchelement': This element is not expected.",
-            errors,
+        assert "(gmx.xsd & srv.xsd)" in errors
+        assert (
+            "'{http://www.isotc211.org/2005/gmd}nosuchelement': This element is not expected." in
+            errors
         )
 
     def test_10_service_fail_constraints_schematron(self):
@@ -147,9 +146,9 @@ class TestValidation(object):
             "gemini2.1/validation/10_Service_Invalid_19139_Level_Description.xml",
         )
         assert len(errors) > 0
-        assert_in(
-            "DQ_Scope: 'levelDescription' is mandatory if 'level' notEqual 'dataset' or 'series'.",
-            errors,
+        assert (
+            "DQ_Scope: 'levelDescription' is mandatory if 'level' notEqual 'dataset' or 'series'." in
+            errors
         )
 
     def test_11_service_fail_gemini_schematron(self):
@@ -158,9 +157,9 @@ class TestValidation(object):
             "gemini2.1/validation/11_Service_Invalid_GEMINI_Service_Type.xml",
         )
         assert len(errors) > 0
-        assert_in(
-            "Service type shall be one of 'discovery', 'view', 'download', 'transformation', 'invoke' or 'other' following INSPIRE generic names.",
-            errors,
+        assert (
+            "Service type shall be one of 'discovery', 'view', 'download', 'transformation', 'invoke' or 'other' following INSPIRE generic names." in
+            errors
         )
 
     def test_12_service_valid(self):
@@ -175,10 +174,10 @@ class TestValidation(object):
             "gemini2.1/validation/13_Dataset_Invalid_Element_srv.xml",
         )
         assert len(errors) > 0
-        assert_in("(gmx.xsd)", errors)
-        assert_in(
-            "Element '{http://www.isotc211.org/2005/srv}SV_ServiceIdentification': This element is not expected.",
-            errors,
+        assert "(gmx.xsd)" in errors
+        assert (
+            "Element '{http://www.isotc211.org/2005/srv}SV_ServiceIdentification': This element is not expected." in
+            errors
         )
 
     def test_schematron_error_extraction(self):
@@ -198,9 +197,9 @@ class TestValidation(object):
         )
         if isinstance(details, tuple):
             details = details[1]
-        assert_in("srv:serviceType/*[1] = 'discovery'", details)
-        assert_in("/*[local-name()='MD_Metadata'", details)
-        assert_in("Service type shall be one of 'discovery'", details)
+        assert "srv:serviceType/*[1] = 'discovery'" in details
+        assert "/*[local-name()='MD_Metadata'" in details
+        assert "Service type shall be one of 'discovery'" in details
 
     def test_error_line_numbers(self):
         file_path = self._get_file_path("iso19139/dataset-invalid.xml")

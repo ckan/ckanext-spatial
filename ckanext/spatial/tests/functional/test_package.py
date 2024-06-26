@@ -6,33 +6,47 @@ from ckanext.spatial.tests.base import SpatialTestBase
 import ckan.tests.helpers as helpers
 
 
-@pytest.mark.usefixtures("with_plugins", "with_request_context", "clean_db", "clean_index", "harvest_setup")
+@pytest.fixture
+def sysadmin_env():
+    try:
+        from ckan.tests.factories import SysadminWithToken
+        user = SysadminWithToken()
+        return {'Authorization': user['token']}
+    except ImportError:
+        # ckan <= 2.9
+        from ckan.tests.factories import Sysadmin
+        user = Sysadmin()
+        return {"REMOTE_USER": user["name"].encode("ascii")}
+
+
+
+def _post_data(app, url, data, env):
+
+    if tk.check_ckan_version(min_version="2.11.0a0"):
+        res = app.post(url, headers=env, data=data, follow_redirects=False)
+    else:
+        res = app.post(
+            url, environ_overrides=env, data=data, follow_redirects=False
+        )
+    return res
+
+
+@pytest.mark.usefixtures("with_plugins", "clean_db", "clean_index")
+@pytest.mark.ckan_config("ckan.plugins", "spatial_metadata spatial_query")
 class TestSpatialExtra(SpatialTestBase):
-    def test_spatial_extra_base(self, app):
+    def test_spatial_extra_base(self, app, sysadmin_env):
 
-        user = factories.User()
-        env = {"REMOTE_USER": user["name"].encode("ascii")}
-        dataset = factories.Dataset(user=user)
+        dataset = factories.Dataset()
 
-        if tk.check_ckan_version(min_version="2.9"):
-            offset = tk.url_for("dataset.edit", id=dataset["id"])
-        else:
-            offset = tk.url_for(controller="package", action="edit", id=dataset["id"])
+        url = tk.url_for("dataset.edit", id=dataset["id"])
 
-        if tk.check_ckan_version(min_version="2.9"):
-            data = {
-                "name": dataset["name"],
-                "extras__0__key": u"spatial",
-                "extras__0__value": self.geojson_examples["point"],
-            }
-            res = app.post(offset, environ_overrides=env, data=data)
-        else:
-            form = res.forms[1]
-            form["extras__0__key"] = u"spatial"
-            form["extras__0__value"] = self.geojson_examples["point"]
+        data = {
+            "name": dataset["name"],
+            "extras__0__key": "spatial",
+            "extras__0__value": self.geojson_examples["point"],
+        }
 
-            res = app.get(offset, extra_environ=env)
-            res = helpers.submit_and_follow(app, form, env, "save")
+        res = _post_data(app, url, data, sysadmin_env)
 
         assert "Error" not in res, res
 
@@ -41,59 +55,37 @@ class TestSpatialExtra(SpatialTestBase):
         assert dataset_dict["extras"][0]["key"] == "spatial"
         assert dataset_dict["extras"][0]["value"] == self.geojson_examples["point"]
 
-    def test_spatial_extra_bad_json(self, app):
+    def test_spatial_extra_bad_json(self, app, sysadmin_env):
 
-        user = factories.User()
-        env = {"REMOTE_USER": user["name"].encode("ascii")}
-        dataset = factories.Dataset(user=user)
+        dataset = factories.Dataset()
 
-        if tk.check_ckan_version(min_version="2.9"):
-            offset = tk.url_for("dataset.edit", id=dataset["id"])
-        else:
-            offset = tk.url_for(controller="package", action="edit", id=dataset["id"])
-        res = app.get(offset, extra_environ=env)
+        url = tk.url_for("dataset.edit", id=dataset["id"])
 
-        if tk.check_ckan_version(min_version="2.9"):
-            data = {
-                "name": dataset["name"],
-                "extras__0__key": u"spatial",
-                "extras__0__value": u'{"Type":Bad Json]',
-            }
-            res = app.post(offset, environ_overrides=env, data=data)
-        else:
-            form = res.forms[1]
-            form["extras__0__key"] = u"spatial"
-            form["extras__0__value"] = u'{"Type":Bad Json]'
-            res = helpers.webtest_submit(form, extra_environ=env, name="save")
+        data = {
+            "name": dataset["name"],
+            "extras__0__key": u"spatial",
+            "extras__0__value": u'{"Type":Bad Json]',
+        }
+
+        res = _post_data(app, url, data, sysadmin_env)
 
         assert "Error" in res, res
         assert "Spatial" in res
         assert "Error decoding JSON object" in res
 
-    def test_spatial_extra_bad_geojson(self, app):
+    def test_spatial_extra_bad_geojson(self, app, sysadmin_env):
 
-        user = factories.User()
-        env = {"REMOTE_USER": user["name"].encode("ascii")}
-        dataset = factories.Dataset(user=user)
+        dataset = factories.Dataset()
 
-        if tk.check_ckan_version(min_version="2.9"):
-            offset = tk.url_for("dataset.edit", id=dataset["id"])
-        else:
-            offset = tk.url_for(controller="package", action="edit", id=dataset["id"])
-        res = app.get(offset, extra_environ=env)
+        url = tk.url_for("dataset.edit", id=dataset["id"])
 
-        if tk.check_ckan_version(min_version="2.9"):
-            data = {
-                "name": dataset["name"],
-                "extras__0__key": u"spatial",
-                "extras__0__value": u'{"Type":"Bad_GeoJSON","a":2}',
-            }
-            res = app.post(offset, environ_overrides=env, data=data)
-        else:
-            form = res.forms[1]
-            form["extras__0__key"] = u"spatial"
-            form["extras__0__value"] = u'{"Type":"Bad_GeoJSON","a":2}'
-            res = helpers.webtest_submit(form, extra_environ=env, name="save")
+        data = {
+            "name": dataset["name"],
+            "extras__0__key": u"spatial",
+            "extras__0__value": u'{"Type":"Bad_GeoJSON","a":2}',
+        }
+
+        res = _post_data(app, url, data, sysadmin_env)
 
         assert "Error" in res, res
         assert "Spatial" in res

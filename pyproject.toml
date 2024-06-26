@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ckanext-spatial"
+description = "Geo-related plugins for CKAN"
+keywords = [""]
+readme = "README.rst"
+authors = [
+    {name = "CKAN Tech Team", email = "ckan-dev@ckan.org"},
+]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.9",
+]
+dependencies = []
+license = {text = "AGPL"}
+requires-python = ">=3.9"
+
+dynamic = ["version"]
+
+[project.entry-points."ckan.plugins"]
+spatial_metadata = "ckanext.spatial.plugin:SpatialMetadata"
+spatial_query = "ckanext.spatial.plugin:SpatialQuery"
+spatial_harvest_metadata_api = "ckanext.spatial.plugin:HarvestMetadataApi"
+
+csw_harvester = "ckanext.spatial.harvesters:CSWHarvester"
+waf_harvester = "ckanext.spatial.harvesters:WAFHarvester"
+doc_harvester = "ckanext.spatial.harvesters:DocHarvester"
+
+# Legacy harvesters
+gemini_csw_harvester = "ckanext.spatial.harvesters.gemini:GeminiCswHarvester"
+gemini_doc_harvester = "ckanext.spatial.harvesters.gemini:GeminiDocHarvester"
+gemini_waf_harvester = "ckanext.spatial.harvesters.gemini:GeminiWafHarvester"
+
+
+[project.entry-points."ckan.test_plugins"]
+test_spatial_plugin = "ckanext.spatial.tests.test_plugin.plugin:TestSpatialPlugin"
+
+
+[project.urls]
+Homepage = "http://okfn.org"
+
+
+[tool.setuptools.dynamic]
+version = {attr = "ckanext.spatial.__version__"}
+
+

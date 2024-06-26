@@ -34,7 +34,7 @@ extents = {
 }
 
 
-@pytest.mark.usefixtures("clean_db", "clean_index", "harvest_setup", "with_plugins")
+@pytest.mark.usefixtures("clean_db", "clean_index", "with_plugins")
 @pytest.mark.ckan_config("ckanext.spatial.search_backend", "solr-bbox")
 class TestBBoxSearch(SpatialTestBase):
     def test_spatial_query(self):
@@ -373,7 +373,7 @@ class TestBBoxSearch(SpatialTestBase):
 
 
 
-@pytest.mark.usefixtures("clean_db", "clean_index", "harvest_setup", "with_plugins")
+@pytest.mark.usefixtures("clean_db", "clean_index", "with_plugins")
 @pytest.mark.ckan_config("ckanext.spatial.search_backend", "solr-spatial-field")
 class TestSpatialFieldSearch(SpatialTestBase):
     def test_spatial_query_point(self):
@@ -720,7 +720,7 @@ class TestSpatialFieldSearch(SpatialTestBase):
         assert result["count"] == 2
 
 
-@pytest.mark.usefixtures("clean_db", "clean_index", "harvest_setup", "with_plugins")
+@pytest.mark.usefixtures("clean_db", "clean_index", "with_plugins")
 @pytest.mark.ckan_config(
     "ckan.plugins", "test_spatial_plugin spatial_metadata spatial_query")
 @pytest.mark.ckan_config("ckanext.spatial.search_backend", "solr-spatial-field")

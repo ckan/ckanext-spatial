@@ -6,8 +6,8 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.8'
       - name: Install requirements
@@ -20,6 +20,9 @@ jobs:
     strategy:
       matrix:
         include:
+          - ckan-version: "master"
+            solr-image: "2.10-solr9-spatial"
+            harvester-version: 'master'
           - ckan-version: "2.10"
             solr-image: "2.10-solr9-spatial"
             harvester-version: 'master'
@@ -31,7 +34,7 @@ jobs:
     name: CKAN ${{ matrix.ckan-version }}, Solr ${{ matrix.solr-image }}
     runs-on: ubuntu-latest
     container:
-      image: openknowledge/ckan-dev:${{ matrix.ckan-version }}
+      image: ckan/ckan-dev:${{ matrix.ckan-version }}
     services:
       solr:
         image: ckan/ckan-solr:${{ matrix.solr-image }}
@@ -53,7 +56,7 @@ jobs:
       PGPASSWORD: postgres
     
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
   
     - name: Install dependencies (common)
       run: |
@@ -68,6 +71,14 @@ jobs:
           libxml2-dev \
           libxslt-dev
 
+    - name: Install dependencies (2.9)
+      if: ${{ matrix.ckan-version == '2.9' }}
+      run: |
+        apk add --no-cache \
+          --force-broken-world \
+          proj-util=9.4.0-r0 \
+          proj-dev=9.4.0-r0
+
     - name: Enable pip cache
       run: |
         echo "PIP version: $(pip --version)"
@@ -75,7 +86,7 @@ jobs:
         pip install -U pip --cache-dir ~/.cache/pip
         chown -R $(whoami) ~/.cache/pip
 
-    - uses: actions/cache@v3
+    - uses: actions/cache@v4
       id: cache
       with:
         path: |
