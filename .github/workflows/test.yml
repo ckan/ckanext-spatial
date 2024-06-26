@@ -71,6 +71,13 @@ jobs:
           libxml2-dev \
           libxslt-dev
 
+    - name: Install dependencies (2.9)
+      if: ${{ matrix.ckan-version == '2.9' }}
+      run: |
+        apk add --no-cache \
+          proj-util=9.4.0-r0 \
+          proj-dev=9.4.0-r0
+
     - name: Enable pip cache
       run: |
         echo "PIP version: $(pip --version)"
