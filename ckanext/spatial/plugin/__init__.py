@@ -157,7 +157,7 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
         qp = None
         if search_backend == "solr-bbox":
             qp = "frange"
-        elif search_backend == "solr-field":
+        elif search_backend == "solr-spatial-field":
             qp = "field"
         if qp:
             if not config.get("ckan.search.solr_allowed_query_parsers"):
