@@ -64,10 +64,10 @@ jobs:
     - name: Install dependencies (common)
       run: |
         apt-get install \
-          python-dev \
+          python3-dev \
           libxml2-dev \
           libxslt1-dev \
-          libgeos-c1
+          libgeos-c1v5
 
     - name: Enable pip cache
       run: |
