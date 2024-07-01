@@ -86,10 +86,17 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-spatial-ckan-${{ matrix.ckan-version }}-${{ hashFiles('requirements.txt') }}
 
+    - name: Patch to test pyproj
+      if: ${{ matrix.ckan-version == '2.9' }}
+      run: |
+        pip install cython==0.29.36
+        pip install --no-use-pep517 pyproj==2.6.1
+
     - name: Install dependencies from requirements.txt
       if: steps.cache.outputs.cache-hit != 'true'
       run: |
         pip install -r requirements.txt
+        pip install pytest-ckan
 
     - name: Install harvester
       if: steps.cache.outputs.cache-hit != 'true'
