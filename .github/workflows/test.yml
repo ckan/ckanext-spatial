@@ -20,8 +20,8 @@ jobs:
     strategy:
       matrix:
         include:
-          - ckan-version: "master"
-            ckan-image: "ckan/ckan-dev:master-py3.10"
+          - ckan-version: "2.11"
+            ckan-image: "ckan/ckan-dev:2.11-py3.10"
             solr-image: "2.10-solr9-spatial"
             harvester-version: 'master'
           - ckan-version: "2.10"
@@ -97,9 +97,4 @@ jobs:
         sed -i -e 's/use = config:.*/use = config:\/srv\/app\/src\/ckan\/test-core.ini/' test.ini
 
     - name: Run tests
-      run: pytest --ckan-ini=test.ini --cov=ckanext.spatial --cov-report=xml --cov-append --disable-warnings ckanext/spatial/tests
-
-    - name: Upload coverage report to codecov
-      uses: codecov/codecov-action@v3
-      with:
-        file: ./coverage.xml
+      run: pytest --ckan-ini=test.ini --cov=ckanext.spatial --cov-report term-missing --cov-append --disable-warnings ckanext/spatial/tests
