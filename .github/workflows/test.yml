@@ -60,7 +60,7 @@ jobs:
     
     steps:
     - uses: actions/checkout@v4
-  
+
     - name: Install dependencies (common)
       run: |
         DEBIAN_FRONTEND=noninteractive apt-get --assume-yes --quiet install \
@@ -69,37 +69,12 @@ jobs:
           libxslt1-dev \
           libgeos-c1v5
 
-    - name: Enable pip cache
-      run: |
-        echo "PIP version: $(pip --version)"
-        mkdir -p ~/.cache/pip
-        pip install -U pip --cache-dir ~/.cache/pip
-        chown -R $(whoami) ~/.cache/pip
-
-    - uses: actions/cache@v4
-      id: cache
-      with:
-        path: |
-          ~/.cache/pip
-          /usr/lib/python*/site-packages
-        key: ${{ runner.os }}-spatial-ckan-${{ matrix.ckan-version }}-${{ hashFiles('requirements.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-spatial-ckan-${{ matrix.ckan-version }}-${{ hashFiles('requirements.txt') }}
-
-    - name: Patch to test pyproj
-      if: ${{ matrix.ckan-version == '2.9' }}
-      run: |
-        pip install cython==0.29.36
-        pip install --no-use-pep517 pyproj==2.6.1
-
     - name: Install dependencies from requirements.txt
-      if: steps.cache.outputs.cache-hit != 'true'
       run: |
         pip install -r requirements.txt
         pip install pytest-ckan
 
     - name: Install harvester
-      if: steps.cache.outputs.cache-hit != 'true'
       run: |
         echo "Installing harvester"
         git clone --depth 1 --branch ${{ matrix.harvester-version }} https://github.com/ckan/ckanext-harvest
@@ -114,7 +89,6 @@ jobs:
         pip install -e .
 
     - name: Install requirements
-      if: steps.cache.outputs.cache-hit != 'true'
       run: pip install -e .
 
     - name: Replace default path to CKAN
