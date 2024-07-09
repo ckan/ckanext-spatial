@@ -152,7 +152,17 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
 
     def update_config(self, config):
 
-        self._get_search_backend()
+        search_backend = self._get_search_backend()
+
+        qp = None
+        if search_backend == "solr-bbox":
+            qp = "frange"
+        elif search_backend == "solr-spatial-field":
+            qp = "field"
+        if qp:
+            if not config.get("ckan.search.solr_allowed_query_parsers"):
+                config["ckan.search.solr_allowed_query_parsers"] = []
+            config["ckan.search.solr_allowed_query_parsers"].append(qp)
 
     # IPackageController
 
