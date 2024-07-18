@@ -7,6 +7,9 @@ cython==0.29.36; python_version < '3.9'
 pyproj==2.6.1; python_version < '3.9'
 pyproj==3.6.1; python_version >= '3.9'
 
-Shapely==2.0.1
+# Compatibility with NumPy 2.0: https://github.com/shapely/shapely/issues/1972
+numpy>=1.26,<2
+Shapely==2.0.4
+
 OWSLib==0.28.1
 geojson==3.0.1
