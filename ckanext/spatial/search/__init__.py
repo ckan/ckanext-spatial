@@ -5,9 +5,10 @@ import shapely.geometry
 
 try:
     from shapely.errors import GeometryTypeError
+    GeometryError = (GeometryTypeError, TypeError)
 except ImportError:
     # Previous version of shapely uses ValueError and TypeError
-    GeometryTypeError = (ValueError, TypeError)
+    GeometryError = (ValueError, TypeError)
 
 from ckantoolkit import config, asbool
 from ckanext.spatial.lib import normalize_bbox, fit_bbox, fit_linear_ring
@@ -35,7 +36,7 @@ class SpatialSearchBackend:
     def shape_from_geometry(self, geometry):
         try:
             shape = shapely.geometry.shape(geometry)
-        except GeometryTypeError as e:
+        except GeometryError as e:
             log.error("{}, not indexing :: {}".format(e, json.dumps(geometry)[:100]))
             return None
 

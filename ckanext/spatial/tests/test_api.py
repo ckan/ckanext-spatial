@@ -9,10 +9,13 @@ from ckanext.spatial.tests.base import SpatialTestBase
     "with_plugins",
     "clean_db",
     "clean_index",
-    "harvest_setup",
 )
+@pytest.mark.ckan_config("ckan.plugins", "harvest spatial_metadata spatial_query spatial_harvest_metadata_api")
 class TestHarvestedMetadataAPI(SpatialTestBase):
-    def test_api(self, app):
+    def test_api(self, app, migrate_db_for):
+
+        migrate_db_for("harvest")
+
         try:
             from ckanext.harvest.model import (
                 HarvestObject,
