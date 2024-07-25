@@ -261,8 +261,7 @@ iis     = parse.SkipTo("<br>").suppress() \
             parse.Word(parse.alphas)
         , adjacent=False, joinString=' ').setResultsName('date')
         ) \
-        + parse.Word(parse.nums).suppress() \
-        + parse.Literal('<A HREF=').suppress() \
+        + parse.SkipTo('<A HREF=', include=True).suppress() \
         + parse.quotedString.setParseAction(parse.removeQuotes).setResultsName('url')
 
 other = parse.SkipTo(parse.CaselessLiteral("<a href="), include=True).suppress() \
