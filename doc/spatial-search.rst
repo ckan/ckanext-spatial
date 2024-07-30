@@ -67,7 +67,7 @@ processing on the geometries before indexing.
 
 In this case you need to implement the ``before_dataset_index()`` method of the `IPackageController <https://docs.ckan.org/en/latest/extensions/plugin-interfaces.html#ckan.plugins.interfaces.IPackageController.before_dataset_index>`_ interface::
 
-    def before_dataset_search(self, dataset_dict):
+    def before_dataset_index(self, dataset_dict):
 
         # When using the default `solr-bbox` backend (based on bounding boxes), you need to
         # include the following fields in the returned dataset_dict:
@@ -109,7 +109,7 @@ Choosing a backend for the spatial search
 
 Ckanext-spatial uses Solr to power the spatial search. The current implementation is tested on Solr 8, which is the supported version, although it might work on previous Solr versions.
 
-The are official `Docker images for Solr <https://github.com/ckan/ckan-solr>`_ that have all the configuration needed to perform spatial searches. This is the easiest way to get started but if you need to customize Solr yourself see below for the modifications needed.
+.. note:: The are official `Docker images for Solr <https://github.com/ckan/ckan-solr>`_ that have all the configuration needed to perform spatial searches (look for the ones with a ``-spatial`` suffix). This is the easiest way to get started but if you need to customize Solr yourself see below for the modifications needed.
 
 There are different backends supported for the spatial search, it is important
 to understand their differences and the necessary setup required when choosing
@@ -172,8 +172,7 @@ details about the available options (again, you don't need to modify Solr if you
 
     "{{!field f=spatial_geom}}Intersects(ENVELOPE({minx}, {maxx}, {maxy}, {miny}))"
 
-.. note:: The old ``postgis`` search backend is deprecated and will be removed in future versions of the extension.
-    You should migrate to one of the other backends instead but if you need to keep using it for a while see :ref:`legacy_postgis`.
+.. note:: The old ``postgis`` search backend is no longer supported. You should migrate to one of the other backends instead.
 
 
 

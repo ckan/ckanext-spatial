@@ -13,9 +13,6 @@ extent
 {% set map_config = h.get_common_map_config() %}
 <div class="dataset-map" data-module="dataset-map" data-extent="{{ extent }}" data-module-site_url="{{ h.dump_json(h.url_for('/', locale='default', qualified=true)) }}" data-module-map_config="{{ h.dump_json(map_config) }}">
   <div id="dataset-map-container"></div>
-  <div id="dataset-map-attribution">
-      {% snippet "spatial/snippets/map_attribution.html", map_config=map_config %}
-  </div>
 </div>
 
 {% set type = 'asset' if h.ckan_version().split('.')[1] | int >= 9 else 'resource' %}

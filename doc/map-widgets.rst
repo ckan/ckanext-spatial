@@ -6,48 +6,49 @@ widgets (at least the ones based on `Leaflet`_) can use a common function to
 create the map. The base layer that the map will use can be configured via
 configuration options.
 
+.. image:: _static/base-map-stamen.png
+
 Configuring the base layer
 --------------------------
 
+The map widgets use the `Leaflet-providers`_ library to make easy to choose the
+base tile layer that the map widgets will use. You can use any of the supported
+providers, which are listed in the `preview page`_.
+
+.. note:: As of October 2023, most if not all of the tile providers require at
+   least some form of registration and / or domain registering. They also have
+   terms of use and will most likely require proper attribution (which should be
+   handled automatically for you when choosing a provider).
+
+If you haven't configured a map provider you will see the following notice in the
+map widgets:
+
+.. image:: _static/no-map-provider.png
+
 The main configuration option to manage the base layer used is
-``ckanext.spatial.common_map.type``. Depending on the map type additional
-options may be required. The spatial extension provides default settings for
-popular tiles providers based on `OpenStreetMap`_, but you can use any tileset
-that follows the `XYZ convention`_.
+``ckanext.spatial.common_map.type``. The value of this setting should be one of the
+provider names supported by Leaflet-providers, e.g. ``Stadia.StamenTerrain``, ``Stadia``,
+``MapBox``, ``Herev3.terrainDay``, ``Esri.WorldImagery``, ``USGS.USImagery`` etc. Note
+that these values are **case-sensitive**.
+
+Any additional configuration options required by Leaflet-providers should be set prefixed
+with ``ckanext.spatial.common_map.``, for instance to configure the Stamen Terrain map that
+was used in previous versions of ckanext-spatial::
+
+    # Stadia / Stamen Terrain
+    ckanext.spatial.common_map.type = Stadia.StamenTerrain
+    ckanext.spatial.common_map.apikey = <your_api_key>
+
+To use MapBox tiles::
+    
+    # MapBox
+    ckanext.spatial.common_map.type = MapBox
+    ckanext.spatial.common_map.mapbox.id = <your_map_id>
+    ckanext.spatial.common_map.mapbox.accessToken = <your_access_token>
 
 
-.. note:: All tile providers have Terms of Use and will most likely require
-    proper attribution. Make sure to read and understand the terms and add
-    the relevant attribution before using them on your CKAN instance.
-
-Stamen Terrain
-++++++++++++++
-
-The Terrain tiles are provided by `Stamen`_, and are based on data by
-OpenStreetMap. This is the default base layer used by the map widgets, and you
-don't need to add any configuration option to use them. If you want to define
-it explicitly though, use the following setting::
-
-    ckanext.spatial.common_map.type = stamen
-
-.. image:: _static/base-map-stamen.png
-
-MapBox
-++++++
-
-`MapBox`_ allows to define your custom maps based on OpenStreetMap data, using
-their online editor or the more advanced `MapBox Studio`_ desktop tool. You will
-need to provide a map id with the ``[account].[handle]`` form and and access token
-(Check `here`_ for more details)::
-
-    ckanext.spatial.common_map.type = mapbox
-    ckanext.spatial.common_map.mapbox.map_id = youraccount.map-xxxxxxxx
-    ckanext.spatial.common_map.mapbox.access_token = pk.ey...
-
-.. image:: _static/base-map-mapbox.png
-
-Custom
-++++++
+Custom layers
++++++++++++++
 
 You can use any tileset that follows the `XYZ convention`_ using the ``custom``
 type::
@@ -55,28 +56,29 @@ type::
     ckanext.spatial.common_map.type = custom
 
 You will need to define the tileset URL using
-``ckanext.spatial.common_map.custom.url``. This follows the `Leaflet URL
+``ckanext.spatial.common_map.custom_url``. This follows the `Leaflet URL
 template`_ format (ie {s} for subdomains if any, {z} for zoom and {x} {y} for
 tile coordinates). Additionally you can use
 ``ckanext.spatial.common_map.subdomains`` and
-``ckanext.spatial.common_map.attribution`` if needed (these two will also work
-for Stamen and MapBox layers if you want to tweak the defaults.
+``ckanext.spatial.common_map.attribution`` if needed (this one will also work
+for Leaflet-provider layers if you want to tweak the default attribution).
 
-This is a complete example that uses `Stamen`_'s famous `watercolor maps`_::
+For example::
 
-    ckanext.spatial.common_map.type = custom
-    ckanext.spatial.common_map.custom.url = http://tile.stamen.com/watercolor/{z}/{x}/{y}.jpg
-    ckanext.spatial.common_map.attribution = Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.
+  ckanext.spatial.common_map.type = custom
+  ckanext.spatial.common_map.custom_url = https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}
+  ckanext.spatial.common_map.attribution = Tiles courtesy of the <a href="https://usgs.gov/">U.S. Geological Survey</a>
 
-This is a example using TMS::
+Old Stamen tiles
+++++++++++++++++
 
-    ckanext.spatial.common_map.type = custom
-    ckanext.spatial.common_map.custom.url = /url/to/your/tms/{z}/{x}/{y}.png
-    ckanext.spatial.common_map.tms = true
+Previous versions of ckanext-spatial defaulted to using the `Stamen`_ terrain tiles as they
+not require registration. These were deprecated and stopped working on October 2023. If you see
+this error displayed in your map widgets, you need to configure an alternative provider using the
+methods described in the sections above:
 
-.. note:: For custom base layers you need to manually modify the attribution
-    link on the templates for widgets on the sidebar, like the spatial query
-    and dataset map widgets.
+.. image:: _static/stamen-map-provider-error.png
+
 
 
 For developers
@@ -100,9 +102,6 @@ attribute (see for instance the ``dataset_map_base.html`` and
   {% set map_config = h.get_common_map_config() %}
   <div class="dataset-map" data-module="spatial-query" ... data-module-map_config="{{ h.dump_json(map_config) }}">
     <div id="dataset-map-container"></div>
-  </div>
-  <div id="dataset-map-attribution">
-    {% snippet "spatial/snippets/map_attribution.html", map_config=map_config %}
   </div>
 
 Once at the Javascript module level, all Leaflet based map widgets should use
@@ -132,4 +131,5 @@ And this for a primary content map::
 .. _here: http://www.mapbox.com/developers/api-overview/
 .. _`Leaflet URL template`: http://leafletjs.com/reference.html#url-template
 .. _Stamen: http://maps.stamen.com/
-.. _`watercolor maps`: http://maps.stamen.com/watercolor/
+.. _`Leaflet-providers`: https://github.com/leaflet-extras/leaflet-providers
+.. _`preview page`: http://leaflet-extras.github.io/leaflet-providers/preview/index.html

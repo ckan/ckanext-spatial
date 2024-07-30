@@ -1,0 +1,9 @@
+.leaflet-control-no-provider {
+  background-color: white;
+  margin-right: 10px;
+  padding: 10px;
+  border: 1px solid #b1b1b1;
+}
+.leaflet-control-attribution {
+  font-size: 11px;
+}

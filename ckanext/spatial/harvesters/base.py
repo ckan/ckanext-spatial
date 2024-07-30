@@ -1,6 +1,5 @@
-import six
-from six.moves.urllib.parse import urlparse
-from six.moves.urllib.request import urlopen
+from urllib.parse import urlparse
+from urllib.request import urlopen
 
 import re
 import cgitb
@@ -23,7 +22,7 @@ from ckan import plugins as p
 from ckan import model
 from ckan.lib.helpers import json
 from ckan import logic
-from ckan.lib.navl.validators import not_empty
+from ckan.lib.navl.validators import not_empty, unicode_safe
 from ckan.lib.search.index import PackageSearchIndex
 from ckanext.harvest.harvesters.base import munge_tag
 
@@ -324,7 +323,7 @@ class SpatialHarvester(HarvesterBase):
         if package is None or package.title != iso_values['title']:
             name = self._gen_new_name(iso_values['title'])
             if not name:
-                name = self._gen_new_name(six.text_type(iso_values['guid']))
+                name = self._gen_new_name(str(iso_values['guid']))
             if not name:
                 raise Exception('Could not generate a unique name from the title or the GUID. Please choose a more unique title.')
             package_dict['name'] = name
@@ -438,7 +437,7 @@ class SpatialHarvester(HarvesterBase):
                 ymin = float(bbox['south'])
                 ymax = float(bbox['north'])
             except ValueError as e:
-                self._save_object_error('Error parsing bounding box value: {0}'.format(six.text_type(e)),
+                self._save_object_error('Error parsing bounding box value: {0}'.format(str(e)),
                                     harvest_object, 'Import')
             else:
                 # Construct a GeoJSON extent so ckanext-spatial can register the extent geometry
@@ -496,7 +495,7 @@ class SpatialHarvester(HarvesterBase):
               log.debug('Processing extra %s', key)
               if not key in extras or override_extras:
                  # Look for replacement strings
-                 if isinstance(value,six.string_types):
+                 if isinstance(value,str):
                     value = value.format(harvest_source_id=harvest_object.job.source.id,
                              harvest_source_url=harvest_object.job.source.url.strip('/'),
                              harvest_source_title=harvest_object.job.source.title,
@@ -600,7 +599,7 @@ class SpatialHarvester(HarvesterBase):
             iso_parser = ISODocument(harvest_object.content)
             iso_values = iso_parser.read_values()
         except Exception as e:
-            self._save_object_error('Error parsing ISO document for object {0}: {1}'.format(harvest_object.id, six.text_type(e)),
+            self._save_object_error('Error parsing ISO document for object {0}: {1}'.format(harvest_object.id, str(e)),
                                     harvest_object, 'Import')
             return False
 
@@ -670,7 +669,7 @@ class SpatialHarvester(HarvesterBase):
 
         # The default package schema does not like Upper case tags
         tag_schema = logic.schema.default_tags_schema()
-        tag_schema['name'] = [not_empty, six.text_type]
+        tag_schema['name'] = [not_empty, unicode_safe]
 
         # Flag this object as the current one
         harvest_object.current = True
@@ -683,8 +682,8 @@ class SpatialHarvester(HarvesterBase):
 
             # We need to explicitly provide a package ID, otherwise ckanext-spatial
             # won't be be able to link the extent to the package.
-            package_dict['id'] = six.text_type(uuid.uuid4())
-            package_schema['id'] = [six.text_type]
+            package_dict['id'] = str(uuid.uuid4())
+            package_schema['id'] = [unicode_safe]
 
             # Save reference to the package on the object
             harvest_object.package_id = package_dict['id']
@@ -699,7 +698,7 @@ class SpatialHarvester(HarvesterBase):
                 package_id = p.toolkit.get_action('package_create')(context, package_dict)
                 log.info('Created new package %s with guid %s', package_id, harvest_object.guid)
             except p.toolkit.ValidationError as e:
-                self._save_object_error('Validation Error: %s' % six.text_type(e.error_summary), harvest_object, 'Import')
+                self._save_object_error('Validation Error: %s' % str(e.error_summary), harvest_object, 'Import')
                 return False
 
         elif status == 'change':
@@ -745,7 +744,7 @@ class SpatialHarvester(HarvesterBase):
                     package_id = p.toolkit.get_action('package_update')(context, package_dict)
                     log.info('Updated package %s with guid %s', package_id, harvest_object.guid)
                 except p.toolkit.ValidationError as e:
-                    self._save_object_error('Validation Error: %s' % six.text_type(e.error_summary), harvest_object, 'Import')
+                    self._save_object_error('Validation Error: %s' % str(e.error_summary), harvest_object, 'Import')
                     return False
 
         model.Session.commit()
@@ -762,7 +761,7 @@ class SpatialHarvester(HarvesterBase):
             s = wms.WebMapService(url)
             return isinstance(s.contents, dict) and s.contents != {}
         except Exception as e:
-            log.error('WMS check for %s failed with exception: %s' % (url, six.text_type(e)))
+            log.error('WMS check for %s failed with exception: %s' % (url, str(e)))
         return False
 
     def _get_object_extra(self, harvest_object, key):
@@ -905,7 +904,7 @@ class SpatialHarvester(HarvesterBase):
         try:
             xml = etree.fromstring(document_string)
         except etree.XMLSyntaxError as e:
-            self._save_object_error('Could not parse XML file: {0}'.format(six.text_type(e)), harvest_object, 'Import')
+            self._save_object_error('Could not parse XML file: {0}'.format(str(e)), harvest_object, 'Import')
             return False, None, []
 
         valid, profile, errors = validator.is_valid(xml)

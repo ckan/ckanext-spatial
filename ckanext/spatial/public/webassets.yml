@@ -6,6 +6,7 @@ dataset_map_js:
       - base/main
   contents:
     - js/vendor/leaflet/1.9.3/leaflet.js
+    - js/vendor/leaflet-providers.js
     - js/common_map.js
     - js/dataset_map.js
 
@@ -14,6 +15,7 @@ dataset_map_css:
   output: ckanext-spatial/%(version)s_dataset_map.css
   contents:
     - js/vendor/leaflet/1.9.3/leaflet.css
+    - css/common_map.css
     - css/dataset_map.css
 
 spatial_query_js:
@@ -25,6 +27,7 @@ spatial_query_js:
   contents:
     - js/vendor/leaflet/1.9.3/leaflet.js
     - js/vendor/leaflet.draw/0.4.14/leaflet.draw.js
+    - js/vendor/leaflet-providers.js
     - js/common_map.js
     - js/spatial_query.js
 
@@ -34,4 +37,5 @@ spatial_query_css:
   contents:
     - js/vendor/leaflet/1.9.3/leaflet.css
     - js/vendor/leaflet.draw/0.4.14/leaflet.draw.css
+    - css/common_map.css
     - css/spatial_query.css
