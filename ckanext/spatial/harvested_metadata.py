@@ -1,5 +1,4 @@
 from lxml import etree
-import six
 
 import logging
 log = logging.getLogger(__name__)
@@ -38,7 +37,7 @@ class MappedXmlDocument(MappedXmlObject):
     def get_xml_tree(self):
         if self.xml_tree is None:
             parser = etree.XMLParser(remove_blank_text=True)
-            xml_str = six.ensure_str(self.xml_str)
+            xml_str = str(self.xml_str)
             self.xml_tree = etree.fromstring(xml_str, parser=parser)
         return self.xml_tree
 
@@ -90,9 +89,9 @@ class MappedXmlElement(MappedXmlObject):
             for child in self.elements:
                 value[child.name] = child.read_value(element)
             return value
-        elif type(element) == etree._ElementStringResult:
+        elif hasattr(etree, "_ElementStringResult") and type(element) is etree._ElementStringResult:
             value = str(element)
-        elif type(element) == etree._ElementUnicodeResult:
+        elif type(element) is etree._ElementUnicodeResult:
             value = str(element)
         else:
             value = self.element_tostring(element)

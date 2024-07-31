@@ -1,6 +1,3 @@
-import six
-from six.moves.urllib.parse import urlparse, urlunparse, urlencode
-
 import re
 import uuid
 import hashlib
@@ -8,6 +5,7 @@ import dateutil
 import mimetypes
 import logging
 from string import Template
+from urllib.parse import urlparse, urlunparse, urlencode
 
 from ckan import plugins as p
 from ckan import model
@@ -126,7 +124,7 @@ class CSWFGDCHarvester(SpatialHarvester, SingletonPlugin):
 
         except Exception as e:
             log.error('Exception: %s' % text_traceback())
-            self._save_gather_error('Error gathering the identifiers from the CSW server [%s]' % six.text_type(e), harvest_job)
+            self._save_gather_error('Error gathering the identifiers from the CSW server [%s]' % str(e), harvest_job)
             return None
 
         new = guids_in_harvest - guids_in_db
@@ -254,7 +252,7 @@ class CSWFGDCHarvester(SpatialHarvester, SingletonPlugin):
             fgdc_parser = FGDCDocument(harvest_object.content)
             fgdc_values = fgdc_parser.read_values()
         except Exception as e:
-            self._save_object_error('Error parsing FGDC document for object {0}: {1}'.format(harvest_object.id, six.text_type(e)),
+            self._save_object_error('Error parsing FGDC document for object {0}: {1}'.format(harvest_object.id, str(e)),
                                     harvest_object, 'Import')
             return False
 
@@ -324,7 +322,7 @@ class CSWFGDCHarvester(SpatialHarvester, SingletonPlugin):
 
         # The default package schema does not like Upper case tags
         tag_schema = logic.schema.default_tags_schema()
-        tag_schema['name'] = [not_empty, six.text_type]
+        tag_schema['name'] = [not_empty, str]
 
         # Flag this object as the current one
         harvest_object.current = True
@@ -337,8 +335,8 @@ class CSWFGDCHarvester(SpatialHarvester, SingletonPlugin):
 
             # We need to explicitly provide a package ID, otherwise ckanext-spatial
             # won't be be able to link the extent to the package.
-            package_dict['id'] = six.text_type(uuid.uuid4())
-            package_schema['id'] = [six.text_type]
+            package_dict['id'] = str(uuid.uuid4())
+            package_schema['id'] = [str]
 
             # Save reference to the package on the object
             harvest_object.package_id = package_dict['id']
@@ -353,7 +351,7 @@ class CSWFGDCHarvester(SpatialHarvester, SingletonPlugin):
                 package_id = p.toolkit.get_action('package_create')(context, package_dict)
                 log.info('Created new package %s with guid %s', package_id, harvest_object.guid)
             except p.toolkit.ValidationError as e:
-                self._save_object_error('Validation Error: %s' % six.text_type(e.error_summary), harvest_object, 'Import')
+                self._save_object_error('Validation Error: %s' % str(e.error_summary), harvest_object, 'Import')
                 return False
 
         elif status == 'change':
@@ -399,7 +397,7 @@ class CSWFGDCHarvester(SpatialHarvester, SingletonPlugin):
                     package_id = p.toolkit.get_action('package_update')(context, package_dict)
                     log.info('Updated package %s with guid %s', package_id, harvest_object.guid)
                 except p.toolkit.ValidationError as e:
-                    self._save_object_error('Validation Error: %s' % six.text_type(e.error_summary), harvest_object, 'Import')
+                    self._save_object_error('Validation Error: %s' % str(e.error_summary), harvest_object, 'Import')
                     return False
 
         model.Session.commit()
@@ -499,7 +497,7 @@ class CSWFGDCHarvester(SpatialHarvester, SingletonPlugin):
         if package is None or package.title != fgdc_values['title']:
             name = self._gen_new_name(fgdc_values['title'])
             if not name:
-                name = self._gen_new_name(six.text_type(fgdc_values['guid']))
+                name = self._gen_new_name(str(fgdc_values['guid']))
             if not name:
                 raise Exception('Could not generate a unique name from the title or the GUID. Please choose a more unique title.')
             package_dict['name'] = name
@@ -541,7 +539,7 @@ class CSWFGDCHarvester(SpatialHarvester, SingletonPlugin):
                 ymin = float(bbox['south'])
                 ymax = float(bbox['north'])
             except ValueError as e:
-                self._save_object_error('Error parsing bounding box value: {0}'.format(six.text_type(e)),
+                self._save_object_error('Error parsing bounding box value: {0}'.format(str(e)),
                                     harvest_object, 'Import')
             else:
                 # Construct a GeoJSON extent so ckanext-spatial can register the extent geometry
@@ -602,7 +600,7 @@ class CSWFGDCHarvester(SpatialHarvester, SingletonPlugin):
                 log.debug('Processing extra %s', key)
                 if not key in extras or override_extras:
                     # Look for replacement strings
-                    if isinstance(value,six.string_types):
+                    if isinstance(value, str):
                         value = value.format(
                                 harvest_source_id=harvest_object.job.source.id,
                                 harvest_source_url=harvest_object.job.source.url.strip('/'),
