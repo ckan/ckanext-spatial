@@ -1,5 +1,6 @@
 from __future__ import print_function
 
+import os
 from urllib.parse import urljoin
 import logging
 import hashlib
@@ -261,8 +262,7 @@ iis     = parse.SkipTo("<br>").suppress() \
             parse.Word(parse.alphas)
         , adjacent=False, joinString=' ').setResultsName('date')
         ) \
-        + parse.Word(parse.nums).suppress() \
-        + parse.Literal('<A HREF=').suppress() \
+        + parse.SkipTo('<A HREF=', include=True).suppress() \
         + parse.quotedString.setParseAction(parse.removeQuotes).setResultsName('url')
 
 other = parse.SkipTo(parse.CaselessLiteral("<a href="), include=True).suppress() \
@@ -311,11 +311,13 @@ def _extract_waf(content, base_url, scraper, results = None, depth=0):
             continue
         if 'mailto:' in url:
             continue
-        if '..' not in url and url[0] != '/' and url[-1] == '/':
+        if '..' not in url and url[-1] == '/':
             new_depth = depth + 1
             if depth > 10:
                 log.info('Max WAF depth reached')
                 continue
+            # turn iis dir url '/some/full/path/' into apache/nginx style 'path/'
+            url = os.path.basename(url.rstrip('/')) + '/'
             new_url = urljoin(base_url, url)
             if not new_url.startswith(base_url):
                 continue
