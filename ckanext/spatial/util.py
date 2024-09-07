@@ -12,7 +12,6 @@ from lxml import etree
 from pprint import pprint
 
 from ckan import model
-from ckan.model.package_extra import PackageExtra
 
 try:
     from ckanext.spatial.lib.reports import validation_report
