@@ -16,6 +16,7 @@ import mimetypes
 
 from owslib import wms
 import requests
+import sqlalchemy as sa
 from lxml import etree
 
 from ckan import plugins as p
@@ -667,7 +668,9 @@ class SpatialHarvester(HarvesterBase):
             # Defer constraints and flush so the dataset can be indexed with
             # the harvest object id (on the after_show hook from the harvester
             # plugin)
-            model.Session.execute('SET CONSTRAINTS harvest_object_package_id_fkey DEFERRED')
+            model.Session.execute(
+                sa.text('SET CONSTRAINTS harvest_object_package_id_fkey DEFERRED')
+            )
             model.Session.flush()
 
             try:
