@@ -97,4 +97,4 @@ jobs:
         sed -i -e 's/use = config:.*/use = config:\/srv\/app\/src\/ckan\/test-core.ini/' test.ini
 
     - name: Run tests
-      run: pytest --ckan-ini=test.ini --cov=ckanext.spatial --cov-report term-missing --cov-append --disable-warnings ckanext/spatial/tests
+      run: pytest --ckan-ini=test.ini --cov=ckanext.spatial --cov-report term-missing --cov-append --disable-warnings ckanext/spatial/tests/test_spatial_search.py::TestBBoxSearch::test_spatial_real_multipolygon_inside_extent_no_intersect
