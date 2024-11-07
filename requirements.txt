@@ -7,6 +7,6 @@ cython==0.29.36; python_version < '3.9'
 pyproj==2.6.1; python_version < '3.9'
 pyproj==3.6.1; python_version >= '3.9'
 
-Shapely==2.0.4
-OWSLib==0.31.0
+Shapely==2.0.6
+OWSLib==0.32.0
 geojson==3.1.0
