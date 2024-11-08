@@ -1,0 +1,75 @@
+site_name: ckanext-spatial
+#site_url: https://docs.ckan.org/projects/ckanext-spatial
+site_url: http://localhost:8000
+
+site_description: >-
+  The documentation of ckanext-spatial, a CKAN extension that 
+  improves CKAN geospatial capabilities.
+
+
+repo_name: ckan/ckanext-spatial
+repo_url: https://github.com/ckan/ckanext-spatial
+
+docs_dir: doc
+
+theme:
+  name: material
+  palette:
+
+    # Palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: ckan
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/toggle-switch-off
+        name: Switch to light mode
+
+  logo: _assets/logo.png
+  favicon: _assets/ckan.ico
+  features:
+    - navigation.expand
+    - navigation.footer
+    - navigation.instant
+    - navigation.instant.progress
+    - search.suggest
+    - search.highlight
+    - toc.integrate
+    - content.code.copy
+
+plugins:
+  - search
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - admonition
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.snippets
+
+
+extra_css:
+  - _css/extra.css
+
+nav:
+  - Home: 'index.md'
+  - Installation and setup: 'install.md'
+  - Spatial search: 'spatial-search.md'
+  - Spatial harvesters: 'harvesters.md'
+  - Other features:
+    - CSW: 'csw.md'
+    - Previews of spatial formats: 'previews.md'
+    - Common base layer for map widgets: 'map-widgets.md'
+  - CHANGELOG: 'changelog.md'
