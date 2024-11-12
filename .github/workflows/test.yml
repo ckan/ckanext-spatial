@@ -72,7 +72,7 @@ jobs:
     - name: Install dependencies from requirements.txt
       run: |
         pip install -r requirements.txt
-        pip install pytest-ckan
+        pip install -r dev-requirements.txt
 
     - name: Install harvester
       run: |

@@ -312,6 +312,8 @@ def _extract_waf(content, base_url, scraper, results = None, depth=0):
         if 'mailto:' in url:
             continue
         if '..' not in url and url[-1] == '/':
+            if scraper == 'apache' and url[0] == '/':
+                continue
             new_depth = depth + 1
             if depth > 10:
                 log.info('Max WAF depth reached')
