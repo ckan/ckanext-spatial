@@ -133,7 +133,7 @@ this.ckan.module('spatial-query', function ($, _) {
               map.removeLayer(module.extentLayer);
             }
             module.extentLayer = extentLayer = e.layer;
-            $('#ext_bbox').val(extentLayer.getBounds().toBBoxString());
+            module.ext_bbox_input.val(extentLayer.getBounds().toBBoxString());
             map.addLayer(extentLayer);
             element.find('.btn-primary').removeClass('disabled').addClass('btn-primary');
           });
@@ -197,33 +197,31 @@ this.ckan.module('spatial-query', function ($, _) {
 
     // Is there an existing box from a previous search?
     _setPreviousBBBox: function(map, zoom=true) {
-      previous_bbox = this._getParameterByName('ext_bbox');
+      let module = this;
+      previous_bbox = module._getParameterByName('ext_bbox');
       if (previous_bbox) {
-        $('#ext_bbox').val(previous_bbox);
-        this.extentLayer = this._drawExtentFromCoords(previous_bbox.split(','))
-        map.addLayer(this.extentLayer);
+        module.ext_bbox_input.val(previous_bbox);
+        module.extentLayer = module._drawExtentFromCoords(previous_bbox.split(','))
+        map.addLayer(module.extentLayer);
         if (zoom) {
-          map.fitBounds(this.extentLayer.getBounds(), {"animate": false, "padding": [20, 20]});
+          map.fitBounds(module.extentLayer.getBounds(), {"animate": false, "padding": [20, 20]});
         }
       } else {
-        map.fitBounds(this.options.default_extent, {"animate": false});
+        map.fitBounds(module.options.default_extent, {"animate": false});
       }
-
     },
 
     _onReady: function() {
       let module = this;
       let map;
-      let form = $(".search-form");
+      let form = $('#dataset-search-form');
+      let bbox_input_id = 'ext_bbox';
 
-      var buttons;
-
-      // Add necessary fields to the search form if not already created
-      $(['ext_bbox']).each(function(index, item){
-        if ($("#" + item).length === 0) {
-          $('<input type="hidden" />').attr({'id': item, 'name': item}).appendTo(form);
-        }
-      });
+      // Add necessary field to the search form if not already created
+      if ($("#" + bbox_input_id).length === 0) {
+        $('<input type="hidden" />').attr({'id': bbox_input_id, 'name': bbox_input_id}).appendTo(form);
+      }
+      module.ext_bbox_input = $('#dataset-search-form #ext_bbox');
 
       // OK map time
       this.mainMap = map = this._createMap('dataset-map-container');

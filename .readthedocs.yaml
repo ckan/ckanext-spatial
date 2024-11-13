@@ -8,18 +8,14 @@ version: 2
 # Set the version of Python and other tools you might need
 build:
   os: ubuntu-22.04
-  apt_packages:
-      - libmagic-dev
   tools:
-    python: "3.10"
+    python: "3.12"
 
-sphinx:
-  configuration: doc/conf.py
+mkdocs:
+  configuration: mkdocs.yml
 
 formats: all
 
 python:
   install:
-    - method: pip
-      path: .
-    - requirements: doc-requirements.txt
+  - requirements: doc/requirements.txt
