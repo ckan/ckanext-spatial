@@ -29,7 +29,7 @@ jobs:
             solr-image: "2.10-solr9-spatial"
             harvester-version: 'master'
           - ckan-version: 2.9
-            ckan-image: "amercader/ckan-dev:2.9-py3.9"
+            ckan-image: "ckan/ckan-dev:2.9-py3.9"
             solr-image: 2.9-solr9-spatial
             harvester-version: 'master'
       fail-fast: false
@@ -38,6 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ${{ matrix.ckan-image }}
+      options: --user root
     services:
       solr:
         image: ckan/ckan-solr:${{ matrix.solr-image }}
