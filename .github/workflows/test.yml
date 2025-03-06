@@ -38,6 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ${{ matrix.ckan-image }}
+      options: --user root
     services:
       solr:
         image: ckan/ckan-solr:${{ matrix.solr-image }}
@@ -63,7 +64,8 @@ jobs:
 
     - name: Install dependencies (common)
       run: |
-        DEBIAN_FRONTEND=noninteractive apt-get --assume-yes --quiet install \
+        DEBIAN_FRONTEND=noninteractive apt-get update && \
+        apt-get --assume-yes --quiet install \
           python3-dev \
           libxml2-dev \
           libxslt1-dev \
@@ -72,7 +74,7 @@ jobs:
     - name: Install dependencies from requirements.txt
       run: |
         pip install -r requirements.txt
-        pip install pytest-ckan
+        pip install -r dev-requirements.txt
 
     - name: Install harvester
       run: |
