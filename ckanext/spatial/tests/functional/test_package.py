@@ -32,9 +32,11 @@ def _post_data(app, url, data, env):
 
 
 @pytest.mark.usefixtures("with_plugins", "clean_db", "clean_index")
-@pytest.mark.ckan_config("ckan.plugins", "spatial_metadata spatial_query")
+@pytest.mark.ckan_config("ckan.plugins", "harvest spatial_metadata spatial_query")
 class TestSpatialExtra(SpatialTestBase):
-    def test_spatial_extra_base(self, app, sysadmin_env):
+    def test_spatial_extra_base(self, app, sysadmin_env, migrate_db_for):
+
+        migrate_db_for("harvest")
 
         dataset = factories.Dataset()
 
