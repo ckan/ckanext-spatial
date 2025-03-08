@@ -26,7 +26,7 @@
 
 * Dropped support for Python 2
 * Dropped support for the PostGIS search backend
-* Updated the common map JS module to support many different tile providers. The default Stamen Terrain tile will no longer work, and users will need to configure a map tiles provider. Please check the [documentation](https://docs.ckan.org/projects/ckanext-spatial/en/latest/map-widgets.html) for full details.
+* Updated the common map JS module to support many different tile providers. The default Stamen Terrain tile will no longer work, and users will need to configure a map tiles provider. Please check the [documentation](https://docs.ckan.org/projects/ckanext-spatial/en/latest/map-widgets/) for full details.
 * Upgrade tests to check all envs, including CKAN 2.10 with Python 3.10 [#308](https://github.com/ckan/ckanext-spatial/pull/308)
 * TypeError when spatial is missing [#306](https://github.com/ckan/ckanext-spatial/pull/306)
 * Fix requirements [#313](https://github.com/ckan/ckanext-spatial/pull/313)
