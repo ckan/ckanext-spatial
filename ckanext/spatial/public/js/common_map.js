@@ -85,7 +85,7 @@
           onAdd: (map) => {
             let element = document.createElement("div");
             element.className = "leaflet-control-no-provider";
-            element.innerHTML = 'No map provider set. Please check the <a href="https://docs.ckan.org/projects/ckanext-spatial/en/latest/map-widgets.html">documentation</a>';
+            element.innerHTML = 'No map provider set. Please check the <a href="https://docs.ckan.org/projects/ckanext-spatial/en/latest/map-widgets/">documentation</a>';
             return element;
           },
           onRemove: (map) => {}
