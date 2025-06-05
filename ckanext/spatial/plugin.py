@@ -1,4 +1,3 @@
-import os
 import mimetypes
 from logging import getLogger
 
@@ -15,20 +14,14 @@ import ckantoolkit as tk
 
 from ckan import plugins as p
 from ckan.lib.search import SearchError
-
 from ckan.lib.helpers import json
 
-if tk.check_ckan_version(min_version="2.9.0"):
-    from ckanext.spatial.plugin.flask_plugin import (
-        SpatialQueryMixin, HarvestMetadataApiMixin
-    )
-else:
-    from ckanext.spatial.plugin.pylons_plugin import (
-        SpatialQueryMixin, HarvestMetadataApiMixin
-    )
-
+import ckanext.spatial.views as blueprints
+from ckanext.spatial.cli import get_commands
 from ckanext.spatial.lib import normalize_bbox
 from ckanext.spatial.search import search_backends
+from ckanext.spatial import helpers as spatial_helpers
+
 
 config = tk.config
 
@@ -36,7 +29,6 @@ log = getLogger(__name__)
 
 DEFAULT_SEARCH_BACKEND = "solr-bbox"
 ALLOWED_SEARCH_BACKENDS = [
-    "solr",         # Deprecated, please update to "solr-bbox"
     "solr-bbox",
     "solr-spatial-field",
 ]
@@ -55,9 +47,9 @@ class SpatialMetadata(p.SingletonPlugin):
         ''' Set up the resource library, public directory and
         template directory for all the spatial extensions
         '''
-        tk.add_public_directory(config, '../public')
-        tk.add_template_directory(config, '../templates')
-        tk.add_resource('../public', 'ckanext-spatial')
+        tk.add_public_directory(config, 'public')
+        tk.add_template_directory(config, 'templates')
+        tk.add_resource('assets', 'ckanext-spatial')
 
         # Add media types for common extensions not included in the mimetypes
         # module
@@ -116,7 +108,6 @@ class SpatialMetadata(p.SingletonPlugin):
     # ITemplateHelpers
 
     def get_helpers(self):
-        from ckanext.spatial import helpers as spatial_helpers
         return {
             "get_reference_date": spatial_helpers.get_reference_date,
             "get_responsible_party": spatial_helpers.get_responsible_party,
@@ -124,10 +115,11 @@ class SpatialMetadata(p.SingletonPlugin):
         }
 
 
-class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
+class SpatialQuery(p.SingletonPlugin):
 
     p.implements(p.IPackageController, inherit=True)
     p.implements(p.IConfigurer, inherit=True)
+    p.implements(p.IClick)
 
     def _get_search_backend(self):
         search_backend = config.get(
@@ -212,8 +204,13 @@ class SpatialQuery(SpatialQueryMixin, p.SingletonPlugin):
 
         return search_params
 
+    # IClick
 
-class HarvestMetadataApi(HarvestMetadataApiMixin, p.SingletonPlugin):
+    def get_commands(self):
+        return get_commands()
+
+
+class HarvestMetadataApi(p.SingletonPlugin):
     '''
     Harvest Metadata API
     (previously called "InspireApi")
@@ -221,4 +218,10 @@ class HarvestMetadataApi(HarvestMetadataApiMixin, p.SingletonPlugin):
     A way for a user to view the harvested metadata XML, either as a raw file or
     styled to view in a web browser.
     '''
-    pass
+
+    p.implements(p.IBlueprint)
+
+    # IBlueprint
+
+    def get_blueprint(self):
+        return [blueprints.harvest_metadata]

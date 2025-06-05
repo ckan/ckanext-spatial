@@ -15,5 +15,5 @@ extent
   <div id="dataset-map-container"></div>
 </div>
 
-{% set type = 'asset' if h.ckan_version().split('.')[1] | int >= 9 else 'resource' %}
-{% include 'spatial/snippets/dataset_map_' ~ type ~ '.html' %}
+{% asset 'ckanext-spatial/dataset_map_js' %}
+{% asset 'ckanext-spatial/dataset_map_css' %}
