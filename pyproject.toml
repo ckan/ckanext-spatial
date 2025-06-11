@@ -28,7 +28,8 @@ dynamic = ["version"]
 [project.entry-points."ckan.plugins"]
 spatial_metadata = "ckanext.spatial.plugin:SpatialMetadata"
 spatial_query = "ckanext.spatial.plugin:SpatialQuery"
-spatial_harvest_metadata_api = "ckanext.spatial.plugin:HarvestMetadataApi"
+
+spatial_harvest_metadata_api = "ckanext.spatial.plugin_harvest_metadata_api:HarvestMetadataApi"
 
 csw_harvester = "ckanext.spatial.harvesters:CSWHarvester"
 waf_harvester = "ckanext.spatial.harvesters:WAFHarvester"

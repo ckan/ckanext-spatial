@@ -1,7 +1,6 @@
 # encoding: utf-8
 import click
 
-import ckanext.spatial.util as util
 
 
 def get_commands():
@@ -22,8 +21,8 @@ def report(pkg):
     Performs validation on the harvested metadata, either for all
     packages or the one specified.
     """
-
-    return util.report(pkg)
+    from ckanext.spatial.util import report
+    return report(pkg)
 
 
 @spatial_validation.command('report-csv')
@@ -33,11 +32,13 @@ def report_csv(filepath):
     Performs validation on all the harvested metadata in the db and
     writes a report in CSV format to the given filepath.
     """
-    return util.report_csv(filepath)
+    from ckanext.spatial.util import report_csv
+    return report_csv(filepath)
 
 
 @spatial_validation.command('file')
 @click.argument('filepath')
 def validate_file(filepath):
     """Performs validation on the given metadata file."""
-    return util.validate_file(filepath)
+    from ckanext.spatial.util import validate_file
+    return validate_file(filepath)

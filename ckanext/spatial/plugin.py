@@ -16,7 +16,6 @@ from ckan import plugins as p
 from ckan.lib.search import SearchError
 from ckan.lib.helpers import json
 
-import ckanext.spatial.views as blueprints
 from ckanext.spatial.cli import get_commands
 from ckanext.spatial.lib import normalize_bbox
 from ckanext.spatial.search import search_backends
@@ -208,20 +207,3 @@ class SpatialQuery(p.SingletonPlugin):
 
     def get_commands(self):
         return get_commands()
-
-
-class HarvestMetadataApi(p.SingletonPlugin):
-    '''
-    Harvest Metadata API
-    (previously called "InspireApi")
-
-    A way for a user to view the harvested metadata XML, either as a raw file or
-    styled to view in a web browser.
-    '''
-
-    p.implements(p.IBlueprint)
-
-    # IBlueprint
-
-    def get_blueprint(self):
-        return [blueprints.harvest_metadata]
