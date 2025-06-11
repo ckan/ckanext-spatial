@@ -1,6 +1,14 @@
 # Changelog
 
-## [Unreleased](https://github.com/ckan/ckanext-dcat/compare/v2.3.0...HEAD)
+## [Unreleased](https://github.com/ckan/ckanext-dcat/compare/v2.3.1...HEAD)
+
+
+
+## [v2.3.1](https://github.com/ckan/ckanext-spatial/compare/v2.3.0...v2.3.1) - 2025-06-11
+
+* Decouple harvest model to avoid SQLAlchemy metadata errors [#347](https://github.com/ckan/ckanext-spatial/issues/347)
+* Remove legacy Pylons code [#346](https://github.com/ckan/ckanext-spatial/pull/346)
+* Fix map documentation link [#344](https://github.com/ckan/ckanext-spatial/pull/344)
 
 ## [v2.3.0](https://github.com/ckan/ckanext-spatial/compare/v2.2.0...v2.3.0) - 2025-03-06
 
