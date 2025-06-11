@@ -3,7 +3,6 @@ from logging import getLogger
 
 import geojson
 
-import shapely.geometry
 try:
     from shapely.errors import GeometryTypeError
 except ImportError:
