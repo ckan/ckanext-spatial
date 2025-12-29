@@ -192,8 +192,8 @@ you need to split the geometry in order to fit the parts. Not indexing"""
                 return dataset_dict
             wkt = shape.wkt
 
-        dataset_dict["spatial_geom"] = wkt
-
+        spatial_field_name = config.get("ckanext.spatial.field_name", "spatial_geom")
+        dataset_dict[spatial_field_name] = wkt
         return dataset_dict
 
     def search_params(self, bbox, search_params):
