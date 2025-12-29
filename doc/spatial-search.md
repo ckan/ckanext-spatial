@@ -208,6 +208,11 @@ images):
     ```
        {{!field f=spatial_geom}}Intersects(ENVELOPE({minx}, {maxx}, {maxy}, {miny}))
     ```
+    
+    You can also customize the Solr field name using: 
+    ```
+    ckanext.spatial.field_name = my_custom_geom_field
+    ```
 
 !!! Note
     The old `postgis` search backend is no longer supported. You should
