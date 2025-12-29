@@ -192,8 +192,8 @@ you need to split the geometry in order to fit the parts. Not indexing"""
                 return dataset_dict
             wkt = shape.wkt
 
-        dataset_dict["spatial_geom"] = wkt
-
+        spatial_field_name = config.get("ckanext.spatial.field_name", "spatial_geom")
+        dataset_dict[spatial_field_name] = wkt
         return dataset_dict
 
     def search_params(self, bbox, search_params):
@@ -202,13 +202,14 @@ you need to split the geometry in order to fit the parts. Not indexing"""
 
         if not search_params.get("fq_list"):
             search_params["fq_list"] = []
-
-        default_spatial_query = "{{!field f=spatial_geom}}Intersects(ENVELOPE({minx}, {maxx}, {maxy}, {miny}))"
-
+        
+        spatial_field_name = config.get("ckanext.spatial.field_name", "spatial_geom")
+        
+        default_spatial_query = "{{!field f={spatial_field}}}Intersects(ENVELOPE({minx}, {maxx}, {maxy}, {miny}))"
         spatial_query = config.get("ckanext.spatial.solr_query", default_spatial_query)
-
+    
         search_params["fq_list"].append(
-            spatial_query.format(spatial_field="spatial_geom", **bbox)
+            spatial_query.format(spatial_field=spatial_field_name, **bbox)
         )
 
         return search_params
