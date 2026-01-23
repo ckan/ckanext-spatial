@@ -211,7 +211,7 @@ images):
     
     You can also customize the Solr field name using: 
     ```
-    ckanext.spatial.field_name = my_custom_geom_field
+    ckanext.spatial.solr_geom_field_name = my_custom_geom_field
     ```
 
 !!! Note
