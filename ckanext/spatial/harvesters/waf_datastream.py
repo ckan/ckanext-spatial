@@ -78,7 +78,7 @@ class DatastreamSitemapHarvester(WAFHarvester, SingletonPlugin):
                 redis_conn.hset(store_name, mapping={string_to_translate:aws_trans})
                 return aws_trans
         except Exception as e:
-              log.error('Could not translate text %s : %e', string_to_translate, e)
+              log.error('Could not translate text "%s" : %s', string_to_translate, str(e))
 
         return None
 
@@ -95,6 +95,22 @@ class DatastreamSitemapHarvester(WAFHarvester, SingletonPlugin):
         # TODO: determin if we can set EOV to something useful
         if not package_dict.get("eov"):
             package_dict["eov"] = ["other"]
+
+        # Fix lineage field format - convert string to list of dicts as required by schema
+        if package_dict.get('lineage') and isinstance(package_dict['lineage'], str):
+            lineage_text = package_dict['lineage']
+            log.warning('Converting lineage from string to list of dicts for dataset: %s',
+                       iso_values.get('unique-resource-identifier', 'unknown'))
+            package_dict['lineage'] = [{
+                'statment': {'en': lineage_text},
+                'scope': 'dataset',
+                'additional-documentation': [],
+                'source': [],
+                'processing-step': []
+            }]
+        elif not package_dict.get('lineage'):
+            # Set empty list if no lineage
+            package_dict['lineage'] = []
 
         # call check redis for translation, call Amazon translate if needed and cache results in redis
         redis_conn = get_connection_redis()
@@ -164,6 +180,16 @@ class DatastreamSitemapHarvester(WAFHarvester, SingletonPlugin):
                 'resource_locator_function': r'',
             }]
 
+        # Debug log to check all repeating subfield types before validation
+        repeating_fields = ['aggregation-info', 'metadata-reference-date', 'dataset-reference-date',
+                           'metadata-point-of-contact', 'cited-responsible-party', 'distributor',
+                           'lineage', 'included_in_data_catalogue']
+        for field_name in repeating_fields:
+            if field_name in package_dict:
+                field_value = package_dict[field_name]
+                if not isinstance(field_value, list):
+                    log.error('Field "%s" is not a list (type: %s, value: %s)',
+                             field_name, type(field_value).__name__, str(field_value)[:100])
 
         # End of processing, return the modified package
         return package_dict
@@ -235,7 +261,14 @@ class DatastreamSitemapHarvester(WAFHarvester, SingletonPlugin):
             for url_node in sitemap_tree.findall(".//{http://www.sitemaps.org/schemas/sitemap/0.9}url"):
                 loc_node = url_node.find(".//{http://www.sitemaps.org/schemas/sitemap/0.9}loc")
                 last_modified_node = url_node.find(".//{http://www.sitemaps.org/schemas/sitemap/0.9}lastmod")
-                url = loc_node.text + '/iso19115.xml'
+                # DataStream URLs need language code (e.g., /en-ca/ or /fr-ca/) before /dataset/
+                # Original URL format: https://datastream.org/dataset/{uuid}
+                # Required format: https://datastream.org/en-ca/dataset/{uuid}/iso19115.xml
+                base_url = loc_node.text
+                # Insert /en-ca/ before /dataset/ if not already present
+                if '/dataset/' in base_url and '/en-ca/' not in base_url and '/fr-ca/' not in base_url:
+                    base_url = base_url.replace('/dataset/', '/en-ca/dataset/')
+                url = base_url + '/iso19115.xml'
                 modified_date = last_modified_node.text
                 url_to_modified_harvest[url] = modified_date
         except Exception as e:
