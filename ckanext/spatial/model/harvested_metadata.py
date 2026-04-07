@@ -1935,6 +1935,7 @@ class ISODocument(MappedXmlDocument):
                 "individual-name": x['individual-name'],
                 "organisation-name": x['organisation-name'],
             } for x in value['author']
+            if x['role'] in ['author', 'coAuthor', 'owner', 'originator']
         ]
         author_list = [i for n, i in enumerate(
             author_list) if i not in author_list[n + 1:]]
