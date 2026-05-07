@@ -175,7 +175,7 @@ class CSWHarvester(SpatialHarvester, SingletonPlugin):
             # Save the fetch contents in the HarvestObject
             # Contents come from csw_client already declared and encoded as utf-8
             # Remove original XML declaration
-            content = re.sub('<\\?xml(.*)\\?>', '', record['xml'])
+            content = re.sub('<xml(.*)>', '', record['xml'])
 
             harvest_object.content = content.strip()
             harvest_object.save()
