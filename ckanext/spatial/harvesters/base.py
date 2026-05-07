@@ -2,8 +2,7 @@ from urllib.parse import urlparse
 from urllib.request import urlopen
 
 import re
-import cgitb
-import warnings
+import traceback
 
 import sys
 import logging
@@ -41,12 +40,7 @@ DEFAULT_VALIDATOR_PROFILES = ['iso19139']
 
 
 def text_traceback():
-    with warnings.catch_warnings():
-        warnings.simplefilter("ignore")
-        res = 'the original traceback:'.join(
-            cgitb.text(sys.exc_info()).split('the original traceback:')[1:]
-        ).strip()
-    return res
+    return "".join(traceback.format_exception(*sys.exc_info()))
 
 
 def guess_standard(content):
