@@ -1,15 +1,18 @@
 ckantoolkit
-lxml>=2.3
-argparse
+
+# CKAN core requirements, use whatever version core uses
+lxml
+requests
+
 pyparsing>=2.1.10
-requests>=1.1.0
+
 cython==0.29.36; python_version < '3.9'
 
 pyproj==2.6.1; python_version < '3.9'
-pyproj==3.6.1; python_version >= '3.9'
+pyproj~=3.6; python_version >= '3.9'
 
 OWSLib==0.31.0; python_version < '3.10'
-OWSLib==0.32.0; python_version >= '3.10'
+OWSLib~=0.32.0; python_version >= '3.10'
 
-Shapely==2.0.7
-geojson==3.1.0
+Shapely~=2.1.2
+geojson~=3.1
