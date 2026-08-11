@@ -23,16 +23,18 @@ All commands assume an existing CKAN database named `ckan_default`.
 3.  Install the ckanext-spatial Python package into your virtual
     environment:
 
-        pip install -e "git+https://github.com/ckan/ckanext-spatial.git#egg=ckanext-spatial"
+        pip install ckanext-spatial
 
-4.  Install the rest of Python modules required by the extension:
+    !!! Note
 
-        pip install -r /usr/lib/ckan/default/src/ckanext-spatial/requirements.txt
+        For versions older than **ckanext-spatial 2.3.1** use the old legacy version of the install:
 
-5.  Restart CKAN. For example if you\'ve deployed CKAN with Apache on
-    Ubuntu:
+            pip install -e git+https://github.com/ckan/ckanext-spatial.git#egg=ckanext-spatial
 
-        sudo service apache2 reload
+            pip install -r ckanext-spatial/requirements.txt
+
+5.  Restart CKAN.
+
 
 To use the [spatial harvesters](harvesters.md), you will need to
 install and configure the harvester extension:
