@@ -8,8 +8,12 @@ description = "Geo-related plugins for CKAN"
 keywords = [""]
 readme = "README.rst"
 authors = [
-    {name = "CKAN Tech Team", email = "ckan-dev@ckan.org"},
+    {name = "Adrià Mercader", email = "amercadero@gmail.com"}
 ]
+maintainers = [
+    {name = "CKAN Tech Team and contributors", email = "tech-team@ckan.org"},
+]
+
 classifiers = [
     "Development Status :: 5 - Production/Stable",
     "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
@@ -17,6 +21,8 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Programming Language :: Python :: 3.9",
 ]
 license = {text = "AGPL"}
@@ -45,7 +51,9 @@ test_spatial_plugin = "ckanext.spatial.tests.test_plugin.plugin:TestSpatialPlugi
 
 
 [project.urls]
-Homepage = "http://okfn.org"
+Documentation = "https://docs.ckan.org/projects/ckanext-spatial"
+Repository = "https://github.com/ckan/ckanext-spatial"
+
 
 [tool.setuptools.dynamic]
 version = {attr = "ckanext.spatial.__version__"}
