@@ -19,11 +19,10 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.9",
 ]
-dependencies = []
 license = {text = "AGPL"}
 requires-python = ">=3.9"
 
-dynamic = ["version"]
+dynamic = ["version", "dependencies", "optional-dependencies"]
 
 [project.entry-points."ckan.plugins"]
 spatial_metadata = "ckanext.spatial.plugin:SpatialMetadata"
@@ -48,8 +47,8 @@ test_spatial_plugin = "ckanext.spatial.tests.test_plugin.plugin:TestSpatialPlugi
 [project.urls]
 Homepage = "http://okfn.org"
 
-
 [tool.setuptools.dynamic]
 version = {attr = "ckanext.spatial.__version__"}
-
+dependencies = {file = ["requirements.txt"]}
+optional-dependencies = {dev = { file = ["dev-requirements.txt"] }}
 
