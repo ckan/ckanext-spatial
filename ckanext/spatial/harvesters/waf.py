@@ -334,6 +334,10 @@ def _extract_waf(content, base_url, scraper, results = None, depth=0):
             continue
         if not url.endswith('.xml'):
             continue
+        record_url = urljoin(base_url, url)
+        if not record_url.startswith(base_url):
+            log.debug('Skipping WAF record outside of base URL: %s', record_url)
+            continue
         date = record.date
         if date:
             try:
@@ -343,6 +347,6 @@ def _extract_waf(content, base_url, scraper, results = None, depth=0):
                 date = None
         if not date:
             log.debug('failed to get date for %s', url)
-        results.append((urljoin(base_url, record.url), date))
+        results.append((record_url, date))
 
     return results
