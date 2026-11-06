@@ -20,6 +20,8 @@ from ckanext.harvest.model import HarvestObject
 from ckanext.harvest.model import HarvestObjectExtra as HOExtra
 import ckanext.harvest.queue as queue
 
+from ckantoolkit import config
+
 from ckanext.spatial.harvesters.base import SpatialHarvester, guess_standard
 
 log = logging.getLogger(__name__)
@@ -63,7 +65,10 @@ class WAFHarvester(SpatialHarvester, SingletonPlugin):
 
         # Get contents
         try:
-            response = requests.get(source_url, timeout=60)
+            proxy = config.get('ckan.download_proxy')
+            proxies = {'http': proxy, 'https': proxy} if proxy else None
+
+            response = requests.get(source_url, timeout=60, proxies=proxies)
             response.raise_for_status()
         except requests.exceptions.RequestException as e:
             self._save_gather_error('Unable to get content for URL: %s: %r' % \
@@ -325,7 +330,10 @@ def _extract_waf(content, base_url, scraper, results = None, depth=0):
                 continue
             log.debug('WAF new_url: %s', new_url)
             try:
-                response = requests.get(new_url)
+                proxy = config.get('ckan.download_proxy')
+                proxies = {'http': proxy, 'https': proxy} if proxy else None
+
+                response = requests.get(new_url, timeout=10, proxies=proxies)
                 content = response.content
             except Exception as e:
                 print(str(e))

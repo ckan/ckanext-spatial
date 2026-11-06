@@ -844,7 +844,10 @@ class SpatialHarvester(HarvesterBase):
 
         '''
         url = url.replace(' ', '%20')
-        response = requests.get(url, timeout=10)
+        proxy = config.get('ckan.download_proxy')
+        proxies = {'http': proxy, 'https': proxy} if proxy else None
+
+        response = requests.get(url, timeout=10, proxies=proxies)
 
         content = response.text
 
