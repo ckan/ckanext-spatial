@@ -51,3 +51,20 @@ def test_extract_iis(httpserver):
     assert records_expected == sorted([(os.path.basename(r[0]), r[1]) for r in iis_results])
     assert records_expected == sorted([(os.path.basename(r[0]), r[1]) for r in nginx_results])
     assert records_expected == sorted([(os.path.basename(r[0]), r[1]) for r in apache_results])
+
+
+def test_extract_ignores_records_outside_base_url():
+
+    content = """
+<html><body><pre>
+<a href="record-1.xml">record-1.xml</a>            2024-11-07 15:00  356K
+<a href="http://169.254.169.254/latest/meta-data/x.xml">x.xml</a>            2024-11-07 15:00  356K
+<a href="//internal.example.com/y.xml">y.xml</a>            2024-11-07 15:00  356K
+<a href="/other-folder/z.xml">z.xml</a>            2024-11-07 15:00  356K
+<a href="../w.xml">w.xml</a>            2024-11-07 15:00  356K
+</pre></body></html>
+"""
+
+    results = _extract_waf(content, "http://waf.example.com/folder/", "apache")
+
+    assert [r[0] for r in results] == ["http://waf.example.com/folder/record-1.xml"]

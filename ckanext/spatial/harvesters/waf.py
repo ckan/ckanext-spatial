@@ -20,6 +20,8 @@ from ckanext.harvest.model import HarvestObject
 from ckanext.harvest.model import HarvestObjectExtra as HOExtra
 import ckanext.harvest.queue as queue
 
+from ckantoolkit import config
+
 from ckanext.spatial.harvesters.base import SpatialHarvester, guess_standard
 
 log = logging.getLogger(__name__)
@@ -63,7 +65,10 @@ class WAFHarvester(SpatialHarvester, SingletonPlugin):
 
         # Get contents
         try:
-            response = requests.get(source_url, timeout=60)
+            proxy = config.get('ckan.download_proxy')
+            proxies = {'http': proxy, 'https': proxy} if proxy else None
+
+            response = requests.get(source_url, timeout=60, proxies=proxies)
             response.raise_for_status()
         except requests.exceptions.RequestException as e:
             self._save_gather_error('Unable to get content for URL: %s: %r' % \
@@ -325,7 +330,10 @@ def _extract_waf(content, base_url, scraper, results = None, depth=0):
                 continue
             log.debug('WAF new_url: %s', new_url)
             try:
-                response = requests.get(new_url)
+                proxy = config.get('ckan.download_proxy')
+                proxies = {'http': proxy, 'https': proxy} if proxy else None
+
+                response = requests.get(new_url, timeout=10, proxies=proxies)
                 content = response.content
             except Exception as e:
                 print(str(e))
@@ -333,6 +341,10 @@ def _extract_waf(content, base_url, scraper, results = None, depth=0):
             _extract_waf(str(content), new_url, scraper, results, new_depth)
             continue
         if not url.endswith('.xml'):
+            continue
+        record_url = urljoin(base_url, url)
+        if not record_url.startswith(base_url):
+            log.debug('Skipping WAF record outside of base URL: %s', record_url)
             continue
         date = record.date
         if date:
@@ -343,6 +355,6 @@ def _extract_waf(content, base_url, scraper, results = None, depth=0):
                 date = None
         if not date:
             log.debug('failed to get date for %s', url)
-        results.append((urljoin(base_url, record.url), date))
+        results.append((record_url, date))
 
     return results
