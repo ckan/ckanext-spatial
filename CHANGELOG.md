@@ -4,7 +4,7 @@
 
 ## [v2.3.3](https://github.com/ckan/ckanext-spatial/compare/v2.3.2...v2.3.3) - 2026-11-06
 
-* [ (CVE Pending)](https://github.com/ckan/ckanext-spatial/security/advisories/GHSA-8hc6-5v68-vj65): Potential
+* [GHSA-8hc6-5v68-vj65 (CVE Pending)](https://github.com/ckan/ckanext-spatial/security/advisories/GHSA-8hc6-5v68-vj65): Potential
   access to sensitive URLs via WAF harvester (SSRF) 
 * Add support for the [`ckan.download_proxy`](https://docs.ckan.org/en/latest/maintaining/configuration.html#ckan-download-proxy) configuration option in WAF and Doc harvesters.
 * Use raw strings for regex backslash escapes, Revert "Remove greedy regexes" [#356](https://github.com/ckan/ckanext-spatial/pull/355)
